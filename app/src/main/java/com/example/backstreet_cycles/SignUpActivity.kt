@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import com.example.backstreet_cycles.databinding.ActivityLogInBinding
-import com.example.backstreet_cycles.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_log_in.*
@@ -17,7 +15,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
 
-        sign_up_button.setOnClickListener {
+        buttonLogin.setOnClickListener {
             when {
                 TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
                     Toast.makeText(
