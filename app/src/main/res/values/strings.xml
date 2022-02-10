@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Backstreet_cycles</string>
     <string name="mapbox_access_token">YOUR_MAPBOX_ACCESS_TOKEN</string>
-    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/Search?query</string>
+    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
+    <string name="tfl_url_by_name">https://api.tfl.gov.uk/BikePoint/Search?query=</string>
 </resources>
