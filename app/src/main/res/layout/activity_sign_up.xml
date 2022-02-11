@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/firstName"
+            android:id="@+id/et_firstName"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -65,7 +65,7 @@
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/lastName"
+            android:id="@+id/et_lastName"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"

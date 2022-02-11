@@ -20,24 +20,24 @@ class SignUpActivity : AppCompatActivity() {
 
         buttonSignUp.setOnClickListener {
             when {
+                TextUtils.isEmpty(et_firstName.text.toString().trim() { it <= ' ' }) -> {
+                    et_firstName.error = "Please enter your first name"
+                }
+                TextUtils.isEmpty(et_lastName.text.toString().trim() { it <= ' ' }) -> {
+                    et_lastName.error = "Please enter your last name"
+                }
+
                 TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter your email",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    et_email.error = "Please enter your email"
                 }
 
                 TextUtils.isEmpty(et_password.text.toString().trim() { it <= ' ' }) -> {
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Please enter your password",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    et_password.error = "Please enter a password"
                 }
 
                 else -> {
-
+                    val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
+                    val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
                     val email: String = et_email.text.toString().trim { it <= ' ' }
                     val password: String = et_password.text.toString().trim { it <= ' '}
 
