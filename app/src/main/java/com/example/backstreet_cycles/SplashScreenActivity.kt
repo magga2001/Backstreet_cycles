@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.backstreet_cycles.data.Dock
+import com.example.backstreet_cycles.DTO.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 

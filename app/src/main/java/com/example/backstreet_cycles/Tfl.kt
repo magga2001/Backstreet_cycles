@@ -1,7 +1,7 @@
 package com.example.backstreet_cycles
 
 import android.util.Log
-import com.example.backstreet_cycles.data.Dock
+import com.example.backstreet_cycles.DTO.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
