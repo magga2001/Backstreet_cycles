@@ -3,9 +3,13 @@ package com.example.backstreet_cycles
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
+import android.text.TextUtils
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_log_in.et_email
+import kotlinx.android.synthetic.main.activity_log_in.et_password
+import kotlinx.android.synthetic.main.activity_sign_up.*
 
 
 class LogInActivity : AppCompatActivity() {
@@ -22,10 +26,21 @@ class LogInActivity : AppCompatActivity() {
         }
 
         buttonLogin.setOnClickListener {
-            logIn(
-                et_email.text.trim().toString(),
-                et_password.text.trim().toString()
-            )
+            when {
+                TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
+                    et_email.error = "Please enter your email"
+                }
+
+                TextUtils.isEmpty(et_password.text.toString().trim() { it <= ' ' }) -> {
+                    et_password.error = "Please enter a password"
+                }
+
+                else -> logIn(
+                    et_email.text.trim().toString(),
+                    et_password.text.trim().toString()
+                )
+            }
+
         }
 
     }
@@ -53,7 +68,7 @@ class LogInActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 else{
-                    Toast.makeText(this,"Error"+task.exception, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,"Invalid details", Toast.LENGTH_LONG).show()
                 }
             }
     }
