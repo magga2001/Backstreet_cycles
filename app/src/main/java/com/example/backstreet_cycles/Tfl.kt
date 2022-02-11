@@ -32,5 +32,27 @@ class Tfl {
                 }.await()
             return dock
         }
+
+        private fun updateDock(dock : Dock)
+        {
+
+            Log.i("Dock_station", dock.toString())
+            //Reassign value to hashmap dock
+            val dockStation = hashMapOf(
+                "id" to dock.id,
+                "name" to dock.name,
+                "lat" to dock.lat,
+                "lon" to dock.lon,
+                "nbBikes" to dock.nbBikes,
+                "nbSpaces" to dock.nbSpaces,
+                "nbDocks" to dock.nbDocks,
+            )
+
+            // Add a new document with a generated ID
+            db.collection("docks").document(dock.id)
+                .set(dockStation)
+                .addOnSuccessListener { Log.d("Success", "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w("Fail", "Error writing document", e) }
+        }
     }
 }
