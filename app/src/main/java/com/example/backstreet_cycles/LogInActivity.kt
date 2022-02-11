@@ -30,11 +30,26 @@ class LogInActivity : AppCompatActivity() {
 
     }
 
+     override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if(currentUser != null){
+            reload()
+        }
+    }
+
+
+    private fun reload() {
+        startActivity(Intent(this@LogInActivity,MainActivity::class.java))
+    }
+
+
     fun logIn(email:String,password:String ){
         auth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener(this){task->
                 if (task.isSuccessful){
-                    val intent=Intent(this,MainActivity::class.java);
+                    val intent=Intent(this,MainActivity::class.java)
                     startActivity(intent)
                 }
                 else{
