@@ -2,6 +2,8 @@ package com.example.backstreet_cycles;
 
 import android.app.Application;
 import android.content.Context
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class App : Application() {
 
@@ -13,7 +15,6 @@ class App : Application() {
          super.onCreate()
 
          context = this
-         Tfl.getDock()
      }
 
 }
