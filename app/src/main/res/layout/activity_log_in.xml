@@ -59,7 +59,8 @@
             android:layout_margin="20dp"
             android:ems="10"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/et_password"
@@ -69,7 +70,8 @@
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:autofillHints="" />
 
     </LinearLayout>
 
@@ -93,7 +95,7 @@
             android:text="@string/no_account" />
 
         <Button
-            android:id="@+id/buttonSignUp"
+            android:id="@+id/buttonCreateAccount"
             android:layout_width="170dp"
             android:layout_height="63dp"
             android:layout_marginTop="16dp"

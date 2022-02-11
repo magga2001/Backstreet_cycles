@@ -13,9 +13,9 @@ import com.google.firebase.ktx.Firebase
 
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import kotlinx.android.synthetic.main.activity_log_in.buttonLogin as buttonLogin
-import kotlinx.android.synthetic.main.activity_log_in.et_password as et_password
-import kotlinx.android.synthetic.main.activity_sign_up.et_email as et_email
+import kotlinx.android.synthetic.main.activity_log_in.buttonLogin
+import kotlinx.android.synthetic.main.activity_log_in.et_password
+import kotlinx.android.synthetic.main.activity_sign_up.et_email
 
 class LogInActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -27,7 +27,7 @@ class LogInActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
 
-        buttonSignUp.setOnClickListener {
+        buttonCreateAccount.setOnClickListener {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
         }
 

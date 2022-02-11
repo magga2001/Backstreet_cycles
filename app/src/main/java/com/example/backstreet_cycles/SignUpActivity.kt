@@ -8,6 +8,9 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_log_in.et_email
+import kotlinx.android.synthetic.main.activity_log_in.et_password
+import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +18,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
 
-        buttonLogin.setOnClickListener {
+        buttonSignUp.setOnClickListener {
             when {
                 TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
                     Toast.makeText(
