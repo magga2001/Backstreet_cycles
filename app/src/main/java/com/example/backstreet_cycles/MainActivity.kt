@@ -19,9 +19,8 @@ class MainActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
-        lifecycleScope.launch {Log.i("Retrieve one data", Tfl.readDock("BikePoints_10").toString()) }
+        lifecycleScope.launch {Log.i("Retrieve one data", Tfl.readDock("BikePoints_617").toString()) }
         Log.i("Retrieve data", Tfl.docks.toString())
-
     }
 
     override fun onStart() {

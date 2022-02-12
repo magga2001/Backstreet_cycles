@@ -7,6 +7,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.backstreet_cycles.DTO.Dock
 import org.json.JSONArray
+import java.util.*
 
 class Api{
 
@@ -73,7 +74,12 @@ class Api{
 
         private fun checkValidity(value : String): Int
         {
-            if(value.isEmpty()) return 0 else return value.toInt()
+            return try {
+                value.toInt()
+            } catch (e: Exception) {
+                // handler
+                0
+            }
         }
     }
 }

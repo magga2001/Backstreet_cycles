@@ -61,9 +61,9 @@ dependencies {
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx:23.0.3'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.0.1'
     //Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
 }

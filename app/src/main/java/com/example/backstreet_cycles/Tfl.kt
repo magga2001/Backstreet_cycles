@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 class Tfl {
     companion object
     {
+        //The purpose of this list is to iterate through whole list on any query
         val docks = mutableListOf<Dock>()
         private val db = Firebase.firestore
 
