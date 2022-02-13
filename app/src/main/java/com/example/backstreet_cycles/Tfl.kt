@@ -1,7 +1,7 @@
 package com.example.backstreet_cycles
 
 import android.util.Log
-import com.example.backstreet_cycles.data.Dock
+import com.example.backstreet_cycles.DTO.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 class Tfl {
     companion object
     {
+        //The purpose of this list is to iterate through whole list on any query
         val docks = mutableListOf<Dock>()
         private val db = Firebase.firestore
 

@@ -7,9 +7,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.backstreet_cycles.data.Dock
+import androidx.lifecycle.lifecycleScope
+import com.example.backstreet_cycles.DTO.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlin.concurrent.thread
 
 class SplashScreenActivity: AppCompatActivity() {
 
@@ -29,13 +33,13 @@ class SplashScreenActivity: AppCompatActivity() {
             Log.d("Success loading", "Loading Main Activity")
             startActivity(Intent(this,MainActivity::class.java))
             finish()
-        },3000)
+        },100)
     }
 
     private fun checkLoading() {
 
         Log.i("COUNT_DOWN", "RUN")
-        object: CountDownTimer(3000,1000)
+        object: CountDownTimer(500,250)
         {
             override fun onTick(p0: Long) {
                 Log.i("COUNT_DOWN", "OnTickRUn")
@@ -45,19 +49,13 @@ class SplashScreenActivity: AppCompatActivity() {
                 Log.i("COUNT_DOWN", "OnFinishRUn")
                 if(Api.isLoaded)
                 {
-                    for(dock in Api.docks)
-                    {
-                        seedDock(dock)
-                    }
+                    thread(start = true) {
+                        for(dock in Api.docks)
+                        {
+                            lifecycleScope.launch {seedDock(dock)}
+                        }
 
-                    readDock()
-                    //THEN GO TO MAIN ACTIVITY
-                    if(Tfl.docks.isEmpty())
-                    {
-                        checkLoading()
-                    }else
-                    {
-                        loadActivity()
+                        lifecycleScope.launch{readDock()}
                     }
                 }
                 else
@@ -69,10 +67,8 @@ class SplashScreenActivity: AppCompatActivity() {
         }.start()
     }
 
-    private fun seedDock(dock : Dock)
+    private suspend fun seedDock(dock : Dock)
     {
-
-        Log.i("Dock_station", dock.toString())
         //Create dock
         val dockStation = hashMapOf(
             "id" to dock.id,
@@ -89,6 +85,7 @@ class SplashScreenActivity: AppCompatActivity() {
             .set(dockStation)
             .addOnSuccessListener { Log.d("Success", "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w("Fail", "Error writing document", e) }
+            .await()
     }
 
     private fun loadDock()
@@ -99,8 +96,7 @@ class SplashScreenActivity: AppCompatActivity() {
                 Log.i("Document", document.toString())
                 if (document != null && !document.isEmpty) {
                     Log.d("Success,Data Found!", "--")
-                    readDock()
-                    loadActivity()
+                    lifecycleScope.launch{readDock()}
                 } else {
                     Log.d("Success,Data Not Found!", "Adding data")
                     Api.getDock()
@@ -112,7 +108,7 @@ class SplashScreenActivity: AppCompatActivity() {
             }
     }
 
-    private fun readDock()
+    private suspend fun readDock()
     {
         val docRef = db.collection("docks")
         docRef.get()
@@ -122,8 +118,6 @@ class SplashScreenActivity: AppCompatActivity() {
                     for(doc in document)
                     {
                         Tfl.docks.add(doc.toObject(Dock::class.java))
-                        Log.i("Local data", "Success")
-                        Log.i("Local data docks #", Tfl.docks.size.toString())
                     }
                 } else {
                     Log.d("Success,Data Not Found!", "No data")
@@ -132,14 +126,15 @@ class SplashScreenActivity: AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.d("Fail", "get failed with ", exception)
-            }
+            }.await()
+
+        loadActivity()
     }
 
     //Unseed data from Firebase
     private fun unseed()
     {
         //Unseed dock
-
         val docRef = db.collection("docks")
         docRef.get()
             .addOnSuccessListener { document ->

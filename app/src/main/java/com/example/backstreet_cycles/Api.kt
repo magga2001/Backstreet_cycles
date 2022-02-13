@@ -5,10 +5,9 @@ import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.backstreet_cycles.data.Dock
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.backstreet_cycles.DTO.Dock
 import org.json.JSONArray
+import java.util.*
 
 class Api{
 
@@ -36,7 +35,7 @@ class Api{
                     Toast.makeText(App.context,it.message.toString(),Toast.LENGTH_LONG).show()
                     Log.i("ERROR", "Fail to fetch data")
 
-                isLoaded=true
+                    isLoaded=true
                 })
 
 
@@ -75,7 +74,12 @@ class Api{
 
         private fun checkValidity(value : String): Int
         {
-            if(value.isEmpty()) return 0 else return value.toInt()
+            return try {
+                value.toInt()
+            } catch (e: Exception) {
+                // handler
+                0
+            }
         }
     }
 }
