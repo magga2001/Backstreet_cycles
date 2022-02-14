@@ -7,17 +7,17 @@
     <string name="log_in">Log In</string>
     <string name="previous">Previous</string>
 
-    <string name="log_in_title">Log in</string>
+    <string name="log_in_title">backstreet cycles.</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="no_account">No account?</string>
-    <string name="create_account">Create account</string>
+<!--    <string name="no_account">no account?</string>-->
+    <string name="create_account">Create Account</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="next">Next</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="sign_up_title">Create Account</string>
+    <string name="sign_up_title">create an account.</string>
     <string name="sign_up">Sign Up</string>
     <string name="f_name">First Name</string>
     <string name="l_name">Last Name</string>
