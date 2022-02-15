@@ -41,6 +41,15 @@ class SignUpActivity : AppCompatActivity() {
                     et_password.error = "Please enter a password"
                 }
 
+
+                TextUtils.isEmpty(et_confirmPassword.text.toString().trim() { it <= ' ' }) -> {
+                    et_password.error = "Please confirm your password"
+                }
+
+                (et_confirmPassword.text.toString().trim()) != (et_password.text.toString().trim(){ it <= ' ' }) -> {
+                    et_confirmPassword.error = "Passwords do not match"
+                }
+
                 else -> {
                     val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
                     val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
