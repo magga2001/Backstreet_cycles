@@ -67,17 +67,22 @@ class MainActivity : AppCompatActivity() {
         showButtonMenu.setOnClickListener() {
             popupMenu.show()
         }
-        val location = findViewById<SearchView>(R.id.searchView) as SearchView
+        val location1 = findViewById<SearchView>(R.id.searchView1) as SearchView
+        val location2 = findViewById<SearchView>(R.id.searchView2) as SearchView
         val goButton = findViewById<Button>(R.id.goButton) as Button
+
+        if(location1==null && location2==null) goButton.isEnabled=false else goButton.isEnabled=true
 
         goButton.setOnClickListener { view ->
             Snackbar.make(
                 view,
-                "you entered the location of ${location.query}",
+                "you entered the locations of ${location1.query} and ${location2.query}",
                 Snackbar.LENGTH_LONG
             )
                 .setAction("Action", null).show()
         }
+
+
     }
 
     override fun onStart() {
