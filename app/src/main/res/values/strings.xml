@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Backstreet_cycles</string>
+    <string name="app_name">"Backstreet Cycles"</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -11,7 +11,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-<!--    <string name="no_account">no account?</string>-->
+    <string name="confirm_password">Confirm Password</string>
+    <!--    <string name="no_account">no account?</string>-->
     <string name="create_account">Create Account</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="next">Next</string>
