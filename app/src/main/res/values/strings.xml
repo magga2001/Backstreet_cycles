@@ -2,4 +2,7 @@
     <string name="app_name">Backstreet_cycles</string>
     <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
+    <string name="start_journey">Start journey</string>
+    <string name="destination">Destination</string>
+    <string name="start">Start</string>
 </resources>

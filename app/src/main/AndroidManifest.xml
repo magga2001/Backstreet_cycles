@@ -14,6 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
+            android:name=".Navigation"
+            android:exported="false" />
+        <activity
+            android:name=".Journey_on_map"
+            android:exported="false" />
+        <activity
+            android:name=".Journey"
+            android:exported="false" />
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
