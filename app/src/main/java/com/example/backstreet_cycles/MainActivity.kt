@@ -35,7 +35,9 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import kotlinx.coroutines.launch
+import java.lang.Math.pow
 import kotlin.math.abs
+import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -163,7 +165,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             // Set the component's render mode
             locationComponent?.renderMode = RenderMode.COMPASS
 
-            Log.i("Retrieve closest dock", getRadiusDocks(0.01).size.toString())
+            Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
             //Update to current location
             //locationComponent?.forceLocationUpdate(LocationUpdate.Builder().build())
 
@@ -203,24 +205,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         return locationComponent!!.lastKnownLocation
     }
 
-    private fun getRadiusDocks(radius: Double): List<Dock>
+    private fun getRadiusDocks(radius: Double): MutableList<Dock>
     {
         val currentLat = getCurrentLocation()?.latitude as Double
         val currentLon = getCurrentLocation()?.longitude as Double
 
-        val closestDocks = mutableListOf<Dock>()
-
-        for(dock in docks)
-        {
+        return docks.filter { dock ->
             val dockLat = dock.lat
             val dockLon = dock.lon
+            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
+        }.toMutableList()
+    }
 
-            if(abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius)
-            {
-                closestDocks.add(dock)
-            }
-        }
+    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
+    {
+        val closestDocks = getRadiusDocks(radius)
 
-        return closestDocks
+        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+
+        return closestDocks.subList(0, numberOfDock)
     }
 }
