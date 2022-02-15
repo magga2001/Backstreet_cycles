@@ -4,4 +4,5 @@
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
     <string name="user_location_permission_explanation">Permission needed</string>
     <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
+    <string name="start_navigation">start navigation</string>
 </resources>

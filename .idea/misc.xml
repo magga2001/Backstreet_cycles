@@ -3,13 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Shahmir/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Shahmir/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/menu/menu.xml" value="0.23981481481481481" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.174" />
-        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="app/src/main/res/drawable/marker.xml" value="0.1" />
-        <entry key="app/src/main/res/drawable/red_marker.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.174" />
-        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
       </map>
     </option>
