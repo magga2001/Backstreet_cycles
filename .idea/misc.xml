@@ -3,13 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable/mapbox_button.xml" value="0.1815" />
-        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_journey_map.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_journey_on_map.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1203125" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.174" />
+        <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.174" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.174" />
+        <entry key="app/src/main/res/layout/activity_journey_on_map.xml" value="0.25815217391304346" />
+        <entry key="app/src/main/res/layout/activity_journey_overview.xml" value="0.21623672230652505" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25815217391304346" />
+        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.25815217391304346" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
       </map>
     </option>
   </component>
