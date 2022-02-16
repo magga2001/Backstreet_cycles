@@ -1,8 +1,9 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.backstreet_cycles.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 

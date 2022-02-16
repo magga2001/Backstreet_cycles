@@ -1,15 +1,16 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.text.TextUtils
 import android.widget.Toast
+import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.logicClasses.UserLogic
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_log_in.et_email
 import kotlinx.android.synthetic.main.activity_log_in.et_password
-import kotlinx.android.synthetic.main.activity_sign_up.*
 
 
 class LogInActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class LogInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
         auth = FirebaseAuth.getInstance()
+//        val userLogic = UserLogic
+
 
 
         buttonCreateAccount.setOnClickListener {
@@ -45,7 +48,7 @@ class LogInActivity : AppCompatActivity() {
 
     }
 
-     override fun onStart() {
+    override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
@@ -59,16 +62,15 @@ class LogInActivity : AppCompatActivity() {
         startActivity(Intent(this@LogInActivity,MainActivity::class.java))
     }
 
-
-    fun logIn(email:String,password:String ){
-        auth.signInWithEmailAndPassword(email,password)
-            .addOnCompleteListener(this){task->
-                if (task.isSuccessful){
-                    val intent=Intent(this,MainActivity::class.java)
-                    startActivity(intent)
-                }
-                else{
-                    Toast.makeText(this,"Invalid details", Toast.LENGTH_LONG).show()
+    fun logIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    Toast.makeText(this,"Login Successful",Toast.LENGTH_SHORT).show()
+                    this.startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Invalid details", Toast.LENGTH_LONG).show()
                 }
             }
     }
