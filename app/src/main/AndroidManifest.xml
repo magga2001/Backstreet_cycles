@@ -17,7 +17,7 @@
             android:name=".Navigation"
             android:exported="false" />
         <activity
-            android:name=".Journey_on_map"
+            android:name=".JourneyActivity"
             android:exported="false" />
         <activity
             android:name=".Journey"
@@ -31,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

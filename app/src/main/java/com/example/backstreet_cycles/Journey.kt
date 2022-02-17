@@ -4,14 +4,8 @@ import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_journey.*
-import java.math.BigDecimal
-import java.math.RoundingMode
-import kotlin.math.pow
-import kotlin.math.round
-import kotlin.math.roundToInt
 
 
 class Journey : AppCompatActivity() {
@@ -25,7 +19,7 @@ class Journey : AppCompatActivity() {
         distanceText.setText(distance.toString() + " miles")
 
         goButton.setOnClickListener {
-            val intent = Intent(this, Journey_on_map::class.java)
+            val intent = Intent(this, JourneyActivity::class.java)
             startActivity(intent)
         }
     }

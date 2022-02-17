@@ -31,7 +31,7 @@ class SplashScreenActivity: AppCompatActivity() {
     {
         Handler(Looper.myLooper()!!).postDelayed({
             Log.d("Success loading", "Loading Main Activity")
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this,JourneyActivity::class.java))
             finish()
         },100)
     }
