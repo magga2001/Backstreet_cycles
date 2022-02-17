@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.views
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -27,13 +28,14 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
         loginRegiterViewModel = ViewModelProviders.of(this).get(LogInRegisterViewModel::class.java)
-        loginRegiterViewModel.getMutableLiveData().observe(this, Observer<FirebaseUser> {
-            fun onChanged(firebaseUser: FirebaseUser){
-                if (firebaseUser != null) {
-                    Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-
-                }
+        loginRegiterViewModel.getMutableLiveData().observe(this, Observer<FirebaseUser> { firebaseUser ->
+            if (firebaseUser != null) {
+                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
+
 
 
         })
