@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.LogInActivity"
+            android:name=".views.SignUpActivity" />
+        <activity android:name=".views.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".views.MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

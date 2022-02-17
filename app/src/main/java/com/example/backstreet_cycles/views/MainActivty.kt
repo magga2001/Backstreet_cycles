@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.activities
+package com.example.backstreet_cycles.views
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
