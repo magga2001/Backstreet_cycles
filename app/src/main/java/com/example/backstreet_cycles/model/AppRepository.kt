@@ -83,42 +83,6 @@ class AppRepository(private val application: Application) {
     fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
         return loggedOutMutableLiveData
     }
-
-
-
-
-//    companion object {
-//
-//        private lateinit var auth: FirebaseAuth
-//        private val db = Firebase.firestore
-//        private lateinit var acitvity: Activity
-//
-//
-//        fun getActivity(): Activity {
-//            return acitvity
-//        }
-//
-//        fun signUp(email: String, password: String) {
-//            auth = FirebaseAuth.getInstance()
-//            var successful = false
-//            auth.createUserWithEmailAndPassword(email,password)
-//                .addOnSuccessListener {
-//                    successful = true
-//                }.addOnFailureListener {
-//                    successful = false
-//                }
-//
-//        }
-//
-//        private fun successful(success: Boolean) {
-//            if (success) {
-//                acitvity = MainActivity()
-//            }
-//            acitvity =  LogInActivity()
-//        }
-//
-
-//    }
 }
 
 
