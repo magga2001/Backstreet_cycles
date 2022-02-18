@@ -5,9 +5,8 @@ import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.dto.Dock
 import org.json.JSONArray
-import java.util.*
 
 class Api{
 

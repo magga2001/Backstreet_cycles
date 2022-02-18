@@ -12,7 +12,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import androidx.annotation.DrawableRes
 import android.graphics.drawable.Drawable
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,11 +19,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.util.HomepageHelper
+import com.example.backstreet_cycles.viewModel.HomepageViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
@@ -32,7 +35,6 @@ import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.LocationUpdate
@@ -47,35 +49,35 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.PropertyValue
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.coroutines.launch
-import java.lang.Math.pow
-import kotlin.math.abs
-import kotlin.math.pow
 
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
+class HomepageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
+
+    private lateinit var viewModel : HomepageViewModel
+
 
     private val REQUEST_CODE_AUTOCOMPLETE = 7171
     var mapView: MapView? = null
+
+
+//    private var locationComponent: LocationComponent? = null
     private var permissionsManager: PermissionsManager? = null
-    private var mapboxMap: MapboxMap? = null
-    private var locationComponent: LocationComponent? = null
     private var locationUpdate: LocationUpdate? = null
-    private var fab_location_search: FloatingActionButton?=null
-    var docks= Tfl.docks
-    private val geoJsonSourceLayerId="GeoJsonSourceLayerId"
-    private val symbolIconId = "SymbolIconId"
+    private var fabLocationSearch: FloatingActionButton?=null
+    //var docks= Tfl.docks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_homepage)
 
-        fab_location_search = findViewById(R.id.fab_location_search)
+        viewModel = ViewModelProviders.of(this).get(HomepageViewModel::class.java)
+
+        fabLocationSearch = findViewById(R.id.fab_location_search)
         mapView = findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -106,7 +108,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
+
+        //Check again for refactoring
+        viewModel.mapboxMap.value = mapboxMap
 //        mapboxMap.addOnMapClickListener(this)
         mapboxMap.setStyle(
             Style.MAPBOX_STREETS
@@ -120,25 +124,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
             val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_location_on_red_24dp, null)
             val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
-            style!!.addImage(symbolIconId, bitmapUtils!!)
+            style!!.addImage(getString(R.string.SymbolIconId), bitmapUtils!!)
         }
     }
 
     private fun setUpLayer(loadedMapStyle: Style) {
-        loadedMapStyle.addLayer(SymbolLayer("SYMBOL_LAYER_ID", geoJsonSourceLayerId).withProperties(
-            PropertyFactory.iconImage(symbolIconId),
+        loadedMapStyle.addLayer(SymbolLayer("SYMBOL_LAYER_ID", getString(R.string.GeoJsonSourceLayerId)).withProperties(
+            PropertyFactory.iconImage(getString(R.string.SymbolIconId)),
             PropertyFactory.iconOffset(arrayOf(0f, -8f))
         ))
 
     }
 
     private fun setUpSource(loadedMapStyle: Style) {
-        loadedMapStyle.addSource(GeoJsonSource(geoJsonSourceLayerId))
+        loadedMapStyle.addSource(GeoJsonSource(getString(R.string.GeoJsonSourceLayerId)))
 
     }
 
     private fun initSearchFab() {
-        fab_location_search!!.setOnClickListener { v: View? ->
+        fabLocationSearch!!.setOnClickListener { v: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -148,7 +152,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                         .limit(10)
                         .build(PlaceOptions.MODE_CARDS)
                 )
-                .build(this@MainActivity)
+                .build(this@HomepageActivity)
             startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
         }
     }
@@ -157,12 +161,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
-            if(mapboxMap!=null){
-                val style= mapboxMap!!.style
+            if(viewModel.mapboxMap.value!=null){
+                val style= viewModel.mapboxMap.value!!.style
                 if(style!=null){
-                    val source = style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)
+                    val source = style.getSourceAs<GeoJsonSource>(getString(R.string.GeoJsonSourceLayerId))
                     source?.setGeoJson(FeatureCollection.fromFeatures(arrayOf(Feature.fromJson(selectedCarmenFeature.toJson()))))
-                    mapboxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
+                    viewModel.mapboxMap.value!!.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
                         .target(LatLng((selectedCarmenFeature.geometry() as Point?)!!.latitude(),
                             (selectedCarmenFeature.geometry() as Point?)!!.longitude()))
                             .zoom(14.0)
@@ -179,7 +183,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         symbolManager?.iconAllowOverlap = true
         val bitmap = bitmapFromDrawableRes(this,R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 10, false))
-        for(dock in docks)
+        for(dock in Tfl.docks)
         {
             symbolManager?.create(
                 SymbolOptions()
@@ -213,46 +217,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         }
     }
 
-    @SuppressLint("MissingPermission")
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
             // Enable the most basic pulsing styling by ONLY using
             // the `.pulseEnabled()` method
-            val customLocationComponentOptions = LocationComponentOptions.builder(this)
-                .pulseEnabled(true)
-                .build()
-
-            // Get an instance of the component
-            //val locationComponent: LocationComponent? = mapboxMap?.locationComponent
-            locationComponent = mapboxMap?.locationComponent
-
-
-            // Activate with options
-            locationComponent?.activateLocationComponent(
-                LocationComponentActivationOptions.builder(this, loadedMapStyle)
-                    .locationComponentOptions(customLocationComponentOptions)
-                    .build()
-            )
-
-            // Enable to make component visible
-            locationComponent?.isLocationComponentEnabled = true
-
-            // Set the component's camera mode
-            locationComponent?.cameraMode = CameraMode.TRACKING
-
-            // Set the component's render mode
-            locationComponent?.renderMode = RenderMode.COMPASS
-
-            Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
-            //Update to current location
-            //locationComponent?.forceLocationUpdate(LocationUpdate.Builder().build())
+            viewModel.setLocationOptions(loadedMapStyle)
 
         } else {
             permissionsManager = PermissionsManager(this)
             permissionsManager?.requestLocationPermissions(this)
         }
     }
+
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -264,44 +242,49 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
-        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG)
-            .show()
+        createToastMessage(R.string.user_location_permission_explanation)
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if (granted) {
-            mapboxMap?.getStyle { style -> enableLocationComponent(style) }
+            viewModel.mapboxMap.value?.getStyle { style -> enableLocationComponent(style) }
         } else {
-            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG)
-                .show()
+            createToastMessage(R.string.user_location_permission_not_granted)
             finish()
         }
     }
 
-    private fun getCurrentLocation(): Location?
-    {
-        //Can call lat and lon from this function
-        return locationComponent!!.lastKnownLocation
+    private fun createToastMessage(stringMessage: Int) {
+        Toast.makeText(this, stringMessage, Toast.LENGTH_LONG)
+            .show()
     }
 
-    private fun getRadiusDocks(radius: Double): MutableList<Dock>
-    {
-        val currentLat = getCurrentLocation()?.latitude as Double
-        val currentLon = getCurrentLocation()?.longitude as Double
+//    private fun getCurrentLocation(): Location?
 
-        return docks.filter { dock ->
-            val dockLat = dock.lat
-            val dockLon = dock.lon
-            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
-        }.toMutableList()
-    }
+//    {
 
-    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
-    {
-        val closestDocks = getRadiusDocks(radius)
+//        //Can call lat and lon from this function
+//        return locationComponent!!.lastKnownLocation
+//    }
 
-        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+//    private fun getRadiusDocks(radius: Double): MutableList<Dock>
+//    {
+//        val currentLat = getCurrentLocation()?.latitude as Double
+//        val currentLon = getCurrentLocation()?.longitude as Double
+//
+//        return Tfl.docks.filter { dock ->
+//            val dockLat = dock.lat
+//            val dockLon = dock.lon
+//            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
+//        }.toMutableList()
+//    }
 
-        return closestDocks.subList(0, numberOfDock)
-    }
+//    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
+//    {
+//        val closestDocks = getRadiusDocks(radius)
+//
+//        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+//
+//        return closestDocks.subList(0, numberOfDock)
+//    }
 }
