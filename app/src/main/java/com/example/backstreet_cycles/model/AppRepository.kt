@@ -54,12 +54,14 @@ class AppRepository(private val application: Application) {
                     "DocumentSnapshot written with ID: ${documentReference.id}"
                 )
             }
+
             .addOnFailureListener { e ->
                 Log.w(ContentValues.TAG, "Error adding document", e)
             }
     }
 
     fun login(email: String, password: String) {
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
@@ -75,6 +77,8 @@ class AppRepository(private val application: Application) {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
     }
+
+
 
    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData

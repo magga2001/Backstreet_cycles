@@ -28,4 +28,6 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData
     }
+
+
 }

@@ -61,6 +61,10 @@ dependencies {
 
 //    For Unit Tests
     testImplementation 'junit:junit:4.13.2'
+    // Mockito
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
 
 //    For Instrumentation tests
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
