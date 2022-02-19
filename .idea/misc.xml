@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/activity_main.xml" value="0.14130434782608695" />
+        <entry key="app/src/main/res/drawable/mapbox_button.xml" value="0.1815" />
+        <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.15572916666666667" />
+        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.1203125" />
+        <entry key="app/src/main/res/layout/activity_journey_map.xml" value="0.1203125" />
+        <entry key="app/src/main/res/layout/activity_journey_on_map.xml" value="0.1203125" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1203125" />
+        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.1203125" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1203125" />
       </map>
     </option>
   </component>
