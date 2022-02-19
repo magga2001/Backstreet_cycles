@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -11,18 +12,25 @@ class Tfl {
     {
         //The purpose of this list is to iterate through whole list on any query
         val docks = mutableListOf<Dock>()
+        private val mutableLiveData: MutableLiveData<Dock> = MutableLiveData()
         private val db = Firebase.firestore
 
-        suspend fun readDock(id : String):Dock?
+        suspend fun readDock(name : String):Dock?
         {
             var dock: Dock? = null
-            val docRef = db.collection("docks").document(id)
+            val docRef = db.collection("docks").whereEqualTo("name", name)
             docRef.get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
+                    if (document != null) {
                         Log.d("Success,Data Found!", "--")
-                        dock = document.toObject(Dock::class.java)!!
-                        Log.i("Fetching $id", dock.toString())
+
+                        for(doc in document)
+                        {
+                            dock = doc.toObject(Dock::class.java)
+                        }
+
+                        Log.i("Fetching $name", dock.toString())
+//                        mutableLiveData.postValue(dock)
                     } else {
                         Log.d("Success,Data Not Found!", "No data")
 
@@ -34,7 +42,7 @@ class Tfl {
             return dock
         }
 
-        private fun updateDock(dock : Dock)
+        fun updateDock(dock : Dock)
         {
 
             Log.i("Dock_station", dock.toString())

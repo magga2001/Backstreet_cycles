@@ -14,13 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".Navigation"
+            android:name=".NavigationActivity"
             android:exported="false" />
         <activity
-            android:name=".JourneyActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Journey"
+            android:name=".PlanJourneyActivity"
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
@@ -31,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".JourneyActivity" />
     </application>
 
 </manifest>

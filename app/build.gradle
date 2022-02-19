@@ -55,6 +55,7 @@ dependencies {
     implementation ('com.mapbox.maps:android:10.2.0'){
         exclude group: 'group_name', module: 'module_name'
     }
+    implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
@@ -75,6 +76,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
 
-    //
+    //Lifecycle
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
 }
