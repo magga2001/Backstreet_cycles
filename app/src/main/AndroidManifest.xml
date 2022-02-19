@@ -10,8 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".views.SignUpActivity" />
-        <activity android:name=".views.LogInActivity"
+            android:name=".views.EditUserProfileActivity"
+            android:exported="false" />
+        <activity android:name=".views.SignUpActivity" />
+        <activity
+            android:name=".views.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,10 +27,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <!--        <meta-data-->
-<!--            android:name="preloaded_fonts"-->
-<!--            android:resource="@array/preloaded_fonts" />-->
     </application>
 
 </manifest>

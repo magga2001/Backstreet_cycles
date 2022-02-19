@@ -24,4 +24,6 @@
     <string name="l_name">Last Name</string>
     <string name="log_out">Log Out</string>
     <string name="home_activity">Home Activity</string>
+    <string name="profile_details">Profile Details</string>
+    <string name="update_profile">Save</string>
 </resources>

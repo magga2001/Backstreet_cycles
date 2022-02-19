@@ -35,7 +35,7 @@ class AppRepository(private val application: Application) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
-                    createUserAccount(fName, lName, email, password)
+                    createUserAccount(fName, lName, email)
                     mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
                     Toast.makeText(application, "Registration failed "+ task.exception, Toast.LENGTH_SHORT)
@@ -44,8 +44,8 @@ class AppRepository(private val application: Application) {
             }
     }
 
-    fun createUserAccount(firstName: String, lastName: String, email: String, password: String) {
-        val user = UserDto(firstName, lastName, email, password)
+    fun createUserAccount(firstName: String, lastName: String, email: String) {
+        val user = UserDto(firstName, lastName, email)
         db.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
@@ -59,6 +59,12 @@ class AppRepository(private val application: Application) {
                 Log.w(ContentValues.TAG, "Error adding document", e)
             }
     }
+
+//    fun updateUserDetails(firstName: String, lastName: String) {
+//        var user = db.collection("users").get()
+//        val newUser = UserDto(firstName, lastName, firebaseAuth.currentUser!!.email, user.get())
+//        user.update()
+//    }
 
     fun login(email: String, password: String) {
 
