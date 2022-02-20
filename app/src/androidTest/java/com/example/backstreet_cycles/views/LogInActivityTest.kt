@@ -59,15 +59,16 @@ class LogInActivityTest{
 
     }
 
-//    @Test
-//    fun test_backPress_toLogInActivity() {
-//        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
-//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
-//        pressBack();
-//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//
-//
-//    }
+    @Test
+    fun test_backPress_toLogInActivity() {
+        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        onView(withId(R.id.buttonCreateAccount)).perform(click())
+        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+        pressBack()
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+
+
+    }
 
 
 }
