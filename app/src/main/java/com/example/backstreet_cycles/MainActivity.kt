@@ -3,10 +3,9 @@ package com.example.backstreet_cycles
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
+import com.example.backstreet_cycles.model.TflRepository
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +18,7 @@ class MainActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
-        lifecycleScope.launch {Log.i("Retrieve one data", Tfl.readDock("BikePoints_617").toString()) }
-        Log.i("Retrieve data", Tfl.docks.toString())
+        Log.i("Retrieve data", TflRepository.docks.size.toString())
     }
 
     override fun onStart() {
