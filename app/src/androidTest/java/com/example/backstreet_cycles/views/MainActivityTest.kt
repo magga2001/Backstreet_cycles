@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.views
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -38,5 +39,20 @@ class MainActivityTest{
             onView(withId(R.id.buttonUpdateProfile)).check(matches(isDisplayed()))
         }
 
+    @Test
+    fun test_navigation_logOut() {
+        val activityScenario=ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.buttonLogOut)).perform(ViewActions.click())
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun test_navigation_updateProfile() {
+        val activityScenario=ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.buttonUpdateProfile)).perform(ViewActions.click())
+        onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
+
+    }
 
 }
