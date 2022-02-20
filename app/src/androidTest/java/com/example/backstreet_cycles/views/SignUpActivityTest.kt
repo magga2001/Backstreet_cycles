@@ -14,6 +14,7 @@ import org.junit.runner.RunWith
 
 
 class SignUpActivityTest {
+
     @Test
     fun test_activity_is_in_view() {
         val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
@@ -54,6 +55,12 @@ class SignUpActivityTest {
     fun test_et_confirmPassword_is_visible() {
         val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_confirmPassword)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_buttonSignUp_is_visible() {
+        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
+        onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
 
 
