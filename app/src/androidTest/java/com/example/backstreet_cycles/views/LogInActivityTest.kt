@@ -8,7 +8,6 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.*
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class LogInActivityTest{
@@ -25,7 +24,7 @@ class LogInActivityTest{
     }
 
     @Test
-    fun test_buttonCreateAccount_is_visble() {
+    fun test_buttonCreateAccount_is_visible() {
         val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
 
@@ -35,6 +34,18 @@ class LogInActivityTest{
     fun test_buttonLogin_is_visible() {
         val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_et_email_is_visible() {
+        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_et_password_is_visible() {
+        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        onView(withId(R.id.et_password)).check(matches(isDisplayed()))
     }
 
 }
