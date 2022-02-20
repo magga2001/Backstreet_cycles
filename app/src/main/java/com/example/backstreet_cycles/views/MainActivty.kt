@@ -37,6 +37,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        buttonUpdateProfile.setOnClickListener {
+            startActivity(Intent(this@MainActivity,EditUserProfileActivity::class.java))
+            finish()
+        }
+
         buttonLogOut.setOnClickListener {
             loggedInViewModel.logOut()
         }

@@ -2,7 +2,7 @@ package com.example.backstreet_cycles.DTO
 
 
 data class UserDto(
-    val firstName: String? = null,
-    val lastName: String? = null,
-    val email: String? = null
+    var firstName: String? = null,
+    var lastName: String? = null,
+    var email: String? = null
 )

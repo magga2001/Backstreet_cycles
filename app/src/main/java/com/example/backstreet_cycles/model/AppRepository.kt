@@ -2,6 +2,8 @@ package com.example.backstreet_cycles.model
 
 import android.app.Application
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.os.Looper
 import android.text.BoringLayout
 import android.util.Log
 import android.widget.Toast
@@ -11,23 +13,36 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 
 class AppRepository(private val application: Application) {
     private val mutableLiveData: MutableLiveData<FirebaseUser>
     private val loggedOutMutableLiveData: MutableLiveData<Boolean>
+    private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
+    private val userDetailsMutableLiveData: MutableLiveData<UserDto>
     private val firebaseAuth: FirebaseAuth
     private val db = Firebase.firestore
 
     init {
         mutableLiveData = MutableLiveData()
         loggedOutMutableLiveData = MutableLiveData()
+        updatedProfileMutableLiveData = MutableLiveData()
+        userDetailsMutableLiveData = MutableLiveData()
         firebaseAuth = FirebaseAuth.getInstance()
         if (firebaseAuth.currentUser != null) {
             mutableLiveData.postValue(firebaseAuth.currentUser)
             loggedOutMutableLiveData.postValue(false)
+            updatedProfileMutableLiveData.postValue(false)
         }
     }
 
@@ -60,11 +75,48 @@ class AppRepository(private val application: Application) {
             }
     }
 
-//    fun updateUserDetails(firstName: String, lastName: String) {
-//        var user = db.collection("users").get()
-//        val newUser = UserDto(firstName, lastName, firebaseAuth.currentUser!!.email, user.get())
-//        user.update()
-//    }
+    fun updateUserDetails(firstName: String, lastName: String) = CoroutineScope(Dispatchers.IO).launch {
+
+        val user = db
+            .collection("users")
+            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+            .get()
+            .await()
+
+        if(user.documents.isNotEmpty()){
+            for (document in user) {
+                try {
+                    db.collection("users").document(document.id).update("firstName", firstName)
+                    db.collection("users").document(document.id).update("lastName", lastName)
+                    updatedProfileMutableLiveData.postValue(true)
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(application, e.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        }else {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(application, "No persons matched the query.", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
+    }
+
+    fun getUserDetails() = CoroutineScope(Dispatchers.IO).launch {
+        db
+            .collection("users")
+            .document(firebaseAuth.currentUser!!.uid)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    var userDetails = task.result.toObject(UserDto::class.java)!!
+                    userDetailsMutableLiveData.postValue(userDetails)
+                }
+            }
+    }
 
     fun login(email: String, password: String) {
 
@@ -84,14 +136,20 @@ class AppRepository(private val application: Application) {
         loggedOutMutableLiveData.postValue(true)
     }
 
-
-
    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData
     }
 
     fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
         return loggedOutMutableLiveData
+    }
+
+    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
+        return updatedProfileMutableLiveData
+    }
+
+    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
+        return userDetailsMutableLiveData
     }
 }
 
