@@ -15,14 +15,18 @@ import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.DTO.Dock
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -58,7 +62,7 @@ import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
-
+    lateinit var toggle : ActionBarDrawerToggle
     private val REQUEST_CODE_AUTOCOMPLETE = 7171
     var mapView: MapView? = null
     private var permissionsManager: PermissionsManager? = null
@@ -83,6 +87,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
         lifecycleScope.launch {Log.i("Retrieve one data", Tfl.readDock("BikePoints_617").toString()) }
         Log.i("Retrieve data", Tfl.docks.size.toString())
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
+        val navView : NavigationView = findViewById(R.id.nav_view)
+        toggle= ActionBarDrawerToggle(this, drawerLayout,R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        navView.setNavigationItemSelectedListener{
+            when(it.itemId){
+                R.id.nav_home -> Toast.makeText(applicationContext, "clicked home", Toast.LENGTH_SHORT).show()
+                R.id.profile -> Toast.makeText(applicationContext, "clicked view", Toast.LENGTH_SHORT).show()
+                R.id.plan_journey -> Toast.makeText(applicationContext, "clicked sync", Toast.LENGTH_SHORT).show()
+                R.id.about-> Toast.makeText(applicationContext, "clicked settings", Toast.LENGTH_SHORT).show()
+                R.id.help -> Toast.makeText(applicationContext, "clicked trash", Toast.LENGTH_SHORT).show()
+                R.id.logout-> Toast.makeText(applicationContext, "clicked settings", Toast.LENGTH_SHORT).show()
+
+            }
+            true
+        }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)){
+            return true
+        }
+        return true
     }
 
     override fun onStart() {
@@ -244,7 +274,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             // Set the component's render mode
             locationComponent?.renderMode = RenderMode.COMPASS
 
-            Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
+            //Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
             //Update to current location
             //locationComponent?.forceLocationUpdate(LocationUpdate.Builder().build())
 
