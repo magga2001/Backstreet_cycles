@@ -56,6 +56,12 @@ class LogInActivity : AppCompatActivity() {
         buttonCreateAccount.setOnClickListener {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
         }
+
+
+    }
+
+    override fun onBackPressed() {
+        
     }
 
 

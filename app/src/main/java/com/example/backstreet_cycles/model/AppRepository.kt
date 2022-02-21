@@ -51,6 +51,7 @@ class AppRepository(private val application: Application) {
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     createUserAccount(fName, lName, email)
+                    getUserDetails()
                     mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
                     Toast.makeText(application, "Registration failed "+ task.exception, Toast.LENGTH_SHORT)
@@ -105,16 +106,19 @@ class AppRepository(private val application: Application) {
 
     }
 
-    fun getUserDetails() = CoroutineScope(Dispatchers.IO).launch {
+    fun getUserDetails() {
         db
             .collection("users")
-            .document(firebaseAuth.currentUser!!.uid)
+            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
             .get()
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    var userDetails = task.result.toObject(UserDto::class.java)!!
-                    userDetailsMutableLiveData.postValue(userDetails)
+                if (task.isSuccessful){
+                    for (document in task.result) {
+                        var userDetails = document.toObject(UserDto::class.java)
+                        userDetailsMutableLiveData.postValue(userDetails)
+                    }
                 }
+
             }
     }
 

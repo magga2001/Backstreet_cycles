@@ -38,17 +38,13 @@ class EditUserProfileActivity : AppCompatActivity() {
             }
         })
 
-//        logedInViewModel.getUserDetailsMutableLiveData().observe(this, Observer<UserDto> { details ->
-//            if (details != null) {
-//                et_firstName.setText(details.firstName)
-//                et_lastName.setText(details.lastName)
-//            } else {
-//                print("Checking")
-//            }
-//        })
+        logedInViewModel.getUserDetailsMutableLiveData().observe(this, Observer<UserDto> { details ->
+            if (details != null) {
+                et_firstName.setText(details.firstName)
+                et_lastName.setText(details.lastName)
+            }
+        })
 
-//        val user = FirebaseAuth.getInstance().currentUser
-//        et_firstName.setText(user.)
 
 
         buttonUpdateProfile.setOnClickListener {
@@ -66,5 +62,15 @@ class EditUserProfileActivity : AppCompatActivity() {
                 }
             }
         }
+
+
     }
+
+    override fun onBackPressed() {
+        val intent = Intent(this@EditUserProfileActivity, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
 }

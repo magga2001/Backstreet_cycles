@@ -21,6 +21,7 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
         appRepository.register(firstName,lastName,email,password)
     }
 
+
     fun  login(email: String, password: String){
         appRepository.login(email,password)
     }

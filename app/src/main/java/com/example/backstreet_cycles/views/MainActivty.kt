@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         buttonUpdateProfile.setOnClickListener {
+            loggedInViewModel.getUserDetails()
             startActivity(Intent(this@MainActivity,EditUserProfileActivity::class.java))
             finish()
         }
@@ -46,5 +47,9 @@ class MainActivity : AppCompatActivity() {
             loggedInViewModel.logOut()
         }
 
+
+
     }
+
+    override fun onBackPressed() {}
 }

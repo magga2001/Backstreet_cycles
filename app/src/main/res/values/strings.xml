@@ -27,4 +27,6 @@
     <string name="profile_details">Profile Details</string>
     <string name="update_profile">Save</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="firstname">FirstName</string>
+    <string name="last_name">Last Name</string>
 </resources>

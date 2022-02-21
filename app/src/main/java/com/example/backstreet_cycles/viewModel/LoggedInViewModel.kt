@@ -33,7 +33,7 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
         appRepository.updateUserDetails(firstName, lastName)
     }
 
-    fun getUserDetails(): Job {
+    fun getUserDetails() {
         return appRepository.getUserDetails()
     }
 

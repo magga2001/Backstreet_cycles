@@ -58,12 +58,12 @@
             android:layout_margin="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/f_name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="italic"
+            android:hint="@string/firstname"
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <EditText
@@ -73,12 +73,12 @@
             android:layout_margin="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/l_name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="italic"
+            android:hint="@string/last_name"
             tools:ignore="TextContrastCheck" />
 
     </LinearLayout>
