@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     var docks= Tfl.docks
     private val geoJsonSourceLayerId="GeoJsonSourceLayerId"
     private val symbolIconId = "SymbolIconId"
+    // Public variables to store captured location
+    var searchedLocationLat: Double = 0.0
+    var searchedLocationLon: Double = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,14 +189,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
-            if(mapboxMap!=null){
+            if (mapboxMap != null) {
                 val style= mapboxMap!!.style
-                if(style!=null){
+                if (style!=null) {
                     val source = style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)
+
+                    // Save location data of searched location via search bar
+                    searchedLocationLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
+                    searchedLocationLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
+
                     source?.setGeoJson(FeatureCollection.fromFeatures(arrayOf(Feature.fromJson(selectedCarmenFeature.toJson()))))
                     mapboxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
-                        .target(LatLng((selectedCarmenFeature.geometry() as Point?)!!.latitude(),
-                            (selectedCarmenFeature.geometry() as Point?)!!.longitude()))
+                        .target(LatLng(searchedLocationLat,
+                            searchedLocationLon))
                             .zoom(14.0)
                             .build()), 4000)
                 }
@@ -315,6 +324,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         return locationComponent!!.lastKnownLocation
     }
 
+    // Get all the docks around the current location
     private fun getRadiusDocks(radius: Double): MutableList<Dock>
     {
         val currentLat = getCurrentLocation()?.latitude as Double
@@ -327,6 +337,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         }.toMutableList()
     }
 
+    // Get relevant docks around the current location
     private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
     {
         val closestDocks = getRadiusDocks(radius)
@@ -338,4 +349,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
         return closestDocks.subList(0, numberOfDock)
     }
+
+    // Get all the docks around the searched location ie destination
+    private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock>
+    {
+        //Using location data of searched location via search bar
+        val currentLat = searchedLocationLat
+        val currentLon = searchedLocationLon
+
+        return docks.filter { dock ->
+            val dockLat = dock.lat
+            val dockLon = dock.lon
+            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
+        }.toMutableList()
+    }
+
+    // Get relevant docks around the searched location ie destination
+    private fun getDestinationClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
+    {
+        val closestDocks = getDestinationRadiusDocks(radius)
+
+        // Filtering out docks that don't have available spaces
+        closestDocks.filter {it.nbSpaces != 0}
+
+        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+
+        return closestDocks.subList(0, numberOfDock)
+    }
+
+
 }
