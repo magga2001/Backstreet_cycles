@@ -7,4 +7,10 @@
     <string name="start_navigation">start navigation</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="home">Home</string>
+    <string name="plan_a_journey">Plan A Journey</string>
+    <string name="view_profile">View Profile</string>
+    <string name="about">About</string>
+    <string name="help">Help</string>
+    <string name="log_out">Log out</string>
 </resources>

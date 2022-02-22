@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:id="@+id/drawerLayout">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,15 +18,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        mapbox:mapbox_cameraZoom="12"
+        app:mapbox_cameraZoom="12"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:ignore="MissingConstraints"/>
+        tools:layout_editor_absoluteY="0dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_location_search"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
         android:contentDescription="@string/start_navigation"
         android:src="@android:drawable/ic_search_category_default" />
 

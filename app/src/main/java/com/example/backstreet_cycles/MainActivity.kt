@@ -51,25 +51,23 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.PropertyValue
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.coroutines.launch
-import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
-    lateinit var toggle : ActionBarDrawerToggle
-    private val REQUEST_CODE_AUTOCOMPLETE = 7171
+    private lateinit var toggle : ActionBarDrawerToggle
+    private val REQUESTCODEAUTOCOMPLETE = 7171
     var mapView: MapView? = null
     private var permissionsManager: PermissionsManager? = null
     private var mapboxMap: MapboxMap? = null
     private var locationComponent: LocationComponent? = null
     private var locationUpdate: LocationUpdate? = null
-    private var fab_location_search: FloatingActionButton?=null
+    private var locationSearc: FloatingActionButton?=null
     var docks= Tfl.docks
     private val geoJsonSourceLayerId="GeoJsonSourceLayerId"
     private val symbolIconId = "SymbolIconId"
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_main)
 
-        fab_location_search = findViewById(R.id.fab_location_search)
+        locationSearc = findViewById(R.id.fab_location_search)
         mapView = findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -145,12 +143,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             displayingDocks(mapboxMap,style)
 
             initSearchFab()
-            setUpSource(style!!)
-            setUpLayer(style!!)
+            setUpSource(style)
+            setUpLayer(style)
 
             val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_location_on_red_24dp, null)
             val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
-            style!!.addImage(symbolIconId, bitmapUtils!!)
+            style.addImage(symbolIconId, bitmapUtils!!)
         }
     }
 
@@ -168,7 +166,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     private fun initSearchFab() {
-        fab_location_search!!.setOnClickListener { v: View? ->
+        locationSearc!!.setOnClickListener { _: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -179,13 +177,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(this@MainActivity)
-            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+        if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             if(mapboxMap!=null){
                 val style= mapboxMap!!.style
@@ -306,6 +304,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 .show()
             finish()
         }
+        //Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
+
+
     }
 
     private fun getCurrentLocation(): Location?
