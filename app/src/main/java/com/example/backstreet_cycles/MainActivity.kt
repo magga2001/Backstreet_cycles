@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         val closestDocks = getRadiusDocks(radius)
 
         // Filtering out docks that don't have available spaces
-        closestDocks.filter{it.nbSpaces != 0}
+        closestDocks.filter {it.nbSpaces != 0}
 
         closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
 
