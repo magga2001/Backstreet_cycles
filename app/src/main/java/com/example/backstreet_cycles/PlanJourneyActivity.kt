@@ -1,40 +1,33 @@
 package com.example.backstreet_cycles
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
-import com.google.gson.GsonBuilder
-import com.mapbox.api.directions.v5.DirectionsCriteria
-import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
-import com.mapbox.navigation.base.options.NavigationOptions
-import com.mapbox.navigation.base.route.RouterCallback
-import com.mapbox.navigation.base.route.RouterFailure
-import com.mapbox.navigation.base.route.RouterOrigin
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import kotlinx.android.synthetic.main.activity_plan_journey.*
 import kotlinx.coroutines.*
-import org.json.JSONObject
 
 class PlanJourneyActivity : AppCompatActivity() {
 
     private lateinit var planJourneyViewModel: PlanJourneyViewModel
     private lateinit var mapboxNavigation: MapboxNavigation
+    private val REQUEST_CODE_AUTOCOMPLETE = 7171
+    private val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
+    private val symbolIconId = "SymbolIconId"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +36,8 @@ class PlanJourneyActivity : AppCompatActivity() {
 
         planJourneyViewModel = ViewModelProvider(this).get(PlanJourneyViewModel::class.java)
         planJourneyViewModel.checkPermission(this, activity = this)
+
+        initSearchFab()
     }
 
     override fun onStart() {
@@ -50,8 +45,37 @@ class PlanJourneyActivity : AppCompatActivity() {
         mapboxNavigation = planJourneyViewModel.initialiseMapboxNavigation()
     }
 
-    private fun initListener()
-    {
+    private fun initSearchFab() {
+        et_startDock.setOnClickListener(View.OnClickListener { v: View? ->
+            val intent = PlaceAutocomplete.IntentBuilder()
+                .accessToken(
+                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
+                ).placeOptions(
+                    PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+                        .build(PlaceOptions.MODE_CARDS)
+                )
+                .build(this@PlanJourneyActivity)
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
+        })
+
+        et_endDock.setOnClickListener(View.OnClickListener { v: View? ->
+            val intent = PlaceAutocomplete.IntentBuilder()
+                .accessToken(
+                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
+                ).placeOptions(
+                    PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+                        .build(PlaceOptions.MODE_CARDS)
+                )
+                .build(this@PlanJourneyActivity)
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
+        })
+    }
+
+    private fun initListener() {
         val goButton = findViewById<Button>(R.id.goButton)
         goButton.setOnClickListener {
             when {
@@ -64,43 +88,40 @@ class PlanJourneyActivity : AppCompatActivity() {
                 else -> {
 
                     //THIS FUNCTION TO FETCH THE ORIGIN AND DESTINATION FROM EDIT TEXT
-                    lifecycleScope.launch {fetchPoints()}
+                    lifecycleScope.launch { fetchPoints() }
 
                 }
             }
         }
     }
 
-    private suspend fun fetchPoints()
-    {
-        var startDock:Dock? = null
-        var endDock:Dock? = null
+    private suspend fun fetchPoints() {
+        var startDock: Dock? = null
+        var endDock: Dock? = null
 
         coroutineScope {
-            val start = async { Tfl.readDock(et_startDock.text.toString())}
-            val end = async {  Tfl.readDock(et_endDock.text.toString()) }
+            val start = async { Tfl.readDock(et_startDock.text.toString()) }
+            val end = async { Tfl.readDock(et_endDock.text.toString()) }
 
             startDock = start.await()
             endDock = end.await()
 
-            if(startDock == null || endDock == null)
-            {
-                Toast.makeText(this@PlanJourneyActivity,"No location", Toast.LENGTH_SHORT).show()
+            if (startDock == null || endDock == null) {
+                Toast.makeText(this@PlanJourneyActivity, "No location", Toast.LENGTH_SHORT).show()
                 return@coroutineScope
             }
 
-            val startPoint = Point.fromLngLat(startDock!!.lon,startDock!!.lat)
-            val endPoint = Point.fromLngLat(endDock!!.lon,endDock!!.lat)
+            val startPoint = Point.fromLngLat(startDock!!.lon, startDock!!.lat)
+            val endPoint = Point.fromLngLat(endDock!!.lon, endDock!!.lat)
 //            wayPoints.addAll(listOf(startPoint,endPoint))
-            fetchRoute(listOf(startPoint,endPoint))
+            fetchRoute(listOf(startPoint, endPoint))
 
             delay(500)
             loadActivity()
         }
     }
 
-    private fun loadActivity()
-    {
+    private fun loadActivity() {
         val intent = Intent(this, JourneyActivity::class.java)
         startActivity(intent)
     }

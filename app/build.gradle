@@ -84,5 +84,4 @@ dependencies {
     //Navigation
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.12.0'
-
 }
