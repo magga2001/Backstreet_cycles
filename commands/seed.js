@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, doc, setDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import pkg from 'xhr2';
 const { XMLHttpRequest } = pkg;
+import Faker from 'faker';
 
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
@@ -22,6 +24,46 @@ const db = getFirestore(app);
 //const db = app.firestore();
 
 function seed()
+{
+    seedDocks()
+    seedUsers()
+}
+
+function seedUsers()
+{
+    const numberOfUser = 10
+
+    for(let i = 0; i < numberOfUser; i++)
+    {
+        const firstName = Faker.name.firstName();
+        const lastName = Faker.name.lastName();
+        const email = Faker.internet.email();
+        const password = Faker.internet.password();
+
+        const user = {firstName,lastName,email};
+
+        try
+        {
+            addDoc(collection(db, "theUsers"), user);
+        }
+        catch(e)
+        {
+            console.log(e)
+        }
+
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
+    }
+}
+
+function seedDocks()
 {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', "https://api.tfl.gov.uk/BikePoint/", true);
