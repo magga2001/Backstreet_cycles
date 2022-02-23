@@ -1,20 +1,17 @@
 package com.example.backstreet_cycles.model
 
+import android.R.attr.password
 import android.app.Application
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.os.Looper
-import android.text.BoringLayout
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.UserDto
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 
 class AppRepository(private val application: Application) {
@@ -66,13 +62,13 @@ class AppRepository(private val application: Application) {
             .add(user)
             .addOnSuccessListener { documentReference ->
                 Log.d(
-                    ContentValues.TAG,
+                    TAG,
                     "DocumentSnapshot written with ID: ${documentReference.id}"
                 )
             }
 
             .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
+                Log.w(TAG, "Error adding document", e)
             }
     }
 
@@ -80,7 +76,7 @@ class AppRepository(private val application: Application) {
 
         val user = db
             .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
             .get()
             .await()
 
@@ -89,6 +85,95 @@ class AppRepository(private val application: Application) {
                 try {
                     db.collection("users").document(document.id).update("firstName", firstName)
                     db.collection("users").document(document.id).update("lastName", lastName)
+                    db.collection("users").document(document.id).update("email", firebaseAuth.currentUser!!.email)
+                    updatedProfileMutableLiveData.postValue(true)
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(application, e.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        }else {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(application, "No persons matched the query.", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
+    }
+
+    fun updateEmailAndPassword(email: String, password: String, newPassword: String) {
+
+            val credential = EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!,password)
+
+            firebaseAuth.currentUser!!.reauthenticate(credential).addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    Log.d("value", "User re-authenticated.")
+                    val user = FirebaseAuth.getInstance().currentUser
+                    user!!.updateEmail(email).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                application,
+                                "Email Changed Current Email is $email",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val email = userDetailsMutableLiveData.value!!.email
+                            if (email != null) {
+                                updateEmail(email)
+                                userDetailsMutableLiveData.value!!.email = firebaseAuth.currentUser!!.email
+                            }
+                        } else {
+                            Toast.makeText(
+                                application,
+                                "Update Failed " + task.exception,
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }
+                    if (newPassword.isNotEmpty()) {
+                        user.updatePassword(newPassword).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(
+                                    application,
+                                    "Password Changed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    application,
+                                    "Update Failed " + task.exception,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
+                    }
+                }else {
+                    Toast.makeText(
+                        application,
+                        "Update Failed " + task.exception,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+    }
+
+    fun updateEmail(email: String) = CoroutineScope(Dispatchers.IO).launch {
+
+        val user = db
+            .collection("users")
+            .whereEqualTo("email", email)
+            .get()
+            .await()
+
+        if(user.documents.isNotEmpty()){
+            for (document in user) {
+                try {
+                    db.collection("users").document(document.id).update("email", firebaseAuth.currentUser!!.email)
                     updatedProfileMutableLiveData.postValue(true)
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -114,7 +199,7 @@ class AppRepository(private val application: Application) {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     for (document in task.result) {
-                        var userDetails = document.toObject(UserDto::class.java)
+                        val userDetails = document.toObject(UserDto::class.java)
                         userDetailsMutableLiveData.postValue(userDetails)
                     }
                 }

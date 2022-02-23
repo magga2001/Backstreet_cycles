@@ -33,6 +33,10 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
         appRepository.updateUserDetails(firstName, lastName)
     }
 
+    fun updateEmailAndPassword(email: String, password: String, newPassword: String) {
+        appRepository.updateEmailAndPassword(email, password, newPassword)
+    }
+
     fun getUserDetails() {
         return appRepository.getUserDetails()
     }

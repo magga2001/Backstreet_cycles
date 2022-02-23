@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
+            android:name=".views.ChangeEmailOrPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.EditUserProfileActivity"
             android:exported="false" />
         <activity android:name=".views.SignUpActivity" />
