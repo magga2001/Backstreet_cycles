@@ -6,35 +6,97 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:id="@+id/drawerLayout">
-<RelativeLayout
+
+    <RelativeLayout
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
     tools:context=".MainActivity">
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        app:mapbox_cameraZoom="12"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        <RelativeLayout
+            android:id="@+id/locationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            tools:context=".MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_location_search"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:contentDescription="@string/start_navigation"
-        android:src="@android:drawable/ic_search_category_default" />
+            <Button
+                android:id="@+id/fromButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/from" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/fromTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/fromButton"
+                android:autoText="false"
+                android:elegantTextHeight="false"
+                android:text="Current Location"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:autoSizeTextType="none" />
+
+            <Button
+                android:id="@+id/toButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fromButton"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="4dp"
+                android:text="To" />
+
+            <TextView
+                android:id="@+id/toTextView"
+                android:layout_width="323dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/fromTextView"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/toButton"
+                android:elegantTextHeight="true"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:autoSizeTextType="uniform" />
+
+        </RelativeLayout>
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/locationLayout"
+            android:clickable="false"
+            app:mapbox_cameraZoom="12"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+        </com.mapbox.mapboxsdk.maps.MapView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_location_search"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:contentDescription="@string/start_navigation"
+            android:src="@android:drawable/ic_search_category_default" />
+
+    </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -42,5 +104,7 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true" >
+
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

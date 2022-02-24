@@ -3,21 +3,24 @@ package com.example.backstreet_cycles
 //---------------------------------
 
 //import android.R
-import android.content.Context
+import android.R.attr.data
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.Canvas
 import android.graphics.Color
-import androidx.annotation.DrawableRes
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -74,6 +77,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     // Public variables to store captured location
     var searchedLocationLat: Double = 0.0
     var searchedLocationLon: Double = 0.0
+    private var toButton: Button? = null
+    private var fromButton: Button? = null
+    private var toTextView: TextView? = null
+    private var fromTextView: TextView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,6 +116,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             }
             true
         }
+
+        toButton = findViewById(R.id.toButton)
+        fromButton= findViewById(R.id.fromButton)
+        toTextView= findViewById(R.id.toTextView)
+        fromTextView= findViewById(R.id.fromTextView)
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
@@ -183,6 +196,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 .build(this@MainActivity)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
+        toButton!!.setOnClickListener { _: View? ->
+            val intent = PlaceAutocomplete.IntentBuilder()
+                .accessToken(
+                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
+                ).placeOptions(
+                    PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+                        .build(PlaceOptions.MODE_CARDS)
+                )
+                .build(this@MainActivity)
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -206,7 +232,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                             .build()), 4000)
                 }
             }
-
+            val lat = selectedCarmenFeature.center()?.latitude() as Double
+            val long = selectedCarmenFeature.center()?.longitude() as Double
+            toTextView!!.text = "${selectedCarmenFeature.placeName()}"
         }
     }
 
