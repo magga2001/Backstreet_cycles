@@ -1,8 +1,11 @@
 seed:
-	node commands/seed.js
+	cd commands; npm run seed; cd ..
 
 unseed:
-	node commands/unseed.js
+	cd commands; npm run unseed; cd ..
+
+install:
+	cd commands; npm install; cd ..
 
 emulator:
 	/Users/magga/Library/Android/sdk/emulator/emulator -avd Pixel_4_API_30
@@ -12,5 +15,6 @@ install:
 	npm install xhr2
 	npm install firebase
 	npm install firebase-admin --save
+	npm i faker@5.5.3
 	npm init
 	npm install node-fetch@2
