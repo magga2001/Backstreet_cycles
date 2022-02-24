@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     private fun initSearchFab() {
-        locationSearc!!.setOnClickListener { _: View? ->
+        toButton!!.setOnClickListener { _: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 .build(this@MainActivity)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
-        toButton!!.setOnClickListener { _: View? ->
+        fromButton!!.setOnClickListener { _: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -235,6 +235,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             val lat = selectedCarmenFeature.center()?.latitude() as Double
             val long = selectedCarmenFeature.center()?.longitude() as Double
             toTextView!!.text = "${selectedCarmenFeature.placeName()}"
+            fromTextView!!.text = "${selectedCarmenFeature.placeName()}"
         }
     }
 
