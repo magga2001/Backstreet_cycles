@@ -70,7 +70,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var mapboxMap: MapboxMap? = null
     private var locationComponent: LocationComponent? = null
     private var locationUpdate: LocationUpdate? = null
-    private var locationSearc: FloatingActionButton?=null
     var docks= Tfl.docks
     private val geoJsonSourceLayerId="GeoJsonSourceLayerId"
     private val symbolIconId = "SymbolIconId"
@@ -88,7 +87,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_main)
 
-        locationSearc = findViewById(R.id.fab_location_search)
         mapView = findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -121,6 +119,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         fromButton= findViewById(R.id.fromButton)
         toTextView= findViewById(R.id.toTextView)
         fromTextView= findViewById(R.id.fromTextView)
+        val button:Button?=findViewById(R.id.button)
+        button!!.setOnClickListener{
+            fromButton!!.setVisibility(View.VISIBLE)
+            toButton!!.setVisibility(View.VISIBLE)
+            fromTextView!!.setVisibility(View.VISIBLE)
+            toTextView!!.setVisibility(View.VISIBLE)
+
+            button.visibility = View.GONE
+            val title : TextView?= findViewById(R.id.textView)
+            title!!.visibility = View.GONE
+        }
+
 
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -196,19 +206,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 .build(this@MainActivity)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
-        fromButton!!.setOnClickListener { _: View? ->
-            val intent = PlaceAutocomplete.IntentBuilder()
-                .accessToken(
-                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
-                ).placeOptions(
-                    PlaceOptions.builder()
-                        .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .limit(10)
-                        .build(PlaceOptions.MODE_CARDS)
-                )
-                .build(this@MainActivity)
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -235,7 +232,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             val lat = selectedCarmenFeature.center()?.latitude() as Double
             val long = selectedCarmenFeature.center()?.longitude() as Double
             toTextView!!.text = "${selectedCarmenFeature.placeName()}"
-            fromTextView!!.text = "${selectedCarmenFeature.placeName()}"
         }
     }
 
