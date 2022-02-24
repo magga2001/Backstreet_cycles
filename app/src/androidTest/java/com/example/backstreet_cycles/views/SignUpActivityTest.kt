@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.views
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -62,6 +63,36 @@ class SignUpActivityTest {
         val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
+
+//    @Test
+//    fun test_typing(){
+//
+//        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
+//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+//        onView(withId(R.id.et_firstName)).perform(
+//            ViewActions.typeText("john"),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.et_lastName)).perform(
+//            ViewActions.typeText("john"),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.et_email)).perform(
+//            ViewActions.typeText("john@doe.com"),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.et_password)).perform(
+//            ViewActions.typeText("123456"),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.et_confirmPassword)).perform(
+//            ViewActions.typeText("1234567"),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+//
+//
+//    }
 
 
 
