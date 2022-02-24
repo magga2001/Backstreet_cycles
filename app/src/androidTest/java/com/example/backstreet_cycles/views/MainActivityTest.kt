@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.views
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -52,6 +53,14 @@ class MainActivityTest{
         val activityScenario=ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.buttonUpdateProfile)).perform(ViewActions.click())
         onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun test_backPress_toMainActivity() {
+        val activityScenario=ActivityScenario.launch(MainActivity::class.java)
+        Espresso.pressBack()
+        onView(withId(R.id.mainActivity)).check(matches(isDisplayed()))
 
     }
 

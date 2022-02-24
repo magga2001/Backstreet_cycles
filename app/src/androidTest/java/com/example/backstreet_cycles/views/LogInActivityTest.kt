@@ -58,6 +58,14 @@ class LogInActivityTest{
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
 
     }
+    @Test
+    fun test_backPress_onLogInActivity() {
+        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        pressBack()
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+
+
+    }
 
     @Test
     fun test_backPress_toLogInActivity() {
