@@ -14,6 +14,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25815217391304346" />
         <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.25815217391304346" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/drawer_list.xml" value="0.32135416666666666" />
+        <entry key="app/src/main/res/layout/layout_instructions.xml" value="0.32135416666666666" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.32135416666666666" />
+        <entry key="app/src/main/res/menu/drawer_list.xml" value="0.32135416666666666" />
       </map>
     </option>
   </component>

@@ -1,35 +1,20 @@
 package com.example.backstreet_cycles
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
-import com.google.gson.GsonBuilder
-import com.mapbox.api.directions.v5.DirectionsCriteria
-import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
-import com.mapbox.navigation.base.options.NavigationOptions
-import com.mapbox.navigation.base.route.RouterCallback
-import com.mapbox.navigation.base.route.RouterFailure
-import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import kotlinx.android.synthetic.main.activity_plan_journey.*
 import kotlinx.coroutines.*
-import org.json.JSONObject
 
 class PlanJourneyActivity : AppCompatActivity() {
 
@@ -94,7 +79,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 //            wayPoints.addAll(listOf(startPoint,endPoint))
             fetchRoute(listOf(startPoint,endPoint))
 
-            delay(500)
+            delay(1000)
             loadActivity()
         }
     }

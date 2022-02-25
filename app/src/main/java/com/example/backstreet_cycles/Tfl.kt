@@ -2,7 +2,7 @@ package com.example.backstreet_cycles
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.dto.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
