@@ -3,7 +3,6 @@ package com.example.backstreet_cycles
 //---------------------------------
 
 //import android.R
-import android.R.attr.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -28,7 +27,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.DTO.Dock
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -80,7 +78,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var fromButton: Button? = null
     private var toTextView: TextView? = null
     private var fromTextView: TextView? = null
-
+    private var changeTo: Boolean?= true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,14 +117,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         fromButton= findViewById(R.id.fromButton)
         toTextView= findViewById(R.id.toTextView)
         fromTextView= findViewById(R.id.fromTextView)
-        val button:Button?=findViewById(R.id.button)
-        button!!.setOnClickListener{
+        val planJourneyButton:Button?=findViewById(R.id.planJourneyButton)
+        planJourneyButton!!.setOnClickListener{
             fromButton!!.setVisibility(View.VISIBLE)
             toButton!!.setVisibility(View.VISIBLE)
             fromTextView!!.setVisibility(View.VISIBLE)
             toTextView!!.setVisibility(View.VISIBLE)
 
-            button.visibility = View.GONE
+            planJourneyButton.visibility = View.GONE
             val title : TextView?= findViewById(R.id.textView)
             title!!.visibility = View.GONE
         }
@@ -193,7 +191,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     private fun initSearchFab() {
-        toButton!!.setOnClickListener { _: View? ->
+        toButton!!.setOnClickListener { v: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -204,9 +202,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(this@MainActivity)
+            changeTo = true
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+        }
+        fromButton!!.setOnClickListener { v: View? ->
+            val intent = PlaceAutocomplete.IntentBuilder()
+                .accessToken(
+                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
+                ).placeOptions(
+                    PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+                        .build(PlaceOptions.MODE_CARDS)
+                )
+                .build(this@MainActivity)
+            changeTo = false
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -231,7 +245,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             }
             val lat = selectedCarmenFeature.center()?.latitude() as Double
             val long = selectedCarmenFeature.center()?.longitude() as Double
-            toTextView!!.text = "${selectedCarmenFeature.placeName()}"
+            if(changeTo!!) {
+                toTextView!!.text = "${selectedCarmenFeature.placeName()}"
+            }
+            else{
+                fromTextView!!.text = "${selectedCarmenFeature.placeName()}"
+
+            }
         }
     }
 
