@@ -81,6 +81,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var fromButton: Button? = null
     private var toTextView: TextView? = null
     private var fromTextView: TextView? = null
+    private var changeTo: Boolean? = false
+    private var changeFrom: Boolean? = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -257,6 +259,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(this@MainActivity)
+            changeTo = true
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+        }
+        fromButton!!.setOnClickListener { _: View? ->
+            val intent = PlaceAutocomplete.IntentBuilder()
+                .accessToken(
+                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
+                ).placeOptions(
+                    PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+                        .build(PlaceOptions.MODE_CARDS)
+                )
+                .build(this@MainActivity)
+            changeFrom = true
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
     }
@@ -300,7 +317,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             }
             val lat = selectedCarmenFeature.center()?.latitude() as Double
             val long = selectedCarmenFeature.center()?.longitude() as Double
-            toButton!!.text = "${selectedCarmenFeature.placeName()}"
+            if(changeTo!!) {
+                toButton!!.text = "${selectedCarmenFeature.placeName()}"
+                changeTo = false
+            }
+            else if(changeFrom!!){
+                fromButton!!.text = "${selectedCarmenFeature.placeName()}"
+                changeFrom =false
+            }
         }
     }
 
