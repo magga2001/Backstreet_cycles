@@ -2,7 +2,7 @@ package com.example.backstreet_cycles
 
 //---------------------------------
 
-//import android.R
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -27,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.DTO.Dock
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -61,16 +63,17 @@ import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
-    private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private val REQUESTCODEAUTOCOMPLETE = 7171
     var mapView: MapView? = null
     private var permissionsManager: PermissionsManager? = null
     private var mapboxMap: MapboxMap? = null
     private var locationComponent: LocationComponent? = null
     private var locationUpdate: LocationUpdate? = null
-    var docks= Tfl.docks
-    private val geoJsonSourceLayerId="GeoJsonSourceLayerId"
+    var docks = Tfl.docks
+    private val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
     private val symbolIconId = "SymbolIconId"
+
     // Public variables to store captured location
     var searchedLocationLat: Double = 0.0
     var searchedLocationLon: Double = 0.0
@@ -78,7 +81,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var fromButton: Button? = null
     private var toTextView: TextView? = null
     private var fromTextView: TextView? = null
-    private var changeTo: Boolean?= true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,49 +93,95 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         mapView?.getMapAsync(this)
         //mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
-        lifecycleScope.launch {Log.i("Retrieve one data", Tfl.readDock("BikePoints_617").toString()) }
+        lifecycleScope.launch {
+            Log.i(
+                "Retrieve one data",
+                Tfl.readDock("BikePoints_617").toString()
+            )
+        }
         Log.i("Retrieve data", Tfl.docks.size.toString())
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
-        val navView : NavigationView = findViewById(R.id.nav_view)
-        toggle= ActionBarDrawerToggle(this, drawerLayout,R.string.open, R.string.close)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        navView.setNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.nav_home -> Toast.makeText(applicationContext, "clicked home", Toast.LENGTH_SHORT).show()
-                R.id.profile -> Toast.makeText(applicationContext, "clicked view", Toast.LENGTH_SHORT).show()
-                R.id.plan_journey -> Toast.makeText(applicationContext, "clicked sync", Toast.LENGTH_SHORT).show()
-                R.id.about-> Toast.makeText(applicationContext, "clicked settings", Toast.LENGTH_SHORT).show()
-                R.id.help -> Toast.makeText(applicationContext, "clicked trash", Toast.LENGTH_SHORT).show()
-                R.id.logout-> Toast.makeText(applicationContext, "clicked settings", Toast.LENGTH_SHORT).show()
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> Toast.makeText(
+                    applicationContext,
+                    "clicked home",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.profile -> Toast.makeText(
+                    applicationContext,
+                    "clicked view",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.plan_journey -> Toast.makeText(
+                    applicationContext,
+                    "clicked sync",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.about -> Toast.makeText(
+                    applicationContext,
+                    "clicked settings",
+                    Toast.LENGTH_SHORT
+                ).show()
+                R.id.help -> Toast.makeText(applicationContext, "clicked trash", Toast.LENGTH_SHORT)
+                    .show()
+                R.id.logout -> Toast.makeText(
+                    applicationContext,
+                    "clicked settings",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
             true
         }
 
+        // Buttons inside the fragment and the fragment itself
         toButton = findViewById(R.id.toButton)
-        fromButton= findViewById(R.id.fromButton)
-        toTextView= findViewById(R.id.toTextView)
-        fromTextView= findViewById(R.id.fromTextView)
-        val planJourneyButton:Button?=findViewById(R.id.planJourneyButton)
-        planJourneyButton!!.setOnClickListener{
+        fromButton = findViewById(R.id.fromButton)
+        toTextView = findViewById(R.id.toTextView)
+        fromTextView = findViewById(R.id.fromTextView)
+        val locationLayout: RelativeLayout? = findViewById<RelativeLayout>(R.id.locationLayout)
+
+        // The floating action buttons.
+        val planJourneyButton: FloatingActionButton? = findViewById(R.id.planJourneyButton)
+        val backButton: FloatingActionButton? = findViewById(R.id.backButton)
+
+        locationLayout!!.visibility = View.GONE
+        backButton!!.visibility = View.GONE
+
+        planJourneyButton!!.setOnClickListener {
+            locationLayout!!.setVisibility(View.VISIBLE)
             fromButton!!.setVisibility(View.VISIBLE)
             toButton!!.setVisibility(View.VISIBLE)
             fromTextView!!.setVisibility(View.VISIBLE)
             toTextView!!.setVisibility(View.VISIBLE)
+            backButton!!.setVisibility(View.VISIBLE)
 
             planJourneyButton.visibility = View.GONE
-            val title : TextView?= findViewById(R.id.textView)
-            title!!.visibility = View.GONE
         }
 
+        backButton!!.setOnClickListener {
+            locationLayout!!.visibility = View.GONE
+            fromButton!!.visibility = View.GONE
+            toButton!!.visibility = View.GONE
+            fromTextView!!.visibility = View.GONE
+            toTextView!!.visibility = View.GONE
+            backButton!!.visibility = View.GONE
+
+            planJourneyButton.setVisibility(View.VISIBLE)
+        }
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(toggle.onOptionsItemSelected(item)){
+        if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         return true
@@ -165,23 +214,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            displayingDocks(mapboxMap,style)
+            displayingDocks(mapboxMap, style)
 
             initSearchFab()
             setUpSource(style)
             setUpLayer(style)
 
-            val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_location_on_red_24dp, null)
+            val drawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_baseline_location_on_red_24dp,
+                null
+            )
             val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
             style.addImage(symbolIconId, bitmapUtils!!)
         }
     }
 
     private fun setUpLayer(loadedMapStyle: Style) {
-        loadedMapStyle.addLayer(SymbolLayer("SYMBOL_LAYER_ID", geoJsonSourceLayerId).withProperties(
-            PropertyFactory.iconImage(symbolIconId),
-            PropertyFactory.iconOffset(arrayOf(0f, -8f))
-        ))
+        loadedMapStyle.addLayer(
+            SymbolLayer("SYMBOL_LAYER_ID", geoJsonSourceLayerId).withProperties(
+                PropertyFactory.iconImage(symbolIconId),
+                PropertyFactory.iconOffset(arrayOf(0f, -8f))
+            )
+        )
 
     }
 
@@ -191,7 +246,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     private fun initSearchFab() {
-        toButton!!.setOnClickListener { v: View? ->
+        toButton!!.setOnClickListener { _: View? ->
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
@@ -202,67 +257,59 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(this@MainActivity)
-            changeTo = true
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
-        fromButton!!.setOnClickListener { v: View? ->
-            val intent = PlaceAutocomplete.IntentBuilder()
-                .accessToken(
-                    (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(R.string.mapbox_access_token))!!
-                ).placeOptions(
-                    PlaceOptions.builder()
-                        .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .limit(10)
-                        .build(PlaceOptions.MODE_CARDS)
-                )
-                .build(this@MainActivity)
-            changeTo = false
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             if (mapboxMap != null) {
-                val style= mapboxMap!!.style
-                if (style!=null) {
+                val style = mapboxMap!!.style
+                if (style != null) {
                     val source = style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)
 
                     // Save location data of searched location via search bar
                     searchedLocationLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
                     searchedLocationLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
 
-                    source?.setGeoJson(FeatureCollection.fromFeatures(arrayOf(Feature.fromJson(selectedCarmenFeature.toJson()))))
-                    mapboxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
-                        .target(LatLng(searchedLocationLat,
-                            searchedLocationLon))
-                            .zoom(14.0)
-                            .build()), 4000)
+                    source?.setGeoJson(
+                        FeatureCollection.fromFeatures(
+                            arrayOf(
+                                Feature.fromJson(
+                                    selectedCarmenFeature.toJson()
+                                )
+                            )
+                        )
+                    )
+                    mapboxMap!!.animateCamera(
+                        CameraUpdateFactory.newCameraPosition(
+                            CameraPosition.Builder()
+                                .target(
+                                    LatLng(
+                                        searchedLocationLat,
+                                        searchedLocationLon
+                                    )
+                                )
+                                .zoom(14.0)
+                                .build()
+                        ), 4000
+                    )
                 }
             }
             val lat = selectedCarmenFeature.center()?.latitude() as Double
             val long = selectedCarmenFeature.center()?.longitude() as Double
-            if(changeTo!!) {
-                toTextView!!.text = "${selectedCarmenFeature.placeName()}"
-            }
-            else{
-                fromTextView!!.text = "${selectedCarmenFeature.placeName()}"
-
-            }
+            toButton!!.text = "${selectedCarmenFeature.placeName()}"
         }
     }
 
-    private fun displayingDocks(mapboxMap: MapboxMap, loadedMapStyle: Style)
-    {
+    private fun displayingDocks(mapboxMap: MapboxMap, loadedMapStyle: Style) {
         val symbolManager = mapView?.let { SymbolManager(it, mapboxMap, loadedMapStyle) }
         symbolManager?.iconAllowOverlap = true
-        val bitmap = bitmapFromDrawableRes(this,R.drawable.marker_map) as Bitmap
+        val bitmap = bitmapFromDrawableRes(this, R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 10, false))
-        for(dock in docks)
-        {
+        for (dock in docks) {
             symbolManager?.create(
                 SymbolOptions()
                     .withLatLng(LatLng(dock.lat, dock.lon))
@@ -363,15 +410,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     }
 
-    private fun getCurrentLocation(): Location?
-    {
+    private fun getCurrentLocation(): Location? {
         //Can call lat and lon from this function
         return locationComponent!!.lastKnownLocation
     }
 
     // Get all the docks around the current location
-    private fun getRadiusDocks(radius: Double): MutableList<Dock>
-    {
+    private fun getRadiusDocks(radius: Double): MutableList<Dock> {
         val currentLat = getCurrentLocation()?.latitude as Double
         val currentLon = getCurrentLocation()?.longitude as Double
 
@@ -383,21 +428,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     // Get relevant docks around the current location
-    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
-    {
+    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
         val closestDocks = getRadiusDocks(radius)
 
         // Filtering out docks that don't have available spaces
-        closestDocks.filter {it.nbSpaces != 0}
+        closestDocks.filter { it.nbSpaces != 0 }
 
-        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+        closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
 
         return closestDocks.subList(0, numberOfDock)
     }
 
     // Get all the docks around the searched location ie destination
-    private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock>
-    {
+    private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock> {
         //Using location data of searched location via search bar
         val currentLat = searchedLocationLat
         val currentLon = searchedLocationLon
@@ -410,14 +453,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     }
 
     // Get relevant docks around the searched location ie destination
-    private fun getDestinationClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock>
-    {
+    private fun getDestinationClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
         val closestDocks = getDestinationRadiusDocks(radius)
 
         // Filtering out docks that don't have available spaces
-        closestDocks.filter {it.nbSpaces != 0}
+        closestDocks.filter { it.nbSpaces != 0 }
 
-        closestDocks.sortBy {it.lat.pow(2.0) + it.lon.pow(2.0)}
+        closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
 
         return closestDocks.subList(0, numberOfDock)
     }

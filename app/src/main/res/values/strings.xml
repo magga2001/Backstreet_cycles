@@ -13,6 +13,10 @@
     <string name="about">About</string>
     <string name="help">Help</string>
     <string name="log_out">Log out</string>
-    <string name="from">From</string>
+    <string name="from">From: </string>
     <string name="current_location">Current Location</string>
+    <string name="to">To: </string>
+    <string name="origin">e.g. Waterloo</string>
+    <string name="destination">e.g. Shoreditch</string>
+
 </resources>
