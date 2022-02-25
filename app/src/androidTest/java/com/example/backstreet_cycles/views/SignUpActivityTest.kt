@@ -64,35 +64,35 @@ class SignUpActivityTest {
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_typing(){
-//
-//        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
-//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
-//        onView(withId(R.id.et_firstName)).perform(
-//            ViewActions.typeText("john"),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.et_lastName)).perform(
-//            ViewActions.typeText("john"),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.et_email)).perform(
-//            ViewActions.typeText("john@doe.com"),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.et_password)).perform(
-//            ViewActions.typeText("123456"),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.et_confirmPassword)).perform(
-//            ViewActions.typeText("1234567"),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//
-//
-//    }
+    @Test
+    fun test_typing_TRASHTEST(){
+
+        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
+        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_firstName)).perform(
+            ViewActions.typeText("john"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.et_lastName)).perform(
+            ViewActions.typeText("john"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.et_email)).perform(
+            ViewActions.typeText("john@doebo.com"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.et_password)).perform(
+            ViewActions.typeText("123456"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.et_confirmPassword)).perform(
+            ViewActions.typeText("123456"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+
+
+    }
 
 
 

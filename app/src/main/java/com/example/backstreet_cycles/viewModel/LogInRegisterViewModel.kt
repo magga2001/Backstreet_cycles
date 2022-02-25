@@ -12,6 +12,7 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
     private val mutableLiveData: MutableLiveData<FirebaseUser>
 
 
+
     init {
         appRepository = AppRepository(application)
         mutableLiveData = appRepository.getMutableLiveData()

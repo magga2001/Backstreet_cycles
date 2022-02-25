@@ -71,8 +71,8 @@ dependencies {
     androidTestImplementation"androidx.test.ext:junit-ktx:1.1.3"
 //    // Mockito
 //    // https://mvnrepository.com/artifact/org.mockito/mockito-core
-//    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
-//    testImplementation 'android.arch.core:core-testing:1.0.0-alpha3'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    testImplementation 'android.arch.core:core-testing:1.0.0-alpha3'
 //
 
 //    Firebase
