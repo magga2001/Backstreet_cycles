@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Maneuver
@@ -12,12 +13,12 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
-
+        internal var instruction: TextView = view.findViewById(R.id.instruction)
+        internal var distance: TextView = view.findViewById(R.id.distance)
 
         override fun onClick(p0: View?) {
             TODO("Not yet implemented")
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +28,10 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+
+        val maneuver = maneuvers[position]
+
+        holder.instruction.text = maneuver.instruction
     }
 
     override fun getItemCount(): Int {

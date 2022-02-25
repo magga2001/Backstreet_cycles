@@ -7,11 +7,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.backstreet_cycles.adapter.ManeuverAdapter
 import com.example.backstreet_cycles.model.MapHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
-import com.mapbox.maps.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxMap
+import com.mapbox.maps.Style
 import com.mapbox.maps.extension.observable.eventdata.MapLoadingErrorEventData
 import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
@@ -36,6 +43,8 @@ import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
+import kotlinx.android.synthetic.main.journey_bottom_sheet.*
+
 
 class JourneyActivity : AppCompatActivity() {
     /**
@@ -234,9 +243,11 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private var mapView: MapView?= null
-    private var startNavigation: Button? = null
     private var mapboxMap: MapboxMap? = null
     private lateinit var journeyViewModel: JourneyViewModel
+    private var sheetBehavior: BottomSheetBehavior<*>? = null
+    private lateinit var mAdapter: ManeuverAdapter
+    private lateinit var recycleView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -246,9 +257,56 @@ class JourneyActivity : AppCompatActivity() {
         journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         journeyViewModel.checkPermission(this, activity = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
-        startNavigation = findViewById(R.id.startNavigation)
         init()
+
+        recycleView = findViewById(R.id.maneuver_recycling_view)
+
+        val bottomView = findViewById<View>(R.id.bottom_sheet_view)
+        sheetBehavior = BottomSheetBehavior.from(bottomView)
+
+//        setBottomSheetAndCallBackBottomSheetBehaviour()
+
+        mAdapter = ManeuverAdapter(this, MapHelper.maneuvers)
+        recycleView.layoutManager = LinearLayoutManager(this)
+        recycleView.adapter = mAdapter
     }
+
+//    /**
+//     * set bottom sheet behavior and state
+//     */
+//    private fun setBottomSheetAndCallBackBottomSheetBehaviour() {
+//
+//
+//        sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+//
+//        //callback
+//        sheetBehavior?.setBottomSheetCallback(object :
+//            BottomSheetBehavior.BottomSheetCallback() {
+//            override fun onStateChanged(bottomSheet: View, newState: Int) {
+//                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    bottomSheetCollapsed()
+//                }
+//            }
+//
+//            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+//        })
+//    }
+//
+//   private fun isExpendCollapse(){
+//        if (sheetBehavior?.state == BottomSheetBehavior.STATE_COLLAPSED) {
+//            bottomSheetExpand()
+//        } else {
+//            bottomSheetCollapsed()
+//        }
+//    }
+//
+//    private fun bottomSheetExpand() {
+//        sheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+//    }
+//
+//    private fun bottomSheetCollapsed() {
+//        sheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+//    }
 
     private fun init() {
         initStyle()

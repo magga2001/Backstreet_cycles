@@ -8,13 +8,15 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.174" />
         <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.11626139817629179" />
-        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.11626139817629179" />
+        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.3156326293945313" />
         <entry key="app/src/main/res/layout/activity_journey_on_map.xml" value="0.25815217391304346" />
         <entry key="app/src/main/res/layout/activity_journey_overview.xml" value="0.21623672230652505" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25815217391304346" />
         <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.25815217391304346" />
+        <entry key="app/src/main/res/layout/activity_plan_journey.xml" value="0.17300724637681159" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="app/src/main/res/layout/drawer_list.xml" value="0.32135416666666666" />
+        <entry key="app/src/main/res/layout/journey_bottom_sheet.xml" value="0.28329929959946787" />
         <entry key="app/src/main/res/layout/layout_instructions.xml" value="0.32135416666666666" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.32135416666666666" />
         <entry key="app/src/main/res/menu/drawer_list.xml" value="0.32135416666666666" />

@@ -14,7 +14,10 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.dto.Maneuver
 import com.google.gson.GsonBuilder
+import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
@@ -43,6 +46,7 @@ class MapHelper(private val application: Application) {
     companion object
     {
         lateinit var currentRoute: DirectionsRoute
+        val maneuvers = mutableListOf<Maneuver>()
         lateinit var centerPoint: Point
         lateinit var wayPoints : List<Point>
     }
@@ -110,6 +114,8 @@ class MapHelper(private val application: Application) {
                     // GSON instance used only to print the response prettily
                     val gson = GsonBuilder().setPrettyPrinting().create()
 
+                    Log.i("retrieving route", "success")
+
                     currentRoute = getFastestRoute(routes)
                     centerPoint = getCenterViewPoint(points)
                     wayPoints = points
@@ -124,6 +130,7 @@ class MapHelper(private val application: Application) {
                 override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
                     // This particular callback is executed if you invoke
                     //mapboxNavigation.cancelRouteRequest()
+                    Log.i("retrieving route", "cancel")
                 }
 
                 /**
@@ -131,6 +138,7 @@ class MapHelper(private val application: Application) {
                  */
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
                     //Route request fail
+                    Log.i("retrieving route", "fail")
                 }
             }
         )
@@ -148,15 +156,19 @@ class MapHelper(private val application: Application) {
             val maneuver = JSONObject(steps.getString(i)).getString("maneuver")
             val instruction = JSONObject(maneuver).getString("instruction")
             val type = JSONObject(maneuver).getString("type")
+            var modifier = ""
 
             if(JSONObject(maneuver).has("modifier"))
             {
-                val modifier = JSONObject(maneuver).getString("modifier")
+                modifier = JSONObject(maneuver).getString("modifier")
                 Log.i("modifier $i",modifier )
             }
 
             Log.i("maneuver $i", maneuver)
             Log.i("instruction $i", instruction + "type: " + type)
+
+            val theManeuver = Maneuver(instruction,type,modifier)
+            maneuvers.add(theManeuver)
         }
 
     }
