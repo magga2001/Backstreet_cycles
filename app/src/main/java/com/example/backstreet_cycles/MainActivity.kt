@@ -239,12 +239,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 PropertyFactory.iconOffset(arrayOf(0f, -8f))
             )
         )
-
     }
 
     private fun setUpSource(loadedMapStyle: Style) {
         loadedMapStyle.addSource(GeoJsonSource(geoJsonSourceLayerId))
-
     }
 
     private fun initSearchFab() {
