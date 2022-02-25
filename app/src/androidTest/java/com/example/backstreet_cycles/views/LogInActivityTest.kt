@@ -74,8 +74,6 @@ class LogInActivityTest{
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
         pressBack()
         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-
-
     }
 
 
