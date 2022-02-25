@@ -24,9 +24,13 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.adapter.ViewPagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -109,6 +113,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             }
             true
         }
+
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        val pager = findViewById<ViewPager2>(R.id.pager)
+
+        val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+
+        pager.adapter=adapter
+
+        TabLayoutMediator(tabLayout, pager){tab, position->
+            when(position){
+                0 -> {
+                    tab.text = "Depart From"
+                }
+
+                1->{
+                    tab.text = "Arrive To"
+                }
+            }
+
+        }.attach()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
@@ -202,8 +226,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     mapboxMap!!.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.Builder()
                         .target(LatLng(searchedLocationLat,
                             searchedLocationLon))
-                            .zoom(14.0)
-                            .build()), 4000)
+                        .zoom(14.0)
+                        .build()), 4000)
                 }
             }
 
