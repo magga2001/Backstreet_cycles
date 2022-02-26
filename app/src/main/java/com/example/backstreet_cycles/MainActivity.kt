@@ -337,6 +337,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     .withLatLng(LatLng(dock.lat, dock.lon))
                     .withIconImage("myMarker")
                     .withTextField(dock.name)
+                    .withTextSize(10.0F)
+                    .withTextColor("red")
             )
         }
     }
