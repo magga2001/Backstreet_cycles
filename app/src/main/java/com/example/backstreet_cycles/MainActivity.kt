@@ -336,6 +336,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 SymbolOptions()
                     .withLatLng(LatLng(dock.lat, dock.lon))
                     .withIconImage("myMarker")
+                    .withTextField(dock.name)
             )
         }
     }
