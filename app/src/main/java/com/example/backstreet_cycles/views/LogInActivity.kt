@@ -26,14 +26,15 @@ class LogInActivity : AppCompatActivity() {
         setContentView(R.layout.activity_log_in)
 
         loginRegiterViewModel = ViewModelProviders.of(this).get(LogInRegisterViewModel::class.java)
-        loginRegiterViewModel.getMutableLiveData().observe(this, Observer<FirebaseUser> { firebaseUser ->
-            if (firebaseUser != null) {
-                val intent = Intent(this@LogInActivity, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-        })
+        loginRegiterViewModel.getMutableLiveData()
+            .observe(this, Observer<FirebaseUser> { firebaseUser ->
+                if (firebaseUser != null) {
+                    val intent = Intent(this@LogInActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            })
 
 
         buttonLogin.setOnClickListener {
@@ -61,7 +62,7 @@ class LogInActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        
+
     }
 
 

@@ -5,7 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.UserDto
 import com.example.backstreet_cycles.model.AppRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Job
 
 class LoggedInViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,11 +21,15 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
 
 
     init {
-        appRepository = AppRepository(application)
-        mutableLiveData = appRepository.getMutableLiveData()
-        loggedOutMutableiveData = appRepository.getLoggedOutMutableLiveData()
-        updatedProfileMutableLiveData = appRepository.getUpdatedProfileMutableLiveData()
-        userDetailsMutableLiveData = appRepository.getUserDetailsMutableLiveData()
+//        mutableLiveData = appRepository.getMutableLiveData()
+//        loggedOutMutableiveData = appRepository.getLoggedOutMutableLiveData()
+//        updatedProfileMutableLiveData = appRepository.getUpdatedProfileMutableLiveData()
+//        userDetailsMutableLiveData = appRepository.getUserDetailsMutableLiveData()
+        mutableLiveData = MutableLiveData()
+        loggedOutMutableiveData = MutableLiveData()
+        updatedProfileMutableLiveData = MutableLiveData()
+        userDetailsMutableLiveData = MutableLiveData()
+        appRepository = AppRepository(application, Firebase.firestore, FirebaseAuth.getInstance(), mutableLiveData)
     }
 
     fun logOut() {

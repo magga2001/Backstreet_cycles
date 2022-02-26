@@ -1,20 +1,12 @@
 package com.example.backstreet_cycles.model
 
 import com.example.backstreet_cycles.DTO.UserDto
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class DatabaseInteractor(firestore: FirebaseFirestore) {
-    val user: UserDto
-    val db: FirebaseFirestore = firestore
+    private val user: UserDto = UserDto()
+    private val db = firestore
 //    private val userData: DocumentReference
-
-    init {
-        user = UserDto()
-    }
 
     fun createUser(firstName: String, lastName: String, email: String): UserDto {
         user.firstName = firstName
@@ -44,8 +36,6 @@ class DatabaseInteractor(firestore: FirebaseFirestore) {
 //        db.collection("users")
 //            .document(usr.)
 //    }
-
-
 
 
 }
