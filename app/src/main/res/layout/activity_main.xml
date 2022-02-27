@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,10 +10,10 @@
 
     <RelativeLayout
 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="false"
-    tools:context=".MainActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        tools:context=".MainActivity">
 
         <RelativeLayout
             android:id="@+id/locationLayout"
@@ -80,7 +81,7 @@
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="428dp"
             android:layout_below="@+id/locationLayout"
             android:clickable="false"
             app:mapbox_cameraZoom="12"
@@ -101,6 +102,29 @@
                 android:clickable="true"
                 app:srcCompat="@drawable/mapbox_ic_arrow_back" />
         </com.mapbox.mapboxsdk.maps.MapView>
+
+
+        <LinearLayout
+            android:id="@+id/fragmentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/mapView"
+            android:orientation="vertical">
+
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <androidx.viewpager2.widget.ViewPager2 xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tab_layout" />
+        </LinearLayout>
+
 
     </RelativeLayout>
     <com.google.android.material.navigation.NavigationView

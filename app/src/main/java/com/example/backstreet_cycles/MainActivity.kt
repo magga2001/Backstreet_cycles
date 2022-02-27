@@ -16,20 +16,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.adapter.PagerAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -94,6 +97,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
         //mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+
+
 
         lifecycleScope.launch {
             Log.i(
@@ -179,6 +184,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
             planJourneyButton.setVisibility(View.VISIBLE)
         }
+
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        val pager = findViewById<ViewPager2>(R.id.pager)
+        val adapter = PagerAdapter(supportFragmentManager,lifecycle)
+
+
+        pager.adapter = adapter
+
+        TabLayoutMediator(tabLayout, pager) {tab, position->
+            when(position){
+                0 -> {
+                    tab.text="Depart From"
+                }
+
+                1 -> {
+                    tab.text = "Arrive To"
+                }
+            }
+
+        }.attach()
+
+
+
 
     }
 
