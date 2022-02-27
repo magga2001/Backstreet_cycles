@@ -6,12 +6,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.UserDto
+import com.example.backstreet_cycles.R
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,13 +50,7 @@ class AppRepository(private val application: Application,
                     getUserDetails()
                     mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
-                    //TostSerive.showToast();
-//                    Toast.makeText(
-//                        application,
-//                        "Registration failed " + task.exception,
-//                        Toast.LENGTH_SHORT
-//                    )
-//                        .show()
+                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
             }
     }
@@ -97,18 +90,16 @@ class AppRepository(private val application: Application,
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(application, e.message, Toast.LENGTH_SHORT).show()
+                            createToastMessage(e.message)
                         }
                     }
 
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(application, "No persons matched the query.", Toast.LENGTH_LONG)
-                        .show()
+                    createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
                 }
             }
-
         }
 
     fun updateEmailAndPassword(email: String, password: String, newPassword: String) {
@@ -123,11 +114,7 @@ class AppRepository(private val application: Application,
                 val user = FirebaseAuth.getInstance().currentUser
                 user!!.updateEmail(email).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(
-                            application,
-                            "Email Changed Current Email is $email",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        createToastMessage("Email Changed Current Email is $email")
                         val email = userDetailsMutableLiveData.value!!.email
                         if (email != null) {
                             updateEmail(email)
@@ -135,39 +122,20 @@ class AppRepository(private val application: Application,
                                 firebaseAuth.currentUser!!.email
                         }
                     } else {
-                        Toast.makeText(
-                            application,
-                            "Update Failed " + task.exception,
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        createToastMessage(application.getString(R.string.UPDATE_FAILED))
                     }
                 }
                 if (newPassword.isNotEmpty()) {
                     user.updatePassword(newPassword).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(
-                                application,
-                                "Password Changed",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
                         } else {
-                            Toast.makeText(
-                                application,
-                                "Update Failed " + task.exception,
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                            createToastMessage(application.getString(R.string.UPDATE_FAILED))
                         }
                     }
                 }
             } else {
-                Toast.makeText(
-                    application,
-                    "Update Failed " + task.exception,
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                createToastMessage(application.getString(R.string.UPDATE_FAILED))
             }
         }
     }
@@ -188,15 +156,14 @@ class AppRepository(private val application: Application,
                     updatedProfileMutableLiveData.postValue(true)
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(application, e.message, Toast.LENGTH_SHORT).show()
+                        createToastMessage(e.message)
                     }
                 }
 
             }
         } else {
             withContext(Dispatchers.Main) {
-                Toast.makeText(application, "No persons matched the query.", Toast.LENGTH_LONG)
-                    .show()
+                createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
             }
         }
 
@@ -225,12 +192,7 @@ class AppRepository(private val application: Application,
                 if (task.isSuccessful) {
                     mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
-                    Toast.makeText(
-                        application,
-                        "Log in failed " + task.exception,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
                 }
             }
     }
@@ -238,6 +200,11 @@ class AppRepository(private val application: Application,
     fun logout() {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
+    }
+
+    private fun createToastMessage(stringMessage: String?) {
+        Toast.makeText(application, stringMessage, Toast.LENGTH_LONG)
+            .show()
     }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
