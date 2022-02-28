@@ -13,10 +13,12 @@
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19174977334542156" />
         <entry key="app/src/main/res/layout/fragment_docks_list.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.10944848225737494" />
-        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.10944848225737494" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.125" />
         <entry key="app/src/main/res/layout/fragment_test1.xml" value="0.10944848225737494" />
         <entry key="app/src/main/res/layout/fragment_test2.xml" value="0.10944848225737494" />
-        <entry key="app/src/main/res/layout/layout_docks.xml" value="0.4703704833984375" />
+        <entry key="app/src/main/res/layout/layout_docks.xml" value="0.11" />
+        <entry key="app/src/main/res/layout/list_docks.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/list_items.xml" value="0.165" />
         <entry key="app/src/main/res/layout/list_view_model.xml" value="0.165" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.19174977334542156" />
       </map>

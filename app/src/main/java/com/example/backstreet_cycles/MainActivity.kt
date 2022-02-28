@@ -66,6 +66,7 @@ import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
+
     private lateinit var toggle: ActionBarDrawerToggle
     private val REQUESTCODEAUTOCOMPLETE = 7171
     var mapView: MapView? = null
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var fromTextView: TextView? = null
     private var changeTo: Boolean? = false
     private var changeFrom: Boolean? = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -463,16 +465,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     }
 
-    private fun getCurrentLocation(): Location? {
+    fun getCurrentLocation(): Location? {
         //Can call lat and lon from this function
         return locationComponent!!.lastKnownLocation
+//        return locationComponent
     }
+
 
     // Get all the docks around the current location
     private fun getRadiusDocks(radius: Double): MutableList<Dock> {
         val currentLat = getCurrentLocation()?.latitude as Double
         val currentLon = getCurrentLocation()?.longitude as Double
 
+//        return docks
         return docks.filter { dock ->
             val dockLat = dock.lat
             val dockLon = dock.lon
@@ -480,17 +485,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         }.toMutableList()
     }
 
-    // Get relevant docks around the current location
-    private fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
-        val closestDocks = getRadiusDocks(radius)
 
-        // Filtering out docks that don't have available spaces
-        closestDocks.filter { it.nbSpaces != 0 }
 
-        closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
-
-        return closestDocks.subList(0, numberOfDock)
-    }
 
     // Get all the docks around the searched location ie destination
     private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock> {
@@ -517,5 +513,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         return closestDocks.subList(0, numberOfDock)
     }
 
+        // Get relevant docks around the current location
+        fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
+            val closestDocks = getRadiusDocks(radius)
+//            // Filtering out docks that don't have available spaces
+            closestDocks.filter { it.nbSpaces != 0 }
+
+            closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
+
+
+            return closestDocks.subList(0, numberOfDock)
+        }
 
 }
