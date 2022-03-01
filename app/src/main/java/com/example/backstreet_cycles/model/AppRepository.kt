@@ -27,7 +27,7 @@ class AppRepository(private val application: Application,
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
     private val userDetailsMutableLiveData: MutableLiveData<UserDto>
     private val firebaseAuth: FirebaseAuth
-    private val db = fireStore
+    private val db: FirebaseFirestore
 
     init {
         mutableLiveData = _mutableLiveData
@@ -35,6 +35,7 @@ class AppRepository(private val application: Application,
         updatedProfileMutableLiveData = MutableLiveData()
         userDetailsMutableLiveData = MutableLiveData()
         firebaseAuth = fireBaseAuth
+        db = fireStore
         if (firebaseAuth.currentUser != null) {
             mutableLiveData.postValue(firebaseAuth.currentUser)
             loggedOutMutableLiveData.postValue(false)
