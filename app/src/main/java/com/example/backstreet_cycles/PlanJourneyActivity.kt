@@ -28,6 +28,12 @@ class PlanJourneyActivity : AppCompatActivity() {
         initListener()
 
         planJourneyViewModel = ViewModelProvider(this).get(PlanJourneyViewModel::class.java)
+        planJourneyViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
+            if(ready)
+            {
+                loadActivity()
+            }
+        }
         planJourneyViewModel.checkPermission(this, activity = this)
     }
 
@@ -80,8 +86,8 @@ class PlanJourneyActivity : AppCompatActivity() {
 //            wayPoints.addAll(listOf(startPoint,endPoint))
             fetchRoute(mutableListOf(startPoint,endPoint))
 
-            delay(1000)
-            loadActivity()
+//            delay(2000)
+//            loadActivity()
         }
     }
 
@@ -99,6 +105,5 @@ class PlanJourneyActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         MapboxNavigationProvider.destroy()
-        mapboxNavigation.onDestroy()
     }
 }
