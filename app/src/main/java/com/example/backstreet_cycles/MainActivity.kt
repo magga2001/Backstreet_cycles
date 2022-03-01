@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     var fromLocationLat: Double = 0.0
     var fromLocationLon: Double = 0.0
-
     // Public variables to store captured location
     var toLocationLat: Double = 0.0
     var toLocationLon: Double = 0.0
@@ -331,11 +330,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             if(changeTo!!) {
                 toButton!!.text = "${selectedCarmenFeature.placeName()}"
                 changeTo = false
+                toLocationLat = lat
+                toLocationLon = long
             }
             else if(changeFrom!!){
                 fromButton!!.text = "${selectedCarmenFeature.placeName()}"
                 changeFrom =false
+
+                fromLocationLat = lat
+                fromLocationLon = long
             }
+            //fragmentIntialiser()
         }
     }
 
@@ -354,12 +359,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     .withTextColor("red")
             )
         }
+        fromLocationLat = getCurrentLocation()!!.latitude
+        fromLocationLon = getCurrentLocation()!!.longitude
         fragmentIntialiser()
     }
 
     fun fragmentIntialiser(){
-        tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-        pager = findViewById<ViewPager2>(R.id.pager)
+        tabLayout = findViewById(R.id.tab_layout)
+        pager = findViewById(R.id.pager)
         adapter = PagerAdapter(supportFragmentManager,lifecycle)
 
 
@@ -468,15 +475,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                 .show()
             finish()
         }
-        //Log.i("Retrieve closest dock", getClosestDocks(10,0.01).size.toString())
 
 
     }
 
     fun getCurrentLocation(): Location? {
-        //Can call lat and lon from this function
         return locationComponent?.lastKnownLocation
-//        return locationComponent
     }
 
 
@@ -520,8 +524,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     // Get relevant docks around the searched location ie destination
     fun getDestinationClosestDocks(): MutableList<Dock> {
-        val currentLat = getCurrentLocation()!!.latitude
-        val currentLon = getCurrentLocation()!!.longitude
+        val currentLat = toLocationLat
+        val currentLon = toLocationLon
 
         val closestDocks = docks
         closestDocks.sortBy {
@@ -537,12 +541,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         return closestDocks.subList(0, 10)
     }
 
-        // Get relevant docks around the current location
-        fun getClosestDocks(): MutableList<Dock> {
+
+    fun getClosestDocks(): MutableList<Dock> {
             val closestDocks = docks
 
-            val currentLat = getCurrentLocation()!!.latitude
-            val currentLon = getCurrentLocation()!!.longitude
+            val currentLat = fromLocationLat
+            val currentLon = fromLocationLon
 //            // Filtering out docks that don't have available spaces
             closestDocks.filter { it.nbSpaces != 0 }
 

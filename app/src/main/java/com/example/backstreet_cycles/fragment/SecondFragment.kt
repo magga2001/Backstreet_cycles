@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.fragment
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.MainActivity
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.RecyclerAdapter
-
 
 
 

@@ -36,6 +36,8 @@ class RecyclerAdapter(private var docks: MutableList<Dock>?) : RecyclerView.Adap
     }
 
     override fun getItemCount(): Int {
-        return docks!!.size
+        Log.i("docks size:", docks!!.size.toString())
+        return 10
+//        return docks!!.size
     }
 }
