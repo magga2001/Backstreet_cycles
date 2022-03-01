@@ -72,4 +72,18 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //    Testing
+    testImplementation 'junit:junit:4.13.2'
+
+    //UI testing
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestImplementation"androidx.test:core:1.4.0"
+    androidTestImplementation"androidx.test.ext:junit-ktx:1.1.3"
+//    // Mockito
+//    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.22.0'
+//    testImplementation 'android.arch.core:core-testing:1.0.0-alpha3'
+//
 }
