@@ -55,6 +55,7 @@ class PlanJourneyActivity : AppCompatActivity() {
                 }
                 else -> {
 
+                    Toast.makeText(this, "Loading...", Toast.LENGTH_SHORT).show()
                     //THIS FUNCTION TO FETCH THE ORIGIN AND DESTINATION FROM EDIT TEXT
                     lifecycleScope.launch {fetchPoints()}
 
