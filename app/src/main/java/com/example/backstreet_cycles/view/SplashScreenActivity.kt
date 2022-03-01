@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,10 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.backstreet_cycles.Api
+import com.example.backstreet_cycles.PlanJourneyActivity
+import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.Tfl
 import com.example.backstreet_cycles.dto.Dock
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -31,7 +35,7 @@ class SplashScreenActivity: AppCompatActivity() {
     {
         Handler(Looper.myLooper()!!).postDelayed({
             Log.d("Success loading", "Loading Main Activity")
-            startActivity(Intent(this,PlanJourneyActivity::class.java))
+            startActivity(Intent(this, PlanJourneyActivity::class.java))
             finish()
         },100)
     }

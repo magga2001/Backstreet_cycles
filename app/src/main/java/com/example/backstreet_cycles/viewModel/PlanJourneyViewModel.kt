@@ -4,16 +4,16 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import com.example.backstreet_cycles.model.MapHelper
+import com.example.backstreet_cycles.model.JourneyHelper
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
 
 class PlanJourneyViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mapRepository: MapHelper
+    private val mapRepository: JourneyHelper
 
     init {
-        mapRepository = MapHelper(application)
+        mapRepository = JourneyHelper(application)
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
@@ -26,7 +26,7 @@ class PlanJourneyViewModel(application: Application) : AndroidViewModel(applicat
         mapRepository.checkPermission(context, activity)
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: List<Point>) {
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>) {
 
         mapRepository.fetchRoute(context,mapboxNavigation, wayPoints)
     }

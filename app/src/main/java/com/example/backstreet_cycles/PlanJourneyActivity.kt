@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.view.JourneyActivity
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
@@ -77,7 +78,7 @@ class PlanJourneyActivity : AppCompatActivity() {
             val startPoint = Point.fromLngLat(startDock!!.lon,startDock!!.lat)
             val endPoint = Point.fromLngLat(endDock!!.lon,endDock!!.lat)
 //            wayPoints.addAll(listOf(startPoint,endPoint))
-            fetchRoute(listOf(startPoint,endPoint))
+            fetchRoute(mutableListOf(startPoint,endPoint))
 
             delay(1000)
             loadActivity()
@@ -90,7 +91,7 @@ class PlanJourneyActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun fetchRoute(wayPoints: List<Point>) {
+    private fun fetchRoute(wayPoints: MutableList<Point>) {
 
         planJourneyViewModel.fetchRoute(this, mapboxNavigation, wayPoints)
     }
@@ -98,104 +99,6 @@ class PlanJourneyActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         MapboxNavigationProvider.destroy()
+        mapboxNavigation.onDestroy()
     }
-
-//    private fun fetchRoute() {
-//
-//        val routeOptions = RouteOptions.builder()
-//            // applies the default parameters to route options
-//            .applyDefaultNavigationOptions()
-//            .applyLanguageAndVoiceUnitOptions(this)
-////            .profile(DirectionsCriteria.PROFILE_CYCLING)
-//            // lists the coordinate pair i.e. origin and destination
-//            // If you want to specify waypoints you can pass list of points instead of null
-//            .coordinatesList(wayPoints)
-//            // set it to true if you want to receive alternate routes to your destination
-//            .alternatives(true)
-//            .build()
-//
-//        mapboxNavigation.requestRoutes(
-//            routeOptions,
-//            object : RouterCallback {
-//                /**
-//                 * The callback is triggered when the routes are ready to be displayed.
-//                 */
-//                override fun onRoutesReady(
-//                    routes: List<DirectionsRoute>,
-//                    routerOrigin: RouterOrigin
-//                ) {
-//                    // GSON instance used only to print the response prettily
-//                    val gson = GsonBuilder().setPrettyPrinting().create()
-//
-//                    currentRoute= getFastestRoute(routes)
-//                    centerPoint = getCenterViewPoint(wayPoints)
-//
-//                    //Getting route instruction
-//                    getInstructions(currentRoute)
-//                }
-//
-//                /**
-//                 * The callback is triggered if the request to fetch a route was canceled.
-//                 */
-//                override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
-//                    // This particular callback is executed if you invoke
-//                    //mapboxNavigation.cancelRouteRequest()
-//                }
-//
-//                /**
-//                 * The callback is triggered if the request to fetch a route failed for any reason.
-//                 */
-//                override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
-//                    //Route request fail
-//                }
-//            }
-//        )
-//
-//    }
-//
-//    private fun getInstructions(route:DirectionsRoute)
-//    {
-//        val json = JSONObject(route.toJson())
-//        val legs = JSONObject(json.getJSONArray("legs").getString(0))
-//        val steps = legs.getJSONArray("steps")
-//
-//        for(i in 0 until steps.length())
-//        {
-//            val maneuver = JSONObject(steps.getString(i)).getString("maneuver")
-//            val instruction = JSONObject(maneuver).getString("instruction")
-//            val type = JSONObject(maneuver).getString("type")
-//
-//            if(JSONObject(maneuver).has("modifier"))
-//            {
-//                val modifier = JSONObject(maneuver).getString("modifier")
-//                Log.i("modifier $i",modifier )
-//            }
-//
-//            Log.i("maneuver $i", maneuver)
-//            Log.i("instruction $i", instruction + "type: " + type)
-//        }
-//
-//    }
-//
-//    private fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
-//    {
-//        routes.sortedBy { it.duration() }
-//
-//        return routes.first()
-//    }
-//
-//    private fun getCenterViewPoint(docks: List<Point>): Point
-//    {
-//        var totalLat = 0.0
-//        var totalLng = 0.0
-//        val size = docks.size
-//
-//        for(dock in docks)
-//        {
-//            totalLat += dock.latitude()
-//            totalLng += dock.longitude()
-//        }
-//
-//        return Point.fromLngLat(totalLng/size, totalLat/size)
-//    }
 }
