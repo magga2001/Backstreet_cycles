@@ -32,6 +32,7 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
         val maneuver = maneuvers[position]
 
         holder.instruction.text = maneuver.instruction
+        holder.distance.text = context.getString(R.string.distance_unit, maneuver.distance.toString())
     }
 
     override fun getItemCount(): Int {
