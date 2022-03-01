@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         mapView?.getMapAsync(this)
         //mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
+        //getCurrentLocation()
 
 
         lifecycleScope.launch {
@@ -409,7 +410,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
             // Get an instance of the component
             //val locationComponent: LocationComponent? = mapboxMap?.locationComponent
-            locationComponent = mapboxMap?.locationComponent
+            locationComponent = mapboxMap?.locationComponent!!
 
 
             // Activate with options
@@ -467,22 +468,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     fun getCurrentLocation(): Location? {
         //Can call lat and lon from this function
-        return locationComponent!!.lastKnownLocation
+        return locationComponent?.lastKnownLocation
 //        return locationComponent
     }
 
 
     // Get all the docks around the current location
     private fun getRadiusDocks(radius: Double): MutableList<Dock> {
-        val currentLat = getCurrentLocation()?.latitude as Double
-        val currentLon = getCurrentLocation()?.longitude as Double
+        if (getCurrentLocation()  != null) {
+            val currentLat = getCurrentLocation()?.latitude
+            val currentLon = getCurrentLocation()?.longitude
 
 //        return docks
-        return docks.filter { dock ->
-            val dockLat = dock.lat
-            val dockLon = dock.lon
-            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
-        }.toMutableList()
+            return docks.filter { dock ->
+                val dockLat = dock.lat
+                val dockLon = dock.lon
+                abs(dockLat - currentLat!!) <= radius && abs(dockLon - currentLon!!) <= radius
+            }.toMutableList()
+        } else {
+            return docks
+        }
     }
 
 
@@ -505,6 +510,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private fun getDestinationClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
         val closestDocks = getDestinationRadiusDocks(radius)
 
+        val currentLat = searchedLocationLat
+        val currentLon = searchedLocationLon
+
         // Filtering out docks that don't have available spaces
         closestDocks.filter { it.nbSpaces != 0 }
 
@@ -516,10 +524,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         // Get relevant docks around the current location
         fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
             val closestDocks = getRadiusDocks(radius)
+
+            val currentLat = searchedLocationLat
+            val currentLon = searchedLocationLon
 //            // Filtering out docks that don't have available spaces
             closestDocks.filter { it.nbSpaces != 0 }
 
-            closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
+            closestDocks.sortBy { abs(it.lat - currentLat) +  abs(it.lon - currentLon) }
 
 
             return closestDocks.subList(0, numberOfDock)

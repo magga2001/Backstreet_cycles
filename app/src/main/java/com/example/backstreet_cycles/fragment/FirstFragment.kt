@@ -36,7 +36,7 @@ class FirstFragment : Fragment() {
         var dockList: MutableList<Dock>? = null
         if (activity is MainActivity) {
             val myactivity: MainActivity? = activity as MainActivity?
-            dockList = myactivity?.getClosestDocks(10,0.1)
+            dockList = myactivity?.getClosestDocks(10,0.1)!!
         }
         //getClosestDocks(10,1.0)
         super.onViewCreated(view, savedInstanceState)

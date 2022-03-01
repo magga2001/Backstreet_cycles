@@ -35,18 +35,18 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-//        val activity: Activity? = activity
-//        var dockList: MutableList<Dock>? = null
-//        if (activity is MainActivity) {
-//           val myactivity: MainActivity? = activity as MainActivity?
-//           dockList = myactivity?.getClosestDocks(10,0.1)
-//        }
-//        //getClosestDocks(10,1.0)
-//        super.onViewCreated(view, savedInstanceState)
-//        recycle = view.findViewById(R.id.arrive_to_recyclerView)
-//        val adapter = RecyclerAdapter(dockList)
-//        recycle.layoutManager = LinearLayoutManager(activity)
-//        recycle.adapter = adapter
+        val activity: Activity? = activity
+        var dockList: MutableList<Dock>? = null
+        if (activity is MainActivity) {
+           val myactivity: MainActivity? = activity as MainActivity?
+           dockList = myactivity?.getClosestDocks(10,0.1)
+        }
+        //getClosestDocks(10,1.0)
+        super.onViewCreated(view, savedInstanceState)
+        recycle = view.findViewById(R.id.arrive_to_recyclerView)
+        val adapter = RecyclerAdapter(dockList)
+        recycle.layoutManager = LinearLayoutManager(activity)
+        recycle.adapter = adapter
     }
 
 
