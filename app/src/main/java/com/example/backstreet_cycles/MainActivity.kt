@@ -21,14 +21,12 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.adapter.PagerAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
@@ -62,7 +60,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-import kotlin.math.pow
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -78,15 +75,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
     private val symbolIconId = "SymbolIconId"
 
+    var fromLocationLat: Double = 0.0
+    var fromLocationLon: Double = 0.0
+
     // Public variables to store captured location
-    var searchedLocationLat: Double = 0.0
-    var searchedLocationLon: Double = 0.0
+    var toLocationLat: Double = 0.0
+    var toLocationLon: Double = 0.0
     private var toButton: Button? = null
     private var fromButton: Button? = null
     private var toTextView: TextView? = null
     private var fromTextView: TextView? = null
     private var changeTo: Boolean? = false
     private var changeFrom: Boolean? = false
+
+    private var tabLayout:TabLayout?=null
+    private var pager:ViewPager2?=null
+    private var adapter:PagerAdapter?=null
 
 
 
@@ -187,31 +191,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
             planJourneyButton.setVisibility(View.VISIBLE)
         }
-
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-        val pager = findViewById<ViewPager2>(R.id.pager)
-        val adapter = PagerAdapter(supportFragmentManager,lifecycle)
-
-
-        pager.adapter = adapter
-
-        TabLayoutMediator(tabLayout, pager) {tab, position->
-            when(position){
-                0 -> {
-                    tab.text="Depart From"
-                }
-
-                1 -> {
-                    tab.text = "Arrive To"
-                }
-            }
-
-        }.attach()
-
-
-
-
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
@@ -317,8 +299,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     val source = style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)
 
                     // Save location data of searched location via search bar
-                    searchedLocationLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
-                    searchedLocationLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
+                    toLocationLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
+                    toLocationLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
 
                     source?.setGeoJson(
                         FeatureCollection.fromFeatures(
@@ -334,8 +316,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                             CameraPosition.Builder()
                                 .target(
                                     LatLng(
-                                        searchedLocationLat,
-                                        searchedLocationLon
+                                        toLocationLat,
+                                        toLocationLon
                                     )
                                 )
                                 .zoom(14.0)
@@ -372,6 +354,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     .withTextColor("red")
             )
         }
+        fragmentIntialiser()
+    }
+
+    fun fragmentIntialiser(){
+        tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+        pager = findViewById<ViewPager2>(R.id.pager)
+        adapter = PagerAdapter(supportFragmentManager,lifecycle)
+
+
+        pager!!.adapter = adapter
+
+        TabLayoutMediator(tabLayout!!, pager!!) {tab, position->
+            when(position){
+                0 -> {
+                    tab.text="Depart From"
+                }
+
+                1 -> {
+                    tab.text = "Arrive To"
+                }
+            }
+
+        }.attach()
     }
 
     private fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
@@ -446,6 +451,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionsManager?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        fromLocationLat = getCurrentLocation()!!.latitude
+        fromLocationLon = getCurrentLocation()!!.longitude
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
@@ -492,48 +499,59 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
 
 
-
     // Get all the docks around the searched location ie destination
     private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock> {
         //Using location data of searched location via search bar
-        val currentLat = searchedLocationLat
-        val currentLon = searchedLocationLon
+        val currentLat = toLocationLat
+        val currentLon = toLocationLon
+        val closestDocks = docks
 
-        return docks.filter { dock ->
-            val dockLat = dock.lat
-            val dockLon = dock.lon
-            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
-        }.toMutableList()
+        closestDocks.filter { it.nbSpaces != 0 }
+        closestDocks.sortBy { abs(it.lat - currentLat) +  abs(it.lon - currentLon) }
+        return closestDocks.subList(0, 10)
+
+
+//        return docks.filter { dock ->
+//            val dockLat = dock.lat
+//            val dockLon = dock.lon
+//            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
+//        }.toMutableList()
     }
 
     // Get relevant docks around the searched location ie destination
-    private fun getDestinationClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
-        val closestDocks = getDestinationRadiusDocks(radius)
+    fun getDestinationClosestDocks(): MutableList<Dock> {
+        val currentLat = getCurrentLocation()!!.latitude
+        val currentLon = getCurrentLocation()!!.longitude
 
-        val currentLat = searchedLocationLat
-        val currentLon = searchedLocationLon
+        val closestDocks = docks
+        closestDocks.sortBy {
+            abs(it.lat - currentLat) + abs(it.lon - currentLon)
+        }
+
 
         // Filtering out docks that don't have available spaces
-        closestDocks.filter { it.nbSpaces != 0 }
+        //closestDocks.filter { it.nbSpaces != 0 }
 
-        closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
+        //closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
 
-        return closestDocks.subList(0, numberOfDock)
+        return closestDocks.subList(0, 10)
     }
 
         // Get relevant docks around the current location
-        fun getClosestDocks(numberOfDock: Int, radius: Double): MutableList<Dock> {
-            val closestDocks = getRadiusDocks(radius)
+        fun getClosestDocks(): MutableList<Dock> {
+            val closestDocks = docks
 
-            val currentLat = searchedLocationLat
-            val currentLon = searchedLocationLon
+            val currentLat = getCurrentLocation()!!.latitude
+            val currentLon = getCurrentLocation()!!.longitude
 //            // Filtering out docks that don't have available spaces
             closestDocks.filter { it.nbSpaces != 0 }
+
 
             closestDocks.sortBy { abs(it.lat - currentLat) +  abs(it.lon - currentLon) }
 
 
-            return closestDocks.subList(0, numberOfDock)
+            return closestDocks.subList(0, 10)
         }
+
 
 }
