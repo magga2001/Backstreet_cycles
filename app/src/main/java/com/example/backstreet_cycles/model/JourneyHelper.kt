@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Maneuver
 import com.mapbox.api.directions.v5.DirectionsCriteria
@@ -33,8 +34,16 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 class JourneyHelper(private val application: Application): MapHelper(application) {
+
+    private val isReadyMutableLiveData: MutableLiveData<Boolean>
+
+    init {
+        isReadyMutableLiveData = MutableLiveData()
+        isReadyMutableLiveData.value = false
+    }
 
     override fun initialiseMapboxNavigation(): MapboxNavigation
     {
@@ -74,7 +83,8 @@ class JourneyHelper(private val application: Application): MapHelper(application
                                         routeLineApi: MapboxRouteLineApi,
                                         routeLineView: MapboxRouteLineView,
                                         routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView): RouteProgressObserver
+                                        routeArrowView: MapboxRouteArrowView
+    ): RouteProgressObserver
     {
         return RouteProgressObserver { routeProgress ->
             // RouteLine: This line is only necessary if the vanishing route line feature
@@ -97,14 +107,14 @@ class JourneyHelper(private val application: Application): MapHelper(application
     }
 
     fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>) {
-
+//
         currentRoute.clear()
         maneuvers.clear()
 
-//        //Add your current location
+        //Add your current location
 //        points.add(0, Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude))
 
-        val routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_DRIVING)
+        val routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
         requestRoute(mapboxNavigation, routeOptions, points)
 
     }
@@ -150,6 +160,8 @@ class JourneyHelper(private val application: Application): MapHelper(application
                     {
                         getInstructions(route)
                     }
+
+                    isReadyMutableLiveData.postValue(true)
                 }
 
                 /**
@@ -184,6 +196,9 @@ class JourneyHelper(private val application: Application): MapHelper(application
             val instruction = JSONObject(maneuver).getString("instruction")
             val type = JSONObject(maneuver).getString("type")
             var modifier = ""
+            val distance = JSONObject(steps.getString(i)).getString("distance")
+
+            Log.i("distance", distance)
 
             if(JSONObject(maneuver).has("modifier"))
             {
@@ -194,7 +209,7 @@ class JourneyHelper(private val application: Application): MapHelper(application
             Log.i("maneuver $i", maneuver)
             Log.i("instruction $i", instruction + "type: " + type)
 
-            val theManeuver = Maneuver(instruction,type,modifier)
+            val theManeuver = Maneuver(instruction, type, modifier, distance.toDouble().roundToInt())
             maneuvers.add(theManeuver)
         }
 
@@ -249,9 +264,10 @@ class JourneyHelper(private val application: Application): MapHelper(application
     }
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
-                                   routesObserver: RoutesObserver,
-                                   locationObserver: LocationObserver,
-                                   routeProgressObserver: RouteProgressObserver)
+                          routesObserver: RoutesObserver,
+                          locationObserver: LocationObserver,
+                          routeProgressObserver: RouteProgressObserver
+    )
     {
         mapboxNavigation.registerRoutesObserver(routesObserver)
         mapboxNavigation.registerLocationObserver(locationObserver)
@@ -259,12 +275,17 @@ class JourneyHelper(private val application: Application): MapHelper(application
     }
 
     fun unregisterObservers(mapboxNavigation: MapboxNavigation,
-                          routesObserver: RoutesObserver,
-                          locationObserver: LocationObserver,
-                          routeProgressObserver: RouteProgressObserver)
+                            routesObserver: RoutesObserver,
+                            locationObserver: LocationObserver,
+                            routeProgressObserver: RouteProgressObserver)
     {
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
         mapboxNavigation.unregisterLocationObserver(locationObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
+    }
+
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyMutableLiveData
     }
 }
