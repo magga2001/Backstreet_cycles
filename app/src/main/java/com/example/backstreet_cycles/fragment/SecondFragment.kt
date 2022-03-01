@@ -36,10 +36,8 @@ class SecondFragment : Fragment() {
         val activity: Activity? = activity
         var dockList: MutableList<Dock>? = null
         if (activity is MainActivity) {
-           val myactivity: MainActivity? = activity as MainActivity?
-            if(myactivity?.toLocationLat !=null) {
-                dockList = myactivity?.getDestinationClosestDocks()
-            }
+            val myactivity: MainActivity? = activity as MainActivity?
+            dockList = myactivity?.getDestinationClosestDocks()
         }
         //getClosestDocks(10,1.0)
         super.onViewCreated(view, savedInstanceState)

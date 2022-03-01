@@ -21,7 +21,7 @@ class RecyclerAdapter(private var docks: MutableList<Dock>?) : RecyclerView.Adap
         }
 
         override fun onClick(p0: View?) {
-            Log.i("asdsad", dockName.text.toString())
+            Log.i("Dock Clicked: ", dockName.text.toString())
 
         }
     }
@@ -32,12 +32,11 @@ class RecyclerAdapter(private var docks: MutableList<Dock>?) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.dockName.text = docks!!.get(position).name
+        holder.dockName.text = docks!![position].name
     }
 
     override fun getItemCount(): Int {
-        Log.i("docks size:", docks!!.size.toString())
         return 10
-//        return docks!!.size
+        //return docks!!.size
     }
 }

@@ -107,8 +107,9 @@
         <LinearLayout
             android:id="@+id/fragmentLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:layout_below="@id/mapView"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
 
@@ -124,6 +125,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/tab_layout" />
         </LinearLayout>
+
 
 
     </RelativeLayout>

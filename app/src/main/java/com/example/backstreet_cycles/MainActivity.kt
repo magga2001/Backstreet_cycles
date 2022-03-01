@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var tabLayout:TabLayout?=null
     private var pager:ViewPager2?=null
     private var adapter:PagerAdapter?=null
-
+    private var button: Button?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,23 +170,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         backButton!!.visibility = View.GONE
 
         planJourneyButton!!.setOnClickListener {
-            locationLayout!!.setVisibility(View.VISIBLE)
-            fromButton!!.setVisibility(View.VISIBLE)
-            toButton!!.setVisibility(View.VISIBLE)
-            fromTextView!!.setVisibility(View.VISIBLE)
-            toTextView!!.setVisibility(View.VISIBLE)
-            backButton!!.setVisibility(View.VISIBLE)
+            locationLayout.visibility = View.VISIBLE
+            fromButton!!.visibility = View.VISIBLE
+            toButton!!.visibility = View.VISIBLE
+            fromTextView!!.visibility = View.VISIBLE
+            toTextView!!.visibility = View.VISIBLE
+            backButton.visibility = View.VISIBLE
 
             planJourneyButton.visibility = View.GONE
         }
 
-        backButton!!.setOnClickListener {
-            locationLayout!!.visibility = View.GONE
+        backButton.setOnClickListener {
+            locationLayout.visibility = View.GONE
             fromButton!!.visibility = View.GONE
             toButton!!.visibility = View.GONE
             fromTextView!!.visibility = View.GONE
             toTextView!!.visibility = View.GONE
-            backButton!!.visibility = View.GONE
+            backButton.visibility = View.GONE
 
             planJourneyButton.setVisibility(View.VISIBLE)
         }
@@ -336,11 +336,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
             else if(changeFrom!!){
                 fromButton!!.text = "${selectedCarmenFeature.placeName()}"
                 changeFrom =false
-
                 fromLocationLat = lat
                 fromLocationLon = long
             }
-            //fragmentIntialiser()
+            fragmentIntialiser()
         }
     }
 
@@ -364,26 +363,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
         fragmentIntialiser()
     }
 
-    fun fragmentIntialiser(){
-        tabLayout = findViewById(R.id.tab_layout)
-        pager = findViewById(R.id.pager)
-        adapter = PagerAdapter(supportFragmentManager,lifecycle)
+    private fun fragmentIntialiser(){
+    tabLayout = findViewById(R.id.tab_layout)
+    pager = findViewById(R.id.pager)
+    adapter = PagerAdapter(supportFragmentManager,lifecycle)
 
+    pager!!.adapter = adapter
 
-        pager!!.adapter = adapter
-
-        TabLayoutMediator(tabLayout!!, pager!!) {tab, position->
-            when(position){
-                0 -> {
-                    tab.text="Depart From"
-                }
-
-                1 -> {
-                    tab.text = "Arrive To"
-                }
+    TabLayoutMediator(tabLayout!!, pager!!) {tab, position->
+        when(position){
+            0 -> {
+                tab.text="Depart From"
             }
 
-        }.attach()
+            1 -> {
+                tab.text = "Arrive To"
+            }
+        }
+
+    }.attach()
     }
 
     private fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
@@ -479,62 +477,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     }
 
-    fun getCurrentLocation(): Location? {
+    private fun getCurrentLocation(): Location? {
         return locationComponent?.lastKnownLocation
     }
 
 
-    // Get all the docks around the current location
-    private fun getRadiusDocks(radius: Double): MutableList<Dock> {
-        if (getCurrentLocation()  != null) {
-            val currentLat = getCurrentLocation()?.latitude
-            val currentLon = getCurrentLocation()?.longitude
-
-//        return docks
-            return docks.filter { dock ->
-                val dockLat = dock.lat
-                val dockLon = dock.lon
-                abs(dockLat - currentLat!!) <= radius && abs(dockLon - currentLon!!) <= radius
-            }.toMutableList()
-        } else {
-            return docks
-        }
-    }
-
-
-
-    // Get all the docks around the searched location ie destination
-    private fun getDestinationRadiusDocks(radius: Double): MutableList<Dock> {
-        //Using location data of searched location via search bar
-        val currentLat = toLocationLat
-        val currentLon = toLocationLon
-        val closestDocks = docks
-
-        closestDocks.filter { it.nbSpaces != 0 }
-        closestDocks.sortBy { abs(it.lat - currentLat) +  abs(it.lon - currentLon) }
-        return closestDocks.subList(0, 10)
-
-
-//        return docks.filter { dock ->
-//            val dockLat = dock.lat
-//            val dockLon = dock.lon
-//            abs(dockLat - currentLat) <= radius && abs(dockLon - currentLon) <= radius
-//        }.toMutableList()
-    }
 
     // Get relevant docks around the searched location ie destination
     fun getDestinationClosestDocks(): MutableList<Dock> {
+        val closestDocks = docks
         val currentLat = toLocationLat
         val currentLon = toLocationLon
 
-        val closestDocks = docks
+        closestDocks.filter { it.nbSpaces != 0 }
         closestDocks.sortBy {
             abs(it.lat - currentLat) + abs(it.lon - currentLon)
         }
 
 
         // Filtering out docks that don't have available spaces
-        //closestDocks.filter { it.nbSpaces != 0 }
 
         //closestDocks.sortBy { it.lat.pow(2.0) + it.lon.pow(2.0) }
 
@@ -544,16 +505,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
 
     fun getClosestDocks(): MutableList<Dock> {
             val closestDocks = docks
-
             val currentLat = fromLocationLat
             val currentLon = fromLocationLon
 //            // Filtering out docks that don't have available spaces
             closestDocks.filter { it.nbSpaces != 0 }
-
-
             closestDocks.sortBy { abs(it.lat - currentLat) +  abs(it.lon - currentLon) }
-
-
             return closestDocks.subList(0, 10)
         }
 
