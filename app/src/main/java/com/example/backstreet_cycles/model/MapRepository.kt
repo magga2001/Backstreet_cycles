@@ -46,6 +46,9 @@ abstract class MapRepository(private val application: Application)
      */
     protected val navigationLocationProvider = NavigationLocationProvider()
 
+    /**
+     * Test
+     */
     fun checkPermission(context: Context, activity: Activity)
     {
         val TAG_CODE_PERMISSION_LOCATION = 0

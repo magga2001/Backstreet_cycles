@@ -21,12 +21,18 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
         }
     }
 
+    /**
+     * Test
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_instructions, parent, false)
 
         return ViewHolder(view)
     }
 
+    /**
+     * Test
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val maneuver = maneuvers[position]
@@ -35,6 +41,9 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
         holder.distance.text = context.getString(R.string.distance_unit, maneuver.distance.toString())
     }
 
+    /**
+     * Test
+     */
     override fun getItemCount(): Int {
         return maneuvers.size
     }

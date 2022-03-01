@@ -10,11 +10,17 @@ import androidx.appcompat.content.res.AppCompatResources
 
 class BitmapHelper {
 
-    companion object
-    {
+
+    companion object {
+        /**
+         * Test
+         */
         fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
             convertDrawableToBitmap(AppCompatResources.getDrawable(context, resourceId))
 
+        /**
+         * Test
+         */
         private fun convertDrawableToBitmap(sourceDrawable: Drawable?): Bitmap? {
             if (sourceDrawable == null) {
                 return null

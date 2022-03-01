@@ -106,6 +106,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
         }
     }
 
+    /**
+     * Test
+     */
     fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>) {
 //
         currentRoute.clear()
@@ -119,6 +122,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
     }
 
+    /**
+     * Test
+     */
     private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
     {
         return RouteOptions.builder()
@@ -134,6 +140,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
             .build()
     }
 
+    /**
+     * Test
+     */
     private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, points: List<Point>)
     {
         mapboxNavigation.requestRoutes(
@@ -184,6 +193,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
         )
     }
 
+    /**
+     * Test
+     */
     fun getInstructions(route:DirectionsRoute)
     {
         val json = JSONObject(route.toJson())
@@ -215,6 +227,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
     }
 
+    /**
+     * Test
+     */
     fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
     {
         routes.sortedBy { it.duration() }
@@ -222,6 +237,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
         return routes.first()
     }
 
+    /**
+     * Test
+     */
     fun getCenterViewPoint(docks: List<Point>): Point
     {
         var totalLat = 0.0
