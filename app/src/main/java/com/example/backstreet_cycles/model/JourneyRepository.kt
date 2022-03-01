@@ -36,7 +36,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
-class JourneyHelper(private val application: Application): MapHelper(application) {
+class JourneyRepository(private val application: Application): MapRepository(application) {
 
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
 

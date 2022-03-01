@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.ManeuverAdapter
-import com.example.backstreet_cycles.model.MapHelper
+import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.MapboxMap
@@ -74,7 +74,7 @@ class JourneyActivity : AppCompatActivity() {
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var mAdapter: ManeuverAdapter
-    private val currentRoute = MapHelper.currentRoute
+    private val currentRoute = MapRepository.currentRoute
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +118,7 @@ class JourneyActivity : AppCompatActivity() {
         mapboxMap.loadStyleUri(
             Style.MAPBOX_STREETS,
             {
-                journeyViewModel.updateCamera(MapHelper.centerPoint, null, mapView)
+                journeyViewModel.updateCamera(MapRepository.centerPoint, null, mapView)
                 startNavigation?.visibility = View.VISIBLE
                 journeyViewModel.addAnnotationToMap(this, mapView)
             },
@@ -191,7 +191,7 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet()
     {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-        mAdapter = ManeuverAdapter(this, MapHelper.maneuvers)
+        mAdapter = ManeuverAdapter(this, MapRepository.maneuvers)
         maneuver_recycling_view.layoutManager = LinearLayoutManager(this)
         maneuver_recycling_view.adapter = mAdapter
     }

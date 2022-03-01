@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import com.example.backstreet_cycles.model.JourneyHelper
+import com.example.backstreet_cycles.model.JourneyRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -22,40 +22,40 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 
 class JourneyViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mapRepository: JourneyHelper
+    private val journeyRepository: JourneyRepository
 
     init {
-        mapRepository = JourneyHelper(application)
+        journeyRepository = JourneyRepository(application)
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
     {
-        return mapRepository.initialiseMapboxNavigation()
+        return journeyRepository.initialiseMapboxNavigation()
     }
 
     fun initialiseRouteLineResources(): RouteLineResources
     {
-        return mapRepository.initialiseRouteLineResources()
+        return journeyRepository.initialiseRouteLineResources()
     }
 
     fun initialiseLocationComponent(mapView: MapView) : LocationComponentPlugin
     {
-        return mapRepository.initialiseLocationComponent(mapView)
+        return journeyRepository.initialiseLocationComponent(mapView)
     }
 
     fun initialiseLocationObserver(mapView: MapView): LocationObserver
     {
-        return mapRepository.initialiseLocationObserver(mapView)
+        return journeyRepository.initialiseLocationObserver(mapView)
     }
 
     fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
     {
-        return mapRepository.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
+        return journeyRepository.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
     }
 
     fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
     {
-        return mapRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView)
+        return journeyRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView)
     }
 
     fun initialiseRouteProgressObserver(mapboxMap: MapboxMap,
@@ -65,22 +65,22 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
                                         routeArrowView: MapboxRouteArrowView
     ): RouteProgressObserver
     {
-        return mapRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView)
+        return journeyRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView)
     }
 
     fun checkPermission(context: Context, activity: Activity)
     {
-        mapRepository.checkPermission(context, activity)
+        journeyRepository.checkPermission(context, activity)
     }
 
     fun updateCamera(point: Point, bearing: Double?, mapView: MapView)
     {
-        mapRepository.updateCamera(point, bearing, mapView)
+        journeyRepository.updateCamera(point, bearing, mapView)
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView)
     {
-        mapRepository.addAnnotationToMap(context,mapView)
+        journeyRepository.addAnnotationToMap(context,mapView)
     }
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
@@ -88,7 +88,7 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
                           locationObserver: LocationObserver,
                           routeProgressObserver: RouteProgressObserver)
     {
-        mapRepository.registerObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
+        journeyRepository.registerObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
     }
 
     fun unregisterObservers(mapboxNavigation: MapboxNavigation,
@@ -96,7 +96,7 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
                           locationObserver: LocationObserver,
                           routeProgressObserver: RouteProgressObserver)
     {
-        mapRepository.unregisterObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
+        journeyRepository.unregisterObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
     }
 
 }

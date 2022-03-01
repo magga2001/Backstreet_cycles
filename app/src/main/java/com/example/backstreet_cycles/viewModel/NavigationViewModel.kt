@@ -4,8 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import com.example.backstreet_cycles.model.JourneyHelper
-import com.example.backstreet_cycles.model.NavigationHelper
+import com.example.backstreet_cycles.model.NavigationRepository
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -13,7 +12,6 @@ import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.directions.session.RoutesObserver
-import com.mapbox.navigation.core.replay.MapboxReplayer
 import com.mapbox.navigation.core.replay.route.ReplayProgressObserver
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
@@ -34,10 +32,10 @@ import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
 
 class NavigationViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val navigationRepository: NavigationHelper
+    private val navigationRepository: NavigationRepository
 
     init {
-        navigationRepository = NavigationHelper(application)
+        navigationRepository = NavigationRepository(application)
     }
 
     fun checkPermission(context: Context, activity: Activity)

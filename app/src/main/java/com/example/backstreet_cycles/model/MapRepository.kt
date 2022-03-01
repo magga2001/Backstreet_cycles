@@ -29,7 +29,7 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 
-abstract class MapHelper(private val application: Application)
+abstract class MapRepository(private val application: Application)
 {
     companion object
     {

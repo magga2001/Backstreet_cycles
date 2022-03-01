@@ -7,7 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.model.MapHelper
+import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.viewModel.NavigationViewModel
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.maps.EdgeInsets
@@ -173,7 +173,7 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var onPositionChangedListener: OnIndicatorPositionChangedListener
     private lateinit var routeLineResources: RouteLineResources
     private lateinit var mapboxNavigation: MapboxNavigation
-    private val currentRoute = MapHelper.currentRoute
+    private val currentRoute = MapRepository.currentRoute
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
