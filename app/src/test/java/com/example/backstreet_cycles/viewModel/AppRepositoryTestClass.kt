@@ -34,10 +34,11 @@ class AppRepositoryTestClass {
     lateinit var mockFirestore: FirebaseFirestore
     lateinit var  mockFirebaseAuth: FirebaseAuth
     lateinit var application: Application
+
     @Mock
     private lateinit var successTask: Task<AuthResult>
     @Mock
-    private lateinit var failiureTask: Task<AuthResult>
+    private lateinit var failureTask: Task<AuthResult>
     @Mock
     private lateinit var collectionReference: CollectionReference
     @Mock
@@ -48,6 +49,9 @@ class AppRepositoryTestClass {
     private  lateinit var taskQuery: Task<QuerySnapshot>
     @Mock
     private lateinit var mutableFirebaseUser : MutableLiveData<FirebaseUser>
+
+    @Mock
+    private lateinit var exception: Exception
 
     @Before
     fun setUp() {
@@ -97,27 +101,27 @@ class AppRepositoryTestClass {
             }
 
             override fun getException(): Exception? {
-                TODO("Not yet implemented")
+                return task.exception
             }
 
             override fun getResult(): DocumentReference {
-                TODO("Not yet implemented")
+                return task.result
             }
 
             override fun <X : Throwable?> getResult(p0: Class<X>): DocumentReference {
-                TODO("Not yet implemented")
+                return task.result
             }
 
             override fun isCanceled(): Boolean {
-                TODO("Not yet implemented")
+                return true
             }
 
             override fun isComplete(): Boolean {
-                TODO("Not yet implemented")
+                return true
             }
 
             override fun isSuccessful(): Boolean {
-                TODO("Not yet implemented")
+               return true
             }
 
         }
@@ -125,7 +129,7 @@ class AppRepositoryTestClass {
     }
 
     @Test
-    fun `test create user account`() {
+    fun `test create user account returns correct email`() {
 //        val task: Task<AuthResult> = Mockito.mock(Task<AuthResult>::class.java)
        //  val firebaseAuth: FirebaseAuth = Mockito.mock(FirebaseAuth::class.java);
 //        Mockito.`when`(successTask.isSuccessful).thenReturn(true)
@@ -151,16 +155,16 @@ class AppRepositoryTestClass {
 //        }.`when`(taskQuery).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<QuerySnapshot>>())
 //        Mockito.doNothing().`when`(mutableFirebaseUser).postValue(any());
         `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
-        val testUser = appRepository.register("example1", "example2", "example@gmail.com","12345")
+        val testUser = appRepository.register("example1", "example2", "example@gmail.com","123456")
         if (testUser != null) {
             assert(testUser.email == "example@gmail.com")
         }
-        Mockito.verify(mockFirebaseAuth).createUserWithEmailAndPassword(any(), any())
+        //Mockito.verify(mockFirebaseAuth).createUserWithEmailAndPassword(any(), any())
         //Mockito.verify( userDetailsMutableLiveData).postValue(userDetails)
     }
 
     @Test
-    fun `test create user when error`() {
+    fun `test create user when error does not return an email`() {
 //        val task: Task<AuthResult> = Mockito.mock(Task<AuthResult>::class.java)
         //  val firebaseAuth: FirebaseAuth = Mockito.mock(FirebaseAuth::class.java);
 //        Mockito.`when`(successTask.isSuccessful).thenReturn(false)
@@ -171,13 +175,25 @@ class AppRepositoryTestClass {
 //            successTask
 //        }.`when`(successTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
 
-        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(failiureTask)
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(failureTask)
         val testUser = appRepository.register("example1", "example2", "example@gmail.com","12345")
-        if (testUser != null) {
-            assert(testUser.email == null)
-        }
+        assert(testUser == null)
+
 
 //        appRepository.register("example1", "example2", "example@gmail.com","12345")
         //Mockito.verify(toastService.show)
+    }
+
+    @Test
+    fun `test create two users with same email does not work`() {
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        val testUser = appRepository.register("example1", "example2", "example1@gmail.com","123456")
+        if (testUser != null) {
+            assert(testUser.email == "example1@gmail.com")
+        }
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(failureTask)
+        val testUser2 = appRepository.register("example1", "example2", "example1@gmail.com","123456")
+        assert(testUser2 == null)
+
     }
 }
