@@ -37,6 +37,8 @@ class AppRepositoryTestClass {
     @Mock
     private lateinit var successTask: Task<AuthResult>
     @Mock
+    private lateinit var failiureTask: Task<AuthResult>
+    @Mock
     private lateinit var collectionReference: CollectionReference
     @Mock
     private  lateinit var task: Task<DocumentReference>
@@ -50,10 +52,10 @@ class AppRepositoryTestClass {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        //application = Mockito.mock(Application::class.java)
+        application = Mockito.mock(Application::class.java)
         mockFirestore = mock(FirebaseFirestore::class.java)
         mockFirebaseAuth = mock(FirebaseAuth::class.java)
-        appRepository = AppRepository(application = Application(),mockFirestore,mockFirebaseAuth, mutableFirebaseUser)
+        appRepository = AppRepository(application,mockFirestore,mockFirebaseAuth, mutableFirebaseUser)
         println(mockFirestore)
         databaseInteractor = DatabaseInteractor(mockFirestore)
         println(databaseInteractor)
@@ -126,29 +128,33 @@ class AppRepositoryTestClass {
     fun `test create user account`() {
 //        val task: Task<AuthResult> = Mockito.mock(Task<AuthResult>::class.java)
        //  val firebaseAuth: FirebaseAuth = Mockito.mock(FirebaseAuth::class.java);
-        Mockito.`when`(successTask.isSuccessful).thenReturn(true)
-        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(any(), any())).thenReturn(successTask)
-        doAnswer{
-            val listener = it.arguments[0] as OnCompleteListener<AuthResult>
-            listener.onComplete(successTask)
-            successTask
-        }.`when`(successTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
-
-        Mockito.`when`(mockFirestore.collection(any())).thenReturn(collectionReference)
-        Mockito.`when`(collectionReference.add(any())).thenReturn(task);
-        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(firebaseUser)
-        Mockito.`when`(firebaseUser.email).thenReturn("test")
-        val queryMock = mock(Query::class.java)
-        Mockito.`when`(collectionReference.whereEqualTo(anyString(), any())).thenReturn(queryMock)
-        Mockito.`when`(queryMock.get()).thenReturn(taskQuery)
-        Mockito.`when`(taskQuery.isSuccessful).thenReturn(false)
-        doAnswer{
-            val listener = it.arguments[0] as OnCompleteListener<QuerySnapshot>
-            listener.onComplete(taskQuery)
-            taskQuery
-        }.`when`(taskQuery).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<QuerySnapshot>>())
-        Mockito.doNothing().`when`(mutableFirebaseUser).postValue(any());
-        appRepository.register("example1", "example2", "example@gmail.com","12345")
+//        Mockito.`when`(successTask.isSuccessful).thenReturn(true)
+//        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(any(), any())).thenReturn(successTask)
+//        doAnswer{
+//            val listener = it.arguments[0] as OnCompleteListener<AuthResult>
+//            listener.onComplete(successTask)
+//            successTask
+//        }.`when`(successTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
+//
+//        Mockito.`when`(mockFirestore.collection(any())).thenReturn(collectionReference)
+//        Mockito.`when`(collectionReference.add(any())).thenReturn(task);
+//        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(firebaseUser)
+//        Mockito.`when`(firebaseUser.email).thenReturn("test")
+//        val queryMock = mock(Query::class.java)
+//        Mockito.`when`(collectionReference.whereEqualTo(anyString(), any())).thenReturn(queryMock)
+//        Mockito.`when`(queryMock.get()).thenReturn(taskQuery)
+//        Mockito.`when`(taskQuery.isSuccessful).thenReturn(false)
+//        doAnswer{
+//            val listener = it.arguments[0] as OnCompleteListener<QuerySnapshot>
+//            listener.onComplete(taskQuery)
+//            taskQuery
+//        }.`when`(taskQuery).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<QuerySnapshot>>())
+//        Mockito.doNothing().`when`(mutableFirebaseUser).postValue(any());
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        val testUser = appRepository.register("example1", "example2", "example@gmail.com","12345")
+        if (testUser != null) {
+            assert(testUser.email == "example@gmail.com")
+        }
         Mockito.verify(mockFirebaseAuth).createUserWithEmailAndPassword(any(), any())
         //Mockito.verify( userDetailsMutableLiveData).postValue(userDetails)
     }
@@ -157,15 +163,21 @@ class AppRepositoryTestClass {
     fun `test create user when error`() {
 //        val task: Task<AuthResult> = Mockito.mock(Task<AuthResult>::class.java)
         //  val firebaseAuth: FirebaseAuth = Mockito.mock(FirebaseAuth::class.java);
-        Mockito.`when`(successTask.isSuccessful).thenReturn(false)
-        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(any(), any())).thenReturn(successTask)
-        doAnswer{
-            val listener = it.arguments[0] as OnCompleteListener<AuthResult>
-            listener.onComplete(successTask)
-            successTask
-        }.`when`(successTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
+//        Mockito.`when`(successTask.isSuccessful).thenReturn(false)
+//        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(any(), any())).thenReturn(successTask)
+//        doAnswer{
+//            val listener = it.arguments[0] as OnCompleteListener<AuthResult>
+//            listener.onComplete(successTask)
+//            successTask
+//        }.`when`(successTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
 
-        appRepository.register("example1", "example2", "example@gmail.com","12345")
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(failiureTask)
+        val testUser = appRepository.register("example1", "example2", "example@gmail.com","12345")
+        if (testUser != null) {
+            assert(testUser.email == null)
+        }
+
+//        appRepository.register("example1", "example2", "example@gmail.com","12345")
         //Mockito.verify(toastService.show)
     }
 }

@@ -27,7 +27,7 @@ class AppRepository(private val application: Application,
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
     private val userDetailsMutableLiveData: MutableLiveData<UserDto>
     private val firebaseAuth: FirebaseAuth
-    private val db: FirebaseFirestore
+    private val db = fireStore
 
     init {
         mutableLiveData = _mutableLiveData
@@ -35,7 +35,6 @@ class AppRepository(private val application: Application,
         updatedProfileMutableLiveData = MutableLiveData()
         userDetailsMutableLiveData = MutableLiveData()
         firebaseAuth = fireBaseAuth
-        db = fireStore
         if (firebaseAuth.currentUser != null) {
             mutableLiveData.postValue(firebaseAuth.currentUser)
             loggedOutMutableLiveData.postValue(false)
@@ -43,7 +42,7 @@ class AppRepository(private val application: Application,
         }
     }
 
-    fun register(fName: String, lName: String, email: String, password: String) {
+    fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -54,6 +53,7 @@ class AppRepository(private val application: Application,
                     createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
             }
+        return firebaseAuth.currentUser
     }
 
     fun createUserAccount(firstName: String, lastName: String, email: String) {

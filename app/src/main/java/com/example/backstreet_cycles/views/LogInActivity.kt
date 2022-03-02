@@ -84,10 +84,10 @@ class LogInActivity : AppCompatActivity() {
                 .setApiKey("AIzaSyDHMVdka4bwNzSXOKy65GZCQh8ONpHv058")
                 .build()
         Firebase.initialize(application, options, "secondary")
-        val secondary = Firebase.app("secondary")
-        val mutableLiveData = MutableLiveData<FirebaseUser>()
-        val appRepository = AppRepository(application, FirebaseFirestore.getInstance(secondary), FirebaseAuth.getInstance(secondary), mutableLiveData)
-        appRepository.register("One","Coconut","more@example.com","123456")
+//        val secondary = Firebase.app("secondary")
+//        val mutableLiveData = MutableLiveData<FirebaseUser>()
+//        val appRepository = AppRepository(application, FirebaseFirestore.getInstance(secondary), FirebaseAuth.getInstance(secondary), mutableLiveData)
+//        appRepository.register("One","Coconut","more@example.com","123456")
 
     }
 
