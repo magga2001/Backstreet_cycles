@@ -199,9 +199,10 @@ class AppRepository(private val application: Application,
         return firebaseAuth.currentUser
     }
 
-    fun logout() {
+    fun logout() : FirebaseUser? {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
+        return firebaseAuth.currentUser
     }
 
     private fun createToastMessage(stringMessage: String?) {
@@ -209,21 +210,6 @@ class AppRepository(private val application: Application,
             .show()
     }
 
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
-    }
-
-    fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
-        return loggedOutMutableLiveData
-    }
-
-    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
-        return updatedProfileMutableLiveData
-    }
-
-    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
-        return userDetailsMutableLiveData
-    }
 }
 
 

@@ -207,4 +207,33 @@ class AppRepositoryTestClass {
             assert(testUser.email=="example@gmail.com")
         }
     }
+
+    @Test
+    fun `test unsuccessful sign in with incorrect email`() {
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        appRepository.register("example1", "example2", "example@gmail.com","123456")
+        `when`(mockFirebaseAuth.signInWithEmailAndPassword(anyString(), anyString())).thenReturn(failureTask)
+        val testUser=appRepository.login("incorrect@gmail.com", "123456")
+        assert(testUser== null)
+    }
+
+    @Test
+    fun `test unsuccessful sign in with incorrect password`() {
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        appRepository.register("example1", "example2", "example@gmail.com","123456")
+        `when`(mockFirebaseAuth.signInWithEmailAndPassword(anyString(), anyString())).thenReturn(failureTask)
+        val testUser=appRepository.login("example@gmail.com", "incorrect")
+        assert(testUser== null)
+    }
+
+    @Test
+    fun `test successful log out`(){
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        appRepository.register("example1", "example2", "example@gmail.com","123456")
+        `when`(mockFirebaseAuth.signInWithEmailAndPassword(anyString(), anyString())).thenReturn(failureTask)
+        appRepository.login("example@gmail.com", "incorrect")
+        val testUser=appRepository.logout()
+        assert(testUser== null)
+    }
+
 }
