@@ -78,6 +78,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     var fromLocationLat: Double = 0.0
     var fromLocationLon: Double = 0.0
     // Public variables to store captured location
+    var searchedLat: Double = 0.0
+    var searchedLon: Double = 0.0
+
     var toLocationLat: Double = 0.0
     var toLocationLon: Double = 0.0
     private var toButton: Button? = null
@@ -90,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
     private var tabLayout:TabLayout?=null
     private var pager:ViewPager2?=null
     private var adapter:PagerAdapter?=null
-    private var button: Button?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -298,8 +300,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                     val source = style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)
 
                     // Save location data of searched location via search bar
-                    toLocationLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
-                    toLocationLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
+                    searchedLat = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
+                    searchedLon = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
 
                     source?.setGeoJson(
                         FeatureCollection.fromFeatures(
@@ -315,8 +317,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListene
                             CameraPosition.Builder()
                                 .target(
                                     LatLng(
-                                        toLocationLat,
-                                        toLocationLon
+                                        searchedLat,
+                                        searchedLon
                                     )
                                 )
                                 .zoom(14.0)

@@ -81,7 +81,8 @@
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="428dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fragmentLayout"
             android:layout_below="@+id/locationLayout"
             android:clickable="false"
             app:mapbox_cameraZoom="12"
@@ -107,9 +108,8 @@
         <LinearLayout
             android:id="@+id/fragmentLayout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@id/mapView"
-            android:layout_alignParentBottom="true"
+            android:layout_height="250dp"
+            android:layout_above="@+id/toAndFromDock"
             android:orientation="vertical">
 
 
@@ -119,12 +119,37 @@
                 android:layout_height="wrap_content"
                 tools:ignore="SpeakableTextPresentCheck" />
 
-            <androidx.viewpager2.widget.ViewPager2 xmlns:android="http://schemas.android.com/apk/res/android"
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="196dp"
                 android:layout_below="@id/tab_layout" />
         </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toAndFromDock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/fromDock"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/toDock"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="From"/>
+
+            <TextView
+                android:id="@+id/toDock"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="To"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
