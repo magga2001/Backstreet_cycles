@@ -186,7 +186,7 @@ class AppRepository(private val application: Application,
             }
     }
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String) : FirebaseUser? {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -196,6 +196,7 @@ class AppRepository(private val application: Application,
                     createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
                 }
             }
+        return firebaseAuth.currentUser
     }
 
     fun logout() {

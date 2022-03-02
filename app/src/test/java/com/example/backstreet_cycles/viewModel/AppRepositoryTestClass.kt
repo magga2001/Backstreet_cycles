@@ -196,4 +196,15 @@ class AppRepositoryTestClass {
         assert(testUser2 == null)
 
     }
+
+    @Test
+    fun `test successful sign in with username and password`(){
+        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        appRepository.register("example1", "example2", "example@gmail.com","123456")
+        `when`(mockFirebaseAuth.signInWithEmailAndPassword(anyString(), anyString())).thenReturn(successTask)
+        val testUser=appRepository.login("example@gmail.com", "123456")
+        if (testUser != null) {
+            assert(testUser.email=="example@gmail.com")
+        }
+    }
 }
