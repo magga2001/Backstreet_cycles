@@ -1,17 +1,15 @@
 package com.example.backstreet_cycles.adapter
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.R
 
-class RecyclerAdapter(private var docks: MutableList<Dock>?) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>()
+class DockAdapter(private var docks: List<Dock>?) : RecyclerView.Adapter<DockAdapter.ViewHolder>()
 {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         internal val dockName: TextView = itemView.findViewById(R.id.dock_name)
@@ -38,5 +36,12 @@ class RecyclerAdapter(private var docks: MutableList<Dock>?) : RecyclerView.Adap
     override fun getItemCount(): Int {
         return 10
         //return docks!!.size
+    }
+
+    fun updateList(docks: List<Dock>)
+    {
+        this.docks = docks
+
+        notifyDataSetChanged()
     }
 }

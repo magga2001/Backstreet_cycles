@@ -8,7 +8,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.view.HomePageActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -31,7 +32,7 @@ class SplashScreenActivity: AppCompatActivity() {
     {
         Handler(Looper.myLooper()!!).postDelayed({
             Log.d("Success loading", "Loading Main Activity")
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, HomePageActivity::class.java))
             finish()
         },100)
     }

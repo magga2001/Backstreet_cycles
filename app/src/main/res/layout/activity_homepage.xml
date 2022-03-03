@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".view.HomePageActivity"
     android:id="@+id/drawerLayout">
 
     <RelativeLayout
@@ -13,14 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        tools:context=".MainActivity">
+        tools:context=".view.HomePageActivity">
 
         <RelativeLayout
             android:id="@+id/locationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
-            tools:context=".MainActivity">
+            tools:context=".view.HomePageActivity">
 
             <Button
                 android:id="@+id/fromButton"
@@ -82,7 +82,6 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/fragmentLayout"
             android:layout_below="@+id/locationLayout"
             android:clickable="false"
             app:mapbox_cameraZoom="12"
@@ -105,55 +104,20 @@
         </com.mapbox.mapboxsdk.maps.MapView>
 
 
-        <LinearLayout
-            android:id="@+id/fragmentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_above="@+id/toAndFromDock"
-            android:orientation="vertical">
-
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="196dp"
-                android:layout_below="@id/tab_layout" />
-        </LinearLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toAndFromDock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-
-            <TextView
-                android:id="@+id/fromDock"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/toDock"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="From"/>
-
-            <TextView
-                android:id="@+id/toDock"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="To"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
     </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.JourneyActivity"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <include
+            android:id="@+id/bottom_sheet_view"
+            layout="@layout/homepage_bottom_sheet"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -164,4 +128,5 @@
         android:fitsSystemWindows="true" >
 
     </com.google.android.material.navigation.NavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

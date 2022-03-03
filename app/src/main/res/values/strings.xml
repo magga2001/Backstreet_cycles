@@ -19,5 +19,7 @@
     <string name="origin">e.g. Waterloo</string>
     <string name="destination">e.g. Shoreditch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Depart">Depart</string>
+    <string name="Arrive">Arrive</string>
 
 </resources>

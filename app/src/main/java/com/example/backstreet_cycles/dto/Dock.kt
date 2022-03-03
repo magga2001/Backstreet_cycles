@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.DTO
+package com.example.backstreet_cycles.dto
 
 data class Dock(
     val id : String = "",
