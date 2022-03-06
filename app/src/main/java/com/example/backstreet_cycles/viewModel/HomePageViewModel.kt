@@ -29,9 +29,9 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         homePageRepository.initialiseCurrentLocation(loadedMapStyle, locationComponent)
     }
 
-    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style)
+    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: MutableList<MutableList<String>>)
     {
-        homePageRepository.displayingDocks(mapView, mapboxMap, loadedMapStyle)
+        homePageRepository.displayingDocks(mapView, mapboxMap, loadedMapStyle,data)
     }
 
     fun getCurrentLocation(locationComponent: LocationComponent): Location?

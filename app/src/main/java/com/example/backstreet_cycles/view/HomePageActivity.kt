@@ -4,6 +4,7 @@ package com.example.backstreet_cycles.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -36,6 +37,8 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
+import java.io.BufferedReader
+import java.io.InputStream
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -48,6 +51,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var mAdapter: DockAdapter
+    private var data : MutableList<MutableList<String>>?= mutableListOf()
+
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
@@ -74,7 +79,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initialiseNavigationDrawer()
         initialiseView()
         initialiseListeners()
+        initialiseTouristAttractions()
     }
+
+    private fun initialiseTouristAttractions() {
+        val openRawSource: InputStream = resources.openRawResource(R.raw.data)
+        val bufferedReader: BufferedReader = openRawSource.bufferedReader()
+        var line: String = bufferedReader.readLine()
+        while(!line.startsWith("last")){
+            val d = line.split(",")
+            data?.add(d.toMutableList())
+            line = bufferedReader.readLine()
+        }
+
+        bufferedReader.close()
+        openRawSource.close()    }
 
     private fun initialiseNavigationDrawer()
     {
@@ -189,13 +208,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
+
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(
             Style.MAPBOX_STREETS
         ) { style ->
 
             enableLocationComponent(style)
-            homePageViewModel.displayingDocks(mapView, mapboxMap, style)
+            homePageViewModel.displayingDocks(mapView, mapboxMap, style, data!!)
             //init search fab()
             setUpSource(style)
             setUpLayer(style)
@@ -248,7 +268,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
             selectedCarmenFeature.placeName()?.let { updateSearchBar(latitude, longitude, it) }
-
             docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
 
             updateBottomSheet()
