@@ -13,15 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".views.SplashScreenActivity"
+            android:name=".views.SplashScreenActivity"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".views.SelectRouteActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
