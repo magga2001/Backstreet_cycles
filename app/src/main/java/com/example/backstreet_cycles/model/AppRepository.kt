@@ -45,6 +45,7 @@ class AppRepository(private val application: Application,
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    firebaseAuth.currentUser?.sendEmailVerification()
                     createUserAccount(fName, lName, email)
                     getUserDetails()
                     mutableLiveData.postValue(firebaseAuth.currentUser)
