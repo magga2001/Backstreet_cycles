@@ -186,7 +186,7 @@ class AppRepository(private val application: Application,
             }
     }
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String) : FirebaseUser? {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -196,11 +196,13 @@ class AppRepository(private val application: Application,
                     createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
                 }
             }
+        return firebaseAuth.currentUser
     }
 
-    fun logout() {
+    fun logout() : FirebaseUser? {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
+        return firebaseAuth.currentUser
     }
 
     private fun createToastMessage(stringMessage: String?) {
@@ -208,21 +210,6 @@ class AppRepository(private val application: Application,
             .show()
     }
 
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
-    }
-
-    fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
-        return loggedOutMutableLiveData
-    }
-
-    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
-        return updatedProfileMutableLiveData
-    }
-
-    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
-        return userDetailsMutableLiveData
-    }
 }
 
 
