@@ -3,11 +3,14 @@ package com.example.backstreet_cycles
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.backstreet_cycles.model.SelectRouteHelper
 import com.example.backstreet_cycles.model.TflRepository
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 
 class MainActivity : AppCompatActivity() {
+
+    var  srh : SelectRouteHelper = SelectRouteHelper()
 
     var mapView: MapView? = null
 
@@ -17,6 +20,9 @@ class MainActivity : AppCompatActivity() {
 
         mapView = findViewById(R.id.mapView)
         mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+
+        srh.createDistanceList()
+        srh.travellingSalesmanProblem()
 
         Log.i("Retrieve data", TflRepository.docks.size.toString())
     }
