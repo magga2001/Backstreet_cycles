@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.view
 
 //---------------------------------
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -11,9 +12,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.DockAdapter
+import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.utils.MapHelper
@@ -36,6 +41,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
+import java.util.*
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -48,6 +54,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var mAdapter: DockAdapter
+
+//    Currently in progress
+    private lateinit var stops: MutableList<String>
+    private lateinit var sAdapter: StopsAdapter
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
@@ -74,6 +84,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initialiseNavigationDrawer()
         initialiseView()
         initialiseListeners()
+
+
+
+
+
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(closest_dock_recycling_view)
     }
 
     private fun initialiseNavigationDrawer()
@@ -173,14 +190,39 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
+
+    val simpleCallback: SimpleCallback = object : SimpleCallback(
+        ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+        0
+    ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            val fromPosition = viewHolder.adapterPosition
+            val toPosition = target.adapterPosition
+            Collections.swap(stops, fromPosition, toPosition)
+            recyclerView.adapter!!.notifyItemMoved(fromPosition, toPosition)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+    }
+
     private fun initBottomSheet()
     {
-        docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-        mAdapter = DockAdapter(docks)
+        stops = listOf("Stop1","Stop2","Stop3","Stop4") as MutableList<String>
+        sAdapter = StopsAdapter(stops)
         closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
-        closest_dock_recycling_view.adapter = mAdapter
+        closest_dock_recycling_view.adapter = sAdapter
+//        docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
+
+//        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+//        mAdapter = DockAdapter(docks)
+//        closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
+//        closest_dock_recycling_view.adapter = mAdapter
+
     }
 
     private fun updateBottomSheet()
