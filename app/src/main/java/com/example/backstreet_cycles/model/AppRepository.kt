@@ -20,8 +20,7 @@ import kotlinx.coroutines.withContext
 
 class AppRepository(private val application: Application,
                     private val fireStore: FirebaseFirestore,
-                    private val fireBaseAuth: FirebaseAuth,
-                    private val _mutableLiveData: MutableLiveData<FirebaseUser>) {
+                    private val fireBaseAuth: FirebaseAuth) {
     private val mutableLiveData: MutableLiveData<FirebaseUser>
     private val loggedOutMutableLiveData: MutableLiveData<Boolean>
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
@@ -30,7 +29,7 @@ class AppRepository(private val application: Application,
     private val db = fireStore
 
     init {
-        mutableLiveData = _mutableLiveData
+        mutableLiveData = MutableLiveData()
         loggedOutMutableLiveData = MutableLiveData()
         updatedProfileMutableLiveData = MutableLiveData()
         userDetailsMutableLiveData = MutableLiveData()

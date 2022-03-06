@@ -21,15 +21,17 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
 
 
     init {
-//        mutableLiveData = appRepository.getMutableLiveData()
-//        loggedOutMutableiveData = appRepository.getLoggedOutMutableLiveData()
-//        updatedProfileMutableLiveData = appRepository.getUpdatedProfileMutableLiveData()
-//        userDetailsMutableLiveData = appRepository.getUserDetailsMutableLiveData()
-        mutableLiveData = MutableLiveData()
-        loggedOutMutableiveData = MutableLiveData()
-        updatedProfileMutableLiveData = MutableLiveData()
-        userDetailsMutableLiveData = MutableLiveData()
-        appRepository = AppRepository(application, Firebase.firestore, FirebaseAuth.getInstance(), mutableLiveData)
+        appRepository = AppRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
+        mutableLiveData = appRepository.getMutableLiveData()
+        loggedOutMutableiveData = appRepository.getLoggedOutMutableLiveData()
+        updatedProfileMutableLiveData = appRepository.getUpdatedProfileMutableLiveData()
+        userDetailsMutableLiveData = appRepository.getUserDetailsMutableLiveData()
+
+//        mutableLiveData = MutableLiveData()
+//        loggedOutMutableiveData = MutableLiveData()
+//        updatedProfileMutableLiveData = MutableLiveData()
+//        userDetailsMutableLiveData = MutableLiveData()
+
     }
 
     fun logOut() {

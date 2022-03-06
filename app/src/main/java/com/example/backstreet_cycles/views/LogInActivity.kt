@@ -34,7 +34,7 @@ class LogInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        intialiseSecondDB()
+//        intialiseSecondDB()
 
         loginRegiterViewModel = ViewModelProviders.of(this).get(LogInRegisterViewModel::class.java)
         loginRegiterViewModel.getMutableLiveData()
