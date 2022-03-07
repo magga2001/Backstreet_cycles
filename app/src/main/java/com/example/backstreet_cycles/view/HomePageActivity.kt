@@ -20,6 +20,7 @@ import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.LocationData
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -39,6 +40,8 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
 import java.io.BufferedReader
 import java.io.InputStream
+import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
+
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -49,7 +52,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
-    //private lateinit var sheetBehavior: BottomSheetBehavior<*>
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
     //private lateinit var mAdapter: DockAdapter
     private var data : MutableList<MutableList<String>>?= mutableListOf()
     private val REQUESTCODEAUTOCOMPLETE = 7171
@@ -64,6 +67,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private var changeTo: Boolean? = false
     private var changeFrom: Boolean? = false
+    private var addInfoToList: Boolean = true
+
+    private var updateInfo:Boolean=false
 
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
@@ -86,23 +92,29 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initialiseListeners()
         initialiseTouristAttractions()
 
-        addsBtn = findViewById(R.id.addingBtn)
-        locationList = ArrayList()
-        recy = findViewById(R.id.recyclerView)
-        locationAdapter = LocationAdapter(this,locationList)
-        recy.layoutManager = LinearLayoutManager(this)
-        recy.adapter = locationAdapter
-        //addsBtn.setOnClickListener{addInfo()}
-        addsBtn.setOnClickListener{
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
+
+        //********** to be added inside the func for recycler View initialiser *********
+
+
+
+
+        //********** to be added inside the func for recycler View initialiser *********
     }
 
+    private var pos:Int=0
     private fun addInfo(name:String, lat: Double, long: Double) {
         val inflater = LayoutInflater.from(this)
         //val v = inflater.inflate(R.layout.add_item, null)
         locationList.add(LocationData(name,lat, long))
+        locationAdapter.notifyDataSetChanged()
+        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
+        locationList.remove(locationList[pos])
+        val inflater = LayoutInflater.from(this)
+        //val v = inflater.inflate(R.layout.add_item, null)
+        locationList.add(pos,LocationData(name,lat, long))
         locationAdapter.notifyDataSetChanged()
         Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
     }
@@ -218,15 +230,33 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-//    private fun initBottomSheet()
-//    {
-//        docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-//
-//        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-//        mAdapter = DockAdapter(docks)
-//        closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
-//        closest_dock_recycling_view.adapter = mAdapter
-//    }
+    private fun initBottomSheet()
+    {
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+        addsBtn = findViewById(R.id.addingBtn)
+        locationList = ArrayList()
+        recy = findViewById(R.id.recyclerView)
+        locationAdapter = LocationAdapter(this,locationList)
+        recy.layoutManager = LinearLayoutManager(this)
+        recy.adapter = locationAdapter
+
+        addsBtn.setOnClickListener{
+            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+        }
+        locationAdapter.setOnItemClickListener(object : LocationAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                updateInfo = true
+                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+                //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
+                //locationList.remove(locationList[position])
+                pos=position
+            }
+
+
+        })
+    }
 
 //    private fun updateBottomSheet()
 //    {
@@ -294,9 +324,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
             selectedCarmenFeature.placeName()?.let { updateSearchBar(latitude, longitude, it) }
-            addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
-            //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-            //updateBottomSheet()
+            if(updateInfo){
+                updateInfo=false
+                addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+                //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
+                //updateBottomSheet()
+            }
+            else{
+                addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+            }
+
         }
     }
 
@@ -329,7 +366,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
             latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
 
-            //initBottomSheet()
+            initBottomSheet()
 
         } else {
             permissionsManager = PermissionsManager(this)
@@ -345,7 +382,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
-       // initBottomSheet()
+        initBottomSheet()
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
