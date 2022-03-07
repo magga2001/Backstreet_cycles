@@ -64,6 +64,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private var changeTo: Boolean? = false
     private var changeFrom: Boolean? = false
+    private var addInfoToList: Boolean = true
+
+    private var updateInfo:Boolean=false
 
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
@@ -86,6 +89,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initialiseListeners()
         initialiseTouristAttractions()
 
+
+        //********** to be added inside the func for recycler View initialiser *********
+
+
         addsBtn = findViewById(R.id.addingBtn)
         locationList = ArrayList()
         recy = findViewById(R.id.recyclerView)
@@ -97,12 +104,37 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
+
+        locationAdapter.setOnItemClickListener(object : LocationAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                updateInfo = true
+                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+               //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
+                //locationList.remove(locationList[position])
+                pos=position
+            }
+
+
+        })
+
+        //********** to be added inside the func for recycler View initialiser *********
     }
 
+    private var pos:Int=0
     private fun addInfo(name:String, lat: Double, long: Double) {
         val inflater = LayoutInflater.from(this)
         //val v = inflater.inflate(R.layout.add_item, null)
         locationList.add(LocationData(name,lat, long))
+        locationAdapter.notifyDataSetChanged()
+        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
+        locationList.remove(locationList[pos])
+        val inflater = LayoutInflater.from(this)
+        //val v = inflater.inflate(R.layout.add_item, null)
+        locationList.add(pos,LocationData(name,lat, long))
         locationAdapter.notifyDataSetChanged()
         Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
     }
@@ -294,9 +326,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
             selectedCarmenFeature.placeName()?.let { updateSearchBar(latitude, longitude, it) }
-            addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
-            //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-            //updateBottomSheet()
+            if(updateInfo){
+                updateInfo=false
+                addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+                //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
+                //updateBottomSheet()
+            }
+            else{
+                addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+            }
+
         }
     }
 
