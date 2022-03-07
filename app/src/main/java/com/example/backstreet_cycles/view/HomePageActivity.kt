@@ -78,7 +78,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         private const val symbolIconId = "SymbolIconId"
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
@@ -93,7 +92,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 //        initialiseView()
         initialiseListeners()
         initialiseTouristAttractions()
-
     }
 
     private var pos:Int=0
@@ -125,10 +123,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         bufferedReader.close()
-        openRawSource.close()    }
+        openRawSource.close()
+    }
 
-    private fun initialiseNavigationDrawer()
-    {
+    private fun initialiseNavigationDrawer() {
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -175,19 +173,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 //        locationLayout.visibility = View.GONE
 //    }
 
-    private fun initialiseListeners()
-    {
+    private fun initialiseListeners() {
         initialiseSearchBarListeners()
     }
 
-    private fun initialiseSearchBarListeners()
-    {
+    private fun initialiseSearchBarListeners() {
         val REQUESTCODEAUTOCOMPLETE = 7171
-
     }
 
-    private fun initBottomSheet()
-    {
+    private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
         addsBtn = findViewById(R.id.addingBtn)
         locationList = ArrayList()
@@ -211,8 +205,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
                 }
 
-
-
             }
 
             val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
@@ -224,7 +216,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
 
 
-        addsBtn.setOnClickListener{
+        addsBtn.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
@@ -237,7 +229,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 //locationList.remove(locationList[position])
                 pos=position
             }
-
 
         })
     }
@@ -308,16 +299,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
 
-            if(updateInfo){
+            if (updateInfo) {
                 updateInfo=false
                 addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
                 //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
                 //updateBottomSheet()
-            }
-            else{
+            } else {
                 addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
             }
-
         }
     }
 
