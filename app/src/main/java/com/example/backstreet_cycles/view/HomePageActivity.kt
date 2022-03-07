@@ -12,9 +12,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.SwipeToDeleteCallBack
 import com.example.backstreet_cycles.adapter.LocationAdapter
 import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.model.HomePageRepository
@@ -88,17 +90,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-        initialiseView()
+//        initialiseView()
         initialiseListeners()
         initialiseTouristAttractions()
 
-
-        //********** to be added inside the func for recycler View initialiser *********
-
-
-
-
-        //********** to be added inside the func for recycler View initialiser *********
     }
 
     private var pos:Int=0
@@ -174,16 +169,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-    private fun initialiseView()
-    {
-        //Relative Layout
-        locationLayout.visibility = View.GONE
-        backButton.visibility = View.GONE
-    }
+//    private fun initialiseView()
+//    {
+//        //Relative Layout
+//        locationLayout.visibility = View.GONE
+//    }
 
     private fun initialiseListeners()
     {
-        initialiseViewListeners()
         initialiseSearchBarListeners()
     }
 
@@ -191,43 +184,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     {
         val REQUESTCODEAUTOCOMPLETE = 7171
 
-        fromButton.setOnClickListener {
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            changeFrom = true
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
-
-        toButton.setOnClickListener {
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            changeTo = true
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
-
-    }
-
-    private fun initialiseViewListeners()
-    {
-        planJourneyButton.setOnClickListener {
-            locationLayout.visibility = View.VISIBLE
-            fromButton!!.visibility = View.VISIBLE
-            toButton!!.visibility = View.VISIBLE
-            fromTextView!!.visibility = View.VISIBLE
-            toTextView!!.visibility = View.VISIBLE
-            backButton.visibility = View.VISIBLE
-
-            planJourneyButton.visibility = View.GONE
-        }
-
-        backButton.setOnClickListener {
-            locationLayout.visibility = View.GONE
-            fromButton!!.visibility = View.GONE
-            toButton!!.visibility = View.GONE
-            fromTextView!!.visibility = View.GONE
-            toTextView!!.visibility = View.GONE
-            backButton.visibility = View.GONE
-
-            planJourneyButton.visibility = View.VISIBLE
-        }
     }
 
     private fun initBottomSheet()
@@ -235,10 +191,38 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
         addsBtn = findViewById(R.id.addingBtn)
         locationList = ArrayList()
-        recy = findViewById(R.id.recyclerView)
+        locationList.add(LocationData("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+//        recy = findViewById(R.id.recyclerView)
         locationAdapter = LocationAdapter(this,locationList)
-        recy.layoutManager = LinearLayoutManager(this)
-        recy.adapter = locationAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = locationAdapter
+
+//        if (locationList.size>1) {
+            val swipeToDeleteCallBack = object : SwipeToDeleteCallBack(){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    if (viewHolder.absoluteAdapterPosition != 0) {
+                        val position = viewHolder.absoluteAdapterPosition
+                        locationList.removeAt(position)
+                        recyclerView.adapter?.notifyItemRemoved(position)
+                    }
+                    else{
+                        Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+
+
+            }
+
+            val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
+
+            itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
+
+
+
 
         addsBtn.setOnClickListener{
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
@@ -323,7 +307,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 )
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
-            selectedCarmenFeature.placeName()?.let { updateSearchBar(latitude, longitude, it) }
+
             if(updateInfo){
                 updateInfo=false
                 addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
@@ -337,24 +321,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-    private fun updateSearchBar(latitude: Double, longitude: Double, name: String)
-    {
-        val point =  Point.fromLngLat(longitude, latitude)
-
-        if(changeFrom!!){
-            fromButton.text = name
-            //title_homepage.text = getString(R.string.Depart)
-            HomePageRepository.DepartPoint = point
-            changeFrom = false
-        }
-        else if(changeTo!!)
-        {
-            toButton.text = name
-            //title_homepage.text = getString(R.string.Arrive)
-            HomePageRepository.DestinationPoint = point
-            changeTo = false
-        }
-    }
 
     @SuppressLint("MissingPermission")
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not request
