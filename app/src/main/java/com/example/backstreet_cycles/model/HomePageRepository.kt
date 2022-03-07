@@ -72,12 +72,12 @@ class HomePageRepository(private val application: Application) {
         val doube : Double? = data[1][1].toDoubleOrNull()
 
         val textSize = 10.0F
-        val textColor = "red"
+        val textColor = "black"
 
         val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
         symbolManager.iconAllowOverlap = true
         val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
-        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 10, false))
+        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
         for (dock in data) {
             if(dock[1].toDoubleOrNull()!=null){
                 symbolManager.create(
