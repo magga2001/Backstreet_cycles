@@ -41,13 +41,17 @@ class AppRepository(private val application: Application,
         }
     }
 
+
     fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //logout()
+                    //firebaseAuth.currentUser?.sendEmailVerification()
                     emailVerification(fName,lName,email)
 
+                    //createUserAccount(fName, lName, email)
+                    //getUserDetails()
+                    //mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
                     createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
@@ -71,12 +75,11 @@ class AppRepository(private val application: Application,
             }
 
         }
-
-        }
-
+    }
 
 
-        fun createUserAccount(firstName: String, lastName: String, email: String) {
+
+    fun createUserAccount(firstName: String, lastName: String, email: String) {
         val user = UserDto(firstName, lastName, email)
         db.collection("users")
             .add(user)
@@ -210,19 +213,24 @@ class AppRepository(private val application: Application,
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    mutableLiveData.postValue(firebaseAuth.currentUser)
-                } else {
+                if (task.isSuccessful){
+                    if (firebaseAuth.currentUser?.isEmailVerified == true) {
+                        mutableLiveData.postValue(firebaseAuth.currentUser)
+                    }
+                    else{
+                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + "EMAIL NOT VERIFIED")
+                    }
+                }
+                else {
                     createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
                 }
             }
         return firebaseAuth.currentUser
     }
 
-    fun logout() : FirebaseUser? {
+    fun logout() {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
-        return firebaseAuth.currentUser
     }
 
     private fun createToastMessage(stringMessage: String?) {
@@ -230,6 +238,21 @@ class AppRepository(private val application: Application,
             .show()
     }
 
+    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
+        return mutableLiveData
+    }
+
+    fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
+        return loggedOutMutableLiveData
+    }
+
+    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
+        return updatedProfileMutableLiveData
+    }
+
+    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
+        return userDetailsMutableLiveData
+    }
 }
 
 
