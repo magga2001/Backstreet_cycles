@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Backstreet_cycles</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
+    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
+    <string name="user_location_permission_explanation">Permission needed</string>
+    <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
+    <string name="start_navigation">start navigation</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="home">Home</string>
+    <string name="plan_a_journey">Plan A Journey</string>
+    <string name="view_profile">View Profile</string>
+    <string name="about">About</string>
+    <string name="help">Help</string>
+    <string name="log_out">Log out</string>
+    <string name="from">From: </string>
+    <string name="current_location">Current Location</string>
+    <string name="to">To: </string>
+    <string name="origin">e.g. Waterloo</string>
+    <string name="destination">e.g. Shoreditch</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Depart">Depart</string>
+    <string name="Arrive">Arrive</string>
+
 </resources>
