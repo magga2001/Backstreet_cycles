@@ -45,10 +45,9 @@ class AppRepository(private val application: Application,
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    firebaseAuth.currentUser?.sendEmailVerification()
-                    createUserAccount(fName, lName, email)
-                    getUserDetails()
-                    mutableLiveData.postValue(firebaseAuth.currentUser)
+                    //logout()
+                    emailVerification(fName,lName,email)
+
                 } else {
                     createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
@@ -56,7 +55,28 @@ class AppRepository(private val application: Application,
         return firebaseAuth.currentUser
     }
 
-    fun createUserAccount(firstName: String, lastName: String, email: String) {
+    fun emailVerification(fName: String, lName: String, email: String) {
+        firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
+            if (task.isSuccessful) {
+                createToastMessage("Email verification sent to $email")
+                logout()
+                createUserAccount(fName, lName, email)
+                getUserDetails()
+                mutableLiveData.postValue(firebaseAuth.currentUser)
+
+            }
+            else{
+                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
+
+            }
+
+        }
+
+        }
+
+
+
+        fun createUserAccount(firstName: String, lastName: String, email: String) {
         val user = UserDto(firstName, lastName, email)
         db.collection("users")
             .add(user)
