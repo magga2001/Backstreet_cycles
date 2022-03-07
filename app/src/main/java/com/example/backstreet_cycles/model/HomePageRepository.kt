@@ -76,7 +76,7 @@ class HomePageRepository(private val application: Application) {
 
         val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
         symbolManager.iconAllowOverlap = true
-        val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_background) as Bitmap
+        val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
         for (dock in data) {
             if(dock[1].toDoubleOrNull()!=null){
