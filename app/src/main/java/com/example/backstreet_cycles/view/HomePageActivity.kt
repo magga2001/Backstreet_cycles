@@ -20,6 +20,7 @@ import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.LocationData
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -39,6 +40,8 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
 import java.io.BufferedReader
 import java.io.InputStream
+import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
+
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -49,7 +52,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
-    //private lateinit var sheetBehavior: BottomSheetBehavior<*>
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
     //private lateinit var mAdapter: DockAdapter
     private var data : MutableList<MutableList<String>>?= mutableListOf()
     private val REQUESTCODEAUTOCOMPLETE = 7171
@@ -93,30 +96,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         //********** to be added inside the func for recycler View initialiser *********
 
 
-        addsBtn = findViewById(R.id.addingBtn)
-        locationList = ArrayList()
-        recy = findViewById(R.id.recyclerView)
-        locationAdapter = LocationAdapter(this,locationList)
-        recy.layoutManager = LinearLayoutManager(this)
-        recy.adapter = locationAdapter
-        //addsBtn.setOnClickListener{addInfo()}
-        addsBtn.setOnClickListener{
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
 
-        locationAdapter.setOnItemClickListener(object : LocationAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                updateInfo = true
-                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
-                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-               //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
-                //locationList.remove(locationList[position])
-                pos=position
-            }
-
-
-        })
 
         //********** to be added inside the func for recycler View initialiser *********
     }
@@ -250,15 +230,33 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-//    private fun initBottomSheet()
-//    {
-//        docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-//
-//        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-//        mAdapter = DockAdapter(docks)
-//        closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
-//        closest_dock_recycling_view.adapter = mAdapter
-//    }
+    private fun initBottomSheet()
+    {
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+        addsBtn = findViewById(R.id.addingBtn)
+        locationList = ArrayList()
+        recy = findViewById(R.id.recyclerView)
+        locationAdapter = LocationAdapter(this,locationList)
+        recy.layoutManager = LinearLayoutManager(this)
+        recy.adapter = locationAdapter
+
+        addsBtn.setOnClickListener{
+            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
+            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+        }
+        locationAdapter.setOnItemClickListener(object : LocationAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                updateInfo = true
+                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+                //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
+                //locationList.remove(locationList[position])
+                pos=position
+            }
+
+
+        })
+    }
 
 //    private fun updateBottomSheet()
 //    {
@@ -368,7 +366,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
             latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
 
-            //initBottomSheet()
+            initBottomSheet()
 
         } else {
             permissionsManager = PermissionsManager(this)
@@ -384,7 +382,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
-       // initBottomSheet()
+        initBottomSheet()
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
