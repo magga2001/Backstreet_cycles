@@ -62,7 +62,7 @@ class AppRepository(private val application: Application,
     fun emailVerification(fName: String, lName: String, email: String) {
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
-                createToastMessage("Email verification sent to $email")
+                createToastMessage("EMAIL VERIFICATION HAS BEEN SENT TO:  $email")
                 logout()
                 createUserAccount(fName, lName, email)
                 getUserDetails()
@@ -89,7 +89,6 @@ class AppRepository(private val application: Application,
                     "DocumentSnapshot written with ID: ${documentReference.id}"
                 )
             }
-
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
             }
