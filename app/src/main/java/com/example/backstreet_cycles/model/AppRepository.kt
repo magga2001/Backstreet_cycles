@@ -49,6 +49,7 @@ class AppRepository(private val application: Application,
                     //firebaseAuth.currentUser?.sendEmailVerification()
                     emailVerification(fName,lName,email)
 
+
                     //createUserAccount(fName, lName, email)
                     //getUserDetails()
                     //mutableLiveData.postValue(firebaseAuth.currentUser)
@@ -60,14 +61,15 @@ class AppRepository(private val application: Application,
     }
 
     fun emailVerification(fName: String, lName: String, email: String) {
+        createToastMessage("EMAIL VERIFICATION BEING SENT TO:  $email")
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
-                createToastMessage("EMAIL VERIFICATION HAS BEEN SENT TO:  $email")
                 logout()
+                createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
+                //this needs to be relocated
                 createUserAccount(fName, lName, email)
                 getUserDetails()
                 mutableLiveData.postValue(firebaseAuth.currentUser)
-
             }
             else{
                 createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
@@ -217,7 +219,7 @@ class AppRepository(private val application: Application,
                         mutableLiveData.postValue(firebaseAuth.currentUser)
                     }
                     else{
-                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + "EMAIL NOT VERIFIED")
+                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
                     }
                 }
                 else {
