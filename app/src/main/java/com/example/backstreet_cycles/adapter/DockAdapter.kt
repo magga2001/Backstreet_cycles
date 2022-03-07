@@ -34,8 +34,7 @@ class DockAdapter(private var docks: List<Dock>?) : RecyclerView.Adapter<DockAda
     }
 
     override fun getItemCount(): Int {
-        return 10
-        //return docks!!.size
+        return docks!!.size
     }
 
     fun updateList(docks: List<Dock>)
