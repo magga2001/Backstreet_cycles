@@ -43,7 +43,8 @@ import kotlinx.android.synthetic.main.activity_homepage.*
 import java.io.BufferedReader
 import java.io.InputStream
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -208,7 +209,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     else{
                         Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
                     }
+                }
 
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val fromPosition = viewHolder.absoluteAdapterPosition
+                    val toPosition = target.absoluteAdapterPosition
+                    Collections.swap(locationList, fromPosition, toPosition)
+                    recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
+                    return true
                 }
 
 

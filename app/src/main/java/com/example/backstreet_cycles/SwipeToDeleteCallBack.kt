@@ -12,7 +12,7 @@ abstract class SwipeToDeleteCallBack : ItemTouchHelper.Callback() {
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         val position = viewHolder.absoluteAdapterPosition
-        val dragFlags = 0
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlag = disableFlags(position)
 
 
