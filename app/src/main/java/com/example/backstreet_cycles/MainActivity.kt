@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
-        Log.i("Retrieve data", TflRepository.docks.size.toString())
+//        Log.i("Retrieve data", TflRepository.docks.size.toString())
     }
 
     override fun onStart() {

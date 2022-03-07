@@ -20,11 +20,13 @@ class SplashScreenActivity: AppCompatActivity() {
         splashViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
+
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
 
-        splashViewModel.loadDock()
+        splashViewModel.loadTouristLocations()
+        splashViewModel.loadDocks()
     }
 }

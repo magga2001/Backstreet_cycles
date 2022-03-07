@@ -1,36 +1,33 @@
 package com.example.backstreet_cycles.viewModel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.dto.Location
 import com.example.backstreet_cycles.model.TflRepository
-import kotlinx.coroutines.launch
 
 class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tflRepository: TflRepository
+    private val tflRepository: TflRepository = TflRepository(application)
+    val touristAttractionList = MutableLiveData<List<Location>?>()
+    val docksList = MutableLiveData<List<Dock>?>()
+
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
 
     init{
-        tflRepository = TflRepository(application)
+        touristAttractionList.value = loadTouristLocations()
+        docksList.value = loadDocks()
         isReadyMutableLiveData = tflRepository.getIsReadyMutableLiveData()
-
     }
 
-    suspend fun readADock(dockName: String): Dock
-    {
-        lateinit var dock: Dock
-
-        viewModelScope.launch {
-            dock = tflRepository.readADock(dockName)!!
-        }.join()
-
-        return dock
+    fun loadTouristLocations(): List<Location> {
+        return tflRepository.getTouristLocations()
     }
 
-    fun loadDock()
-    {
-        tflRepository.loadDock()
+    fun loadDocks(): List<Dock> {
+        return tflRepository.getDocks()
     }
 
     fun getIsReadyMutableLiveData(): LiveData<Boolean>

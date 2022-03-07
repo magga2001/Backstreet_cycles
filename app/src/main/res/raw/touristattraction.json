@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Tower of London",
+    "lat": "51.5081",
+    "lon": "-0.0759"
+  },
+  {
+    "name": "St Paul’s Cathedral",
+    "lat": "51.5138",
+    "lon": "-0.0984"
+  },
+  {
+    "name": "Tate Modern",
+    "lat": "51.5076",
+    "lon": "-0.0994"
+  },
+  {
+    "name": "Tower Bridge",
+    "lat": "51.5055",
+    "lon": "-0.0754"
+  },
+  {
+    "name": "Trafalgar Square",
+    "lat": "51.5080",
+    "lon": "-0.1281"
+  },
+  {
+    "name": "Buckingham Palace",
+    "lat": "51.5014",
+    "lon": "-0.1419"
+  },
+  {
+    "name": "The Barbican Centre",
+    "lat": "51.5202",
+    "lon": "-0.0938"
+  },
+  {
+    "name": "Royal Albert Hall",
+    "lat": "51.5009",
+    "lon": "-0.1774"
+  },
+  {
+    "name": "Harrods",
+    "lat": "51.4994",
+    "lon": "-0.1632"
+  },
+  {
+    "name": "Selfridges",
+    "lat": "51.5144",
+    "lon": "-0.1528"
+  },
+  {
+    "name": "The Ritz London",
+    "lat": "51.5071",
+    "lon": "-0.1416"
+  },
+  {
+    "name": "Camden Town",
+    "lat": "51.5390",
+    "lon": "-0.1426"
+  },
+  {
+    "name": "V Museum",
+    "lat": "51.5419",
+    "lon": "-0.1466"
+  },
+  {
+    "name": "Natural History Museum",
+    "lat": "51.4967",
+    "lon": "-0.1764"
+  },
+  {
+    "name": "Big Ben",
+    "lat": "51.5007",
+    "lon": "-0.1246"
+  },
+  {
+    "name": "ZSL London zoo",
+    "lat": "51.5353",
+    "lon": "-0.1534"
+  },
+  {
+    "name": "Leicester Square",
+    "lat": "51.5104",
+    "lon": "-0.1301"
+  },
+  {
+    "name": "Madame Tussauds London",
+    "lat": "51.5230",
+    "lon": "-0.1544"
+  },
+  {
+    "name": "London Eye",
+    "lat": "51.5033",
+    "lon": "-0.1196"
+  },
+  {
+    "name": "The Shard",
+    "lat": "51.5045",
+    "lon": "-0.0865"
+  },
+  {
+    "name": "The Gherkin",
+    "lat": "51.5145",
+    "lon": "-0.0803"
+  },
+  {
+    "name": "The Savoy Hotel",
+    "lat": "51.5101",
+    "lon": "-0.1205"
+  },
+  {
+    "name": "Westminster Abbey",
+    "lat": "51.4994",
+    "lon": "-0.1273"
+  },
+  {
+    "name": "Borough Market",
+    "lat": "51.5055",
+    "lon": "-0.0910"
+  },
+  {
+    "name": "Hyde Park",
+    "lat": "51.5073",
+    "lon": "-0.1657"
+  },
+  {
+    "name": "Canary Wharf",
+    "lat": "51.5054",
+    "lon": "-0.0235"
+  },
+  {
+    "name": "Somerset House",
+    "lat": "51.5111",
+    "lon": "-0.1171"
+  },
+  {
+    "name": "Sky Garden",
+    "lat": "51.5112",
+    "lon": "-0.0835"
+  },
+  {
+    "name": "Marble Arch",
+    "lat": "51.5131",
+    "lon": "-0.1589"
+  },
+  {
+    "name": "Covent Garden",
+    "lat": "51.5117",
+    "lon": "-0.1240"
+  }
+]
