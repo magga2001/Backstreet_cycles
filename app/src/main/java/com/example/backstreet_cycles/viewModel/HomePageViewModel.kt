@@ -1,12 +1,12 @@
 package com.example.backstreet_cycles.viewModel
 
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
-import com.example.backstreet_cycles.adapter.LocationAdapter
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
+import com.example.backstreet_cycles.model.LocationRepository
 import com.example.backstreet_cycles.view.HomePageActivity
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapView
@@ -17,8 +17,11 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val homePageRepository: HomePageRepository
 
+    private val locationRepository: LocationRepository
+
     init {
         homePageRepository = HomePageRepository(application)
+        locationRepository = LocationRepository(application)
     }
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
@@ -31,14 +34,18 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         homePageRepository.initialiseCurrentLocation(loadedMapStyle, locationComponent)
     }
 
-    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: MutableList<MutableList<String>>)
+    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>)
     {
-        homePageRepository.displayingDocks(mapView, mapboxMap, loadedMapStyle,data)
+        homePageRepository.displayingAttractions(mapView, mapboxMap, loadedMapStyle,data)
     }
 
     fun getCurrentLocation(locationComponent: LocationComponent): Location?
     {
         return homePageRepository.getCurrentLocation(locationComponent)
+    }
+
+    fun getTouristAttraction(): List<Locations> {
+        return locationRepository.getTouristLocations()
     }
 
     fun initialisePlaceAutoComplete(activity: HomePageActivity): Intent

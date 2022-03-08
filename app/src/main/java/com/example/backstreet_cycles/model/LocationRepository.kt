@@ -8,7 +8,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.dto.Location
+import com.example.backstreet_cycles.dto.Locations
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -16,11 +16,11 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONArray
 
 
-class TflRepository(private val application: Application) {
+class LocationRepository(private val application: Application) {
 
-    private val locationType = Types.newParameterizedType(List::class.java, Location::class.java)
+    private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
     private var docks = mutableListOf<Dock>()
-    private val touristAttractionList = mutableListOf<Location>()
+    private val touristAttractionList = mutableListOf<Locations>()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
@@ -37,9 +37,9 @@ class TflRepository(private val application: Application) {
         }
     }
 
-    private fun parseFile(text: String): List<Location>? {
+    private fun parseFile(text: String): List<Locations>? {
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val adapter: JsonAdapter<List<Location>> = moshi.adapter(locationType)
+        val adapter: JsonAdapter<List<Locations>> = moshi.adapter(locationType)
         return adapter.fromJson(text)
     }
 
@@ -55,7 +55,7 @@ class TflRepository(private val application: Application) {
 
     }
 
-    fun getTouristLocations(): MutableList<Location> {
+    fun getTouristLocations(): MutableList<Locations> {
         return touristAttractionList
     }
 

@@ -1,17 +1,14 @@
 package com.example.backstreet_cycles.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.model.LocationData
-import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.example.backstreet_cycles.dto.Locations
 
-class LocationAdapter(val c: Context, val locationList: ArrayList<LocationData>):RecyclerView.Adapter<LocationAdapter.LocationViewHolder>(){
+class LocationAdapter(val locationsList: ArrayList<Locations>):RecyclerView.Adapter<LocationAdapter.LocationViewHolder>(){
 
     private lateinit var mListener: onItemClickListener
 
@@ -41,20 +38,20 @@ class LocationAdapter(val c: Context, val locationList: ArrayList<LocationData>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val v = inflater.inflate(R.layout.location_data,parent, false)
-        return LocationViewHolder(v,mListener)
+        val view = inflater.inflate(R.layout.location_data,parent, false)
+        return LocationViewHolder(view,mListener)
     }
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
-        val newList = locationList[position]
+        val newList = locationsList[position]
         holder.name.text = newList.name
-        holder.latitude.text = newList.latitude.toString()
-        holder.longitude.text = newList.longitude.toString()
+        holder.latitude.text = newList.lat.toString()
+        holder.longitude.text = newList.lon.toString()
 
     }
 
     override fun getItemCount(): Int {
-        return locationList.size
+        return locationsList.size
     }
 
 

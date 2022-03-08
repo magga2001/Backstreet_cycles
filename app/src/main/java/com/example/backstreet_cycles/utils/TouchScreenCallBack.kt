@@ -1,9 +1,9 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.utils
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class SwipeToDeleteCallBack : ItemTouchHelper.Callback() {
+abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
 
 
 

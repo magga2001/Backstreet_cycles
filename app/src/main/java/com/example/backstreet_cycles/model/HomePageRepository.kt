@@ -7,11 +7,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import android.util.Log
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.Tfl
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.utils.BitmapHelper
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -30,11 +28,6 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 
 class HomePageRepository(private val application: Application) {
 
-    companion object
-    {
-        lateinit var DepartPoint: Point
-        lateinit var DestinationPoint: Point
-    }
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -67,10 +60,8 @@ class HomePageRepository(private val application: Application) {
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
-    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data:MutableList<MutableList<String>>)
+    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>)
     {
-        val doube : Double? = data[1][1].toDoubleOrNull()
-
         val textSize = 10.0F
         val textColor = "black"
 
@@ -78,17 +69,17 @@ class HomePageRepository(private val application: Application) {
         symbolManager.iconAllowOverlap = true
         val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
-        for (dock in data) {
-            if(dock[1].toDoubleOrNull()!=null){
+        for (attraction in data) {
+
                 symbolManager.create(
                     SymbolOptions()
-                        .withLatLng(LatLng(dock[1].toDouble()!!, dock[2].toDouble()!!))
+                        .withLatLng(LatLng(attraction.lat, attraction.lon))
                         .withIconImage("myMarker")
-                        .withTextField(dock[0])
+                        .withTextField(attraction.name)
                         .withTextSize(textSize)
                         .withTextColor(textColor)
                 )
-            }
+
         }
     }
 

@@ -5,13 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.dto.Location
-import com.example.backstreet_cycles.model.TflRepository
+import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.model.LocationRepository
 
 class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tflRepository: TflRepository = TflRepository(application)
-    val touristAttractionList = MutableLiveData<List<Location>?>()
+    private val locationRepository: LocationRepository = LocationRepository(application)
+    val touristAttractionList = MutableLiveData<List<Locations>?>()
     val docksList = MutableLiveData<List<Dock>?>()
 
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
@@ -19,15 +19,15 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
     init{
         touristAttractionList.value = loadTouristLocations()
         docksList.value = loadDocks()
-        isReadyMutableLiveData = tflRepository.getIsReadyMutableLiveData()
+        isReadyMutableLiveData = locationRepository.getIsReadyMutableLiveData()
     }
 
-    fun loadTouristLocations(): List<Location> {
-        return tflRepository.getTouristLocations()
+    fun loadTouristLocations(): List<Locations> {
+        return locationRepository.getTouristLocations()
     }
 
     fun loadDocks(): List<Dock> {
-        return tflRepository.getDocks()
+        return locationRepository.getDocks()
     }
 
     fun getIsReadyMutableLiveData(): LiveData<Boolean>

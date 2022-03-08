@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,11 +15,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.SwipeToDeleteCallBack
 import com.example.backstreet_cycles.adapter.LocationAdapter
-import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.model.HomePageRepository
-import com.example.backstreet_cycles.model.LocationData
+import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,7 +25,6 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -40,37 +36,26 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
-import java.io.BufferedReader
-import java.io.InputStream
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
     private lateinit var homePageViewModel: HomePageViewModel
-    private lateinit var docks: MutableList<Dock>
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    //private lateinit var mAdapter: DockAdapter
-    private var data : MutableList<MutableList<String>>?= mutableListOf()
     private val REQUESTCODEAUTOCOMPLETE = 7171
 
     private lateinit var addsBtn: FloatingActionButton
-    private lateinit var recy: RecyclerView
-    private lateinit var locationList:ArrayList<LocationData>
+    private lateinit var locationsList:ArrayList<Locations>
     private lateinit var locationAdapter: LocationAdapter
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-
-    private var changeTo: Boolean? = false
-    private var changeFrom: Boolean? = false
-    private var addInfoToList: Boolean = true
 
     private var updateInfo:Boolean=false
 
@@ -90,41 +75,23 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-//        initialiseView()
-        initialiseListeners()
-        initialiseTouristAttractions()
     }
 
     private var pos:Int=0
     private fun addInfo(name:String, lat: Double, long: Double) {
-        val inflater = LayoutInflater.from(this)
-        //val v = inflater.inflate(R.layout.add_item, null)
-        locationList.add(LocationData(name,lat, long))
+        LayoutInflater.from(this)
+
+        locationsList.add(Locations(name,lat, long))
         locationAdapter.notifyDataSetChanged()
         Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
-        locationList.remove(locationList[pos])
-        val inflater = LayoutInflater.from(this)
-        //val v = inflater.inflate(R.layout.add_item, null)
-        locationList.add(pos,LocationData(name,lat, long))
+        locationsList.remove(locationsList[pos])
+        LayoutInflater.from(this)
+        locationsList.add(pos,Locations(name,lat, long))
         locationAdapter.notifyDataSetChanged()
         Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
-    }
-
-    private fun initialiseTouristAttractions() {
-        val openRawSource: InputStream = resources.openRawResource(R.raw.data)
-        val bufferedReader: BufferedReader = openRawSource.bufferedReader()
-        var line: String = bufferedReader.readLine()
-        while(!line.startsWith("last")){
-            val d = line.split(",")
-            data?.add(d.toMutableList())
-            line = bufferedReader.readLine()
-        }
-
-        bufferedReader.close()
-        openRawSource.close()
     }
 
     private fun initialiseNavigationDrawer() {
@@ -167,37 +134,20 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             true
         }
     }
-
-//    private fun initialiseView()
-//    {
-//        //Relative Layout
-//        locationLayout.visibility = View.GONE
-//    }
-
-    private fun initialiseListeners() {
-        initialiseSearchBarListeners()
-    }
-
-    private fun initialiseSearchBarListeners() {
-        val REQUESTCODEAUTOCOMPLETE = 7171
-    }
-
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
         addsBtn = findViewById(R.id.addingBtn)
-        locationList = ArrayList()
-        locationList.add(LocationData("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
-//        recy = findViewById(R.id.recyclerView)
-        locationAdapter = LocationAdapter(this,locationList)
+        locationsList = ArrayList()
+        locationsList.add(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        locationAdapter = LocationAdapter(locationsList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = locationAdapter
 
-//        if (locationList.size>1) {
-            val swipeToDeleteCallBack = object : SwipeToDeleteCallBack(){
+            val swipeToDeleteCallBack = object : TouchScreenCallBack(){
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     if (viewHolder.absoluteAdapterPosition != 0) {
                         val position = viewHolder.absoluteAdapterPosition
-                        locationList.removeAt(position)
+                        locationsList.removeAt(position)
                         recyclerView.adapter?.notifyItemRemoved(position)
                     }
                     else{
@@ -212,7 +162,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 ): Boolean {
                     val fromPosition = viewHolder.absoluteAdapterPosition
                     val toPosition = target.absoluteAdapterPosition
-                    Collections.swap(locationList, fromPosition, toPosition)
+                    Collections.swap(locationsList, fromPosition, toPosition)
                     recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
                     return true
                 }
@@ -258,7 +208,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         ) { style ->
 
             enableLocationComponent(style)
-            homePageViewModel.displayingDocks(mapView, mapboxMap, style, data!!)
+
+            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttraction())
             //init search fab()
             setUpSource(style)
             setUpLayer(style)
