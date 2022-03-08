@@ -1,10 +1,10 @@
 package com.example.backstreet_cycles.view
 
 //---------------------------------
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -13,17 +13,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.adapter.DockAdapter
-import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.SwipeToDeleteCallBack
+import com.example.backstreet_cycles.adapter.LocationAdapter
 import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.model.HomePageRepository
-import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.model.LocationData
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -40,8 +40,11 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
+import java.io.BufferedReader
+import java.io.InputStream
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
@@ -53,23 +56,28 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    private lateinit var mAdapter: DockAdapter
+    //private lateinit var mAdapter: DockAdapter
+    private var data : MutableList<MutableList<String>>?= mutableListOf()
+    private val REQUESTCODEAUTOCOMPLETE = 7171
 
-//    Currently in progress
-    private lateinit var stops: MutableList<String>
-    private lateinit var sAdapter: StopsAdapter
+    private lateinit var addsBtn: FloatingActionButton
+    private lateinit var recy: RecyclerView
+    private lateinit var locationList:ArrayList<LocationData>
+    private lateinit var locationAdapter: LocationAdapter
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
     private var changeTo: Boolean? = false
     private var changeFrom: Boolean? = false
+    private var addInfoToList: Boolean = true
+
+    private var updateInfo:Boolean=false
 
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
         private const val symbolIconId = "SymbolIconId"
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,19 +90,44 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-        initialiseView()
+//        initialiseView()
         initialiseListeners()
-
-
-
-
-
-        val itemTouchHelper = ItemTouchHelper(simpleCallback)
-        itemTouchHelper.attachToRecyclerView(closest_dock_recycling_view)
+        initialiseTouristAttractions()
     }
 
-    private fun initialiseNavigationDrawer()
-    {
+    private var pos:Int=0
+    private fun addInfo(name:String, lat: Double, long: Double) {
+        val inflater = LayoutInflater.from(this)
+        //val v = inflater.inflate(R.layout.add_item, null)
+        locationList.add(LocationData(name,lat, long))
+        locationAdapter.notifyDataSetChanged()
+        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
+        locationList.remove(locationList[pos])
+        val inflater = LayoutInflater.from(this)
+        //val v = inflater.inflate(R.layout.add_item, null)
+        locationList.add(pos,LocationData(name,lat, long))
+        locationAdapter.notifyDataSetChanged()
+        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initialiseTouristAttractions() {
+        val openRawSource: InputStream = resources.openRawResource(R.raw.data)
+        val bufferedReader: BufferedReader = openRawSource.bufferedReader()
+        var line: String = bufferedReader.readLine()
+        while(!line.startsWith("last")){
+            val d = line.split(",")
+            data?.add(d.toMutableList())
+            line = bufferedReader.readLine()
+        }
+
+        bufferedReader.close()
+        openRawSource.close()
+    }
+
+    private fun initialiseNavigationDrawer() {
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -135,109 +168,97 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-    private fun initialiseView()
-    {
-        //Relative Layout
-        locationLayout.visibility = View.GONE
-        backButton.visibility = View.GONE
-    }
+//    private fun initialiseView()
+//    {
+//        //Relative Layout
+//        locationLayout.visibility = View.GONE
+//    }
 
-    private fun initialiseListeners()
-    {
-        initialiseViewListeners()
+    private fun initialiseListeners() {
         initialiseSearchBarListeners()
     }
 
-    private fun initialiseSearchBarListeners()
-    {
+    private fun initialiseSearchBarListeners() {
         val REQUESTCODEAUTOCOMPLETE = 7171
+    }
 
-        fromButton.setOnClickListener {
+    private fun initBottomSheet() {
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+        addsBtn = findViewById(R.id.addingBtn)
+        locationList = ArrayList()
+        locationList.add(LocationData("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+//        recy = findViewById(R.id.recyclerView)
+        locationAdapter = LocationAdapter(this,locationList)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = locationAdapter
+
+//        if (locationList.size>1) {
+            val swipeToDeleteCallBack = object : SwipeToDeleteCallBack(){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    if (viewHolder.absoluteAdapterPosition != 0) {
+                        val position = viewHolder.absoluteAdapterPosition
+                        locationList.removeAt(position)
+                        recyclerView.adapter?.notifyItemRemoved(position)
+                    }
+                    else{
+                        Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val fromPosition = viewHolder.absoluteAdapterPosition
+                    val toPosition = target.absoluteAdapterPosition
+                    Collections.swap(locationList, fromPosition, toPosition)
+                    recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
+                    return true
+                }
+
+            }
+
+            val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
+
+            itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
+
+
+
+
+        addsBtn.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            changeFrom = true
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
+        locationAdapter.setOnItemClickListener(object : LocationAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                updateInfo = true
+                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+                //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
+                //locationList.remove(locationList[position])
+                pos=position
+            }
 
-        toButton.setOnClickListener {
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            changeTo = true
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-        }
+        })
     }
 
-    private fun initialiseViewListeners()
-    {
-        planJourneyButton.setOnClickListener {
-            locationLayout.visibility = View.VISIBLE
-            fromButton!!.visibility = View.VISIBLE
-            toButton!!.visibility = View.VISIBLE
-            fromTextView!!.visibility = View.VISIBLE
-            toTextView!!.visibility = View.VISIBLE
-            backButton.visibility = View.VISIBLE
-
-            planJourneyButton.visibility = View.GONE
-        }
-
-        backButton.setOnClickListener {
-            locationLayout.visibility = View.GONE
-            fromButton!!.visibility = View.GONE
-            toButton!!.visibility = View.GONE
-            fromTextView!!.visibility = View.GONE
-            toTextView!!.visibility = View.GONE
-            backButton.visibility = View.GONE
-
-            planJourneyButton.visibility = View.VISIBLE
-        }
-    }
-
-
-    val simpleCallback: SimpleCallback = object : SimpleCallback(
-        ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
-        0
-    ) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            val fromPosition = viewHolder.adapterPosition
-            val toPosition = target.adapterPosition
-            Collections.swap(stops, fromPosition, toPosition)
-            recyclerView.adapter!!.notifyItemMoved(fromPosition, toPosition)
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
-    }
-
-    private fun initBottomSheet()
-    {
-        stops = listOf("Stop1","Stop2","Stop3","Stop4") as MutableList<String>
-        sAdapter = StopsAdapter(stops)
-        closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
-        closest_dock_recycling_view.adapter = sAdapter
-//        docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-
-//        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-//        mAdapter = DockAdapter(docks)
-//        closest_dock_recycling_view.layoutManager = LinearLayoutManager(this)
-//        closest_dock_recycling_view.adapter = mAdapter
-
-    }
-
-    private fun updateBottomSheet()
-    {
-        mAdapter.updateList(docks)
-    }
+//    private fun updateBottomSheet()
+//    {
+//        mAdapter.updateList(docks)
+//    }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
+
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(
             Style.MAPBOX_STREETS
         ) { style ->
 
             enableLocationComponent(style)
-            homePageViewModel.displayingDocks(mapView, mapboxMap, style)
+            homePageViewModel.displayingDocks(mapView, mapboxMap, style, data!!)
             //init search fab()
             setUpSource(style)
             setUpLayer(style)
@@ -289,32 +310,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 )
                 homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
             }
-            selectedCarmenFeature.placeName()?.let { updateSearchBar(latitude, longitude, it) }
 
-            docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-
-            updateBottomSheet()
+            if (updateInfo) {
+                updateInfo=false
+                addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+                //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
+                //updateBottomSheet()
+            } else {
+                addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+            }
         }
     }
 
-    private fun updateSearchBar(latitude: Double, longitude: Double, name: String)
-    {
-        val point =  Point.fromLngLat(longitude, latitude)
-
-        if(changeFrom!!){
-            fromButton.text = name
-            title_homepage.text = getString(R.string.Depart)
-            HomePageRepository.DepartPoint = point
-            changeFrom = false
-        }
-        else if(changeTo!!)
-        {
-            toButton.text = name
-            title_homepage.text = getString(R.string.Arrive)
-            HomePageRepository.DestinationPoint = point
-            changeTo = false
-        }
-    }
 
     @SuppressLint("MissingPermission")
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not request

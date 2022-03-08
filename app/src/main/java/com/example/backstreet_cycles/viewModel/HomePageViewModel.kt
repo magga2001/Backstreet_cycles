@@ -5,7 +5,9 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
+import com.example.backstreet_cycles.adapter.LocationAdapter
 import com.example.backstreet_cycles.model.HomePageRepository
+import com.example.backstreet_cycles.view.HomePageActivity
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -29,9 +31,9 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         homePageRepository.initialiseCurrentLocation(loadedMapStyle, locationComponent)
     }
 
-    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style)
+    fun displayingDocks(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: MutableList<MutableList<String>>)
     {
-        homePageRepository.displayingDocks(mapView, mapboxMap, loadedMapStyle)
+        homePageRepository.displayingDocks(mapView, mapboxMap, loadedMapStyle,data)
     }
 
     fun getCurrentLocation(locationComponent: LocationComponent): Location?
@@ -39,7 +41,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         return homePageRepository.getCurrentLocation(locationComponent)
     }
 
-    fun initialisePlaceAutoComplete(activity: Activity): Intent
+    fun initialisePlaceAutoComplete(activity: HomePageActivity): Intent
     {
         return homePageRepository.initialisePlaceAutoComplete(activity)
     }
