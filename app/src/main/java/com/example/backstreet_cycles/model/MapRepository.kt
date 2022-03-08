@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
@@ -35,8 +36,9 @@ abstract class MapRepository(private val application: Application)
     {
         var currentRoute = mutableListOf<DirectionsRoute>()
         val maneuvers = mutableListOf<Maneuver>()
+        val wayPoints = mutableListOf<Point>()
+        val location = mutableListOf<Locations>()
         lateinit var centerPoint: Point
-        lateinit var wayPoints : List<Point>
         lateinit var enhancedLocation: Location
     }
 

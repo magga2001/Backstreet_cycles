@@ -31,9 +31,9 @@ class PlanJourneyViewModel(application: Application) : AndroidViewModel(applicat
         mapRepository.checkPermission(context, activity)
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>) {
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, overview:Boolean) {
 
-        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints)
+        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, overview)
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>

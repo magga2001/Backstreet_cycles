@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.model
+package com.example.backstreet_cycles.utils
 
 import android.content.Context
 import android.graphics.Bitmap

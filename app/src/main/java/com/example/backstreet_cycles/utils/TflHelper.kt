@@ -1,26 +1,26 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.utils
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Dock
 import org.json.JSONArray
 
-class Api{
+class TflHelper() {
 
     companion object
     {
         val docks = mutableListOf<Dock>()
-        var isLoaded:Boolean=false
 
-        fun getDock()
+        fun getDock(context: Context)
         {
-            isLoaded=false
             // Instantiate the RequestQueue.
-            val queue = Volley.newRequestQueue(App.context)
-            val url = App.context.getString(R.string.tfl_url)
+            val queue = Volley.newRequestQueue(context)
+            val url = context.getString(R.string.tfl_url)
 
             // Request a string response from the provided URL.
             val stringRequest = StringRequest(
@@ -31,10 +31,8 @@ class Api{
                     fetchDocks(json)
                 },
                 {
-                    Toast.makeText(App.context,it.message.toString(),Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,it.message.toString(),Toast.LENGTH_LONG).show()
                     Log.i("ERROR", "Fail to fetch data")
-
-                isLoaded=true
                 })
 
 
@@ -62,8 +60,6 @@ class Api{
                     Log.i("Dock_station $i", dock.toString())
                 }
             }
-
-            isLoaded=true
         }
 
         private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean

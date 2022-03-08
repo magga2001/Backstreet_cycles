@@ -12,19 +12,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            tools:context=".view.JourneyActivity">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.JourneyActivity"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <include
-                android:id="@+id/bottom_sheet_view"
-                layout="@layout/journey_bottom_sheet" />
+        <include
+            android:id="@+id/bottom_sheet_view_journey"
+            layout="@layout/bottom_sheet_journey"/>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </com.mapbox.maps.MapView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
