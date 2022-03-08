@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.utils
 
 import com.example.backstreet_cycles.dto.Dock
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import kotlin.math.abs
 
@@ -16,6 +17,28 @@ class MapHelper {
             }
 
             return TflHelper.docks.first()
+        }
+
+        fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
+        {
+            routes.sortedBy { it.duration() }
+
+            return routes.first()
+        }
+
+        fun getCenterViewPoint(docks: List<Point>): Point
+        {
+            var totalLat = 0.0
+            var totalLng = 0.0
+            val size = docks.size
+
+            for(dock in docks)
+            {
+                totalLat += dock.latitude()
+                totalLng += dock.longitude()
+            }
+
+            return Point.fromLngLat(totalLng/size, totalLat/size)
         }
     }
 

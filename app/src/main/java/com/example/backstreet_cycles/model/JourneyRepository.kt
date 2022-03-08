@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Maneuver
 import com.example.backstreet_cycles.utils.BitmapHelper
+import com.example.backstreet_cycles.utils.MapHelper
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
@@ -147,7 +148,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
 //        points.add(0, Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude))
 
         wayPoints.addAll(points)
-        centerPoint = getCenterViewPoint(points)
+        centerPoint = MapHelper.getCenterViewPoint(points)
 
         if(overview)
         {
@@ -210,7 +211,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
                     Log.i("retrieving route", "success")
 
-                    val fastestRoute = getFastestRoute(routes)
+                    val fastestRoute = MapHelper.getFastestRoute(routes)
                     getInstructions(fastestRoute)
 
                     if(mainPath)
@@ -220,7 +221,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
                     }else
                     {
                         Log.i("bruh", "Walking")
-                        currentRoute.add(getFastestRoute(routes))
+                        currentRoute.add(MapHelper.getFastestRoute(routes))
                     }
 
                     if(lastPoint)
@@ -278,28 +279,6 @@ class JourneyRepository(private val application: Application): MapRepository(app
             maneuvers.add(theManeuver)
         }
 
-    }
-
-    fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
-    {
-        routes.sortedBy { it.duration() }
-
-        return routes.first()
-    }
-
-    fun getCenterViewPoint(docks: List<Point>): Point
-    {
-        var totalLat = 0.0
-        var totalLng = 0.0
-        val size = docks.size
-
-        for(dock in docks)
-        {
-            totalLat += dock.latitude()
-            totalLng += dock.longitude()
-        }
-
-        return Point.fromLngLat(totalLng/size, totalLat/size)
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView) {
