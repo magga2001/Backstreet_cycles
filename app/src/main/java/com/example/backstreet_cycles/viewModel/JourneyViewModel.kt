@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
@@ -23,14 +24,21 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 class JourneyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val journeyRepository: JourneyRepository
+    private val isReadyMutableLiveData: MutableLiveData<Boolean>
 
     init {
         journeyRepository = JourneyRepository(application)
+        isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
     {
         return journeyRepository.initialiseMapboxNavigation()
+    }
+
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, overview: Boolean)
+    {
+        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, overview)
     }
 
     fun initialiseRouteLineResources(): RouteLineResources
@@ -83,6 +91,12 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository.addAnnotationToMap(context,mapView)
     }
 
+
+    fun removeAnnotations()
+    {
+        journeyRepository.removeAnnotations()
+    }
+
     fun registerObservers(mapboxNavigation: MapboxNavigation,
                           routesObserver: RoutesObserver,
                           locationObserver: LocationObserver,
@@ -97,6 +111,11 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
                           routeProgressObserver: RouteProgressObserver)
     {
         journeyRepository.unregisterObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
+    }
+
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyMutableLiveData
     }
 
 }

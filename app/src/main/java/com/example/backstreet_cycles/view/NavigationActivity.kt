@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.adapter.ManeuverAdapter
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.viewModel.NavigationViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.maps.EdgeInsets
 import com.mapbox.maps.MapView
@@ -46,6 +49,8 @@ import com.mapbox.navigation.ui.voice.api.MapboxSpeechApi
 import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
 import com.mapbox.navigation.ui.voice.model.SpeechVolume
 import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.activity_navigation.mapView
+import kotlinx.android.synthetic.main.bottom_sheet_navigation.*
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
@@ -173,11 +178,15 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var onPositionChangedListener: OnIndicatorPositionChangedListener
     private lateinit var routeLineResources: RouteLineResources
     private lateinit var mapboxNavigation: MapboxNavigation
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
+    private lateinit var mAdapter: ManeuverAdapter
     private val currentRoute = MapRepository.currentRoute
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
+
+        MapboxNavigationProvider.destroy()
 
         navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
         navigationViewModel.checkPermission(context = this, activity = this)
@@ -206,6 +215,7 @@ class NavigationActivity : AppCompatActivity() {
         initialiseObservers()
         initialisePadding()
         initialiseViewListener()
+        initBottomSheet()
     }
 
     private fun initialiseObservers()
@@ -380,6 +390,14 @@ class NavigationActivity : AppCompatActivity() {
 
         // set initial sounds button state
         soundButton.unmute()
+    }
+
+    private fun initBottomSheet()
+    {
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_navigation)
+        mAdapter = ManeuverAdapter(this, MapRepository.maneuvers)
+        maneuver_navigation_recycling_view.layoutManager = LinearLayoutManager(this)
+        maneuver_navigation_recycling_view.adapter = mAdapter
     }
 
     override fun onStart() {

@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
 
-class ManeuverAdapter(private val context: Context, private val maneuvers: List<Maneuver>): RecyclerView.Adapter<ManeuverAdapter.ViewHolder>() {
+class ManeuverAdapter(private val context: Context, private var maneuvers: List<Maneuver>): RecyclerView.Adapter<ManeuverAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
@@ -37,5 +38,12 @@ class ManeuverAdapter(private val context: Context, private val maneuvers: List<
 
     override fun getItemCount(): Int {
         return maneuvers.size
+    }
+
+    fun updateList(maneuvers: List<Maneuver>)
+    {
+        this.maneuvers = maneuvers
+
+        notifyDataSetChanged()
     }
 }

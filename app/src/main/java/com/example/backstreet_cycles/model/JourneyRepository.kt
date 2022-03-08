@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Maneuver
+import com.example.backstreet_cycles.utils.BitmapHelper
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
@@ -15,6 +16,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor
 import com.mapbox.maps.plugin.annotation.annotations
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
@@ -26,6 +28,7 @@ import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
+import com.mapbox.navigation.core.directions.session.RoutesUpdatedResult
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
@@ -33,12 +36,22 @@ import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
 class JourneyRepository(private val application: Application): MapRepository(application) {
 
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private lateinit var routeOptions: RouteOptions
+
+    lateinit var pointAnnotationManager: PointAnnotationManager
+
+    companion object
+    {
+        lateinit var result: RoutesUpdatedResult
+    }
 
     init {
         isReadyMutableLiveData = MutableLiveData()
@@ -64,6 +77,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
             // RouteLine: wrap the DirectionRoute objects and pass them
             // to the MapboxRouteLineApi to generate the data necessary to draw the route(s)
             // on the map.
+            result = routeUpdateResult
             val routeLines = routeUpdateResult.routes.map { RouteLine(it, null) }
 
             routeLineApi.setRoutes(
@@ -106,17 +120,60 @@ class JourneyRepository(private val application: Application): MapRepository(app
         }
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>) {
-//
-        currentRoute.clear()
-        maneuvers.clear()
+    fun fetchRoute(context: Context,
+                   mapboxNavigation: MapboxNavigation,
+                   points: MutableList<Point>,
+                   profile: String,
+                   overview: Boolean)
+    {
 
-        //Add your current location
+//        currentRoute.clear()
+//        maneuvers.clear()
+        location.distinct()
+        points.distinct()
+
+        //Act as current location first
+//        location.add(0, Locations("Camden Town", 51.5390, -0.1426))
+//        points.add(0, Point.fromLngLat(location[0].lon, location[0].lat))
+
+//        val routeOptions = when(profile)
+//        {
+//            "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+//            "cycling" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+//            else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_DRIVING)
+//        }
+
+//        Add your current location
 //        points.add(0, Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude))
 
-        val routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-        requestRoute(mapboxNavigation, routeOptions, points)
+        wayPoints.addAll(points)
+        centerPoint = getCenterViewPoint(points)
 
+        if(overview)
+        {
+            routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            requestRoute(mapboxNavigation, routeOptions,mainPath = true, lastPoint = true)
+        }
+        else
+        {
+            val startWalk = points.slice(0 until 2)
+            val cycling = points.slice(1 until 3)
+            val endWalk = points.slice(2 until 4)
+
+            runBlocking {
+
+                async {
+                    routeOptions = customiseRouteOptions(context, endWalk, DirectionsCriteria.PROFILE_WALKING)
+                    requestRoute(mapboxNavigation, routeOptions, mainPath = false, lastPoint = false)
+
+                    routeOptions = customiseRouteOptions(context, startWalk, DirectionsCriteria.PROFILE_WALKING)
+                    requestRoute(mapboxNavigation, routeOptions, mainPath = false,lastPoint = false)
+                }.await()
+
+                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_CYCLING)
+                requestRoute(mapboxNavigation, routeOptions,mainPath = true,lastPoint = true)
+            }
+        }
     }
 
     private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
@@ -134,8 +191,10 @@ class JourneyRepository(private val application: Application): MapRepository(app
             .build()
     }
 
-    private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, points: List<Point>)
+    private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, mainPath: Boolean,lastPoint: Boolean)
     {
+        Log.i("retrieving the route", "success")
+
         mapboxNavigation.requestRoutes(
             routeOptions,
             object : RouterCallback {
@@ -151,17 +210,23 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
                     Log.i("retrieving route", "success")
 
-                    currentRoute.add(getFastestRoute(routes))
-                    centerPoint = getCenterViewPoint(points)
-                    wayPoints = points
+                    val fastestRoute = getFastestRoute(routes)
+                    getInstructions(fastestRoute)
 
-                    //Getting route instruction
-                    for(route in currentRoute)
+                    if(mainPath)
                     {
-                        getInstructions(route)
+                        Log.i("bruh", "Cycling")
+                        currentRoute.add(0, fastestRoute)
+                    }else
+                    {
+                        Log.i("bruh", "Walking")
+                        currentRoute.add(getFastestRoute(routes))
                     }
 
-                    isReadyMutableLiveData.postValue(true)
+                    if(lastPoint)
+                    {
+                        isReadyMutableLiveData.postValue(true)
+                    }
                 }
 
                 /**
@@ -244,7 +309,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
         bitmap.let {
             // Set options for the resulting symbol layer.
             val annotationApi = mapView.annotations
-            val pointAnnotationManager = annotationApi.createPointAnnotationManager()
+            pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
             for(i in wayPoints.indices)
             {
@@ -261,6 +326,11 @@ class JourneyRepository(private val application: Application): MapRepository(app
                 pointAnnotationManager.create(pointAnnotationOptions)
             }
         }
+    }
+
+    fun removeAnnotations()
+    {
+        pointAnnotationManager.deleteAll()
     }
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
