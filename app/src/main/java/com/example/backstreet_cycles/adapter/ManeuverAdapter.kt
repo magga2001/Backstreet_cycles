@@ -1,14 +1,17 @@
 package com.example.backstreet_cycles.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
+import java.util.*
+
 
 class ManeuverAdapter(private val context: Context, private var maneuvers: List<Maneuver>): RecyclerView.Adapter<ManeuverAdapter.ViewHolder>() {
 
@@ -16,6 +19,7 @@ class ManeuverAdapter(private val context: Context, private var maneuvers: List<
     {
         internal var instruction: TextView = view.findViewById(R.id.instruction)
         internal var distance: TextView = view.findViewById(R.id.distance)
+        // internal var parent: LinearLayout = view.findViewById(R.id.parent)
 
         override fun onClick(p0: View?) {
             TODO("Not yet implemented")
@@ -40,6 +44,7 @@ class ManeuverAdapter(private val context: Context, private var maneuvers: List<
 
         holder.instruction.text = maneuver.instruction
         holder.distance.text = context.getString(R.string.distance_unit, maneuver.distance.toString())
+        // holder.parent.background.clearColorFilter()
     }
 
     /**
