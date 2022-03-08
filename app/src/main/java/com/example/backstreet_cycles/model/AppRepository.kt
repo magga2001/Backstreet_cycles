@@ -65,10 +65,10 @@ class AppRepository(private val application: Application,
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
                 logout()
+
                 createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
-                getUserDetails()
                 mutableLiveData.postValue(firebaseAuth.currentUser)
             }
             else{
@@ -90,6 +90,7 @@ class AppRepository(private val application: Application,
                     TAG,
                     "DocumentSnapshot written with ID: ${documentReference.id}"
                 )
+
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
