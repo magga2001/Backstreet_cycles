@@ -202,6 +202,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     stops.removeAt(position)
                     recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
+                    enableNextPageButton()
                 }
                 else{
                     Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
