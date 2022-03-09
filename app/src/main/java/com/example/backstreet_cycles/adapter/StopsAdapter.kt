@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Locations
 
-class LocationAdapter(val locationsList: ArrayList<Locations>):RecyclerView.Adapter<LocationAdapter.LocationViewHolder>(){
+class StopsAdapter(val stops: ArrayList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
 
     private lateinit var mListener: onItemClickListener
 
@@ -22,7 +22,7 @@ class LocationAdapter(val locationsList: ArrayList<Locations>):RecyclerView.Adap
         mListener = listener
 
     }
-    inner class LocationViewHolder(itemView: View, listener: onItemClickListener):RecyclerView.ViewHolder(itemView){
+    inner class StopViewHolder(itemView: View, listener: onItemClickListener):RecyclerView.ViewHolder(itemView){
         val name = itemView.findViewById<TextView>(R.id.name)
         val latitude = itemView.findViewById<TextView>(R.id.latitude)
         val longitude = itemView.findViewById<TextView>(R.id.longitude)
@@ -36,14 +36,14 @@ class LocationAdapter(val locationsList: ArrayList<Locations>):RecyclerView.Adap
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.location_data,parent, false)
-        return LocationViewHolder(view,mListener)
+        return StopViewHolder(view,mListener)
     }
 
-    override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
-        val newList = locationsList[position]
+    override fun onBindViewHolder(holder: StopViewHolder, position: Int) {
+        val newList = stops[position]
         holder.name.text = newList.name
         holder.latitude.text = newList.lat.toString()
         holder.longitude.text = newList.lon.toString()
@@ -51,7 +51,7 @@ class LocationAdapter(val locationsList: ArrayList<Locations>):RecyclerView.Adap
     }
 
     override fun getItemCount(): Int {
-        return locationsList.size
+        return stops.size
     }
 
 
