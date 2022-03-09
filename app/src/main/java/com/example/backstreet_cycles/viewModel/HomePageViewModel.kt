@@ -16,7 +16,6 @@ import com.mapbox.mapboxsdk.maps.Style
 class HomePageViewModel(application: Application) : AndroidViewModel(application) {
 
     private val homePageRepository: HomePageRepository
-
     private val locationRepository: LocationRepository
 
     init {
