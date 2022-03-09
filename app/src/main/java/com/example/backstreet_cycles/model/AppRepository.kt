@@ -133,6 +133,7 @@ class AppRepository(private val application: Application,
         val credential =
             EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
 
+
         firebaseAuth.currentUser!!.reauthenticate(credential).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
@@ -146,6 +147,17 @@ class AppRepository(private val application: Application,
                             updateEmail(email)
                             userDetailsMutableLiveData.value!!.email =
                                 firebaseAuth.currentUser!!.email
+                            firebaseAuth.currentUser!!.sendEmailVerification().addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    logout()
+                                    createToastMessage("PLEASE VERIFY YOUR EMAIL: $email")
+
+                                } else {
+                                    createToastMessage(application.getString(R.string.UPDATE_FAILED))
+
+                                }
+
+                            }
                         }
                     } else {
                         createToastMessage(application.getString(R.string.UPDATE_FAILED))
