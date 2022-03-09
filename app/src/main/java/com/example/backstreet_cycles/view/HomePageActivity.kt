@@ -53,12 +53,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var addStopButton: FloatingActionButton
     private lateinit var mylocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
-    private lateinit var stops:ArrayList<Locations>
     private lateinit var stopsAdapter: StopsAdapter
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-    private var positionOfStop:Int=0
+    private var positionOfStop:Int = 0
 
     private var updateInfo:Boolean=false
 
@@ -83,7 +82,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun addInfo(name:String, lat: Double, long: Double) {
         LayoutInflater.from(this)
-        stops.add(Locations(name,lat, long))
+        homePageViewModel.addStop(Locations(name,lat, long))
         stopsAdapter.notifyDataSetChanged()
         Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
@@ -92,9 +91,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
-        stops.remove(stops[positionOfStop])
+        homePageViewModel.removeStop(homePageViewModel.getStops()[positionOfStop])
         LayoutInflater.from(this)
-        stops.add(positionOfStop,Locations(name,lat, long))
+        homePageViewModel.addStop(positionOfStop,Locations(name,lat, long))
         stopsAdapter.notifyDataSetChanged()
         Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
@@ -103,11 +102,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun enableMyLocationButton(){
         val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        mylocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
+        mylocationButton.isEnabled = !homePageViewModel.getStops().contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
     }
 
     private fun enableNextPageButton(){
-        nextPageButton.isEnabled = stops.size >= 2
+        nextPageButton.isEnabled = homePageViewModel.getStops().size >= 2
     }
 
     private fun initialiseNavigationDrawer() {
@@ -172,7 +171,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
                 this@HomePageActivity.positionOfStop =position
             }
-
         })
 
         mylocationButton.setOnClickListener {
@@ -187,9 +185,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun createListOfItems(){
-        stops = ArrayList()
-        stops.add(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
-        stopsAdapter = StopsAdapter(stops)
+        homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        stopsAdapter = StopsAdapter(homePageViewModel.getStops())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
     }
@@ -199,7 +196,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder.absoluteAdapterPosition != 0) {
                     val position = viewHolder.absoluteAdapterPosition
-                    stops.removeAt(position)
+                    homePageViewModel.removeStopAt(position)
                     recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
                     enableNextPageButton()
@@ -216,7 +213,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             ): Boolean {
                 val fromPosition = viewHolder.absoluteAdapterPosition
                 val toPosition = target.absoluteAdapterPosition
-                Collections.swap(stops, fromPosition, toPosition)
+                Collections.swap(homePageViewModel.getStops(), fromPosition, toPosition)
                 recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
                 return true
             }
@@ -237,7 +234,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttraction())
+            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
             setUpSource(style)
             setUpLayer(style)
 

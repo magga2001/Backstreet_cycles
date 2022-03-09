@@ -19,6 +19,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     private val locationRepository: LocationRepository
 
     init {
+
         homePageRepository = HomePageRepository(application)
         locationRepository = LocationRepository(application)
     }
@@ -43,7 +44,27 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         return homePageRepository.getCurrentLocation(locationComponent)
     }
 
-    fun getTouristAttraction(): List<Locations> {
+    fun addStop(stop: Locations){
+        locationRepository.addStop(stop)
+    }
+
+    fun addStop(index: Int, stop: Locations){
+        locationRepository.addStop(index, stop)
+    }
+
+    fun removeStop(stop: Locations){
+        locationRepository.removeStop(stop)
+    }
+
+    fun removeStopAt(index: Int){
+        locationRepository.removeStopAt(index)
+    }
+
+    fun getStops(): MutableList<Locations> {
+        return locationRepository.getStops()
+    }
+
+    fun getTouristAttractions(): List<Locations> {
         return locationRepository.getTouristLocations()
     }
 

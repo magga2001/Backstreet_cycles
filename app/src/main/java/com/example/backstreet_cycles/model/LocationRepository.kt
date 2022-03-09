@@ -20,7 +20,8 @@ class LocationRepository(private val application: Application) {
 
     private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
     private var docks = mutableListOf<Dock>()
-    private val touristAttractionList = mutableListOf<Locations>()
+    private var stops = mutableListOf<Locations>()
+    private val touristAttractions = mutableListOf<Locations>()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
@@ -47,16 +48,37 @@ class LocationRepository(private val application: Application) {
         val attractionTouristData = parseFile(text)
 
         for (attraction in attractionTouristData ?: emptyList()){
-            touristAttractionList.add(attraction)
+            touristAttractions.add(attraction)
             Log.i("attractions", "${attraction.name},${attraction.lat},${attraction.lon}")
         }
 
-        Log.i("attractions", touristAttractionList.toString())
+        Log.i("attractions", touristAttractions.toString())
 
     }
 
     fun getTouristLocations(): MutableList<Locations> {
-        return touristAttractionList
+        return touristAttractions
+    }
+
+    fun addStop(stop: Locations){
+        stops.add(stop)
+    }
+
+    fun addStop(index: Int, stop: Locations){
+        stops.add(index, stop)
+    }
+
+    fun removeStop(stop: Locations){
+        stops.remove(stop)
+    }
+
+    fun removeStopAt(index: Int){
+        stops.removeAt(index)
+    }
+
+
+    fun getStops(): MutableList<Locations> {
+        return stops
     }
 
     private fun loadDocks()
