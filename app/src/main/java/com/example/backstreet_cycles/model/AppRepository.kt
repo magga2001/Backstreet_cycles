@@ -128,7 +128,7 @@ class AppRepository(private val application: Application,
             }
         }
 
-    fun updateEmailAndPassword(email: String, password: String, newPassword: String) {
+    fun updateEmailAndPassword(password: String, newPassword: String) {
 
         val credential =
             EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
@@ -139,32 +139,8 @@ class AppRepository(private val application: Application,
             if (task.isSuccessful) {
                 Log.d("value", "User re-authenticated.")
                 val user = FirebaseAuth.getInstance().currentUser
-                user!!.updateEmail(email).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        createToastMessage("Email Changed Current Email is $email")
-                        val email = userDetailsMutableLiveData.value!!.email
-                        if (email != null) {
-                            updateEmail(email)
-                            userDetailsMutableLiveData.value!!.email =
-                                firebaseAuth.currentUser!!.email
-                            firebaseAuth.currentUser!!.sendEmailVerification().addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    logout()
-                                    createToastMessage("PLEASE VERIFY YOUR EMAIL: $email")
-
-                                } else {
-                                    createToastMessage(application.getString(R.string.UPDATE_FAILED))
-
-                                }
-
-                            }
-                        }
-                    } else {
-                        createToastMessage(application.getString(R.string.UPDATE_FAILED))
-                    }
-                }
                 if (newPassword.isNotEmpty()) {
-                    user.updatePassword(newPassword).addOnCompleteListener { task ->
+                    user!!.updatePassword(newPassword).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
                         } else {
@@ -176,35 +152,6 @@ class AppRepository(private val application: Application,
                 createToastMessage(application.getString(R.string.UPDATE_FAILED))
             }
         }
-    }
-
-    fun updateEmail(email: String) = CoroutineScope(Dispatchers.IO).launch {
-
-        val user = db
-            .collection("users")
-            .whereEqualTo("email", email)
-            .get()
-            .await()
-
-        if (user.documents.isNotEmpty()) {
-            for (document in user) {
-                try {
-                    db.collection("users").document(document.id)
-                        .update("email", firebaseAuth.currentUser!!.email)
-                    updatedProfileMutableLiveData.postValue(true)
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        createToastMessage(e.message)
-                    }
-                }
-
-            }
-        } else {
-            withContext(Dispatchers.Main) {
-                createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
-            }
-        }
-
     }
 
     fun getUserDetails() {

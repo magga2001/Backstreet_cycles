@@ -31,19 +31,15 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
-                    et_email.error = "Please enter your email"
-                }
                 TextUtils.isEmpty(et_current_password.text.toString().trim() { it <= ' ' }) -> {
                     et_current_password.error = "In order for use to change your email or password you need to" +
                             " enter your old password"
                 }
                 else -> {
-                    val email = et_email.text.toString().trim { it <= ' ' }
                     val currentPassword = et_current_password.text.toString().trim { it <= ' ' }
                     val newPassword = et_new_password.text.toString()
                     loggedInViewModel.getUserDetails()
-                    loggedInViewModel.updateEmailAndPassword(email,currentPassword,newPassword)
+                    loggedInViewModel.updateEmailAndPassword(currentPassword,newPassword)
                 }
             }
         }

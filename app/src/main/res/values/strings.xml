@@ -29,7 +29,7 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="firstname">FirstName</string>
     <string name="last_name">Last Name</string>
-    <string name="change_email_or_password">Change Email or Password</string>
+    <string name="change_password">Change Password</string>
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="LOG_IN_FAILED">Log in failed</string>
