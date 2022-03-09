@@ -15,17 +15,6 @@
         android:clickable="false"
         tools:context=".view.HomePageActivity">
 
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/locationLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:clickable="false"-->
-<!--            tools:context=".view.HomePageActivity">-->
-
-
-
-<!--        </RelativeLayout>-->
-
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
@@ -38,9 +27,6 @@
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </RelativeLayout>
-
-<!--    android:layout_above="@+id/recyclerView"-->
-<!--    android:layout_below="@+id/locationLayout"-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

@@ -50,12 +50,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private val REQUESTCODEAUTOCOMPLETE = 7171
 
-    private lateinit var addsBtn: FloatingActionButton
+    private lateinit var addStopButton: FloatingActionButton
+    private lateinit var mylocationButton: FloatingActionButton
+    private lateinit var nextPageButton: FloatingActionButton
     private lateinit var locationsList:ArrayList<Locations>
     private lateinit var locationAdapter: LocationAdapter
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private var positionOfLocation:Int=0
 
     private var updateInfo:Boolean=false
 
@@ -75,23 +78,39 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
+
     }
 
-    private var pos:Int=0
     private fun addInfo(name:String, lat: Double, long: Double) {
         LayoutInflater.from(this)
-
         locationsList.add(Locations(name,lat, long))
         locationAdapter.notifyDataSetChanged()
-        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
+        enableNextPageButton()
+        enableLocationButton()
+
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
-        locationsList.remove(locationsList[pos])
+        locationsList.remove(locationsList[positionOfLocation])
         LayoutInflater.from(this)
-        locationsList.add(pos,Locations(name,lat, long))
+        locationsList.add(positionOfLocation,Locations(name,lat, long))
         locationAdapter.notifyDataSetChanged()
-        Toast.makeText(this,"adding user information scuees",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
+        enableNextPageButton()
+        enableLocationButton()
+    }
+
+    private fun enableLocationButton(){
+        for(location in locationsList){
+            mylocationButton.isEnabled = location.lat != homePageViewModel.getCurrentLocation(locationComponent)!!.latitude ||
+                    location.lon != homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
+        }
+
+    }
+
+    private fun enableNextPageButton(){
+        nextPageButton.isEnabled = locationsList.size >= 2
     }
 
     private fun initialiseNavigationDrawer() {
@@ -136,49 +155,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
-        addsBtn = findViewById(R.id.addingBtn)
-        locationsList = ArrayList()
-        locationsList.add(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
-        locationAdapter = LocationAdapter(locationsList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = locationAdapter
+        addStopButton = findViewById(R.id.addingBtn)
+        mylocationButton = findViewById(R.id.myLocationButton)
+        nextPageButton  = findViewById(R.id.nextPageButton)
 
-            val swipeToDeleteCallBack = object : TouchScreenCallBack(){
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    if (viewHolder.absoluteAdapterPosition != 0) {
-                        val position = viewHolder.absoluteAdapterPosition
-                        locationsList.removeAt(position)
-                        recyclerView.adapter?.notifyItemRemoved(position)
-                    }
-                    else{
-                        Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        createListOfItems()
+        itemTouchMethods()
 
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    val fromPosition = viewHolder.absoluteAdapterPosition
-                    val toPosition = target.absoluteAdapterPosition
-                    Collections.swap(locationsList, fromPosition, toPosition)
-                    recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
-                    return true
-                }
-
-            }
-
-            val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
-
-            itemTouchHelper.attachToRecyclerView(recyclerView)
+        enableLocationButton()
+        enableNextPageButton()
 
 
-
-
-
-
-        addsBtn.setOnClickListener {
+        addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
@@ -187,18 +175,62 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
                 startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
-                //locationAdapter.onBindViewHolder(locationAdapter.LocationViewHolder(),position)
-                //locationList.remove(locationList[position])
-                pos=position
+                this@HomePageActivity.positionOfLocation =position
             }
 
         })
+
+        mylocationButton.setOnClickListener {
+            Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
+            locationsList.add(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        }
+
+        nextPageButton.setOnClickListener{
+            Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
+        }
     }
 
-//    private fun updateBottomSheet()
-//    {
-//        mAdapter.updateList(docks)
-//    }
+    private fun createListOfItems(){
+        locationsList = ArrayList()
+        locationsList.add(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        locationAdapter = LocationAdapter(locationsList)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = locationAdapter
+    }
+
+    private fun itemTouchMethods(){
+        val touchScreenCallBack = object : TouchScreenCallBack(){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                if (viewHolder.absoluteAdapterPosition != 0) {
+                    val position = viewHolder.absoluteAdapterPosition
+                    locationsList.removeAt(position)
+                    recyclerView.adapter?.notifyItemRemoved(position)
+                }
+                else{
+                    Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.absoluteAdapterPosition
+                val toPosition = target.absoluteAdapterPosition
+                Collections.swap(locationsList, fromPosition, toPosition)
+                recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
+                return true
+            }
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(touchScreenCallBack)
+
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+
 
     override fun onMapReady(mapboxMap: MapboxMap) {
 
@@ -206,11 +238,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapboxMap.setStyle(
             Style.MAPBOX_STREETS
         ) { style ->
-
             enableLocationComponent(style)
-
             homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttraction())
-            //init search fab()
             setUpSource(style)
             setUpLayer(style)
 
@@ -240,7 +269,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val REQUESTCODEAUTOCOMPLETE = 7171
+
 
         if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
@@ -265,8 +294,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             if (updateInfo) {
                 updateInfo=false
                 addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
-                //docks = MapHelper.getClosestDocks(Point.fromLngLat(longitude,latitude))
-                //updateBottomSheet()
             } else {
                 addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
             }
@@ -275,7 +302,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
 
     @SuppressLint("MissingPermission")
-    private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not request
+    private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
             locationComponent = homePageViewModel.initialiseLocationComponent(mapboxMap)

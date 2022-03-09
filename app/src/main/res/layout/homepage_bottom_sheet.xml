@@ -38,19 +38,53 @@
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/addingBtn"
-                    android:layout_width="363dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_margin="8dp"
                     android:paddingLeft="3dp"
                     android:paddingTop="3dp"
                     android:paddingRight="3dp"
                     android:paddingBottom="3dp"
                     android:src="@drawable/ic_baseline_add_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.500"
+                    app:layout_constraintStart_toStartOf="@+id/myLocationButton" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/myLocationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:paddingLeft="3dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/bottom_sheet"
+                    app:srcCompat="@android:drawable/ic_menu_mylocation"
+                    tools:ignore="NotSibling" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/nextPageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:paddingLeft="3dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="3dp"
+                    tools:layout_editor_absoluteX="291dp"
+                    tools:layout_editor_absoluteY="0dp"
+                    app:srcCompat="@drawable/ic_baseline_navigate_next_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
