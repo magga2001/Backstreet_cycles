@@ -94,6 +94,7 @@ class HomePageRepository(private val application: Application) {
             .accessToken(application.getString(R.string.mapbox_access_token)).
             placeOptions(
                 PlaceOptions.builder()
+                    .country("GB")
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)
                     .build(PlaceOptions.MODE_CARDS)
