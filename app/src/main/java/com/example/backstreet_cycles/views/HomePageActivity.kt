@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.view
+package com.example.backstreet_cycles.views
 
 //---------------------------------
 import android.annotation.SuppressLint
@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,7 @@ import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -37,11 +40,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
+import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
 
 
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
+    private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
@@ -66,12 +71,33 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         private const val symbolIconId = "SymbolIconId"
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
 
         homePageViewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
+
+        loggedInViewModel = ViewModelProviders.of(this).get(LoggedInViewModel::class.java)
+
+        loggedInViewModel.getLoggedOutMutableLiveData()
+            .observe(this, Observer<Boolean> { loggedOut ->
+                if (loggedOut) {
+                    startActivity(Intent(this@HomePageActivity, LogInActivity::class.java))
+                    finish()
+                }
+            })
+
+        loggedInViewModel.getUserDetails()
+        loggedInViewModel.getUserDetailsMutableLiveData().observe(this, Observer { firebaseUser ->
+            if (firebaseUser != null) {
+                user_name.text = "Hello: " + firebaseUser.firstName
+                tv_email.text = firebaseUser.email
+            }
+        })
+
+
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -122,11 +148,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     "clicked home",
                     Toast.LENGTH_SHORT
                 ).show()
-                R.id.profile -> Toast.makeText(
-                    applicationContext,
-                    "clicked view",
-                    Toast.LENGTH_SHORT
-                ).show()
+                R.id.profile -> {
+                    loggedInViewModel.getUserDetails()
+                    startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
+                }
                 R.id.plan_journey -> Toast.makeText(
                     applicationContext,
                     "clicked sync",
@@ -139,11 +164,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 ).show()
                 R.id.help -> Toast.makeText(applicationContext, "clicked trash", Toast.LENGTH_SHORT)
                     .show()
-                R.id.logout -> Toast.makeText(
-                    applicationContext,
-                    "clicked settings",
-                    Toast.LENGTH_SHORT
-                ).show()
+                R.id.logout -> {
+                    loggedInViewModel.logOut()
+                }
 
             }
             true

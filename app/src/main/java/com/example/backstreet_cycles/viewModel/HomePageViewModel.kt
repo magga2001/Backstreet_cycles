@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.LocationRepository
-import com.example.backstreet_cycles.view.HomePageActivity
+import com.example.backstreet_cycles.views.HomePageActivity
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap

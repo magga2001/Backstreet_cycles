@@ -111,13 +111,17 @@ class LocationRepository(private val application: Application) {
             val name = json.getJSONObject(i).getString("commonName")
             val lat = json.getJSONObject(i).getDouble("lat")
             val lon = json.getJSONObject(i).getDouble("lon")
-            val nbBikes = json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(6).getInt("value")
-            val nbSpaces = json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(7).getInt("value")
-            val nbDocks = json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(8).getInt("value")
+            val nbBikes = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(6).getString("value"))
+            val nbSpaces = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(7).getString("value"))
+            val nbDocks = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(8).getString("value"))
 
-            val dock = Dock(id,name,lat,lon,nbBikes,nbSpaces,nbDocks)
-            docks.add(dock)
-            Log.i("Dock_station $i", dock.toString())
+            //Check if dock is broken
+            if(validDock(nbBikes,nbSpaces,nbDocks))
+            {
+                val dock = Dock(id,name,lat,lon,nbBikes,nbSpaces,nbDocks)
+                docks.add(dock)
+                Log.i("Dock_station $i", dock.toString())
+            }
         }
 
         isReadyMutableLiveData.postValue(true)
@@ -126,6 +130,21 @@ class LocationRepository(private val application: Application) {
     fun getDocks(): MutableList<Dock> {
         loadDocks()
         return docks
+    }
+
+    private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean
+    {
+        return (nbDocks - (nbBikes + nbSpaces) == 0)
+    }
+
+    private fun checkValidity(value : String): Int
+    {
+        return try {
+            value.toInt()
+        } catch (e: Exception) {
+            // handler
+            0
+        }
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {

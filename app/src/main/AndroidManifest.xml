@@ -14,14 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".view.SplashScreenActivity"
+            android:name=".views.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.HomePageActivity" />
+        <activity android:name=".views.HomePageActivity" />
+        <activity android:name=".views.LogInActivity" />
+        <activity android:name=".views.ChangeEmailOrPasswordActivity" />
+        <activity android:name=".views.EditUserProfileActivity" />
+        <activity android:name=".views.SignUpActivity" />
     </application>
 
 </manifest>

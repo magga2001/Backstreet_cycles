@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.view
+package com.example.backstreet_cycles.views
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.SplashViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashScreenActivity: AppCompatActivity() {
 
@@ -19,9 +20,13 @@ class SplashScreenActivity: AppCompatActivity() {
         splashViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
-
-                startActivity(Intent(this, HomePageActivity::class.java))
+                if(FirebaseAuth.getInstance().currentUser != null){
+                    startActivity(Intent(this, HomePageActivity::class.java))
+                    finish()
+                }
+                startActivity(Intent(this, LogInActivity::class.java))
                 finish()
+
             }
         }
 
