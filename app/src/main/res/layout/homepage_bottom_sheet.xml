@@ -7,12 +7,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginBottom="8dp"
-    android:background="#ffffff"
+    android:background="#805397FB"
     android:orientation="vertical"
     android:padding="16dp"
     app:behavior_hideable="false"
@@ -76,12 +74,11 @@
                     android:paddingTop="3dp"
                     android:paddingRight="3dp"
                     android:paddingBottom="3dp"
-                    tools:layout_editor_absoluteX="291dp"
-                    tools:layout_editor_absoluteY="0dp"
-                    app:srcCompat="@drawable/ic_baseline_navigate_next_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                     />
+                    app:srcCompat="@drawable/ic_baseline_navigate_next_24"
+                    tools:layout_editor_absoluteX="291dp"
+                    tools:layout_editor_absoluteY="0dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
