@@ -8,4 +8,10 @@
     <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
     <string name="distance_unit">%1$s feets</string>
     <string name="blankData">---</string>
+
+    <string-array name="names">
+        <item>Walk</item>
+        <item>Cycle</item>
+        <item>Walk</item>
+    </string-array>
 </resources>

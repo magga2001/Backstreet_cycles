@@ -41,29 +41,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Summary:"
+                    android:text="Stops:"
                     android:textColor="#000000"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:background="@color/white"
-                    android:id="@+id/maneuver_journey_recycling_view"
+                <ExpandableListView
+                    android:id="@+id/stops_expandableList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your stops:"
+                    android:text="Trip summary: "
                     android:textColor="#000000"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/stop_journey_recycling_view"
+                    android:id="@+id/maneuver_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
