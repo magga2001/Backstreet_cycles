@@ -104,6 +104,7 @@ class HomePageRepository(private val application: Application) {
             .build(activity)
     }
 
+
     fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double)
     {
         mapboxMap.animateCamera(
