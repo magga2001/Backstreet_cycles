@@ -9,6 +9,8 @@
     <string name="distance_unit">%1$s feets</string>
     <string name="blankData">---</string>
     <string name="preference_file_Locations">\"LOCATIONS\"</string>
+    <string name="continue_with_current_journey">Continue With Current Journey</string>
+    <string name="continue_with_newly_set_journey">Continue with the Newly Created Journey</string>
 
     <string-array name="names">
         <item>Walk</item>

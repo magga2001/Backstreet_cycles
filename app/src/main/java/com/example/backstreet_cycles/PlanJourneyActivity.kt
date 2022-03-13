@@ -17,6 +17,7 @@ import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
+import kotlinx.android.synthetic.main.bottom_sheet_navigation.*
 import kotlinx.coroutines.*
 
 class PlanJourneyActivity : AppCompatActivity() {
@@ -99,23 +100,23 @@ class PlanJourneyActivity : AppCompatActivity() {
 //            delay(2000)
 //            loadActivity()
 //        }
-//        MapRepository.location.add(0, Locations("Covent Garden", 51.5117, -0.1240))
+        MapRepository.location.add(0, Locations("Current Location", -0.1426,51.5390))
         MapRepository.location.add(Locations("Harrods", 51.5144, -0.1528))
         MapRepository.location.add(Locations("Tower Bridge", 51.5055, -0.0754))
 
-        val currentPoint = Point.fromLngLat(-0.1426,51.5390)
-        val stopOne = Point.fromLngLat(MapRepository.location[0].lon, MapRepository.location[0].lat)
-        val stopTwo = Point.fromLngLat(MapRepository.location[1].lon, MapRepository.location[1].lat)
+//        val currentPoint = Point.fromLngLat(MapRepository.location[0].lon,MapRepository.location[0].lat)
+//        val stopOne = Point.fromLngLat(MapRepository.location[1].lon, MapRepository.location[1].lat)
+//        val stopTwo = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 //        val stopThree = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
-        if (!checkForARunningJourney){
-            alertDialog()
-            fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
+        if (checkForARunningJourney){
+            alertDialog(MapRepository.location)
         } else{
-            fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
+            val locationPoints = setPoints(MapRepository.location)
+            fetchRoute(locationPoints)
         }
-        fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
+//        fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
     }
 
     private fun loadActivity()
@@ -136,23 +137,35 @@ class PlanJourneyActivity : AppCompatActivity() {
 //        mapboxNavigation.onDestroy()
     }
 
-    fun alertDialog() {
+    fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
         builder.setMessage("There is already a planned journey that you are currently useing." +
                 "Do you want to change the journey to the current one or keep the same one?")
 //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
-        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-            Toast.makeText(applicationContext,
-                android.R.string.yes, Toast.LENGTH_SHORT).show()
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            journeyViewModel.getListLocations()
+            val listPoints = setPoints(newStops)
+            fetchRoute(listPoints)
         }
 
-        builder.setNegativeButton(android.R.string.no) { dialog, which ->
-            Toast.makeText(applicationContext,
-                android.R.string.no, Toast.LENGTH_SHORT).show()
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+//
+            val currentPoint = Point.fromLngLat(MapRepository.location[0].lon,MapRepository.location[0].lat)
+            val stopOne = Point.fromLngLat(MapRepository.location[1].lon, MapRepository.location[1].lat)
+            val stopTwo = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
+            fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
         }
         builder.show()
 
+    }
+
+    private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
+        val listPoints = emptyList<Point>().toMutableList()
+        for (i in 0..newStops.size){
+            listPoints[i] = Point.fromLngLat(MapRepository.location[i].lon,MapRepository.location[i].lat)
+        }
+        return listPoints
     }
 }
