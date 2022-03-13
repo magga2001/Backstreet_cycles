@@ -4,64 +4,54 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_log_in.et_email
 import kotlinx.android.synthetic.main.activity_log_in.et_password
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var loginRegiterViewModel: LogInRegisterViewModel
-
+    private lateinit var loginRegisterViewModel: LogInRegisterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        loginRegiterViewModel = ViewModelProviders.of(this).get(LogInRegisterViewModel::class.java)
-        loginRegiterViewModel.getMutableLiveData().observe(this, Observer<FirebaseUser> { firebaseUser ->
+        loginRegisterViewModel = ViewModelProviders.of(this)[LogInRegisterViewModel::class.java]
+        loginRegisterViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
-
-
-
-        })
-
+        }
 
         buttonSignUp.setOnClickListener {
                 when {
-                    TextUtils.isEmpty(et_firstName.text.toString().trim() { it <= ' ' }) -> {
-                        et_firstName.error = "Please enter your first name"
+                    TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
+                        et_firstName.error = getString(R.string.enter_first_name)
                     }
-                    TextUtils.isEmpty(et_lastName.text.toString().trim() { it <= ' ' }) -> {
-                        et_lastName.error = "Please enter your last name"
-                    }
-
-                    TextUtils.isEmpty(et_email.text.toString().trim() { it <= ' ' }) -> {
-                        et_email.error = "Please enter your email"
+                    TextUtils.isEmpty(et_lastName.text.toString().trim { it <= ' ' }) -> {
+                        et_lastName.error = getString(R.string.enter_last_name)
                     }
 
-                    TextUtils.isEmpty(et_password.text.toString().trim() { it <= ' ' }) -> {
-                        et_password.error = "Please enter a password"
+                    TextUtils.isEmpty(et_email.text.toString().trim { it <= ' ' }) -> {
+                        et_email.error = getString(R.string.enter_email)
                     }
 
-
-                    TextUtils.isEmpty(et_confirmPassword.text.toString().trim() { it <= ' ' }) -> {
-                        et_password.error = "Please confirm your password"
+                    TextUtils.isEmpty(et_password.text.toString().trim { it <= ' ' }) -> {
+                        et_password.error = getString(R.string.enter_password)
                     }
 
-                    (et_confirmPassword.text.toString().trim()) != (et_password.text.toString().trim(){ it <= ' ' }) -> {
-                        et_confirmPassword.error = "Passwords do not match"
+                    TextUtils.isEmpty(et_confirmPassword.text.toString().trim { it <= ' ' }) -> {
+                        et_password.error = getString(R.string.enter_confirmed_password)
+                    }
+
+                    (et_confirmPassword.text.toString().trim()) != (et_password.text.toString().trim { it <= ' ' }) -> {
+                        et_confirmPassword.error = getString(R.string.password_not_match)
                     }
 
                     else -> {
@@ -70,8 +60,7 @@ class SignUpActivity : AppCompatActivity() {
                         val email: String = et_email.text.toString().trim { it <= ' ' }
                         val password: String = et_password.text.toString().trim { it <= ' '}
 
-                        loginRegiterViewModel.register(firstName, lastName, email, password)
-
+                        loginRegisterViewModel.register(firstName, lastName, email, password)
                     }
                 }
             }

@@ -26,7 +26,7 @@ class EditUserProfileActivity : AppCompatActivity() {
             if (updated) {
                 Toast.makeText(
                     this@EditUserProfileActivity,
-                    "Profile updated successfully",
+                    getString(R.string.profile_updated),
                     Toast.LENGTH_SHORT
                 ).show()
                 val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
@@ -44,16 +44,13 @@ class EditUserProfileActivity : AppCompatActivity() {
             }
         }
 
-
-
-
         buttonUpdateProfile.setOnClickListener {
             when {
                 TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
-                    et_firstName.error = "Please enter your first name"
+                    et_firstName.error = getString(R.string.enter_first_name)
                 }
                 TextUtils.isEmpty(et_lastName.text.toString().trim { it <= ' ' }) -> {
-                    et_lastName.error = "Please enter your last name"
+                    et_lastName.error = getString(R.string.enter_last_name)
                 }
                 else -> {
                     val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
@@ -69,8 +66,6 @@ class EditUserProfileActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-
     }
 
     override fun onBackPressed() {
