@@ -69,4 +69,7 @@
     <string name="longitude">longitude</string>
     <string name="name_goes_here">(name goes here)</string>
     <string name="email_goes_here">(email goes here)</string>
+    <string name="add_button">Add Button</string>
+    <string name="location_button">Location Button</string>
+    <string name="next_page_button">Next Page Button</string>
 </resources>

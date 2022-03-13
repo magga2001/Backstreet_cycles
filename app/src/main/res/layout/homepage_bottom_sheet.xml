@@ -40,7 +40,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.500"
-                    app:layout_constraintStart_toStartOf="@+id/myLocationButton" />
+                    app:layout_constraintStart_toStartOf="@+id/myLocationButton"
+                    android:contentDescription="@string/add_button" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/myLocationButton"
@@ -55,7 +56,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/bottom_sheet"
                     app:srcCompat="@android:drawable/ic_menu_mylocation"
-                    tools:ignore="NotSibling" />
+                    tools:ignore="NotSibling"
+                    android:contentDescription="@string/location_button" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/nextPageButton"
@@ -71,7 +73,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_baseline_navigate_next_24"
                     tools:layout_editor_absoluteX="291dp"
-                    tools:layout_editor_absoluteY="0dp" />
+                    tools:layout_editor_absoluteY="0dp"
+                    android:contentDescription="@string/next_page_button" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
