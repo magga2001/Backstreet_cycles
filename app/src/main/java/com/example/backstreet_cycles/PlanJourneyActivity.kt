@@ -110,7 +110,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 //        val stopThree = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
-        if (checkForARunningJourney){
+        if (!checkForARunningJourney){
             alertDialog(MapRepository.location)
         } else{
             val locationPoints = setPoints(MapRepository.location)
@@ -163,8 +163,8 @@ class PlanJourneyActivity : AppCompatActivity() {
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()
-        for (i in 0..newStops.size){
-            listPoints[i] = Point.fromLngLat(MapRepository.location[i].lon,MapRepository.location[i].lat)
+        for (i in 0..newStops.size-1){
+            listPoints.add(Point.fromLngLat(MapRepository.location[i].lon,MapRepository.location[i].lat))
         }
         return listPoints
     }

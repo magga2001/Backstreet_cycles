@@ -181,6 +181,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
                 }.await()
 
                 routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_DRIVING)
+//                routeOptions.toBuilder().applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING).build()
                 requestRoute(mapboxNavigation, routeOptions,mainPath = true,lastPoint = true)
             }
         }
