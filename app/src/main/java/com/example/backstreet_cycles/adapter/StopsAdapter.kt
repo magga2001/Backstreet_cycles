@@ -10,19 +10,18 @@ import com.example.backstreet_cycles.dto.Locations
 
 class StopsAdapter(val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
 
-    private lateinit var mListener: onItemClickListener
+    private lateinit var clickListener: OnItemClickListener
 
-    interface onItemClickListener{
+    interface OnItemClickListener{
         fun onItemClick(position: Int)
-
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener){
 
-        mListener = listener
+        clickListener = listener
 
     }
-    inner class StopViewHolder(itemView: View, listener: onItemClickListener):RecyclerView.ViewHolder(itemView){
+    inner class StopViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
         val name = itemView.findViewById<TextView>(R.id.name)
         val latitude = itemView.findViewById<TextView>(R.id.latitude)
         val longitude = itemView.findViewById<TextView>(R.id.longitude)
@@ -39,7 +38,7 @@ class StopsAdapter(val stops: MutableList<Locations>):RecyclerView.Adapter<Stops
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.location_data,parent, false)
-        return StopViewHolder(view,mListener)
+        return StopViewHolder(view,clickListener)
     }
 
     override fun onBindViewHolder(holder: StopViewHolder, position: Int) {

@@ -26,7 +26,7 @@ class AppRepository(private val application: Application,
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
     private val userDetailsMutableLiveData: MutableLiveData<Users>
     private val firebaseAuth: FirebaseAuth
-    private val db = fireStore
+    private val dataBase = fireStore
 
     init {
         mutableLiveData = MutableLiveData()
@@ -46,13 +46,9 @@ class AppRepository(private val application: Application,
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //firebaseAuth.currentUser?.sendEmailVerification()
+
                     emailVerification(fName,lName,email)
 
-
-                    //createUserAccount(fName, lName, email)
-                    //getUserDetails()
-                    //mutableLiveData.postValue(firebaseAuth.currentUser)
                 } else {
                     createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
@@ -83,7 +79,7 @@ class AppRepository(private val application: Application,
 
     fun createUserAccount(firstName: String, lastName: String, email: String) {
         val user = Users(firstName, lastName, email)
-        db.collection("users")
+        dataBase.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
                 Log.d(
@@ -100,7 +96,7 @@ class AppRepository(private val application: Application,
     fun updateUserDetails(firstName: String, lastName: String) =
         CoroutineScope(Dispatchers.IO).launch {
 
-            val user = db
+            val user = dataBase
                 .collection("users")
                 .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
                 .get()
@@ -109,9 +105,9 @@ class AppRepository(private val application: Application,
             if (user.documents.isNotEmpty()) {
                 for (document in user) {
                     try {
-                        db.collection("users").document(document.id).update("firstName", firstName)
-                        db.collection("users").document(document.id).update("lastName", lastName)
-                        db.collection("users").document(document.id)
+                        dataBase.collection("users").document(document.id).update("firstName", firstName)
+                        dataBase.collection("users").document(document.id).update("lastName", lastName)
+                        dataBase.collection("users").document(document.id)
                             .update("email", firebaseAuth.currentUser!!.email)
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
@@ -155,7 +151,7 @@ class AppRepository(private val application: Application,
     }
 
     fun getUserDetails() {
-        db
+        dataBase
             .collection("users")
             .whereEqualTo("email", firebaseAuth.currentUser!!.email)
             .get()
