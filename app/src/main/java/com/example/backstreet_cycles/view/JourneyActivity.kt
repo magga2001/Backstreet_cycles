@@ -1,19 +1,21 @@
 package com.example.backstreet_cycles.view
 
+//import com.example.backstreet_cycles.adapter.PlannerAdapter
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
-import android.widget.TextView
+import android.widget.ExpandableListView.OnGroupExpandListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.ManeuverAdapter
-//import com.example.backstreet_cycles.adapter.PlannerAdapter
+import com.example.backstreet_cycles.adapter.MyExpandableListAdapter
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
@@ -81,9 +83,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-//    private lateinit var mAdapter: PlannerAdapter
+
+    //    private lateinit var mAdapter: PlannerAdapter
     private lateinit var nAdapter: ManeuverAdapter
     private val currentRoute = MapRepository.currentRoute
+
+    // New shit
+    private lateinit var childList: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,17 +233,80 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         routeArrowView = MapboxRouteArrowView(routeArrowOptions)
     }
 
+    private fun loadChild(mobileModels: Array<String>) {
+        childList = ArrayList()
+        for (model in mobileModels) {
+            (childList as ArrayList<String>).add(model)
+        }
+    }
+
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
+
+        var groupList: List<String>
+        var mobileCollection: Map<String, List<String>>
+        var expandableListView: ExpandableListView
+        var expandableListAdapter: ExpandableListAdapter
+
+        groupList = ArrayList()
+        groupList.add("Samsung")
+
+
+        val samsungModels = arrayOf(
+            "Samsung Galaxy M21", "Samsung Galaxy F41",
+            "Samsung Galaxy M51", "Samsung Galaxy A50s"
+        )
+
+        childList = ArrayList()
+        mobileCollection = HashMap()
+        for (group in groupList) {
+            if (group == "Samsung") {
+                for (model in samsungModels) {
+                    (childList as ArrayList<String>).add(model)
+                }
+            }
+            mobileCollection.put(group, childList)
+        }
+
+        expandableListView = findViewById(R.id.stops_expandableList)
+        expandableListAdapter = MyExpandableListAdapter(this, groupList, mobileCollection)
+        expandableListView.setAdapter(expandableListAdapter)
+        expandableListView.setOnGroupExpandListener(object : OnGroupExpandListener {
+            var lastExpandedPosition = -1
+            override fun onGroupExpand(i: Int) {
+                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
+                    expandableListView.collapseGroup(lastExpandedPosition)
+                }
+                lastExpandedPosition = i
+            }
+        })
+        expandableListView.setOnChildClickListener { expandableListView, view, i, i1, l ->
+            true
+        }
 
 //        val groupList: MutableList<String> = mutableListOf()
 //        val childList: MutableList<String> = mutableListOf()
 //        val stops: MutableMap<String, List<String>> = mutableMapOf()
-//        val expandableListView: ExpandableListView
-//        val expandableListAdapter: ExpandableListAdapter
 //
-//        expandableListView = findViewById(R.id.stops_expandableList)
-//        expandableListAdapter = myExpandableListAdapter(this, childList, stops)
+//        groupList.add("Big Ben")
+//        groupList.add("Heaven Strip club")
+//
+//        val wcw: MutableList<String> = mutableListOf("Walk", "Cycle", "Walk")
+//
+//        for (group in groupList){
+//            if (group == "Big Ben"){
+//                for (w in wcw){
+//                    childList.add(w)
+//                }
+//            }
+//            else {
+//                stops.put(group, childList)
+//            }
+//        }
+//
+//        val expandableListAdapter: ExpandableListAdapter
+//        val expandableListView: ExpandableListView = findViewById(R.id.stops_expandableList)
+//        expandableListAdapter = MyExpandableListAdapter(this, childList, stops)
 //        expandableListView.setAdapter(expandableListAdapter)
 //        expandableListView.setOnGroupExpandListener(ExpandableListView.OnGroupExpandListener {
 //            var lastExpandedPosition = -1
@@ -252,21 +321,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 //
 //        expandableListView.setOnChildClickListener{
 //                expandableListView: ExpandableListView, view1: View, i: Int, i1: Int, l: Long -> true
-//        }
-//
-//
-//
-//        groupList.add("Big Ben")
-//        groupList.add("Heaven Strip club")
-//
-//        val wcw: MutableList<String> = mutableListOf("Walk", "Cycle", "Walk")
-//
-//        for (group in groupList){
-//            if (group == "Big Ben"){
-//                for (w in wcw){
-//                    childList.add(w)
-//                }
-//            }
 //        }
 
 
