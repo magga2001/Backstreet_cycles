@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -14,6 +13,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONArray
+import timber.log.Timber
 
 
 class LocationRepository(private val application: Application) {
@@ -49,11 +49,9 @@ class LocationRepository(private val application: Application) {
 
         for (attraction in attractionTouristData ?: emptyList()){
             touristAttractions.add(attraction)
-            Log.i("attractions", "${attraction.name},${attraction.lat},${attraction.lon}")
+            Timber.tag("attractions").i("${attraction.name},${attraction.lat},${attraction.lon}")
         }
-
-        Log.i("attractions", touristAttractions.toString())
-
+        Timber.tag("attractions").i(touristAttractions.toString())
     }
 
     fun getTouristLocations(): MutableList<Locations> {
@@ -95,8 +93,7 @@ class LocationRepository(private val application: Application) {
                 addDocks(json)
             },
             {
-                Log.i("ERROR", "Fail to fetch data")
-
+                Timber.tag("ERROR").w("Fail to fetch data")
                 isReadyMutableLiveData.postValue(false)
             })
 
@@ -120,10 +117,9 @@ class LocationRepository(private val application: Application) {
             {
                 val dock = Dock(id,name,lat,lon,nbBikes,nbSpaces,nbDocks)
                 docks.add(dock)
-                Log.i("Dock_station $i", dock.toString())
+                Timber.tag("Dock_station $i").w(dock.toString())
             }
         }
-
         isReadyMutableLiveData.postValue(true)
     }
 

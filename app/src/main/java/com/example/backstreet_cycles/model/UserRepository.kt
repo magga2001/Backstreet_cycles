@@ -2,11 +2,10 @@ package com.example.backstreet_cycles.model
 
 import android.app.Application
 import android.content.ContentValues.TAG
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.dto.Users
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -16,31 +15,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
-class AppRepository(private val application: Application,
-                    private val fireStore: FirebaseFirestore,
-                    private val fireBaseAuth: FirebaseAuth) {
-    private val mutableLiveData: MutableLiveData<FirebaseUser>
-    private val loggedOutMutableLiveData: MutableLiveData<Boolean>
-    private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
-    private val userDetailsMutableLiveData: MutableLiveData<Users>
-    private val firebaseAuth: FirebaseAuth
+class UserRepository(private val application: Application,
+                     fireStore: FirebaseFirestore,
+                     fireBaseAuth: FirebaseAuth) {
+    private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
+    private val loggedOutMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val userDetailsMutableLiveData: MutableLiveData<Users> = MutableLiveData()
+    private val firebaseAuth: FirebaseAuth = fireBaseAuth
     private val dataBase = fireStore
 
     init {
-        mutableLiveData = MutableLiveData()
-        loggedOutMutableLiveData = MutableLiveData()
-        updatedProfileMutableLiveData = MutableLiveData()
-        userDetailsMutableLiveData = MutableLiveData()
-        firebaseAuth = fireBaseAuth
         if (firebaseAuth.currentUser != null) {
             mutableLiveData.postValue(firebaseAuth.currentUser)
             loggedOutMutableLiveData.postValue(false)
             updatedProfileMutableLiveData.postValue(false)
         }
     }
-
 
     fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -56,7 +50,7 @@ class AppRepository(private val application: Application,
         return firebaseAuth.currentUser
     }
 
-    fun emailVerification(fName: String, lName: String, email: String) {
+    private fun emailVerification(fName: String, lName: String, email: String) {
         createToastMessage("EMAIL VERIFICATION BEING SENT TO:  $email")
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
@@ -77,19 +71,18 @@ class AppRepository(private val application: Application,
 
 
 
-    fun createUserAccount(firstName: String, lastName: String, email: String) {
+    private fun createUserAccount(firstName: String, lastName: String, email: String) {
         val user = Users(firstName, lastName, email)
         dataBase.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
-                Log.d(
-                    TAG,
-                    "DocumentSnapshot written with ID: ${documentReference.id}"
-                )
+                Timber.tag(TAG).d("DocumentSnapshot written with ID: ${documentReference.id}")
 
             }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
+            .addOnFailureListener { error ->
+                Timber.tag(TAG).w("Error adding document")
+                Timber.tag(TAG).e(error)
+
             }
     }
 
@@ -133,11 +126,11 @@ class AppRepository(private val application: Application,
         firebaseAuth.currentUser!!.reauthenticate(credential).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-                Log.d("value", "User re-authenticated.")
+                Timber.tag("value").w("User re-authenticated.")
                 val user = FirebaseAuth.getInstance().currentUser
                 if (newPassword.isNotEmpty()) {
-                    user!!.updatePassword(newPassword).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
+                    user!!.updatePassword(newPassword).addOnCompleteListener { t ->
+                        if (t.isSuccessful) {
                             createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
                         } else {
                             createToastMessage(application.getString(R.string.UPDATE_FAILED))

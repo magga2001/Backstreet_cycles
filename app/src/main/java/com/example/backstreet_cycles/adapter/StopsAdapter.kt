@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Locations
 
-class StopsAdapter(val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
+class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
 
     private lateinit var clickListener: OnItemClickListener
 

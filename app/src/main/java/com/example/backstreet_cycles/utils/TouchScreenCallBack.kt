@@ -20,8 +20,8 @@ abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
     }
 
     private fun disableFlags(position: Int): Int {
-        if (position == 0) return 0
-        else return ItemTouchHelper.LEFT
+        return if (position == 0) 0
+        else ItemTouchHelper.LEFT
     }
 
     override fun onMove(

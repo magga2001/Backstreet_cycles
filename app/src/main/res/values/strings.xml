@@ -63,4 +63,10 @@
     <string name="enter_confirmed_password">Please confirm your password</string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="profile_updated">Profile updated successfully</string>
+    <string name="vintage_cycle_image">Vintage Cycle Image</string>
+    <string name="title">Title</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="name_goes_here">(name goes here)</string>
+    <string name="email_goes_here">(email goes here)</string>
 </resources>

@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.model.AppRepository
+import com.example.backstreet_cycles.model.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -22,12 +22,12 @@ import org.mockito.MockitoAnnotations
 import java.lang.Exception
 import java.util.concurrent.Executor
 
-class AppRepositoryTestClass {
+class UserRepositoryTestClass {
 
     @Mock
     lateinit var mutableFirebaseUser: MutableLiveData<FirebaseAuth>
 
-    lateinit var appRepository: AppRepository
+    lateinit var userRepository: UserRepository
     @Mock
     lateinit var mockFirestore: FirebaseFirestore
     @Mock
@@ -58,7 +58,7 @@ class AppRepositoryTestClass {
 //        mockApplication = mock(Application::class.java)
 //        mockFirestore = mock(FirebaseFirestore::class.java)
 //        mockFirebaseAuth = mock(FirebaseAuth::class.java)
-        appRepository = AppRepository(mockApplication,mockFirestore,mockFirebaseAuth)
+        userRepository = UserRepository(mockApplication,mockFirestore,mockFirebaseAuth)
         println(mockFirestore)
 
         taskAuth = object : Task<AuthResult>() {
@@ -217,7 +217,7 @@ class AppRepositoryTestClass {
             taskQuery
         }.`when`(taskQuery).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<QuerySnapshot>>())
         Mockito.doNothing().`when`(mutableFirebaseUser).postValue(any());
-        appRepository.register("example1", "example2", "example@gmail.com","12345")
+        userRepository.register("example1", "example2", "example@gmail.com","12345")
         verify(mockFirebaseAuth).createUserWithEmailAndPassword(any(), any())
 //        assert(verify(task.exception)!!.message == Exception("Exception called").message)
     }
@@ -226,7 +226,7 @@ class AppRepositoryTestClass {
     fun `test create user when error`() {
 
         `when`(mockFirebaseAuth.createUserWithEmailAndPassword(anyString(), anyString())).thenReturn(taskAuth)
-        val testUser = appRepository.register("example1", "example2", "example@gmail.com","12345")
+        val testUser = userRepository.register("example1", "example2", "example@gmail.com","12345")
         if (testUser != null) {
             assert(testUser.email == null)
         }
