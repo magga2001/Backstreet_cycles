@@ -5,7 +5,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.DTO.UserDto
+import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.R
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +24,7 @@ class AppRepository(private val application: Application,
     private val mutableLiveData: MutableLiveData<FirebaseUser>
     private val loggedOutMutableLiveData: MutableLiveData<Boolean>
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
-    private val userDetailsMutableLiveData: MutableLiveData<UserDto>
+    private val userDetailsMutableLiveData: MutableLiveData<Users>
     private val firebaseAuth: FirebaseAuth
     private val db = fireStore
 
@@ -82,7 +82,7 @@ class AppRepository(private val application: Application,
 
 
     fun createUserAccount(firstName: String, lastName: String, email: String) {
-        val user = UserDto(firstName, lastName, email)
+        val user = Users(firstName, lastName, email)
         db.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
@@ -162,7 +162,7 @@ class AppRepository(private val application: Application,
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        val userDetails = document.toObject(UserDto::class.java)
+                        val userDetails = document.toObject(Users::class.java)
                         userDetailsMutableLiveData.postValue(userDetails)
                     }
                 }
@@ -211,7 +211,7 @@ class AppRepository(private val application: Application,
         return updatedProfileMutableLiveData
     }
 
-    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
 }

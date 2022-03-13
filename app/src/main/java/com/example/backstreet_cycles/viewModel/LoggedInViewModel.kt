@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.DTO.UserDto
+import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.AppRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,7 +17,7 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
     private val mutableLiveData: MutableLiveData<FirebaseUser>
     private val loggedOutMutableiveData: MutableLiveData<Boolean>
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean>
-    private val userDetailsMutableLiveData: MutableLiveData<UserDto>
+    private val userDetailsMutableLiveData: MutableLiveData<Users>
 
 
     init {
@@ -62,7 +62,7 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
         return loggedOutMutableiveData
     }
 
-    fun getUserDetailsMutableLiveData(): MutableLiveData<UserDto> {
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
 }

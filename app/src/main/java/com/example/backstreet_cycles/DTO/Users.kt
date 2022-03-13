@@ -1,7 +1,7 @@
-package com.example.backstreet_cycles.DTO
+package com.example.backstreet_cycles.dto
 
 
-data class UserDto(
+data class Users(
     var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null

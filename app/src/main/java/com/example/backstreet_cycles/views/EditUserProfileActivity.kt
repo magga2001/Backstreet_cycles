@@ -21,7 +21,7 @@ class EditUserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user_profile)
 
-        loggedInViewModel = ViewModelProviders.of(this).get(LoggedInViewModel::class.java)
+        loggedInViewModel = ViewModelProviders.of(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
                 Toast.makeText(
