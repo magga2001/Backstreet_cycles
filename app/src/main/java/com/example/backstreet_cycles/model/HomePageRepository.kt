@@ -35,33 +35,25 @@ class HomePageRepository(private val application: Application) {
     }
 
     @SuppressLint("MissingPermission")
-    fun initialiseCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent)
-    {
-        // Enable the most basic pulsing styling by ONLY using
-        // the `.pulseEnabled()` method
+    fun initialiseCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
         val customLocationComponentOptions = LocationComponentOptions.builder(application)
             .pulseEnabled(true)
             .build()
 
-        // Activate with options
         locationComponent.activateLocationComponent(
             LocationComponentActivationOptions.builder(application, loadedMapStyle)
                 .locationComponentOptions(customLocationComponentOptions)
                 .build()
         )
 
-        // Enable to make component visible
         locationComponent.isLocationComponentEnabled = true
 
-        // Set the component's camera mode
         locationComponent.cameraMode = CameraMode.TRACKING
 
-        // Set the component's render mode
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
-    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>)
-    {
+    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>) {
         val textSize = 10.0F
         val textColor = "black"
 
@@ -70,7 +62,6 @@ class HomePageRepository(private val application: Application) {
         val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
         for (attraction in data) {
-
                 symbolManager.create(
                     SymbolOptions()
                         .withLatLng(LatLng(attraction.lat, attraction.lon))
@@ -79,19 +70,14 @@ class HomePageRepository(private val application: Application) {
                         .withTextSize(textSize)
                         .withTextColor(textColor)
                 )
-
         }
     }
 
-    fun getCurrentLocation(locationComponent: LocationComponent): Location?
-    {
+    fun getCurrentLocation(locationComponent: LocationComponent): Location? {
         return locationComponent.lastKnownLocation
     }
 
-
-
-    fun initialisePlaceAutoComplete(activity: Activity): Intent
-    {
+    fun initialisePlaceAutoComplete(activity: Activity): Intent {
         return PlaceAutocomplete.IntentBuilder()
             .accessToken(application.getString(R.string.mapbox_access_token)).
             placeOptions(
@@ -104,22 +90,14 @@ class HomePageRepository(private val application: Application) {
             .build(activity)
     }
 
-
-    fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double)
-    {
+    fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double) {
         mapboxMap.animateCamera(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder()
-                    .target(
-                        LatLng(
-                            latitude,
-                            longitude
-                        )
-                    )
+                    .target(LatLng(latitude,longitude))
                     .zoom(14.0)
                     .build()
             ), 4000
         )
     }
-
 }

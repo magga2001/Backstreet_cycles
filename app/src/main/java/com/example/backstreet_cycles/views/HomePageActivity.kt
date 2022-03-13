@@ -10,9 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,13 +51,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    private val REQUESTCODEAUTOCOMPLETE = 7171
+    private val requestCodeAutocomplete = 7171
 
     private lateinit var addStopButton: FloatingActionButton
-    private lateinit var mylocationButton: FloatingActionButton
+    private lateinit var myLocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
 
+    private var stops: List<Locations> = listOf()
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var positionOfStop:Int = 0
@@ -77,27 +76,27 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
 
-        homePageViewModel = ViewModelProvider(this).get(HomePageViewModel::class.java)
+        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
+        homePageViewModel.stops.observe(this) { stops = it }
 
-        loggedInViewModel = ViewModelProviders.of(this).get(LoggedInViewModel::class.java)
+
+        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
 
         loggedInViewModel.getLoggedOutMutableLiveData()
-            .observe(this, Observer<Boolean> { loggedOut ->
+            .observe(this) { loggedOut ->
                 if (loggedOut) {
                     startActivity(Intent(this@HomePageActivity, LogInActivity::class.java))
                     finish()
                 }
-            })
+            }
 
         loggedInViewModel.getUserDetails()
-        loggedInViewModel.getUserDetailsMutableLiveData().observe(this, Observer { firebaseUser ->
+        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello: " + firebaseUser.firstName
                 tv_email.text = firebaseUser.email
             }
-        })
-
-
+        }
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -109,18 +108,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun addInfo(name:String, lat: Double, long: Double) {
         LayoutInflater.from(this)
         homePageViewModel.addStop(Locations(name,lat, long))
-        stopsAdapter.notifyDataSetChanged()
+        stopsAdapter.notifyItemChanged(positionOfStop)
         Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
-
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
-        homePageViewModel.removeStop(homePageViewModel.getStops()[positionOfStop])
+        homePageViewModel.removeStop(stops[positionOfStop])
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop,Locations(name,lat, long))
-        stopsAdapter.notifyDataSetChanged()
+        stopsAdapter.notifyItemChanged(positionOfStop)
         Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
@@ -128,11 +126,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun enableMyLocationButton(){
         val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        mylocationButton.isEnabled = !homePageViewModel.getStops().contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
+        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
     }
 
     private fun enableNextPageButton(){
-        nextPageButton.isEnabled = homePageViewModel.getStops().size >= 2
+        nextPageButton.isEnabled = stops.size >= 2
     }
 
     private fun initialiseNavigationDrawer() {
@@ -175,8 +173,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
         addStopButton = findViewById(R.id.addingBtn)
-        mylocationButton = findViewById(R.id.myLocationButton)
-        mylocationButton.isEnabled = false
+        myLocationButton = findViewById(R.id.myLocationButton)
+        myLocationButton.isEnabled = false
         nextPageButton  = findViewById(R.id.nextPageButton)
         nextPageButton.isEnabled = false
 
@@ -190,18 +188,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initBottomSheet()
         addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+            startActivityForResult(intent, requestCodeAutocomplete)
         }
         stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
-                startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
+                startActivityForResult(intent, requestCodeAutocomplete)
                 this@HomePageActivity.positionOfStop =position
             }
         })
 
-        mylocationButton.setOnClickListener {
+        myLocationButton.setOnClickListener {
             Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
@@ -214,7 +212,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun createListOfItems(){
         homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
-        stopsAdapter = StopsAdapter(homePageViewModel.getStops())
+        stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
     }
@@ -241,7 +239,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             ): Boolean {
                 val fromPosition = viewHolder.absoluteAdapterPosition
                 val toPosition = target.absoluteAdapterPosition
-                Collections.swap(homePageViewModel.getStops(), fromPosition, toPosition)
+                Collections.swap(stops, fromPosition, toPosition)
                 recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
                 return true
             }
@@ -291,7 +289,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
+        if (resultCode == RESULT_OK && requestCode == requestCodeAutocomplete) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             val style = mapboxMap.style
             val location = Locations(
@@ -338,7 +336,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun checkIfAlreadyInStops(location :Locations): Boolean{
-        return homePageViewModel.getStops().contains(location)
+        return stops.contains(location)
     }
 
 

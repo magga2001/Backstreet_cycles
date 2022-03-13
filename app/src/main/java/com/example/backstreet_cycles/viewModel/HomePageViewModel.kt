@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.LocationRepository
@@ -17,6 +18,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val homePageRepository: HomePageRepository = HomePageRepository(application)
     private val locationRepository: LocationRepository = LocationRepository(application)
+    val stops: MutableLiveData<List<Locations>> = MutableLiveData(locationRepository.getStops())
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -52,10 +54,6 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     fun removeStopAt(index: Int){
         locationRepository.removeStopAt(index)
-    }
-
-    fun getStops(): MutableList<Locations> {
-        return locationRepository.getStops()
     }
 
     fun getTouristAttractions(): List<Locations> {

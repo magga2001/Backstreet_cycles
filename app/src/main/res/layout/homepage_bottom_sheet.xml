@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -75,9 +74,6 @@
                     tools:layout_editor_absoluteY="0dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -87,6 +83,5 @@
         android:layout_above="@+id/addingBtn"
         android:layout_alignParentEnd="true"
         tools:ignore="ObsoleteLayoutParam" />
-
 
 </LinearLayout>
