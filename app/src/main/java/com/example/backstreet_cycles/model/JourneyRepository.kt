@@ -181,7 +181,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
     {
         return RouteOptions.builder()
             // applies the default parameters to route options
-            .applyDefaultNavigationOptions()
+            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
             .applyLanguageAndVoiceUnitOptions(context)
             .profile(criteria)
             // lists the coordinate pair i.e. origin and destination
