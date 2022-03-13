@@ -180,7 +180,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
                     requestRoute(mapboxNavigation, routeOptions, mainPath = false,lastPoint = false)
                 }.await()
 
-                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_DRIVING)
+                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_CYCLING)
 //                routeOptions.toBuilder().applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING).build()
                 requestRoute(mapboxNavigation, routeOptions,mainPath = true,lastPoint = true)
             }
@@ -222,7 +222,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
     {
         return RouteOptions.builder()
             // applies the default parameters to route options
-            .applyDefaultNavigationOptions()
+            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
             .applyLanguageAndVoiceUnitOptions(context)
             .profile(criteria)
             // lists the coordinate pair i.e. origin and destination
