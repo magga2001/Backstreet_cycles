@@ -286,36 +286,54 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-
-
         if (resultCode == RESULT_OK && requestCode == REQUESTCODEAUTOCOMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             val style = mapboxMap.style
-            if (style != null) {
+            val location = Locations(
+                selectedCarmenFeature.placeName().toString(),
+                selectedCarmenFeature.center()!!.latitude(),
+                selectedCarmenFeature.center()!!.longitude())
+            if(!checkIfAlreadyInStops(location)){
+                if (style != null) {
 
-                latitude = selectedCarmenFeature.center()!!.latitude()
-                longitude = selectedCarmenFeature.center()!!.longitude()
+                    latitude = selectedCarmenFeature.center()!!.latitude()
+                    longitude = selectedCarmenFeature.center()!!.longitude()
 
-                style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)?.setGeoJson(
-                    FeatureCollection.fromFeatures(
-                        arrayOf(
-                            Feature.fromJson(
-                                selectedCarmenFeature.toJson()
+                    style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)?.setGeoJson(
+                        FeatureCollection.fromFeatures(
+                            arrayOf(
+                                Feature.fromJson(
+                                    selectedCarmenFeature.toJson()
+                                )
                             )
                         )
                     )
-                )
-                homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
-            }
+                    homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
+                }
 
-            if (updateInfo) {
-                updateInfo=false
-                addAndRemoveInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
-            } else {
-                addInfo(selectedCarmenFeature.placeName().toString(), selectedCarmenFeature.center()!!.latitude(), selectedCarmenFeature.center()!!.longitude())
+                if (updateInfo) {
+                    updateInfo = false
+                    addAndRemoveInfo(
+                        selectedCarmenFeature.placeName().toString(),
+                        selectedCarmenFeature.center()!!.latitude(),
+                        selectedCarmenFeature.center()!!.longitude()
+                    )
+                } else {
+                    addInfo(
+                        selectedCarmenFeature.placeName().toString(),
+                        selectedCarmenFeature.center()!!.latitude(),
+                        selectedCarmenFeature.center()!!.longitude()
+                    )
+                }
+            }
+            else{
+                Toast.makeText(this, "Location already in stops.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun checkIfAlreadyInStops(location :Locations): Boolean{
+        return homePageViewModel.getStops().contains(location)
     }
 
 

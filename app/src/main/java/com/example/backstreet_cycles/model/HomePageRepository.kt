@@ -88,18 +88,22 @@ class HomePageRepository(private val application: Application) {
         return locationComponent.lastKnownLocation
     }
 
+
+
     fun initialisePlaceAutoComplete(activity: Activity): Intent
     {
         return PlaceAutocomplete.IntentBuilder()
             .accessToken(application.getString(R.string.mapbox_access_token)).
             placeOptions(
                 PlaceOptions.builder()
+                    .country("GB") // Restricts searches to just Great Britain
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)
                     .build(PlaceOptions.MODE_CARDS)
             )
             .build(activity)
     }
+
 
     fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double)
     {
