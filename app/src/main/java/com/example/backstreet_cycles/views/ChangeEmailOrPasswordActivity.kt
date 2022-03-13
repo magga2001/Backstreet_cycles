@@ -17,7 +17,7 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_email_or_password)
 
-        loggedInViewModel = ViewModelProviders.of(this).get(LoggedInViewModel::class.java)
+        loggedInViewModel = ViewModelProviders.of(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 et_email.text = firebaseUser.email
@@ -26,7 +26,7 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_current_password.text.toString().trim() { it <= ' ' }) -> {
+                TextUtils.isEmpty(et_current_password.text.toString().trim { it <= ' ' }) -> {
                     et_current_password.error = "In order for use to change your email or password you need to" +
                             " enter your old password"
                 }

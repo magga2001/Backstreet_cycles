@@ -11,16 +11,7 @@ import com.example.backstreet_cycles.model.LocationRepository
 class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
     private val locationRepository: LocationRepository = LocationRepository(application)
-    val touristAttractionList = MutableLiveData<List<Locations>?>()
-    val docksList = MutableLiveData<List<Dock>?>()
-
-    private val isReadyMutableLiveData: MutableLiveData<Boolean>
-
-    init{
-        touristAttractionList.value = loadTouristLocations()
-        docksList.value = loadDocks()
-        isReadyMutableLiveData = locationRepository.getIsReadyMutableLiveData()
-    }
+    private val isReadyMutableLiveData: MutableLiveData<Boolean> = locationRepository.getIsReadyMutableLiveData()
 
     fun loadTouristLocations(): List<Locations> {
         return locationRepository.getTouristLocations()
