@@ -150,21 +150,6 @@
     "lon": "-0.1240"
   },
   {
-    "name": "Royal Observatory Greenwich",
-    "lat": "51.4769",
-    "lon": "-0.0005"
-  },
-  {
-    "name": "Emirates Royal Docks",
-    "lat": "51.5077",
-    "lon": "0.0180"
-  },
-  {
-    "name": "Hampton Court Palace",
-    "lat": "51.4036",
-    "lon": "-0.3378"
-  },
-  {
     "name": "Shakespeare's Globe",
     "lat": "51.5081",
     "lon": "-0.0972"
@@ -173,11 +158,6 @@
     "name": "Sea Life",
     "lat": "51.5016",
     "lon": "-0.1195"
-  },
-  {
-    "name": "The O2",
-    "lat": "51.5030",
-    "lon": "0.0032"
   },
   {
     "name": "HMS Belfast",
