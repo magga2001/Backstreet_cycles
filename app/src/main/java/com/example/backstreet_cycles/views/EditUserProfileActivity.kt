@@ -1,16 +1,14 @@
 package com.example.backstreet_cycles.views
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProviders
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
-import kotlinx.android.synthetic.main.activity_edit_user_profile.et_firstName
-import kotlinx.android.synthetic.main.activity_edit_user_profile.et_lastName
 
 class EditUserProfileActivity : AppCompatActivity() {
 
@@ -21,7 +19,9 @@ class EditUserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user_profile)
 
-        loggedInViewModel = ViewModelProviders.of(this)[LoggedInViewModel::class.java]
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
                 Toast.makeText(

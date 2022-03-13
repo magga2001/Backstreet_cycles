@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import kotlinx.android.synthetic.main.activity_change_email_or_password.*
@@ -17,7 +17,9 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_email_or_password)
 
-        loggedInViewModel = ViewModelProviders.of(this)[LoggedInViewModel::class.java]
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 et_email.text = firebaseUser.email

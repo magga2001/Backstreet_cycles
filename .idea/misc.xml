@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/layout/layout_list_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/location_data.xml" value="0.1" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/nav_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.et_email
@@ -19,7 +19,9 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        loginRegisterViewModel = ViewModelProviders.of(this)[LogInRegisterViewModel::class.java]
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        loginRegisterViewModel = ViewModelProvider(this)[LogInRegisterViewModel::class.java]
         loginRegisterViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
