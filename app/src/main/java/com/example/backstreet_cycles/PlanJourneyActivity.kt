@@ -2,28 +2,27 @@ package com.example.backstreet_cycles
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.view.JourneyActivity
+import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
-import kotlinx.android.synthetic.main.activity_plan_journey.*
 import kotlinx.coroutines.*
 
 class PlanJourneyActivity : AppCompatActivity() {
 
     private lateinit var planJourneyViewModel: PlanJourneyViewModel
+    private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var mapboxNavigation: MapboxNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +30,7 @@ class PlanJourneyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_plan_journey)
         initListener()
 
+        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         planJourneyViewModel = ViewModelProvider(this).get(PlanJourneyViewModel::class.java)
         planJourneyViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
@@ -108,6 +108,13 @@ class PlanJourneyActivity : AppCompatActivity() {
         val stopTwo = Point.fromLngLat(MapRepository.location[1].lon, MapRepository.location[1].lat)
 //        val stopThree = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 
+        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
+        if (!checkForARunningJourney){
+            alertDialog()
+            fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
+        } else{
+            fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
+        }
         fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
     }
 
@@ -127,5 +134,25 @@ class PlanJourneyActivity : AppCompatActivity() {
         super.onStop()
 //        MapboxNavigationProvider.destroy()
 //        mapboxNavigation.onDestroy()
+    }
+
+    fun alertDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Planner Alert")
+        builder.setMessage("There is already a planned journey that you are currently useing." +
+                "Do you want to change the journey to the current one or keep the same one?")
+//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+            Toast.makeText(applicationContext,
+                android.R.string.yes, Toast.LENGTH_SHORT).show()
+        }
+
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+            Toast.makeText(applicationContext,
+                android.R.string.no, Toast.LENGTH_SHORT).show()
+        }
+        builder.show()
+
     }
 }

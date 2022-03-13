@@ -3,8 +3,10 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
@@ -116,6 +118,14 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {
+        return journeyRepository.addLocationSharedPreferences(locations)
+    }
+
+    fun getListLocations(): List<Location> {
+        return journeyRepository.getListLocations()
     }
 
 }

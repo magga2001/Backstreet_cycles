@@ -2,13 +2,18 @@ package com.example.backstreet_cycles.model
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.example.backstreet_cycles.utils.MapHelper
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
@@ -40,10 +45,12 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import java.lang.reflect.Type
 import kotlin.math.roundToInt
 
 class JourneyRepository(private val application: Application): MapRepository(application) {
 
+    private lateinit var sharedPref: SharedPreferences
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
     private lateinit var routeOptions: RouteOptions
 
@@ -147,6 +154,8 @@ class JourneyRepository(private val application: Application): MapRepository(app
 //        Add your current location
 //        points.add(0, Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude))
 
+
+
         wayPoints.addAll(points)
         centerPoint = MapHelper.getCenterViewPoint(points)
 
@@ -171,10 +180,41 @@ class JourneyRepository(private val application: Application): MapRepository(app
                     requestRoute(mapboxNavigation, routeOptions, mainPath = false,lastPoint = false)
                 }.await()
 
-                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_CYCLING)
+                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_DRIVING)
                 requestRoute(mapboxNavigation, routeOptions,mainPath = true,lastPoint = true)
             }
         }
+    }
+
+    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
+        sharedPref = application.getSharedPreferences(
+            R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+
+        if (getListLocations().isEmpty()){
+            val gson = Gson();
+            val json = gson.toJson(locations);
+            with (sharedPref.edit()) {
+                putString(R.string.preference_file_Locations.toString(), json)
+                apply()
+            }
+            return false
+        }
+        return true
+//    Need to pop up with a message saying that they are currently in a journey. Should it
+//    proceed with the already save journey or start the new one.
+    }
+
+    fun getListLocations(): List<Location> {
+        val locations: List<Location>
+        val serializedObject: String? = sharedPref.getString(R.string.preference_file_Locations.toString(), null)
+        if (serializedObject != null) {
+            val gson = Gson()
+            val type: Type = object : TypeToken<List<Location?>?>() {}.getType()
+            locations = gson.fromJson<List<Location>>(serializedObject, type)
+        }else {
+            locations = emptyList()
+        }
+        return locations
     }
 
     private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
