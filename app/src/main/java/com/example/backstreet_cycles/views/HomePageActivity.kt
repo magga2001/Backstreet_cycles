@@ -183,11 +183,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         createListOfItems()
         itemTouchMethods()
 
+
+    }
+
+    private fun bottomSheetFunctionality(){
+        initBottomSheet()
         addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, REQUESTCODEAUTOCOMPLETE)
         }
-        stopsAdapter.setOnItemClickListener(object : StopsAdapter.onItemClickListener{
+        stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
@@ -347,7 +352,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
             latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
 
-            initBottomSheet()
+            bottomSheetFunctionality()
 
         } else {
             permissionsManager = PermissionsManager(this)
@@ -363,7 +368,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        initBottomSheet()
+        bottomSheetFunctionality()
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
