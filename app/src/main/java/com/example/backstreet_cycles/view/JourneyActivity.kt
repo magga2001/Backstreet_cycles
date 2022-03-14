@@ -5,18 +5,17 @@ package com.example.backstreet_cycles.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
+import android.view.View
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
-import android.widget.ExpandableListView.OnGroupExpandListener
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.backstreet_cycles.ExpandableListData.data
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.ManeuverAdapter
-import com.example.backstreet_cycles.adapter.CustomExpandableListAdapter
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
@@ -240,19 +239,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
 
-        expandableListView = findViewById(R.id.stops_expandableList)
-        if (expandableListView != null){
-            val listData = data
-            titleList = ArrayList(listData.keys)
-            expandableListAdapter = CustomExpandableListAdapter(this, titleList as ArrayList<String>, listData)
-            expandableListView!!.setAdapter(expandableListAdapter)
-            expandableListView!!.setOnGroupExpandListener {
-                    groupPosition -> Toast.makeText(applicationContext, "Title has expanded.", Toast.LENGTH_SHORT).show()
-            }
-            expandableListView!!.setOnChildClickListener() {
-                    _,_, groupPosition, childPosition, _ ->
-                Toast.makeText(applicationContext, "Child clicked.", Toast.LENGTH_SHORT).show()
-                false
+        expandBtn.setOnClickListener {
+            if (expandableLayout.visibility == View.GONE) {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.VISIBLE
+            } else {
+                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
+                expandableLayout.visibility = View.GONE
             }
         }
 
