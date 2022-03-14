@@ -100,7 +100,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 //            delay(2000)
 //            loadActivity()
 //        }
-        MapRepository.location.add(0, Locations("Current Location", -0.1426,51.5390))
+        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
         MapRepository.location.add(Locations("Harrods", 51.5144, -0.1528))
         MapRepository.location.add(Locations("Tower Bridge", 51.5055, -0.0754))
 
@@ -110,7 +110,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 //        val stopThree = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
-        if (!checkForARunningJourney){
+        if (checkForARunningJourney){
             alertDialog(MapRepository.location)
         } else{
             val locationPoints = setPoints(MapRepository.location)
