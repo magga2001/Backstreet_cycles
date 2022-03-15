@@ -60,12 +60,12 @@ class EditUserProfileActivity : AppCompatActivity() {
             }
         }
 
-        buttonChangeEmailOrPassword.setOnClickListener {
-            val intent = Intent(this@EditUserProfileActivity, ChangeEmailOrPasswordActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        }
+//        buttonChangeEmailOrPassword.setOnClickListener {
+//            val intent = Intent(this@EditUserProfileActivity, ChangeEmailOrPasswordActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            startActivity(intent)
+//            finish()
+//        }
     }
 
     override fun onBackPressed() {

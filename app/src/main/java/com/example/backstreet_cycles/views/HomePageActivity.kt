@@ -58,7 +58,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
 
-    private var stops: List<Locations> = listOf()
+    private var stops: MutableList<Locations> = mutableListOf()
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var positionOfStop:Int = 0
@@ -112,6 +112,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
+
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
@@ -141,20 +142,26 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_home -> Toast.makeText(
-                    applicationContext,
-                    "clicked home",
-                    Toast.LENGTH_SHORT
-                ).show()
+                R.id.changePassword -> {
+                    loggedInViewModel.getUserDetails()
+                    startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
+
+//                    if(this.javaClass == HomePageActivity::class.java) {
+//                        drawerLayout.close()
+//                    }
+//                    else {
+//                        startActivity(Intent(this, HomePageActivity::class.java))
+//                    }
+                }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
                 }
-                R.id.plan_journey -> Toast.makeText(
-                    applicationContext,
-                    "clicked sync",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                R.id.plan_journey -> Toast.makeText(
+//                    applicationContext,
+//                    "clicked sync",
+//                    Toast.LENGTH_SHORT
+//                ).show()
                 R.id.about -> Toast.makeText(
                     applicationContext,
                     "clicked settings",
