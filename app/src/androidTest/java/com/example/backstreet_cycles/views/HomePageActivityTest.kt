@@ -37,9 +37,24 @@ class HomePageActivityTest {
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
-    @After
-    fun tearDown() {
+    @Test
+    fun test_drawer_layout_shown(){
+        val activityScenario=ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun navigation_drawer_shows_about_button(){
 
+    }
+
+    @Test
+    fun navigation_drawer_shows_help_button(){
+
+    }
+
+    @Test
+    fun navigation_drawer_shows_planjourney_button(){
+
+    }
 }

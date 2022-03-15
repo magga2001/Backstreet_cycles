@@ -20,12 +20,13 @@ class LocationRepository(private val application: Application) {
 
     private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
     private var docks = mutableListOf<Dock>()
-    private var stops = mutableListOf<Locations>()
+    private var stops: MutableList<Locations>
     private val touristAttractions = mutableListOf<Locations>()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         val touristAttractionText = getTextFromResources(R.raw.touristattraction)
+        stops = mutableListOf()
         addTouristLocations(touristAttractionText)
         isReadyMutableLiveData.value = false
     }

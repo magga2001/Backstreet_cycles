@@ -18,7 +18,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val homePageRepository: HomePageRepository = HomePageRepository(application)
     private val locationRepository: LocationRepository = LocationRepository(application)
-    val stops: MutableLiveData<List<Locations>> = MutableLiveData(locationRepository.getStops())
+    var stops: MutableLiveData<MutableList<Locations>> = MutableLiveData(locationRepository.getStops())
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
