@@ -249,9 +249,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             }
         }
 
-        nAdapter = ManeuverAdapter(this, MapRepository.maneuvers)
-        maneuver_journey_recycling_view.layoutManager = LinearLayoutManager(this)
-        maneuver_journey_recycling_view.adapter = nAdapter
+//        nAdapter = ManeuverAdapter(this, MapRepository.maneuvers)
+//        maneuver_journey_recycling_view.layoutManager = LinearLayoutManager(this)
+//        maneuver_journey_recycling_view.adapter = nAdapter
 
     }
 
