@@ -28,35 +28,59 @@ class HomePageActivityTest {
     }
 
     @Test
-    fun test_map_on_homepage_is_displayed(){
+    fun test_map_on_homepage_is_displayed() {
         ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether the map is displayed
         onView(withId(R.id.mapView)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_bottom_sheet_is_displayed(){
+    fun test_bottom_sheet_is_displayed() {
         ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_drawer_layout_shown(){
-        val activityScenario=ActivityScenario.launch(HomePageActivity::class.java)
+    fun test_drawer_layout_shown() {
+        ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun navigation_drawer_shows_about_button(){
+    fun test_three_buttons_shown() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Checking whether the three buttons at the top of the bottom sheet are displayed
+        onView(withId(R.id.myLocationButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.addingBtn)).check(matches(isDisplayed()))
+        onView(withId(R.id.nextPageButton)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_current_location_card_shown() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        // Checking whether a card is shown in the bottom sheet
+        onView(withId(R.id.cardView)).check(matches(isDisplayed()))
+        // Checking whether the card is showing the current location
+        assertEquals("Current Location", withId(R.id.name).toString())
+    }
+
+    @Test
+    fun navigation_drawer_shows_about_button() {
 
     }
 
     @Test
-    fun navigation_drawer_shows_help_button(){
+    fun navigation_drawer_shows_help_button() {
 
     }
 
     @Test
-    fun navigation_drawer_shows_planjourney_button(){
+    fun navigation_drawer_shows_planjourney_button() {
 
     }
 }
