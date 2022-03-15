@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +67,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private var updateInfo:Boolean=false
 
+    private var numberOfUsers = 1
+    private lateinit var textOfNumberOfUsers : TextView
+    private lateinit var plusBtn : Button
+    private lateinit var minusBtn : Button
+
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
         private const val symbolIconId = "SymbolIconId"
@@ -75,6 +82,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
+        IncrementAndDecrementUsersFunc()
 
         homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
         homePageViewModel.stops.observe(this) { stops = it }
@@ -102,6 +110,31 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
+
+
+    }
+
+    private fun IncrementAndDecrementUsersFunc(){
+        textOfNumberOfUsers = findViewById(R.id.UserNumber)
+        plusBtn = findViewById(R.id.incrementButton)
+        minusBtn = findViewById(R.id.decrementButton)
+
+
+        textOfNumberOfUsers.setText(""+numberOfUsers)
+
+        plusBtn.setOnClickListener(){
+            textOfNumberOfUsers.setText(""+ ++numberOfUsers)
+        }
+
+        minusBtn.setOnClickListener(){
+
+            if(numberOfUsers>=2){
+                textOfNumberOfUsers.setText(""+ --numberOfUsers)
+            }
+            else{
+                Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
