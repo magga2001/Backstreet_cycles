@@ -1,20 +1,12 @@
 package com.example.backstreet_cycles.views
 
-import androidx.appcompat.app.ActionBarDrawerToggle
-import org.junit.Assert.*
-
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import kotlinx.android.synthetic.main.activity_homepage.*
 
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -65,8 +57,7 @@ class HomePageActivityTest {
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
         // Checking whether a card is shown in the bottom sheet
         onView(withId(R.id.cardView)).check(matches(isDisplayed()))
-        // Checking whether the card is showing the current location
-        assertEquals("Current Location", withId(R.id.name).toString())
+        onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
     }
 
     @Test

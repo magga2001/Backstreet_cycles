@@ -6,8 +6,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -23,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_change_email_or_password.*
 import kotlinx.android.synthetic.main.activity_homepage.*
+import kotlinx.android.synthetic.main.nav_header.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -79,18 +79,20 @@ class NavMenuTest {
     }
      */
 
+    @Test
     fun test_nav_showUserName(){
 
         onView(withId(R.id.user_name)).check(matches(isDisplayed()))
     }
 
+    @Test
     fun test_nav_showUserEmail(){
 
         onView(withId(R.id.tv_email)).check(matches(isDisplayed()))
     }
 
+    @Test
     fun test_nav_equalCurrentUserName(){
-
 
         val testUserName = FirebaseFirestore.getInstance().collection("users")
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser!!.email)
@@ -104,10 +106,15 @@ class NavMenuTest {
         assert(testDisplayedName == textElement)
     }
 
-    fun test_nav_equalCurrentUserEmail(){
-
-        val email = FirebaseAuth.getInstance().currentUser?.email
-        val testDisplayedEmail = getApplicationContext<Application>().getString(R.id.tv_email)
-        assert(testDisplayedEmail == email)
-    }
+//    @Test
+//    fun test_nav_equalCurrentUserEmail(){
+//        setContentView(R.layout.activity_homepage)
+//        val email = FirebaseAuth.getInstance().currentUser?.email
+//
+//
+//        getApplicationContext<Application>().get(R.id.tv_email).text
+//
+//        onView(withId(R.id.tv_email)).check(matches(withText(email)))
+//        //assert(testDisplayedEmail == email)
+//    }
 }
