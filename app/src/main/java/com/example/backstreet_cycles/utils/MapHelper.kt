@@ -24,18 +24,19 @@ class MapHelper {
             routes.sortedBy { it.duration() }
 
             return routes.first()
+
         }
 
-        fun getCenterViewPoint(docks: List<Point>): Point
+        fun getCenterViewPoint(points: List<Point>): Point
         {
             var totalLat = 0.0
             var totalLng = 0.0
-            val size = docks.size
+            val size = points.size
 
-            for(dock in docks)
+            for(point in points)
             {
-                totalLat += dock.latitude()
-                totalLng += dock.longitude()
+                totalLat += point.latitude()
+                totalLng += point.longitude()
             }
 
             return Point.fromLngLat(totalLng/size, totalLat/size)

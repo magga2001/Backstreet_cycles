@@ -81,9 +81,9 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository.checkPermission(context, activity)
     }
 
-    fun updateCamera(point: Point, bearing: Double?, mapView: MapView)
+    fun updateCamera(point: Point, bearing: Double?, zoomLevel:Double, mapView: MapView)
     {
-        journeyRepository.updateCamera(point, bearing, mapView)
+        journeyRepository.updateCamera(point, bearing, zoomLevel, mapView)
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView)

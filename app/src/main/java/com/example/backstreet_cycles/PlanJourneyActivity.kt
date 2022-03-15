@@ -52,21 +52,6 @@ class PlanJourneyActivity : AppCompatActivity() {
     {
         val goButton = findViewById<Button>(R.id.goButton)
         goButton.setOnClickListener {
-//            when {
-//                TextUtils.isEmpty(et_startDock.text.toString()) -> {
-//                    et_startDock.error = "Please enter your starting dock"
-//                }
-//                TextUtils.isEmpty(et_endDock.text.toString()) -> {
-//                    et_endDock.error = "Please enter your destination dock"
-//                }
-//                else -> {
-//
-//                    Toast.makeText(this, "Loading...", Toast.LENGTH_SHORT).show()
-//                    //THIS FUNCTION TO FETCH THE ORIGIN AND DESTINATION FROM EDIT TEXT
-//                    lifecycleScope.launch {fetchPoints()}
-//
-//                }
-//            }
 
             Toast.makeText(this, "Loading...", Toast.LENGTH_SHORT).show()
             //THIS FUNCTION TO FETCH THE ORIGIN AND DESTINATION FROM EDIT TEXT
@@ -76,30 +61,6 @@ class PlanJourneyActivity : AppCompatActivity() {
 
     private suspend fun fetchPoints()
     {
-//        var startDock:Dock? = null
-//        var endDock:Dock? = null
-//
-//        coroutineScope {
-//            val start = async { Tfl.readDock(et_startDock.text.toString())}
-//            val end = async {  Tfl.readDock(et_endDock.text.toString()) }
-//
-//            startDock = start.await()
-//            endDock = end.await()
-//
-//            if(startDock == null || endDock == null)
-//            {
-//                Toast.makeText(this@PlanJourneyActivity,"No location", Toast.LENGTH_SHORT).show()
-//                return@coroutineScope
-//            }
-//
-//            val startPoint = Point.fromLngLat(startDock!!.lon,startDock!!.lat)
-//            val endPoint = Point.fromLngLat(endDock!!.lon,endDock!!.lat)
-//            fetchRoute(mutableListOf(startPoint,endPoint))
-
-//            delay(2000)
-//            loadActivity()
-//        }
-//        MapRepository.location.add(0, Locations("Covent Garden", 51.5117, -0.1240))
         MapRepository.location.add(Locations("Harrods", 51.5144, -0.1528))
         MapRepository.location.add(Locations("Tower Bridge", 51.5055, -0.0754))
 
@@ -119,13 +80,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
-        planJourneyViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "walking", true)
+        planJourneyViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", true)
         TflHelper.getDock(applicationContext)
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        MapboxNavigationProvider.destroy()
-//        mapboxNavigation.onDestroy()
     }
 }

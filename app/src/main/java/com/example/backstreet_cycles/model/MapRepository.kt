@@ -102,14 +102,14 @@ abstract class MapRepository(private val application: Application)
         }
     }
 
-    fun updateCamera(point: Point, bearing: Double?, mapView: MapView) {
+    fun updateCamera(point: Point, bearing: Double?, zoomLevel: Double, mapView: MapView) {
         val mapAnimationOptionsBuilder = MapAnimationOptions.Builder()
         mapView.camera.easeTo(
             CameraOptions.Builder()
                 .center(point)
                 .bearing(bearing)
                 //                .pitch(45.0)
-                .zoom(12.0)
+                .zoom(zoomLevel)
                 .padding(EdgeInsets(1000.0, 0.0, 0.0, 0.0))
                 .build(),
             mapAnimationOptionsBuilder.build()

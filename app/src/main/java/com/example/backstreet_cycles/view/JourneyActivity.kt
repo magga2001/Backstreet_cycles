@@ -5,17 +5,14 @@ package com.example.backstreet_cycles.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.util.Log
-import android.view.View
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.adapter.ManeuverAdapter
+import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
@@ -31,6 +28,7 @@ import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
@@ -85,7 +83,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     //    private lateinit var mAdapter: PlannerAdapter
-    private lateinit var nAdapter: ManeuverAdapter
+    private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
 
     // ExpandableListView variables:
@@ -105,7 +103,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             if (ready) {
                 Log.i("Ready to update UI", "Success")
                 updateUI()
-                //journeyViewModel.getIsReadyMutableLiveData().value = false
+                journeyViewModel.getIsReadyMutableLiveData().value = false
             }
         }
 
@@ -113,6 +111,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
 
         mapboxMap = mapView.getMapboxMap()
+//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+//        init()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
     }
@@ -151,7 +156,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             Style.MAPBOX_STREETS,
             {
 
-                journeyViewModel.updateCamera(MapRepository.centerPoint, null, mapView)
+                journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0,mapView)
                 journeyViewModel.addAnnotationToMap(this, mapView)
             },
             object : OnMapLoadErrorListener {
@@ -239,19 +244,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
 
-        expandBtn.setOnClickListener {
-            if (expandableLayout.visibility == View.GONE) {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.VISIBLE
-            } else {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.GONE
-            }
-        }
-
-//        nAdapter = ManeuverAdapter(this, MapRepository.maneuvers)
-//        maneuver_journey_recycling_view.layoutManager = LinearLayoutManager(this)
-//        maneuver_journey_recycling_view.adapter = nAdapter
+        nAdapter = PlanJourneyAdapter(this, MapRepository.location, this)
+        plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
+        plan_journey_recycling_view.adapter = nAdapter
 
     }
 
@@ -259,10 +254,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 //        mapboxNavigation.setRoutes(currentRoute)
         routesObserver.onRoutesChanged(JourneyRepository.result)
 
-        journeyViewModel.updateCamera(MapRepository.centerPoint, null, mapView)
+        journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0, mapView)
         journeyViewModel.removeAnnotations()
         journeyViewModel.addAnnotationToMap(context = this, mapView)
-        nAdapter.updateList(MapRepository.maneuvers)
+        nAdapter.updateList(MapRepository.location)
 
         //Refresh the map
         mapView.invalidate()
@@ -290,15 +285,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onSelectedStop(location: Locations) {
 
-//        MapRepository.location.clear()
-
-//        MapRepository.location.add(Locations("Camden Town", 51.5390, -0.1426))
-//        MapRepository.location.add(Locations("Harrods", 51.5144, -0.1528))
-
-//        val stopOne = Point.fromLngLat(MapRepository.location[0].lon, MapRepository.location[0].lat)
-
-//        val currentPoint = Point.fromLngLat(MapRepository.enhancedLocation.longitude,MapRepository.enhancedLocation.latitude)
-
         val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
 
         val stop = Point.fromLngLat(location.lon, location.lat)
@@ -322,13 +308,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             "walking",
             false
         )
+    }
 
-//        journeyViewModel.fetchRoute(context = this, mapboxNavigation, mutableListOf(pickUpDock,dropOffDock), "walking")
-//        journeyViewModel.fetchRoute(context = this, mapboxNavigation, mutableListOf(currentPoint, pickUpDock),"walking" )
-//        journeyViewModel.fetchRoute(context = this, mapboxNavigation, mutableListOf(dropOffDock,stopOne), "walking")
+    override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {
+        Log.i("location name", location.name)
 
-
-//        mapboxNavigation.setRoutes(listOf())
+        clear()
+        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, true)
     }
 
     private fun clear() {

@@ -41,7 +41,6 @@ class ManeuverAdapter(private val context: Context, private var maneuvers: List<
 
         holder.instruction.text = maneuver.instruction
         holder.distance.text = context.getString(R.string.distance_unit, maneuver.distance.toString())
-        // holder.parent.background.clearColorFilter()
     }
 
     /**

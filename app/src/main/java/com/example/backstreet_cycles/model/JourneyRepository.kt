@@ -152,7 +152,12 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
         if(overview)
         {
-            routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            routeOptions = when(profile)
+            {
+                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+                else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            }
+
             requestRoute(mapboxNavigation, routeOptions,mainPath = true, lastPoint = true)
         }
         else
@@ -208,6 +213,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
                 ) {
                     // GSON instance used only to print the response prettily
 //                    val gson = GsonBuilder().setPrettyPrinting().create()
+
 
                     Log.i("retrieving route", "success")
 
