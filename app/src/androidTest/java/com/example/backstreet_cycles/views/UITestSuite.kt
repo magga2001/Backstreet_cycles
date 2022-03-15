@@ -6,7 +6,7 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     LogInActivityTest::class,
     SignUpActivityTest::class,
-    MainActivityTest::class, //not all my tests pass
+    HomePageActivity::class, //not all my tests pass
     EditUserProfileActivityTest::class // i do not work
 )
 class UITestSuite
