@@ -2,23 +2,19 @@ package com.example.backstreet_cycles
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.TflHelper
-import com.example.backstreet_cycles.view.JourneyActivity
+import com.example.backstreet_cycles.views.JourneyActivity
 import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
-import kotlinx.android.synthetic.main.activity_plan_journey.*
 import kotlinx.coroutines.*
 
 class PlanJourneyActivity : AppCompatActivity() {

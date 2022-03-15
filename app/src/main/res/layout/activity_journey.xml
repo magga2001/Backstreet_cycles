@@ -17,7 +17,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.JourneyActivity"
+        tools:context=".views.JourneyActivity"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include

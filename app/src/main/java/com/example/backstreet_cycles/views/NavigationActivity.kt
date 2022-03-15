@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.view
+package com.example.backstreet_cycles.views
 
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.model.MapRepository

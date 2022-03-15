@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".view.NavigationActivity"
+            android:name=".views.NavigationActivity"
             android:exported="false" />
         <activity
             android:name=".PlanJourneyActivity"
@@ -37,7 +37,7 @@
             android:parentActivityName=".views.HomePageActivity"/>
         <activity android:name=".views.SignUpActivity"
             android:parentActivityName=".views.LogInActivity"/>
-        <activity android:name=".view.JourneyActivity" />
+        <activity android:name=".views.JourneyActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.view
+package com.example.backstreet_cycles.views
 
 //import com.example.backstreet_cycles.adapter.PlannerAdapter
 

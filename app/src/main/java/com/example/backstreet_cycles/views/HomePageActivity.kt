@@ -246,6 +246,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
+            homePageViewModel.stops.value
+            startActivity(Intent(this, JourneyActivity::class.java))
             Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
