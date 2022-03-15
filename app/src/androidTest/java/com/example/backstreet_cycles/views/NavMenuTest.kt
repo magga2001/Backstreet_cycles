@@ -107,7 +107,7 @@ class NavMenuTest {
     fun test_nav_equalCurrentUserEmail(){
 
         val email = FirebaseAuth.getInstance().currentUser?.email
-        val testDisplayed = getApplicationContext<Application>().getString(R.id.tv_email)
-        assert(testDisplayedName == email)
+        val testDisplayedEmail = getApplicationContext<Application>().getString(R.id.tv_email)
+        assert(testDisplayedEmail == email)
     }
 }
