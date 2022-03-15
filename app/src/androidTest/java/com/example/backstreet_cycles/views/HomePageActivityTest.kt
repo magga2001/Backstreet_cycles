@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.views
 
+import androidx.appcompat.app.ActionBarDrawerToggle
 import org.junit.Assert.*
 
 import androidx.test.core.app.ActivityScenario
@@ -11,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import kotlinx.android.synthetic.main.activity_homepage.*
 
 import org.junit.After
 import org.junit.Before
