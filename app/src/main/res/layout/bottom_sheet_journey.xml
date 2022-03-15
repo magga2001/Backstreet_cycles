@@ -69,11 +69,11 @@
 
                         <Button
                             android:id="@+id/expandBtn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="326dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="18dp"
                             android:layout_marginTop="18dp"
-                            android:text="Harrods"
+                            android:text="From: Current Location  To: Harrods"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                         <LinearLayout
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            >
 
                             <View
                                 android:layout_width="match_parent"
@@ -104,54 +104,96 @@
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="53dp"
                                 android:layout_marginTop="12dp"
-                                android:orientation="horizontal"
-                                >
+                                android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/pickup"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:elevation="0dp"
-                                    android:text="pick up: "
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:id="@+id/imageView11"
+                                    android:layout_width="72dp"
+                                    android:layout_height="33dp"
+                                    android:text="............."
+                                    android:textSize="24sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/pickUpPoint"
-                                    app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/imageView6"
+                                    app:layout_constraintHorizontal_bias="0.457"
+                                    app:layout_constraintStart_toStartOf="@+id/imageView12"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.517" />
-
-                                <TextView
-                                    android:id="@+id/pickUpPoint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="76dp"
-                                    android:elevation="0dp"
-                                    android:text="TBD"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/setNav1"
-                                    app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    app:layout_constraintVertical_bias="0.45" />
 
                                 <Button
                                     android:id="@+id/setNav1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true"
                                     android:elevation="0dp"
-                                    android:text="set navigation"
+                                    android:text="DOCK NAME"
                                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.933"
+                                    app:layout_constraintHorizontal_bias="0.934"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.0" />
+                                    app:layout_constraintVertical_bias="1.0" />
+
+                                <ImageView
+                                    android:id="@+id/imageView12"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/walking"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.028"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.473" />
+
+                                <ImageView
+                                    android:id="@+id/imageView6"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/cyclist"
+                                    tools:layout_editor_absoluteX="132dp"
+                                    tools:layout_editor_absoluteY="9dp" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="53dp"
+                                android:layout_marginTop="12dp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView8"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/cyclist"
+                                    tools:layout_editor_absoluteX="132dp"
+                                    tools:layout_editor_absoluteY="9dp" />
+
+                                <Button
+                                    android:id="@+id/setNav3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:elevation="0dp"
+                                    android:text="cycl"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.934"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="1.0" />
+
+                                <ImageView
+                                    android:id="@+id/imageView7"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/cyclist"
+                                    tools:layout_editor_absoluteX="11dp"
+                                    tools:layout_editor_absoluteY="6dp" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -161,32 +203,22 @@
                                 android:layout_marginTop="12dp"
                                 android:orientation="horizontal">
 
-                                <TextView
-                                    android:id="@+id/dropoff"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:elevation="0dp"
-                                    android:text="drop off:"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/dropOffPoint"
-                                    app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.517" />
+                                <ImageView
+                                    android:id="@+id/imageView10"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/cyclist"
+                                    tools:layout_editor_absoluteX="16dp"
+                                    tools:layout_editor_absoluteY="7dp" />
 
-                                <TextView
-                                    android:id="@+id/dropOffPoint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="76dp"
-                                    android:elevation="0dp"
-                                    android:text="TBD"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                <ImageView
+                                    android:id="@+id/imageView6"
+                                    android:layout_width="43dp"
+                                    android:layout_height="34dp"
+                                    android:src="@drawable/walking"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/setNav2"
-                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.418"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -200,7 +232,7 @@
                                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.933"
+                                    app:layout_constraintHorizontal_bias="0.934"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintVertical_bias="0.0" />
