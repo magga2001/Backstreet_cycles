@@ -3,45 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/activity_homepage.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/activity_splash.xml" value="0.1" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/homepage_bottom_sheet.xml" value="0.24825174825174826" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/layout_list_item.xml" value="0.1" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/list_docks.xml" value="0.1" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/location_data.xml" value="0.1" />
-        <entry key="..\:/Users/anupr/Documents/KCL/YEAR TWO/SEG/LargeGroupProject/app/src/main/res/layout/nav_header.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.1381340579710145" />
-        <entry key="app/src/main/res/layout/activity_plan_journey.xml" value="0.12314814814814815" />
-        <entry key="app/src/main/res/layout/bottom_sheet_journey.xml" value="0.12314814814814815" />
-        <entry key="app/src/main/res/layout/layout_instructions.xml" value="0.2869791666666667" />
-        <entry key="app/src/main/res/layout/layout_journey_planner.xml" value="0.2672285209431596" />
-        <entry key="app/src/main/res/layout/layout_plan_journey.xml" value="0.32678132678132676" />
-        <entry key="app/src/main/res/layout/layout_planner_journey.xml" value="0.2869791666666667" />
-        <entry key="app/src/main/res/drawable/mapbox_button.xml" value="0.1815" />
-        <entry key="app/src/main/res/layout/activity_about.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/activity_change_email_or_password.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/activity_edit_user_profile.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/activity_help.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.15572916666666667" />
-        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.29183502197265626" />
-        <entry key="app/src/main/res/layout/activity_journey_map.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_journey_on_map.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_navigation.xml" value="0.1203125" />
-        <entry key="app/src/main/res/layout/activity_plan_journey.xml" value="0.2953125" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.13170928955078126" />
-        <entry key="app/src/main/res/layout/bottom_sheet_journey.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/bottom_sheet_navigation.xml" value="0.2953125" />
-        <entry key="app/src/main/res/layout/child_item.xml" value="0.2687054356784685" />
-        <entry key="app/src/main/res/layout/group_item.xml" value="0.2980072463768116" />
-        <entry key="app/src/main/res/layout/journey_bottom_sheet.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/layout_instructions.xml" value="0.2980072463768116" />
-        <entry key="app/src/main/res/layout/layout_journey_planner.xml" value="0.2980072463768116" />
-        <entry key="app/src/main/res/layout/layout_plan_journey.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/list_item.xml" value="0.2980072463768116" />
-        <entry key="app/src/main/res/layout/location_data.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/layout/nav_header.xml" value="0.28804347826086957" />
-        <entry key="app/src/main/res/menu/nav_menu.xml" value="0.3098958333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/layout_plan_journey.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/location_data.xml" value="0.1796875" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.174" />
+        <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.174" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.174" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -62,7 +62,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         val location = locations[position]
 
-        holder.expandButton.text = "From: ${location.name}"  + " " + "To: ${locations[position+1].name}"
+
+        holder.expandButton.text = "From: ${shortenName(location.name).first()} " +
+                "To: ${shortenName(locations[position+1].name).first()}"
 
         holder.setNav1.setOnClickListener{
 
@@ -114,6 +116,11 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
      */
     override fun getItemCount(): Int {
         return locations.size - 1
+    }
+
+    private fun shortenName(name: String): List<String> {
+        val delimiter = ","
+        return name.split(delimiter)
     }
 
     fun updateList(locations: List<Locations>)
