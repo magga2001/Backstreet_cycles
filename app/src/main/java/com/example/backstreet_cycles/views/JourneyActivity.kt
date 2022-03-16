@@ -113,13 +113,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         mapboxMap = mapView.getMapboxMap()
 //        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
 //        init()
+        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+        init()
     }
 
     override fun onStart() {
         super.onStart()
         MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
-        init()
     }
 
     private fun init() {
