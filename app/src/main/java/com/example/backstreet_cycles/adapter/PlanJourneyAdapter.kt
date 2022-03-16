@@ -72,7 +72,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav1.setOnClickListener{
 
-            val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
+            val currentPoint = Point.fromLngLat(locations.first().lon, locations.first().lat)
 
             val findClosestDock = MapHelper.getClosestDocks(
                 Point.fromLngLat(
@@ -87,7 +87,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav2.setOnClickListener {
 
-            val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
+            val currentPoint = Point.fromLngLat(locations.first().lon, locations.first().lat)
 
             val findClosestDock = MapHelper.getClosestDocks(
                 Point.fromLngLat(
@@ -96,6 +96,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 )
             )
             val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
+
             val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(location.lon, location.lat))
             val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
 

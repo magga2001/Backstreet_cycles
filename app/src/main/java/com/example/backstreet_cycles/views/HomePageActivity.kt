@@ -4,12 +4,14 @@ package com.example.backstreet_cycles.views
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -19,15 +21,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.model.MapRepository
+import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -38,6 +45,7 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -72,6 +80,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
+    private lateinit var journeyViewModel: JourneyViewModel
+    private lateinit var mapboxNavigation: MapboxNavigation
+
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
         private const val symbolIconId = "SymbolIconId"
@@ -105,6 +116,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 tv_email.text = firebaseUser.email
             }
         }
+
+        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
+        homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
+            if(ready)
+            {
+                startActivity(Intent(this, JourneyActivity::class.java))
+                homePageViewModel.getIsReadyMutableLiveData().value = false
+            }
+        }
+        homePageViewModel.checkPermission(this, activity = this)
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -246,8 +267,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-            homePageViewModel.stops.value
-            startActivity(Intent(this, JourneyActivity::class.java))
+            fetchPoints()
             Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
@@ -436,6 +456,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
+        mapboxNavigation = homePageViewModel.initialiseMapboxNavigation()
     }
 
     override fun onStop() {
@@ -451,5 +472,54 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onDestroy() {
         super.onDestroy()
         mapView?.onDestroy()
+    }
+
+    private fun fetchPoints()
+    {
+//        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
+        MapRepository.location.addAll(stops)
+
+        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
+        if (checkForARunningJourney){
+            alertDialog(MapRepository.location)
+        } else{
+            val locationPoints = setPoints(MapRepository.location)
+            fetchRoute(locationPoints)
+        }
+    }
+
+    private fun fetchRoute(wayPoints: MutableList<Point>) {
+
+        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", true)
+        TflHelper.getDock(applicationContext)
+    }
+
+    private fun alertDialog(newStops: MutableList<Locations>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Planner Alert")
+        builder.setMessage("There is already a planned journey that you are currently useing." +
+                "Do you want to change the journey to the current one or keep the same one?")
+
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            journeyViewModel.getListLocations()
+            val listPoints = setPoints(newStops)
+            fetchRoute(listPoints)
+        }
+
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+
+            val listPoints = setPoints(MapRepository.location)
+            fetchRoute(listPoints)
+        }
+        builder.show()
+
+    }
+
+    private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
+        val listPoints = emptyList<Point>().toMutableList()
+        for (i in 0 until newStops.size){
+            listPoints.add(Point.fromLngLat(MapRepository.location[i].lon, MapRepository.location[i].lat))
+        }
+        return listPoints
     }
 }

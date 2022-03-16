@@ -37,7 +37,6 @@ class PlanJourneyActivity : AppCompatActivity() {
             if(ready)
             {
                 Log.i("Ready to load", "Success")
-                loadActivity()
                 planJourneyViewModel.getIsReadyMutableLiveData().value = false
             }
         }
@@ -60,39 +59,11 @@ class PlanJourneyActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun fetchPoints()
+    private fun fetchPoints()
     {
-//        var startDock:Dock? = null
-//        var endDock:Dock? = null
-//
-//        coroutineScope {
-//            val start = async { Tfl.readDock(et_startDock.text.toString())}
-//            val end = async {  Tfl.readDock(et_endDock.text.toString()) }
-//
-//            startDock = start.await()
-//            endDock = end.await()
-//
-//            if(startDock == null || endDock == null)
-//            {
-//                Toast.makeText(this@PlanJourneyActivity,"No location", Toast.LENGTH_SHORT).show()
-//                return@coroutineScope
-//            }
-//
-//            val startPoint = Point.fromLngLat(startDock!!.lon,startDock!!.lat)
-//            val endPoint = Point.fromLngLat(endDock!!.lon,endDock!!.lat)
-//            fetchRoute(mutableListOf(startPoint,endPoint))
-
-//            delay(2000)
-//            loadActivity()
-//        }
-        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
+//        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
         MapRepository.location.add(Locations("Harrods", 51.5144, -0.1528))
         MapRepository.location.add(Locations("Tower Bridge", 51.5055, -0.0754))
-
-//        val currentPoint = Point.fromLngLat(MapRepository.location[0].lon,MapRepository.location[0].lat)
-//        val stopOne = Point.fromLngLat(MapRepository.location[1].lon, MapRepository.location[1].lat)
-//        val stopTwo = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
-//        val stopThree = Point.fromLngLat(MapRepository.location[2].lon, MapRepository.location[2].lat)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
         if (checkForARunningJourney){
@@ -101,13 +72,6 @@ class PlanJourneyActivity : AppCompatActivity() {
             val locationPoints = setPoints(MapRepository.location)
             fetchRoute(locationPoints)
         }
-//        fetchRoute(mutableListOf(currentPoint,stopOne,stopTwo))
-    }
-
-    private fun loadActivity()
-    {
-        val intent = Intent(this, JourneyActivity::class.java)
-        startActivity(intent)
     }
 
     private fun fetchRoute(wayPoints: MutableList<Point>) {
@@ -116,18 +80,11 @@ class PlanJourneyActivity : AppCompatActivity() {
         TflHelper.getDock(applicationContext)
     }
 
-    override fun onStop() {
-        super.onStop()
-//        MapboxNavigationProvider.destroy()
-//        mapboxNavigation.onDestroy()
-    }
-
-    fun alertDialog(newStops: MutableList<Locations>) {
+    private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
         builder.setMessage("There is already a planned journey that you are currently useing." +
                 "Do you want to change the journey to the current one or keep the same one?")
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             journeyViewModel.getListLocations()
@@ -148,7 +105,7 @@ class PlanJourneyActivity : AppCompatActivity() {
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()
-        for (i in 0..newStops.size-1){
+        for (i in 0 until newStops.size){
             listPoints.add(Point.fromLngLat(MapRepository.location[i].lon,MapRepository.location[i].lat))
         }
         return listPoints
