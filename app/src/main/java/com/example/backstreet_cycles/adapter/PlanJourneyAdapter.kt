@@ -72,7 +72,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 Point.fromLngLat(
                     currentPoint.longitude(),
                     currentPoint.latitude()
-                )
+                ),
+                1
             )
             val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
 
@@ -87,11 +88,12 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 Point.fromLngLat(
                     currentPoint.longitude(),
                     currentPoint.latitude()
-                )
+                ),
+                1
             )
             val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
 
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat))
+            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat), 1)
             val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
 
             plannerInterface.onSelectedJourney(location, "cycling", mutableListOf(pickUpDock,dropOffDock))
@@ -99,7 +101,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav3.setOnClickListener {
 
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat))
+            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat), 1)
             val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
             val destination = Point.fromLngLat(locations[position+1].lon, locations[position+1].lat)
 
