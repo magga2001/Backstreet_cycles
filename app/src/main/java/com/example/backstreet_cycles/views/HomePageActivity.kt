@@ -141,16 +141,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         minusBtn = findViewById(R.id.decrementButton)
 
 
-        textOfNumberOfUsers.setText(""+numberOfUsers)
+        textOfNumberOfUsers.text = ""+numberOfUsers
 
         plusBtn.setOnClickListener(){
-            textOfNumberOfUsers.setText(""+ ++numberOfUsers)
+            textOfNumberOfUsers.text = ""+ ++numberOfUsers
         }
 
         minusBtn.setOnClickListener(){
 
             if(numberOfUsers>=2){
-                textOfNumberOfUsers.setText(""+ --numberOfUsers)
+                textOfNumberOfUsers.text = ""+ --numberOfUsers
             }
             else{
                 Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()

@@ -18,9 +18,6 @@
             android:name=".views.NavigationActivity"
             android:exported="false" />
         <activity
-            android:name=".PlanJourneyActivity"
-            android:exported="false" />
-        <activity
             android:name=".views.SplashScreenActivity"
             android:exported="true">
             <intent-filter>

@@ -209,15 +209,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
             clear()
 
-            val points = mutableListOf<Point>()
-
-            val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
-            points.add(currentPoint)
-
-            for (i in MapRepository.location) {
-                val point = Point.fromLngLat(i.lon, i.lat)
-                points.add(point)
-            }
+            val points = setPoints(MapRepository.location)
 
             journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", true)
         }
@@ -294,9 +286,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             Point.fromLngLat(
                 currentPoint.longitude(),
                 currentPoint.latitude()
-            )
+            ),
+            1
         )
-        val endDock = MapHelper.getClosestDocks(stop)
+        val endDock = MapHelper.getClosestDocks(stop, 1)
         val pickUpDock = Point.fromLngLat(startDock.lon, startDock.lat)
         val dropOffDock = Point.fromLngLat(endDock.lon, endDock.lat)
 
@@ -316,6 +309,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
         clear()
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, true)
+    }
+
+    private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
+        val listPoints = emptyList<Point>().toMutableList()
+        for (i in 0 until newStops.size){
+            listPoints.add(Point.fromLngLat(MapRepository.location[i].lon, MapRepository.location[i].lat))
+        }
+        return listPoints
     }
 
     private fun clear() {
