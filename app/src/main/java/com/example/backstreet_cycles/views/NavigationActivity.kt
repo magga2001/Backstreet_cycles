@@ -49,7 +49,6 @@ import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
 import com.mapbox.navigation.ui.voice.model.SpeechVolume
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.activity_navigation.mapView
-import kotlinx.android.synthetic.main.bottom_sheet_navigation.*
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
