@@ -63,6 +63,12 @@ class NavMenuTest {
         onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
     }
 
+    /*@Test
+    fun test_logOutButton_toLogInActivity() {
+        onView(withId(R.id.logout)).perform(click())
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+    }
+*/
     @Test
     fun test_changePassword_toChangeEmailOrPasswordActivity() {
         onView(withId(R.id.changePassword)).perform(click())

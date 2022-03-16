@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -134,6 +135,34 @@ class HomePageActivityTest {
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
 
+    @Test
+    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withId(R.id.changePassword)).perform(ViewActions.click())
+        onView(withId(R.id.changeEmailOrPassword)).check(matches(isDisplayed()))
+        pressBack()
+        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+    }
 
+    @Test
+    fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withId(R.id.profile)).perform(ViewActions.click())
+        onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
+        pressBack()
+        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+    }
 
+   /* @Test
+    fun back_button_from_SignUpActivity_to_LogInActivity() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withId(R.id.logout)).perform(ViewActions.click())
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
+        pressBack()
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+    }*/
 }
