@@ -82,6 +82,7 @@
     <string name="preference_file_Locations">\"LOCATIONS\"</string>
     <string name="continue_with_current_journey">Continue With Current Journey</string>
     <string name="continue_with_newly_set_journey">Continue with the Newly Created Journey</string>
+    <string name="about_paragraph">Transport for London\'s bicycle hire scheme is a great way for tourists and casual cyclists who do not own a bicycle in London to travel in central London. With the help of Backstreet Cycle you can go on the shortest, safest, and fastest journey out in London. The app provides you with some of the recommended tourist attractions which you can select to go alone, with group of friends, or family.</string>
 
     <string-array name="names">
         <item>Walk</item>
