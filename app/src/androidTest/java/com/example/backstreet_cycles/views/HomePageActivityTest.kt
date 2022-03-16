@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
@@ -58,6 +59,66 @@ class HomePageActivityTest {
         // Checking whether a card is shown in the bottom sheet
         onView(withId(R.id.cardView)).check(matches(isDisplayed()))
         onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
+    }
+
+    @Test
+    fun test_addStopbtn_is_enabled(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.addingBtn)).check(matches(isEnabled()))
+    }
+
+    @Test
+    fun test_addStopbtn_is_clickable(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.addingBtn)).check(matches(isClickable()))
+    }
+
+    @Test
+    fun test_currentLocationbtn_is_disabled(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
+    }
+
+    @Test
+    fun test_currentLocationbtn_is_not_clickable(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.myLocationButton)).check(matches(isNotClickable()))
+    }
+    @Test
+    fun test_nextPage_is_disabled(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+    }
+
+    @Test
+    fun test_nextPage_is_not_clickable(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.nextPageButton)).check(matches(isNotClickable()))
+    }
+
+    @Test
+    fun test_recyclerView_is_displayed(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.recyclerView)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_cardView_is_visible(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.stopCardView)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_cardView_is_swipeable(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeLeft())
+    }
+
+    @Test
+    fun test_cardView_is_draggable(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeUp())
+        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeDown())
     }
 
     @Test
