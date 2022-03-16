@@ -21,8 +21,6 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
     }
     inner class StopViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
         val name: TextView = itemView.findViewById(R.id.card_name)
-        val latitude: TextView = itemView.findViewById(R.id.card_latitude)
-        val longitude: TextView = itemView.findViewById(R.id.card_longitude)
 
         init {
             itemView.setOnClickListener {
@@ -39,12 +37,17 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: StopViewHolder, position: Int) {
         val newList = stops[position]
-        holder.name.text = newList.name
-        holder.latitude.text = newList.lat.toString()
-        holder.longitude.text = newList.lon.toString()
+        val addressName = shortenName(newList.name)
+        holder.name.text = addressName.first()
     }
 
     override fun getItemCount(): Int {
         return stops.size
     }
+
+    private fun shortenName(name: String): List<String> {
+        val delimiter = ","
+        return name.split(delimiter)
+    }
+
 }
