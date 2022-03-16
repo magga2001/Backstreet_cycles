@@ -9,9 +9,9 @@ class MapHelper {
 
     companion object
     {
-        fun getClosestDocks(point: Point): Dock {
+        fun getClosestDocks(point: Point, numUser: Int): Dock {
 
-            TflHelper.docks.filter { it.nbSpaces != 0 }
+            TflHelper.docks.filter { it.nbSpaces >= numUser }
             TflHelper.docks.sortBy {
                 abs(it.lat - point.latitude()) + abs(it.lon - point.longitude())
             }

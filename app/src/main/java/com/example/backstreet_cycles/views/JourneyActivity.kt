@@ -286,9 +286,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             Point.fromLngLat(
                 currentPoint.longitude(),
                 currentPoint.latitude()
-            )
+            ),
+            1
         )
-        val endDock = MapHelper.getClosestDocks(stop)
+        val endDock = MapHelper.getClosestDocks(stop, 1)
         val pickUpDock = Point.fromLngLat(startDock.lon, startDock.lat)
         val dropOffDock = Point.fromLngLat(endDock.lon, endDock.lat)
 
