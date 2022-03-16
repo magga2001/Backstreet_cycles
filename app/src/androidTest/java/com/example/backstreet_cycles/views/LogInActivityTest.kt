@@ -13,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
+//Log out before running tests
 class LogInActivityTest{
     @Test
     fun test_activity_is_in_view() {
