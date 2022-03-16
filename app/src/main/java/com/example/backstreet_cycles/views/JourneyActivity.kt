@@ -4,10 +4,12 @@ package com.example.backstreet_cycles.views
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -208,10 +210,26 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         overview_journey.setOnClickListener {
 
             clear()
-
             val points = setPoints(MapRepository.location)
 
             journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", true)
+        }
+
+        santander_link.setOnClickListener {
+
+            var intent = packageManager.getLaunchIntentForPackage("uk.gov.tfl.cyclehire")
+
+            if(intent == null) {
+                intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://play.google.com/store/apps/details?id=uk.gov.tfl.cyclehire"
+                    )
+                    setPackage("com.android.vending")
+                }
+            }
+
+            startActivity(intent)
+
         }
     }
 
