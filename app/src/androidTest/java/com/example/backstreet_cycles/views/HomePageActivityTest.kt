@@ -62,6 +62,9 @@ class HomePageActivityTest {
 
     @Test
     fun navigation_drawer_shows_about_button() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+
+
 
     }
 
