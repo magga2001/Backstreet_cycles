@@ -105,20 +105,20 @@ class HomePageActivityTest {
     @Test
     fun test_cardView_is_visible(){
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.stopCardView)).check(matches(isDisplayed()))
+        onView(withId(R.id.cardView)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_cardView_is_swipeable(){
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeLeft())
+        onView(withId(R.id.cardView)).perform(ViewActions.swipeLeft())
     }
 
     @Test
     fun test_cardView_is_draggable(){
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeUp())
-        onView(withId(R.id.stopCardView)).perform(ViewActions.swipeDown())
+        onView(withId(R.id.cardView)).perform(ViewActions.swipeUp())
+        onView(withId(R.id.cardView)).perform(ViewActions.swipeDown())
     }
 
     @Test
