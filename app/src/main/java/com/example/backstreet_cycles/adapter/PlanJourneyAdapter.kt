@@ -61,18 +61,12 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val location = locations[position]
-        val fromLocation = if(position - 1 < 0) {
-            "Current location"
 
-        }else {
-            locations[position-1].name
-        }
-
-        holder.expandButton.text = "From: ${fromLocation}"  + " " + "To: ${location.name}"
+        holder.expandButton.text = "From: ${location.name}"  + " " + "To: ${locations[position+1].name}"
 
         holder.setNav1.setOnClickListener{
 
-            val currentPoint = Point.fromLngLat(locations.first().lon, locations.first().lat)
+            val currentPoint = Point.fromLngLat(location.lon, location.lat)
 
             val findClosestDock = MapHelper.getClosestDocks(
                 Point.fromLngLat(
@@ -87,7 +81,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav2.setOnClickListener {
 
-            val currentPoint = Point.fromLngLat(locations.first().lon, locations.first().lat)
+            val currentPoint = Point.fromLngLat(location.lon, location.lat)
 
             val findClosestDock = MapHelper.getClosestDocks(
                 Point.fromLngLat(
@@ -97,7 +91,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             )
             val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
 
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(location.lon, location.lat))
+            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat))
             val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
 
             plannerInterface.onSelectedJourney(location, "cycling", mutableListOf(pickUpDock,dropOffDock))
@@ -105,9 +99,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav3.setOnClickListener {
 
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(location.lon, location.lat))
+            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat))
             val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
-            val destination = Point.fromLngLat(location.lon,location.lat)
+            val destination = Point.fromLngLat(locations[position+1].lon, locations[position+1].lat)
 
             plannerInterface.onSelectedJourney(location, "walking", mutableListOf(dropOffDock,destination))
         }
@@ -117,7 +111,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
      * Test
      */
     override fun getItemCount(): Int {
-        return locations.size
+        return locations.size - 1
     }
 
     fun updateList(locations: List<Locations>)
