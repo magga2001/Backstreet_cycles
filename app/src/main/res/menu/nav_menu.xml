@@ -3,14 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-<!--    <item-->
-<!--        android:id="@+id/nav_home"-->
-<!--        android:title="@string/home"-->
-<!--        android:icon="@drawable/ic_baseline_home_24"/>-->
-<!--    <item-->
-<!--        android:id="@+id/plan_journey"-->
-<!--        android:title="@string/plan_a_journey"-->
-<!--        android:icon="@drawable/ic_baseline_location_on_red_24dp"/>-->
     <item
         android:id="@+id/profile"
         android:title="@string/view_profile"

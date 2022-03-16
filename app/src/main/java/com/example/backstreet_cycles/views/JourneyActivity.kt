@@ -7,9 +7,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,7 +43,9 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
+import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
 
 
@@ -259,6 +262,25 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = nAdapter
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu items for use in the action bar
+        val inflater = menuInflater
+        inflater.inflate(R.menu.journey_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar items
+        return when (item.itemId) {
+            R.id.reload_button -> {
+                finish()
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun updateUI() {
