@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
@@ -77,4 +78,62 @@ class HomePageActivityTest {
     fun navigation_drawer_shows_planjourney_button() {
 
     }
+
+    @Test
+    fun bottom_sheet_invoked_show_users_field() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Checking whether the users field is displayed
+        onView(withId(R.id.Users)).check(matches(withText("Users:")))
+    }
+
+    @Test
+    fun bottom_sheet_invoked_show_number_of_users_is_one() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Checking whether the number of users is one
+        onView(withId(R.id.UserNumber)).check(matches(withText("1")))
+    }
+
+    @Test
+    fun bottom_sheet_invoked_show_increment_and_decrement_buttons() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Checking whether the increment and decrement buttons are displayed
+        onView(withId(R.id.decrementButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.incrementButton)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun increment_button_clicked_number_of_users_incremented_by_one() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Click increment button
+        onView(withId(R.id.incrementButton)).perform(ViewActions.click())
+        //Checking if number of users changed to two
+        onView(withId(R.id.UserNumber)).check(matches(withText("2")))
+
+    }
+
+    @Test
+    fun decrement_button_clicked_number_of_users_decremented_by_one() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        // Checking whether bottom sheet is displayed
+        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        //Click increment button
+        onView(withId(R.id.incrementButton)).perform(ViewActions.click())
+        //Checking if number of users changed to two
+        onView(withId(R.id.UserNumber)).check(matches(withText("2")))
+        //Click decrement button
+        onView(withId(R.id.decrementButton)).perform(ViewActions.click())
+        //Checking if number of users changed back to one
+        onView(withId(R.id.UserNumber)).check(matches(withText("1")))
+    }
+
+
+
 }
