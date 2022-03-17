@@ -477,6 +477,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun fetchPoints()
     {
 //        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
+//        MapRepository.location.clear()
         MapRepository.location.addAll(stops)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
@@ -501,14 +502,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            journeyViewModel.getListLocations()
-            val listPoints = setPoints(newStops)
+            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
+            MapRepository.location = listOfLocations
+            val listPoints = setPoints(listOfLocations)
             fetchRoute(listPoints)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-
-            val listPoints = setPoints(MapRepository.location)
+            val listPoints = setPoints(newStops)
+            journeyViewModel.overrideListLocation(newStops)
             fetchRoute(listPoints)
         }
         builder.show()
@@ -518,7 +520,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()
         for (i in 0 until newStops.size){
-            listPoints.add(Point.fromLngLat(MapRepository.location[i].lon, MapRepository.location[i].lat))
+            listPoints.add(Point.fromLngLat(newStops[i].lon, newStops[i].lat))
         }
         return listPoints
     }

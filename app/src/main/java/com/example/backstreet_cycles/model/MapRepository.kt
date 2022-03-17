@@ -37,7 +37,7 @@ abstract class MapRepository(private val application: Application)
         var currentRoute = mutableListOf<DirectionsRoute>()
         val maneuvers = mutableListOf<Maneuver>()
         val wayPoints = mutableListOf<Point>()
-        val location = mutableListOf<Locations>()
+        var location = mutableListOf<Locations>()
         lateinit var centerPoint: Point
         lateinit var enhancedLocation: Location
     }

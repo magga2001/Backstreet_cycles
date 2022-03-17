@@ -197,12 +197,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
             R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
 
         if (getListLocations().isEmpty()){
-            val gson = Gson();
-            val json = gson.toJson(locations);
-            with (sharedPref.edit()) {
-                putString(R.string.preference_file_Locations.toString(), json)
-                apply()
-            }
+            overrideListLocation(locations)
             return false
         }
         return true
@@ -210,13 +205,22 @@ class JourneyRepository(private val application: Application): MapRepository(app
 //    proceed with the already save journey or start the new one.
     }
 
-    fun getListLocations(): List<Location> {
-        val locations: List<Location>
+    fun overrideListLocation(locations: MutableList<Locations>) {
+        val gson = Gson();
+        val json = gson.toJson(locations);
+        with (sharedPref.edit()) {
+            putString(R.string.preference_file_Locations.toString(), json)
+            apply()
+        }
+    }
+
+    fun getListLocations(): List<Locations> {
+        val locations: List<Locations>
         val serializedObject: String? = sharedPref.getString(R.string.preference_file_Locations.toString(), null)
         if (serializedObject != null) {
             val gson = Gson()
-            val type: Type = object : TypeToken<List<Location?>?>() {}.getType()
-            locations = gson.fromJson<List<Location>>(serializedObject, type)
+            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+            locations = gson.fromJson<List<Locations>>(serializedObject, type)
         }else {
             locations = emptyList()
         }

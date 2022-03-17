@@ -124,8 +124,12 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.addLocationSharedPreferences(locations)
     }
 
-    fun getListLocations(): List<Location> {
+    fun getListLocations(): List<Locations> {
         return journeyRepository.getListLocations()
+    }
+
+    fun overrideListLocation(locations: MutableList<Locations>){
+        journeyRepository.overrideListLocation(locations)
     }
 
 }
