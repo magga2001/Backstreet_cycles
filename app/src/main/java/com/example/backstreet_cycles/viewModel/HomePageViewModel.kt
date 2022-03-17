@@ -88,9 +88,9 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         mapRepository.checkPermission(context, activity)
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, overview:Boolean) {
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, info:Boolean) {
 
-        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, overview)
+        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, info)
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>

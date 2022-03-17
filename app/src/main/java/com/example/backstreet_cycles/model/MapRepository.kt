@@ -36,6 +36,8 @@ abstract class MapRepository(private val application: Application)
     {
         var currentRoute = mutableListOf<DirectionsRoute>()
         val maneuvers = mutableListOf<Maneuver>()
+        val distances = mutableListOf<Double>()
+        val durations = mutableListOf<Double>()
         val wayPoints = mutableListOf<Point>()
         var location = mutableListOf<Locations>()
         lateinit var centerPoint: Point
@@ -141,29 +143,3 @@ abstract class MapRepository(private val application: Application)
 
     abstract fun initialiseMapboxNavigation(): MapboxNavigation
 }
-
-//mapView.location.apply {
-//    this.enabled = true
-////            this.locationPuck = LocationPuck2D(
-////                bearingImage = AppCompatResources.getDrawable(
-////                    this@LocationTrackingActivity,
-////                     com.mapbox.services.android.navigation.ui.v5.R.drawable.ic_arrow_head,
-////                ),
-////                shadowImage = AppCompatResources.getDrawable(
-////                    this@LocationTrackingActivity,
-////                    com.mapbox.services.android.navigation.R.drawable.ic_circle,
-////                ),
-////                scaleExpression = interpolate {
-////                    linear()
-////                    zoom()
-////                    stop {
-////                        literal(0.0)
-////                        literal(0.6)
-////                    }
-////                    stop {
-////                        literal(20.0)
-////                        literal(1.0)
-////                    }
-////                }.toJson()
-////            )
-//}

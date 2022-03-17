@@ -19,6 +19,7 @@ import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -45,6 +46,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
+import kotlinx.android.synthetic.main.layout_instructions.*
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
@@ -85,49 +87,59 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
-    //    private lateinit var mAdapter: PlannerAdapter
     private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
-
-    // ExpandableListView variables:
-    private var expandableListView: ExpandableListView? = null
-    private var expandableListAdapter: ExpandableListAdapter? = null
-    private var titleList: List<String>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
 
-        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
-
-        Log.i("mutable live data", journeyViewModel.getIsReadyMutableLiveData().value.toString())
+        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                Log.i("Ready to update UI", "Success")
                 updateUI()
                 journeyViewModel.getIsReadyMutableLiveData().value = false
             }
         }
 
+        journeyViewModel.getDistanceMutableLiveData().observe(this){ distance ->
+            if(distance != null)
+            {
+                distances.text = "Distance: ${distance} metres"
+            }
+        }
+
+        journeyViewModel.getDurationMutableLiveData().observe(this){ duration ->
+            if(duration != null)
+            {
+                durations.text = "Duration: ${duration} minutes"
+            }
+        }
+
+        journeyViewModel.getPriceMutableLiveData().observe(this){ price ->
+            if(price != null)
+            {
+                prices.text = "Price: £${price}"
+            }
+        }
+
         journeyViewModel.checkPermission(this, activity = this)
 
-
         mapboxMap = mapView.getMapboxMap()
-//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
-//        init()
+//        MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
     }
 
     override fun onStart() {
         super.onStart()
-        MapboxNavigationProvider.destroy()
+//        MapboxNavigationProvider.destroy()
+        PlannerHelper.calcBicycleRental(1, plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
     }
 
     private fun init() {
-
         initStyle()
         initRouteLineUI()
         initObservers()
@@ -213,7 +225,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             clear()
             val points = setPoints(MapRepository.location)
 
-            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", true)
+            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", false)
         }
 
         santander_link.setOnClickListener {
@@ -273,6 +285,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.reload_button -> {
+                clear()
+                MapRepository.distances.clear()
+                MapRepository.durations.clear()
                 TflHelper.getDock(context = this)
                 finish()
                 startActivity(intent)
@@ -295,6 +310,11 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         mapView.invalidate()
     }
 
+//    override fun onStop() {
+//        super.onStop()
+////        mapboxNavigation.onDestroy()
+//    }
+
     override fun onDestroy() {
         super.onDestroy()
         //For future interaction with current location
@@ -315,39 +335,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 //        mapboxNavigation.onDestroy()
     }
 
-    override fun onSelectedStop(location: Locations) {
-
-        val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
-
-        val stop = Point.fromLngLat(location.lon, location.lat)
-
-        val startDock = MapHelper.getClosestDocks(
-            Point.fromLngLat(
-                currentPoint.longitude(),
-                currentPoint.latitude()
-            ),
-            1
-        )
-        val endDock = MapHelper.getClosestDocks(stop, 1)
-        val pickUpDock = Point.fromLngLat(startDock.lon, startDock.lat)
-        val dropOffDock = Point.fromLngLat(endDock.lon, endDock.lat)
-
+    override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {
         clear()
-
-        journeyViewModel.fetchRoute(
-            context = this,
-            mapboxNavigation,
-            mutableListOf(currentPoint, pickUpDock, dropOffDock, stop),
-            "walking",
-            false
-        )
+        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, false)
     }
 
-    override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {
-        Log.i("location name", location.name)
-
-        clear()
-        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, true)
+    override fun onFetchJourney(points : MutableList<Point>) {
+        Log.i("fetching distance", "Success")
+        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
@@ -368,5 +363,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         super.onBackPressed()
         clear()
         MapRepository.location.clear()
+        finish()
     }
 }

@@ -27,10 +27,17 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     private val journeyRepository: JourneyRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private val distanceMutableLiveData: MutableLiveData<String>
+    private val durationMutableLiveData: MutableLiveData<String>
+    private val priceMutableLiveData: MutableLiveData<String>
+
 
     init {
         journeyRepository = JourneyRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
+        distanceMutableLiveData = journeyRepository.getDistanceMutableLiveData()
+        durationMutableLiveData = journeyRepository.getDurationMutableLiveData()
+        priceMutableLiveData = journeyRepository.getPriceMutableLiveData()
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
@@ -38,9 +45,9 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseMapboxNavigation()
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, overview: Boolean)
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, info: Boolean)
     {
-        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, overview)
+        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, info)
     }
 
     fun initialiseRouteLineResources(): RouteLineResources
@@ -118,6 +125,21 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun getDistanceMutableLiveData(): MutableLiveData<String>
+    {
+        return distanceMutableLiveData
+    }
+
+    fun getDurationMutableLiveData(): MutableLiveData<String>
+    {
+        return durationMutableLiveData
+    }
+
+    fun getPriceMutableLiveData(): MutableLiveData<String>
+    {
+        return priceMutableLiveData
     }
 
     fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {

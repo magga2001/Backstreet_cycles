@@ -18,6 +18,8 @@ class TflHelper() {
 
         fun getDock(context: Context)
         {
+            //docks.clear()
+
             // Instantiate the RequestQueue.
             val queue = Volley.newRequestQueue(context)
             val url = context.getString(R.string.tfl_url)

@@ -46,6 +46,7 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -474,8 +475,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun fetchPoints()
     {
-//        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
-//        MapRepository.location.clear()
         MapRepository.location.addAll(stops)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
@@ -489,14 +488,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
-        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", true)
+        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
         TflHelper.getDock(applicationContext)
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently useing." +
+        builder.setMessage("There is already a planned journey that you are currently using." +
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
