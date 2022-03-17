@@ -1,7 +1,5 @@
 package com.example.backstreet_cycles.views
 
-//import com.example.backstreet_cycles.adapter.PlannerAdapter
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -21,6 +19,7 @@ import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.geojson.Point
@@ -43,7 +42,6 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
@@ -275,6 +273,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.reload_button -> {
+                TflHelper.getDock(context = this)
                 finish()
                 startActivity(intent)
                 true
