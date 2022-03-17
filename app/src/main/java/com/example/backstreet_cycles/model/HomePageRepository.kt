@@ -62,14 +62,14 @@ class HomePageRepository(private val application: Application) {
         val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
         for (attraction in data) {
-                symbolManager.create(
-                    SymbolOptions()
-                        .withLatLng(LatLng(attraction.lat, attraction.lon))
-                        .withIconImage("myMarker")
-                        .withTextField(attraction.name)
-                        .withTextSize(textSize)
-                        .withTextColor(textColor)
-                )
+            symbolManager.create(
+                SymbolOptions()
+                    .withLatLng(LatLng(attraction.lat, attraction.lon))
+                    .withIconImage("myMarker")
+                    .withTextField(attraction.name)
+                    .withTextSize(textSize)
+                    .withTextColor(textColor)
+            )
         }
     }
 
