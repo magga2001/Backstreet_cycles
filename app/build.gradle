@@ -141,4 +141,8 @@ dependencies {
     androidTestImplementation "androidx.test:runner:1.4.0"
     androidTestImplementation"androidx.test:core:1.4.0"
     androidTestImplementation"androidx.test.ext:junit-ktx:1.1.3"
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.9'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:8.1.1@aar'
+
 }

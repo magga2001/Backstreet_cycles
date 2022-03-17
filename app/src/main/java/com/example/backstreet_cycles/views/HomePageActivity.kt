@@ -215,13 +215,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 //                    "clicked sync",
 //                    Toast.LENGTH_SHORT
 //                ).show()
-                R.id.about -> Toast.makeText(
-                    applicationContext,
-                    "clicked settings",
-                    Toast.LENGTH_SHORT
-                ).show()
-                R.id.help -> Toast.makeText(applicationContext, "clicked trash", Toast.LENGTH_SHORT)
-                    .show()
+                R.id.about -> startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
+                R.id.help -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                 }

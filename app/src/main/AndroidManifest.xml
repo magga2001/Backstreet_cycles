@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
-            android:name=".views.HelpActivity"
+            android:name=".views.FAQActivity"
             android:exported="false" />
         <activity
             android:name=".views.AboutActivity"
