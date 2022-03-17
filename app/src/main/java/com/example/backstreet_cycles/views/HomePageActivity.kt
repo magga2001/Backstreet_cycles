@@ -125,7 +125,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.getIsReadyMutableLiveData().value = false
             }
         }
-        homePageViewModel.checkPermission(this, activity = this)
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -428,7 +427,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        bottomSheetFunctionality()
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
