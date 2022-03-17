@@ -132,4 +132,8 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository.overrideListLocation(locations)
     }
 
+    fun clearListLocations(){
+        journeyRepository.clearListLocations()
+    }
+
 }

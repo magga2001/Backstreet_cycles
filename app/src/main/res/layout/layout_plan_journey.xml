@@ -25,15 +25,29 @@
                     android:background="#fff"
                     android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/button_expand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="18dp"
-                        android:layout_marginTop="18dp"
-                        android:text="From: Current Location  To: Harrods"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="12sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="85dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/button_expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="18dp"
+                            android:text="@string/from_to_"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textSize="12sp" />
+
+                        <CheckBox
+                            android:id="@+id/checkBoxFinishJourney"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/done_journey" />
+                    </LinearLayout>
+
+
 
                     <LinearLayout
                         android:layout_width="wrap_content"

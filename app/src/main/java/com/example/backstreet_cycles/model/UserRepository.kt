@@ -18,7 +18,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
-class UserRepository(private val application: Application,
+class
+UserRepository(private val application: Application,
                      fireStore: FirebaseFirestore,
                      fireBaseAuth: FirebaseAuth) {
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()

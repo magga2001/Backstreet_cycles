@@ -64,6 +64,8 @@ class JourneyRepository(private val application: Application): MapRepository(app
     init {
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
+        sharedPref = application.getSharedPreferences(
+            R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
     }
 
     override fun initialiseMapboxNavigation(): MapboxNavigation
@@ -193,8 +195,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-        sharedPref = application.getSharedPreferences(
-            R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+//        sharedPref =
 
         if (getListLocations().isEmpty()){
             overrideListLocation(locations)
@@ -210,6 +211,13 @@ class JourneyRepository(private val application: Application): MapRepository(app
         val json = gson.toJson(locations);
         with (sharedPref.edit()) {
             putString(R.string.preference_file_Locations.toString(), json)
+            apply()
+        }
+    }
+
+    fun clearListLocations() {
+        with (sharedPref.edit()) {
+            clear()
             apply()
         }
     }
