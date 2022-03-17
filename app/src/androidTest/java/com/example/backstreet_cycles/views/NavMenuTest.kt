@@ -16,6 +16,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,11 +31,16 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+
 
     @Before
     fun setUp() {
+        logInRegisterViewModel= LogInRegisterViewModel(Application())
+        logInRegisterViewModel.login("msjanbey@gmail.com","123456")
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
+
     }
 
     @Test
