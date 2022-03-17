@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +48,7 @@ import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
 import kotlinx.android.synthetic.main.layout_instructions.*
+import kotlinx.android.synthetic.main.layout_plan_journey.*
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
@@ -242,9 +244,19 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             }
 
             startActivity(intent)
-
         }
+
+        finish_journey.setOnClickListener {
+            journeyViewModel.clearListLocations()
+            val intent = Intent(this, HomePageActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
+
+
+
 
     private fun initRouteLineUI() {
         routeLineResources = journeyViewModel.initialiseRouteLineResources()
@@ -267,11 +279,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
-
+        finish_journey.isEnabled = false
         nAdapter = PlanJourneyAdapter(this, MapRepository.location, this)
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = nAdapter
-
+        nAdapter.getAllBoxesCheckedMutableLiveData()
+            .observe(this) {allBoxesChecked ->
+                finish_journey.isEnabled = allBoxesChecked
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -309,11 +324,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         //Refresh the map
         mapView.invalidate()
     }
-
-//    override fun onStop() {
-//        super.onStop()
-////        mapboxNavigation.onDestroy()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
