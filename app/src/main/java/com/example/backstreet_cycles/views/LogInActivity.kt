@@ -27,6 +27,7 @@ class LogInActivity : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
                 }
             }
 
@@ -49,6 +50,7 @@ class LogInActivity : AppCompatActivity() {
 
         buttonCreateAccount.setOnClickListener {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
         PermissionHelper.checkPermission(context = this, activity = this)

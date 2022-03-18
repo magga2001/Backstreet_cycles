@@ -103,6 +103,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 if (loggedOut) {
                     startActivity(Intent(this@HomePageActivity, LogInActivity::class.java))
                     finish()
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
                 }
             }
 
@@ -120,6 +121,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             {
                 startActivity(Intent(this, JourneyActivity::class.java))
                 homePageViewModel.getIsReadyMutableLiveData().value = false
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
 
@@ -134,6 +136,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
+
+
     }
 
     private fun IncrementAndDecrementUsersFunc(){
@@ -144,8 +148,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         textOfNumberOfUsers.text = ""+numberOfUsers
 
+
         plusBtn.setOnClickListener(){
-            textOfNumberOfUsers.text = ""+ ++numberOfUsers
+          if(numberOfUsers>3){
+              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
+          }
+          else{
+              textOfNumberOfUsers.text = ""+ ++numberOfUsers
+          }
+
+
         }
 
         minusBtn.setOnClickListener(){
@@ -200,11 +212,35 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+
+//                    if(this.javaClass == HomePageActivity::class.java) {
+//                        drawerLayout.close()
+//                    }
+//                    else {
+//                        startActivity(Intent(this, HomePageActivity::class.java))
+//                    }
                 }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
+//                R.id.plan_journey -> Toast.makeText(
+//                    applicationContext,
+//                    "clicked sync",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+                R.id.about -> {
+                    startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
+
+                R.id.faq -> {
+                    startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
+
                 R.id.journeyHistory -> {
                     loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
                         if (userDetails != null){
@@ -218,6 +254,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.help -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
                 R.id.logout -> {
                     loggedInViewModel.logOut()
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
 
 
