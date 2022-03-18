@@ -237,7 +237,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
         nextPageButton  = findViewById(R.id.nextPageButton)
-        nextPageButton.isEnabled = false
+        nextPageButton.isEnabled = true
 
         createListOfItems()
         itemTouchMethods()
@@ -274,6 +274,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun createListOfItems(){
         homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        homePageViewModel.addStop(Locations("BackStreet Cyclist Hub", 51.5014, -0.1419))
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
