@@ -255,7 +255,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             val intent = Intent(this, HomePageActivity::class.java)
             startActivity(intent)
             finish()
-            //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
 
         }
     }

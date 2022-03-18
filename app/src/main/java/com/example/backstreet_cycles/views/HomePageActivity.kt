@@ -236,12 +236,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
 
-                R.id.help -> {
+                R.id.faq -> {
                     startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
-                R.id.about -> startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
-                R.id.faq -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
+
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
