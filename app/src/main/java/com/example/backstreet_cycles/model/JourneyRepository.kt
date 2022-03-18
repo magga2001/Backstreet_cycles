@@ -338,6 +338,8 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView) {
+
+        Log.i("wayPoints", wayPoints.size.toString())
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         val raw_bitmap = BitmapHelper.bitmapFromDrawableRes(context, R.drawable.dock_station) as Bitmap
         val bitmap = Bitmap.createScaledBitmap(raw_bitmap, 150, 150, false)

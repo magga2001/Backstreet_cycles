@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.JourneyRepository
+import com.example.backstreet_cycles.model.LocationRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -26,7 +27,9 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 class JourneyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val journeyRepository: JourneyRepository
+    private val locationRepository: LocationRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private val isReadyDockMutableLiveData: MutableLiveData<Boolean>
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
@@ -34,7 +37,9 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         journeyRepository = JourneyRepository(application)
+        locationRepository = LocationRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
+        isReadyDockMutableLiveData = locationRepository.getIsReadyMutableLiveData()
         distanceMutableLiveData = journeyRepository.getDistanceMutableLiveData()
         durationMutableLiveData = journeyRepository.getDurationMutableLiveData()
         priceMutableLiveData = journeyRepository.getPriceMutableLiveData()
@@ -156,6 +161,16 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     fun clearListLocations(){
         journeyRepository.clearListLocations()
+    }
+
+    fun getIsReadyDockMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyDockMutableLiveData
+    }
+
+    fun getDocks()
+    {
+        locationRepository.getDocks()
     }
 
 }

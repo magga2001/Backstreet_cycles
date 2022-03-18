@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.utils.PermissionHelper
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.*
 
@@ -50,7 +51,7 @@ class LogInActivity : AppCompatActivity() {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
         }
 
-
+        PermissionHelper.checkPermission(context = this, activity = this)
     }
 
     override fun onBackPressed() {

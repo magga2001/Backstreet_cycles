@@ -127,12 +127,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
+        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
+            if(ready)
+            {
+                fetchPoints()
+            }
+        }
+
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-
-
     }
 
     private fun IncrementAndDecrementUsersFunc(){
@@ -262,7 +267,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-            fetchPoints()
+            homePageViewModel.getDocks()
             Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
@@ -470,6 +475,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun fetchPoints()
     {
+        MapRepository.wayPoints.clear()
+        MapRepository.currentRoute.clear()
+        MapRepository.maneuvers.clear()
+
         MapRepository.location.addAll(stops)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
@@ -484,7 +493,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
         homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
-        TflHelper.getDock(applicationContext)
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {

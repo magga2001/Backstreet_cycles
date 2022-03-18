@@ -7,6 +7,7 @@ import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.example.backstreet_cycles.dto.Dock
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.JourneyRepository
@@ -27,6 +28,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val mapRepository: JourneyRepository = JourneyRepository(application)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = mapRepository.getIsReadyMutableLiveData()
+    private val isReadyDockMutableLiveData: MutableLiveData<Boolean> = locationRepository.getIsReadyMutableLiveData()
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -96,5 +98,15 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun getIsDockReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyDockMutableLiveData
+    }
+
+    fun getDocks()
+    {
+        locationRepository.getDocks()
     }
 }

@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ExpandableListAdapter
-import android.widget.ExpandableListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +16,6 @@ import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
-import com.example.backstreet_cycles.utils.MapHelper
 import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
@@ -32,7 +28,6 @@ import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
@@ -45,10 +40,7 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
-import kotlinx.android.synthetic.main.layout_instructions.*
-import kotlinx.android.synthetic.main.layout_plan_journey.*
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
@@ -123,6 +115,16 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             if(price != null)
             {
                 prices.text = "Price: £${price}"
+            }
+        }
+
+        journeyViewModel.getIsReadyDockMutableLiveData().observe(this) { ready ->
+            if (ready) {
+                val points = setPoints(MapRepository.location)
+                journeyViewModel.fetchRoute(this, mapboxNavigation, points, "cycling", false)
+                startActivity(intent)
+                finish()
+                journeyViewModel.getIsReadyMutableLiveData().value = false
             }
         }
 
@@ -227,7 +229,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             clear()
             val points = setPoints(MapRepository.location)
 
-            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", false)
+            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", false)
         }
 
         santander_link.setOnClickListener {
@@ -247,16 +249,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         }
 
         finish_journey.setOnClickListener {
+            clear()
+            MapRepository.location.clear()
             journeyViewModel.clearListLocations()
             val intent = Intent(this, HomePageActivity::class.java)
             startActivity(intent)
+            finish()
         }
-
-
     }
-
-
-
 
     private fun initRouteLineUI() {
         routeLineResources = journeyViewModel.initialiseRouteLineResources()
@@ -303,9 +303,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
                 clear()
                 MapRepository.distances.clear()
                 MapRepository.durations.clear()
-                TflHelper.getDock(context = this)
-                finish()
-                startActivity(intent)
+                journeyViewModel.getDocks()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -313,7 +311,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     }
 
     private fun updateUI() {
-//        mapboxNavigation.setRoutes(currentRoute)
+
+        Log.i("currentRoute", currentRoute.size.toString())
+        mapboxNavigation.setRoutes(currentRoute)
         routesObserver.onRoutesChanged(JourneyRepository.result)
 
         journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0, mapView)
