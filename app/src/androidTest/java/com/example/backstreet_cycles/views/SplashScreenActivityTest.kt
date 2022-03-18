@@ -14,13 +14,13 @@ import org.junit.runner.RunWith
 class SplashScreenActivityTest{
     @Test
     fun test_splash_screen_activity_is_in_view() {
-        val activityScenario= ActivityScenario.launch(SplashScreenActivity::class.java)
+        ActivityScenario.launch(SplashScreenActivity::class.java)
         onView(withId(R.id.splashScreenActivity)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_progress_bar_is_in_view() {
-        val activityScenario= ActivityScenario.launch(SplashScreenActivity::class.java)
+        ActivityScenario.launch(SplashScreenActivity::class.java)
         onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
     }
 }
