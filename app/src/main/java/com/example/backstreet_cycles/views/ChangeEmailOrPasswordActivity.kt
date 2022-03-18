@@ -49,5 +49,4 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         finish()
     }
 
-
 }

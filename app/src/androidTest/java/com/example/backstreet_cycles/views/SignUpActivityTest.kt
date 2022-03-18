@@ -39,54 +39,49 @@ class SignUpActivityTest {
 
     @Test
     fun test_activity_is_in_view() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_title_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_create_account_title)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_first_name_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_email_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_email)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_password_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_password)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_confirmPassword_is_visible() {
-        val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.et_confirmPassword)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonSignUp_is_visible() {
-        val activityScenario=ActivityScenario.launch(SignUpActivity::class.java)
+        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
-
-
-
-
-
 }
