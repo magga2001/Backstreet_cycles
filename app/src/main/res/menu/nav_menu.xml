@@ -18,8 +18,8 @@
         android:icon="@drawable/ic_baseline_about"/>
 
     <item
-        android:id="@+id/help"
-        android:title="@string/help"
+        android:id="@+id/faq"
+        android:title="@string/FAQ"
         android:icon="@drawable/ic_baseline_help"/>
 
     <item

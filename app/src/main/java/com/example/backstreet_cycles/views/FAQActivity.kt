@@ -17,16 +17,6 @@ class FAQActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_faq)
 
-        expandBtn.setOnClickListener {
-            if (expandableLayout.visibility == View.GONE) {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.VISIBLE
-                expandBtn.text = "-"
-            } else {
-                TransitionManager.beginDelayedTransition(cardView, AutoTransition())
-                expandableLayout.visibility = View.GONE
-                expandBtn.text = "+"
-            }
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }
