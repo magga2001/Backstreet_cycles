@@ -29,8 +29,7 @@ class ChangeEmailOrPasswordActivityTest{
         logInRegisterViewModel= LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         ActivityScenario.launch(ChangeEmailOrPasswordActivity::class.java)
-        /*Espresso.onView(ViewMatchers.withId(R.id.nav_view)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.changeEmailOrPassword)).perform(ViewActions.click())*/
+
 
     }
     @Test
