@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
+            android:name=".views.JourneyHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.FAQActivity"
             android:parentActivityName=".views.HomePageActivity" />
         <activity

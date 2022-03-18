@@ -92,5 +92,6 @@
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
     <string name="from_to_">From To</string>
     <string name="done_journey">Done</string>
+    <string name="about_us">About us</string>
     <string name="add_stop_button" />
 </resources>
