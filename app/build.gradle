@@ -145,4 +145,7 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.9'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:8.1.1@aar'
 
+    //GIF Dependency
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
+
 }

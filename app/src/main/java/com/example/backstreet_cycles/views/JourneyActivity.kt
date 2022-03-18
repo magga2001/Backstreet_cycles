@@ -206,6 +206,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         start_navigation.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
         overview_journey.setOnClickListener {
@@ -230,6 +231,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             }
 
             startActivity(intent)
+            //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
 
         }
     }
@@ -368,5 +370,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         super.onBackPressed()
         clear()
         MapRepository.location.clear()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 }
