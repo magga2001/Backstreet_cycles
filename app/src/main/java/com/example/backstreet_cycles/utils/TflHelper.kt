@@ -3,11 +3,12 @@ package com.example.backstreet_cycles.utils
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.DTO.Dock
 import org.json.JSONArray
 
 class TflHelper() {
@@ -15,9 +16,16 @@ class TflHelper() {
     companion object
     {
         val docks = mutableListOf<Dock>()
+        val isReady = MutableLiveData<Boolean>()
+
+        init {
+            isReady.value = false
+        }
 
         fun getDock(context: Context)
         {
+            docks.clear()
+
             // Instantiate the RequestQueue.
             val queue = Volley.newRequestQueue(context)
             val url = context.getString(R.string.tfl_url)
@@ -57,9 +65,13 @@ class TflHelper() {
                 {
                     val dock = Dock(id,name,lat,lon,nbBikes,nbSpaces,nbDocks)
                     docks.add(dock)
-                    Log.i("Dock_station $i", dock.toString())
                 }
             }
+
+            isReady.postValue(true)
+
+            Log.i("Dock_station size", docks.size.toString())
+
         }
 
         private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean

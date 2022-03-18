@@ -176,8 +176,6 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var onPositionChangedListener: OnIndicatorPositionChangedListener
     private lateinit var routeLineResources: RouteLineResources
     private lateinit var mapboxNavigation: MapboxNavigation
-    private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    private lateinit var mAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -466,7 +464,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onDestroy()
 
         locationComponent.removeOnIndicatorPositionChangedListener(onPositionChangedListener)
-        MapboxNavigationProvider.destroy()
+//        MapboxNavigationProvider.destroy()
         navigationViewModel.finishMapboxReplayer()
 //        mapboxReplayer.finish()
         maneuverApi.cancel()
@@ -474,58 +472,8 @@ class NavigationActivity : AppCompatActivity() {
         routeLineView.cancel()
         speechApi.cancel()
         voiceInstructionsPlayer.shutdown()
+        mapboxNavigation.onDestroy()
     }
-
-//    private fun findRoute(destination: Point) {
-//        val originLocation = navigationLocationProvider.lastLocation
-//        val originPoint = originLocation?.let {
-//            Point.fromLngLat(it.longitude, it.latitude)
-//        } ?: return
-//
-//        // execute a route request
-//        // it's recommended to use the
-//        // applyDefaultNavigationOptions and applyLanguageAndVoiceUnitOptions
-//        // that make sure the route request is optimized
-//        // to allow for support of all of the Navigation SDK features
-//        mapboxNavigation.requestRoutes(
-//            RouteOptions.builder()
-//                .applyDefaultNavigationOptions()
-//                .applyLanguageAndVoiceUnitOptions(this)
-//                .coordinatesList(listOf(originPoint, destination))
-//                // provide the bearing for the origin of the request to ensure
-//                // that the returned route faces in the direction of the current user movement
-//                .bearingsList(
-//                    listOf(
-//                        Bearing.builder()
-//                            .angle(originLocation.bearing.toDouble())
-//                            .degrees(45.0)
-//                            .build(),
-//                        null
-//                    )
-//                )
-//                .layersList(listOf(mapboxNavigation.getZLevel(), null))
-//                .build(),
-//            object : RouterCallback {
-//                override fun onRoutesReady(
-//                    routes: List<DirectionsRoute>,
-//                    routerOrigin: RouterOrigin
-//                ) {
-//                    setRouteAndStartNavigation(routes)
-//                }
-//
-//                override fun onFailure(
-//                    reasons: List<RouterFailure>,
-//                    routeOptions: RouteOptions
-//                ) {
-//                    // no impl
-//                }
-//
-//                override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
-//                    // no impl
-//                }
-//            }
-//        )
-//    }
 
     override fun finish() {
         super.finish()

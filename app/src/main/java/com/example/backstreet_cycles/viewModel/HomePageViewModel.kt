@@ -7,7 +7,7 @@ import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository
@@ -27,6 +27,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val mapRepository: JourneyRepository = JourneyRepository(application)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = mapRepository.getIsReadyMutableLiveData()
+    private val isReadyDockMutableLiveData: MutableLiveData<Boolean> = locationRepository.getIsReadyMutableLiveData()
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -88,13 +89,23 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         mapRepository.checkPermission(context, activity)
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, overview:Boolean) {
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, info:Boolean) {
 
-        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, overview)
+        mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, info)
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun getIsDockReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyDockMutableLiveData
+    }
+
+    fun getDocks()
+    {
+        locationRepository.getDocks()
     }
 }

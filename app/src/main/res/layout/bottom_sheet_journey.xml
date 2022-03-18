@@ -46,6 +46,33 @@
                     android:text="Hire a bike" />
 
                 <TextView
+                    android:id="@+id/distances"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distances:"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/durations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Durations:"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/prices"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prices:"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="stops:"
@@ -66,5 +93,11 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <Button
+        android:id="@+id/finish_journey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Finish Journey" />
 
 </LinearLayout>

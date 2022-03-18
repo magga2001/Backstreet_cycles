@@ -16,10 +16,10 @@
         android:theme="@style/Theme.Backstreet_cycles">
         <activity
             android:name=".views.FAQActivity"
-            android:exported="false" />
+            android:parentActivityName=".views.HomePageActivity" />
         <activity
             android:name=".views.AboutActivity"
-            android:exported="false" />
+            android:parentActivityName=".views.HomePageActivity" />
         <activity
             android:name=".views.NavigationActivity"
             android:exported="false" />
