@@ -5,13 +5,12 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Locations
-import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.JourneyRepository
+import com.example.backstreet_cycles.model.LocationRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.example.backstreet_cycles.model.LocationRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -41,7 +40,6 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         journeyRepository = JourneyRepository(application, firestore)
-        journeyRepository = JourneyRepository(application)
         locationRepository = LocationRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
         isReadyDockMutableLiveData = locationRepository.getIsReadyMutableLiveData()
@@ -180,6 +178,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     fun getDocks()
     {
         locationRepository.getDocks()
+    }
+
+    fun getJourneyHistory(userDetails: Users) : MutableList<List<Locations>> {
+        return journeyRepository.getJourneyHistory(userDetails)
     }
 
 }

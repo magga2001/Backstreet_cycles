@@ -200,28 +200,26 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
-
-//                    if(this.javaClass == HomePageActivity::class.java) {
-//                        drawerLayout.close()
-//                    }
-//                    else {
-//                        startActivity(Intent(this, HomePageActivity::class.java))
-//                    }
                 }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
                 }
-//                R.id.plan_journey -> Toast.makeText(
-//                    applicationContext,
-//                    "clicked sync",
-//                    Toast.LENGTH_SHORT
-//                ).show()
+                R.id.journeyHistory -> {
+                    loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+                        if (userDetails != null){
+                            val journeys = journeyViewModel.getJourneyHistory(userDetails)
+                            Toast.makeText(application, journeys.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                R.id.currentJourney -> {}
                 R.id.about -> startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
                 R.id.help -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                 }
+
 
             }
             true
