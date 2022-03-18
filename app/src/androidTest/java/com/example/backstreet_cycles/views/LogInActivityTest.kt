@@ -15,13 +15,13 @@ import org.junit.runner.RunWith
 class LogInActivityTest{
     @Test
     fun test_activity_is_in_view() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_title_is_visible() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
     }
 
