@@ -29,32 +29,32 @@ class EditUserProfileActivityTest{
     }
     @Test
     fun test_activity_is_in_view() {
-        val activityScenario=ActivityScenario.launch(EditUserProfileActivity::class.java)
+        ActivityScenario.launch(EditUserProfileActivity::class.java)
         onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_title_is_visible() {
-        val activityScenario=ActivityScenario.launch(EditUserProfileActivity::class.java)
+        ActivityScenario.launch(EditUserProfileActivity::class.java)
         onView(withId(R.id.et_edit_profile_title)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonUpdateProfile_is_visible() {
-        val activityScenario=ActivityScenario.launch(EditUserProfileActivity::class.java)
+        ActivityScenario.launch(EditUserProfileActivity::class.java)
         onView(withId(R.id.buttonUpdateProfile)).check(matches(isDisplayed()))
 
     }
 
     @Test
     fun test_et_first_name_is_visible() {
-        val activityScenario = ActivityScenario.launch(EditUserProfileActivity::class.java)
+        ActivityScenario.launch(EditUserProfileActivity::class.java)
         onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
-        val activityScenario = ActivityScenario.launch(EditUserProfileActivity::class.java)
+        ActivityScenario.launch(EditUserProfileActivity::class.java)
         onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
     }
 

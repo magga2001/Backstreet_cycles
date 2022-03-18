@@ -34,7 +34,6 @@ class LogInActivityTest{
         if (firebaseAuth.currentUser != null){
             userRepository.logout()
         }
-
     }
 
     @Test
@@ -51,48 +50,46 @@ class LogInActivityTest{
 
     @Test
     fun test_buttonCreateAccount_is_visible() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
 
     }
 
     @Test
     fun test_buttonLogin_is_visible() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_email_is_visible() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.et_email)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_password_is_visible() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.et_password)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_navigation_createAccount() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).perform(click())
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
 
     }
     @Test
     fun test_backPress_onLogInActivity() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         pressBack()
         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-
-
     }
 
     @Test
     fun test_backPress_toLogInActivity() {
-        val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
+        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).perform(click())
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
         pressBack()

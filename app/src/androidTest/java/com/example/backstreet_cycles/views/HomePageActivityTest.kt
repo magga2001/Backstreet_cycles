@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.views
 
 import android.app.Application
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -21,16 +20,10 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.junit.MockitoRule
 
 class HomePageActivityTest {
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel;
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
     @Before
     fun setUp() {
