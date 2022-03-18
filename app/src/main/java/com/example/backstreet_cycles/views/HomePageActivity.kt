@@ -4,7 +4,6 @@ package com.example.backstreet_cycles.views
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
@@ -20,14 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.MapRepository
-import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.viewModel.PlanJourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -126,12 +123,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
+        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
+            if(ready)
+            {
+                fetchPoints()
+            }
+        }
+
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-
-
     }
 
     private fun IncrementAndDecrementUsersFunc(){
@@ -261,7 +263,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-            fetchPoints()
+            homePageViewModel.getDocks()
             Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
@@ -469,8 +471,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun fetchPoints()
     {
-//        MapRepository.location.add(0, Locations("Current Location", 51.5390,-0.1426))
-//        MapRepository.location.clear()
+        MapRepository.wayPoints.clear()
+        MapRepository.currentRoute.clear()
+        MapRepository.maneuvers.clear()
+
         MapRepository.location.addAll(stops)
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
@@ -484,14 +488,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
-        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", true)
-        TflHelper.getDock(applicationContext)
+        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently useing." +
+        builder.setMessage("There is already a planned journey that you are currently using." +
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->

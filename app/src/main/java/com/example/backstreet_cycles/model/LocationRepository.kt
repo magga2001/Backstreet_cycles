@@ -6,8 +6,8 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.DTO.Locations
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -18,8 +18,12 @@ import timber.log.Timber
 
 class LocationRepository(private val application: Application) {
 
+    companion object
+    {
+        var docks = mutableListOf<Dock>()
+    }
+
     private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
-    private var docks = mutableListOf<Dock>()
     private var stops: MutableList<Locations>
     private val touristAttractions = mutableListOf<Locations>()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -125,6 +129,7 @@ class LocationRepository(private val application: Application) {
     }
 
     fun getDocks(): MutableList<Dock> {
+        docks.clear()
         loadDocks()
         return docks
     }

@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -13,10 +12,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.utils.MapHelper
-import com.mapbox.geojson.Point
+import com.example.backstreet_cycles.utils.PlannerHelper
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val plannerInterface: PlannerInterface): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
@@ -55,9 +53,6 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         }
     }
 
-    /**
-     * Test
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_plan_journey, parent, false)
         val viewHolder = ViewHolder(view)
@@ -65,11 +60,6 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         return viewHolder
     }
 
-    /**
-     * Test
-     */
-
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val location = locations[position]
@@ -83,54 +73,35 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav1.setOnClickListener{
 
-            val currentPoint = Point.fromLngLat(location.lon, location.lat)
+            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            val findClosestDock = MapHelper.getClosestDocks(
-                Point.fromLngLat(
-                    currentPoint.longitude(),
-                    currentPoint.latitude()
-                ),
-                1
-            )
-            val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
-
-            plannerInterface.onSelectedJourney(location,"walking", mutableListOf(currentPoint, pickUpDock))
+            plannerInterface.onSelectedJourney(location,"walking", mutableListOf(
+                journeyPoints["startingPoint"]!!,
+                journeyPoints["pickUpPoint"]!!
+            ))
         }
 
         holder.setNav2.setOnClickListener {
 
-            val currentPoint = Point.fromLngLat(location.lon, location.lat)
+            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            val findClosestDock = MapHelper.getClosestDocks(
-                Point.fromLngLat(
-                    currentPoint.longitude(),
-                    currentPoint.latitude()
-                ),
-                1
-            )
-            val pickUpDock = Point.fromLngLat(findClosestDock.lon, findClosestDock.lat)
-
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat), 1)
-            val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
-
-            plannerInterface.onSelectedJourney(location, "cycling", mutableListOf(pickUpDock,dropOffDock))
+            plannerInterface.onSelectedJourney(location,"cycling", mutableListOf(
+                journeyPoints["pickUpPoint"]!!,
+                journeyPoints["dropOffPoint"]!!
+            ))
         }
 
         holder.setNav3.setOnClickListener {
 
-            val findClosestDropOff = MapHelper.getClosestDocks(Point.fromLngLat(locations[position+1].lon, locations[position+1].lat), 1)
-            val dropOffDock = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
-            val destination = Point.fromLngLat(locations[position+1].lon, locations[position+1].lat)
+            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            plannerInterface.onSelectedJourney(location, "walking", mutableListOf(dropOffDock,destination))
+            plannerInterface.onSelectedJourney(location,"walking", mutableListOf(
+                journeyPoints["dropOffPoint"]!!,
+                journeyPoints["destination"]!!
+            ))
         }
     }
 
-
-
-    /**
-     * Test
-     */
     override fun getItemCount(): Int {
         return locations.size - 1
     }

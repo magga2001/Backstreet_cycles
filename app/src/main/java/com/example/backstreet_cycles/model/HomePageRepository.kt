@@ -8,7 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory

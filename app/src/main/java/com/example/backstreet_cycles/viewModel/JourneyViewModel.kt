@@ -3,14 +3,15 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Users
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.example.backstreet_cycles.model.LocationRepository
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -29,12 +30,24 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 class JourneyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val journeyRepository: JourneyRepository
+    private val locationRepository: LocationRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private val isReadyDockMutableLiveData: MutableLiveData<Boolean>
+    private val distanceMutableLiveData: MutableLiveData<String>
+    private val durationMutableLiveData: MutableLiveData<String>
+    private val priceMutableLiveData: MutableLiveData<String>
+
     private val firestore = Firebase.firestore
 
     init {
         journeyRepository = JourneyRepository(application, firestore)
+        journeyRepository = JourneyRepository(application)
+        locationRepository = LocationRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
+        isReadyDockMutableLiveData = locationRepository.getIsReadyMutableLiveData()
+        distanceMutableLiveData = journeyRepository.getDistanceMutableLiveData()
+        durationMutableLiveData = journeyRepository.getDurationMutableLiveData()
+        priceMutableLiveData = journeyRepository.getPriceMutableLiveData()
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
@@ -42,9 +55,9 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseMapboxNavigation()
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, overview: Boolean)
+    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, info: Boolean)
     {
-        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, overview)
+        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, info)
     }
 
     fun initialiseRouteLineResources(): RouteLineResources
@@ -124,6 +137,21 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return isReadyMutableLiveData
     }
 
+    fun getDistanceMutableLiveData(): MutableLiveData<String>
+    {
+        return distanceMutableLiveData
+    }
+
+    fun getDurationMutableLiveData(): MutableLiveData<String>
+    {
+        return durationMutableLiveData
+    }
+
+    fun getPriceMutableLiveData(): MutableLiveData<String>
+    {
+        return priceMutableLiveData
+    }
+
     fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {
         return journeyRepository.addLocationSharedPreferences(locations)
     }
@@ -142,6 +170,16 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) {
         journeyRepository.addJourneyToJourneyHistory(locations, userDetails)
+    }
+
+    fun getIsReadyDockMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyDockMutableLiveData
+    }
+
+    fun getDocks()
+    {
+        locationRepository.getDocks()
     }
 
 }

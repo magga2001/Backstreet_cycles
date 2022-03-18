@@ -5,13 +5,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.distinctUntilChanged
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.DTO.Maneuver
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
 import com.example.backstreet_cycles.dto.Users
@@ -59,6 +60,7 @@ import okhttp3.internal.wait
 import org.json.JSONObject
 import timber.log.Timber
 import java.lang.reflect.Type
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 class JourneyRepository(private val application: Application,
@@ -66,6 +68,9 @@ class JourneyRepository(private val application: Application,
 
     private var sharedPref: SharedPreferences
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private val distanceMutableLiveData: MutableLiveData<String>
+    private val durationMutableLiveData: MutableLiveData<String>
+    private val priceMutableLiveData: MutableLiveData<String>
     private lateinit var routeOptions: RouteOptions
     private val dataBase = fireStore
     lateinit var pointAnnotationManager: PointAnnotationManager
@@ -80,6 +85,9 @@ class JourneyRepository(private val application: Application,
         loggedInViewModel = LoggedInViewModel(application)
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
+        distanceMutableLiveData = MutableLiveData()
+        durationMutableLiveData = MutableLiveData()
+        priceMutableLiveData = MutableLiveData()
         sharedPref = application.getSharedPreferences(
             R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
     }
@@ -150,63 +158,30 @@ class JourneyRepository(private val application: Application,
                    mapboxNavigation: MapboxNavigation,
                    points: MutableList<Point>,
                    profile: String,
-                   overview: Boolean)
+                   info: Boolean)
     {
 
-//        currentRoute.clear()
-//        maneuvers.clear()
         location.distinct()
         points.distinct()
 
-        //Act as current location first
-//        location.add(0, Locations("Camden Town", 51.5390, -0.1426))
-//        points.add(0, Point.fromLngLat(location[0].lon, location[0].lat))
-
-//        val routeOptions = when(profile)
-//        {
-//            "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
-//            "cycling" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-//            else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_DRIVING)
-//        }
-
-//        Add your current location
-//        points.add(0, Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude))
-
-
-
-        wayPoints.addAll(points)
-        centerPoint = MapHelper.getCenterViewPoint(points)
-
-        if(overview)
+        if(!info)
         {
+            distances.clear()
+            durations.clear()
+            wayPoints.addAll(points)
+            centerPoint = MapHelper.getCenterViewPoint(points)
+
             routeOptions = when(profile)
             {
                 "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
                 else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
             }
 
-            requestRoute(mapboxNavigation, routeOptions,mainPath = true, lastPoint = true)
-        }
-        else
+            requestRoute(mapboxNavigation, routeOptions, info)
+        }else
         {
-            val startWalk = points.slice(0 until 2)
-            val cycling = points.slice(1 until 3)
-            val endWalk = points.slice(2 until 4)
-
-            runBlocking {
-
-                async {
-                    routeOptions = customiseRouteOptions(context, endWalk, DirectionsCriteria.PROFILE_WALKING)
-                    requestRoute(mapboxNavigation, routeOptions, mainPath = false, lastPoint = false)
-
-                    routeOptions = customiseRouteOptions(context, startWalk, DirectionsCriteria.PROFILE_WALKING)
-                    requestRoute(mapboxNavigation, routeOptions, mainPath = false,lastPoint = false)
-                }.await()
-
-                routeOptions = customiseRouteOptions(context, cycling, DirectionsCriteria.PROFILE_CYCLING)
-//                routeOptions.toBuilder().applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING).build()
-                requestRoute(mapboxNavigation, routeOptions,mainPath = true,lastPoint = true)
-            }
+            routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            requestRoute(mapboxNavigation, routeOptions, info)
         }
     }
 
@@ -265,8 +240,9 @@ class JourneyRepository(private val application: Application,
             .build()
     }
 
-    private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, mainPath: Boolean,lastPoint: Boolean)
+    private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, info: Boolean)
     {
+
         Log.i("retrieving the route", "success")
 
         mapboxNavigation.requestRoutes(
@@ -288,18 +264,13 @@ class JourneyRepository(private val application: Application,
                     val fastestRoute = MapHelper.getFastestRoute(routes)
                     getInstructions(fastestRoute)
 
-                    if(mainPath)
+                    if(info)
                     {
-                        Log.i("bruh", "Cycling")
-                        currentRoute.add(0, fastestRoute)
-                    }else
-                    {
-                        Log.i("bruh", "Walking")
-                        currentRoute.add(MapHelper.getFastestRoute(routes))
+                        getJourneyInfo(fastestRoute)
                     }
-
-                    if(lastPoint)
+                    else
                     {
+                        currentRoute.add(MapHelper.getFastestRoute(routes))
                         isReadyMutableLiveData.postValue(true)
                     }
                 }
@@ -322,6 +293,33 @@ class JourneyRepository(private val application: Application,
                 }
             }
         )
+    }
+
+    private fun getJourneyInfo(route: DirectionsRoute)
+    {
+        val minutesRate = 30
+
+        Log.i("DistanceJSON", route.distance().toString())
+        Log.i("DurationJSON", route.duration().toString())
+
+        distances.add(route.distance())
+        durations.add(route.duration())
+
+        var prices = ceil(((((durations.sum()/60) - 30) / minutesRate))) * 2
+
+        if(prices < 0)
+        {
+            prices = 0.0
+        }
+
+        if(prices.toInt() % 2 != 0)
+        {
+            prices++
+        }
+
+        distanceMutableLiveData.postValue(distances.sum().toString())
+        durationMutableLiveData.postValue((durations.sum()/60).toString())
+        priceMutableLiveData.postValue(prices.toString())
     }
 
     fun getInstructions(route:DirectionsRoute)
@@ -356,6 +354,8 @@ class JourneyRepository(private val application: Application,
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView) {
+
+        Log.i("wayPoints", wayPoints.size.toString())
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         val raw_bitmap = BitmapHelper.bitmapFromDrawableRes(context, R.drawable.dock_station) as Bitmap
         val bitmap = Bitmap.createScaledBitmap(raw_bitmap, 150, 150, false)
@@ -445,5 +445,20 @@ class JourneyRepository(private val application: Application,
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun getDistanceMutableLiveData(): MutableLiveData<String>
+    {
+        return distanceMutableLiveData
+    }
+
+    fun getDurationMutableLiveData(): MutableLiveData<String>
+    {
+        return durationMutableLiveData
+    }
+
+    fun getPriceMutableLiveData(): MutableLiveData<String>
+    {
+        return priceMutableLiveData
     }
 }

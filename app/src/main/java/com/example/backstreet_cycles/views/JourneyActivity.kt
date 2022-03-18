@@ -7,20 +7,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ExpandableListAdapter
-import android.widget.ExpandableListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
-import com.example.backstreet_cycles.utils.MapHelper
-import com.example.backstreet_cycles.utils.TflHelper
+import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -32,7 +28,6 @@ import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
@@ -45,9 +40,7 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
-import kotlinx.android.synthetic.main.layout_plan_journey.*
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
@@ -89,14 +82,8 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
-    //    private lateinit var mAdapter: PlannerAdapter
     private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
-
-    // ExpandableListView variables:
-    private var expandableListView: ExpandableListView? = null
-    private var expandableListAdapter: ExpandableListAdapter? = null
-    private var titleList: List<String>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,32 +94,61 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         loggedInViewModel = ViewModelProvider(this).get(LoggedInViewModel::class.java)
 
         Log.i("mutable live data", journeyViewModel.getIsReadyMutableLiveData().value.toString())
+        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                Log.i("Ready to update UI", "Success")
                 updateUI()
+                journeyViewModel.getIsReadyMutableLiveData().value = false
+            }
+        }
+
+        journeyViewModel.getDistanceMutableLiveData().observe(this){ distance ->
+            if(distance != null)
+            {
+                distances.text = "Distance: ${distance} metres"
+            }
+        }
+
+        journeyViewModel.getDurationMutableLiveData().observe(this){ duration ->
+            if(duration != null)
+            {
+                durations.text = "Duration: ${duration} minutes"
+            }
+        }
+
+        journeyViewModel.getPriceMutableLiveData().observe(this){ price ->
+            if(price != null)
+            {
+                prices.text = "Price: £${price}"
+            }
+        }
+
+        journeyViewModel.getIsReadyDockMutableLiveData().observe(this) { ready ->
+            if (ready) {
+                val points = setPoints(MapRepository.location)
+                journeyViewModel.fetchRoute(this, mapboxNavigation, points, "cycling", false)
+                startActivity(intent)
+                finish()
                 journeyViewModel.getIsReadyMutableLiveData().value = false
             }
         }
 
         journeyViewModel.checkPermission(this, activity = this)
 
-
         mapboxMap = mapView.getMapboxMap()
-//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
-//        init()
+//        MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
     }
 
     override fun onStart() {
         super.onStart()
-        MapboxNavigationProvider.destroy()
+//        MapboxNavigationProvider.destroy()
+        PlannerHelper.calcBicycleRental(1, plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
     }
 
     private fun init() {
-
         initStyle()
         initRouteLineUI()
         initObservers()
@@ -218,7 +234,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             clear()
             val points = setPoints(MapRepository.location)
 
-            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "walking", true)
+            journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", false)
         }
 
         santander_link.setOnClickListener {
@@ -233,6 +249,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
                     setPackage("com.android.vending")
                 }
             }
+
             startActivity(intent)
         }
 
@@ -240,20 +257,18 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             loggedInViewModel.getUserDetails()
             loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
                 if (userDetails != null){
+                    clear()
+                    MapRepository.location.clear()
                     journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
                     journeyViewModel.clearListLocations()
                     val intent = Intent(this, HomePageActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
             }
 
         }
-
-
     }
-
-
-
 
     private fun initRouteLineUI() {
         routeLineResources = journeyViewModel.initialiseRouteLineResources()
@@ -297,9 +312,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.reload_button -> {
-                TflHelper.getDock(context = this)
-                finish()
-                startActivity(intent)
+                clear()
+                MapRepository.distances.clear()
+                MapRepository.durations.clear()
+                journeyViewModel.getDocks()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -307,7 +323,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     }
 
     private fun updateUI() {
-//        mapboxNavigation.setRoutes(currentRoute)
+
+        Log.i("currentRoute", currentRoute.size.toString())
+        mapboxNavigation.setRoutes(currentRoute)
         routesObserver.onRoutesChanged(JourneyRepository.result)
 
         journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0, mapView)
@@ -339,39 +357,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 //        mapboxNavigation.onDestroy()
     }
 
-    override fun onSelectedStop(location: Locations) {
-
-        val currentPoint = Point.fromLngLat(-0.1426, 51.5390)
-
-        val stop = Point.fromLngLat(location.lon, location.lat)
-
-        val startDock = MapHelper.getClosestDocks(
-            Point.fromLngLat(
-                currentPoint.longitude(),
-                currentPoint.latitude()
-            ),
-            1
-        )
-        val endDock = MapHelper.getClosestDocks(stop, 1)
-        val pickUpDock = Point.fromLngLat(startDock.lon, startDock.lat)
-        val dropOffDock = Point.fromLngLat(endDock.lon, endDock.lat)
-
+    override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {
         clear()
-
-        journeyViewModel.fetchRoute(
-            context = this,
-            mapboxNavigation,
-            mutableListOf(currentPoint, pickUpDock, dropOffDock, stop),
-            "walking",
-            false
-        )
+        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, false)
     }
 
-    override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {
-        Log.i("location name", location.name)
-
-        clear()
-        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, profile, true)
+    override fun onFetchJourney(points : MutableList<Point>) {
+        Log.i("fetching distance", "Success")
+        journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
@@ -392,5 +385,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         super.onBackPressed()
         clear()
         MapRepository.location.clear()
+        finish()
     }
 }
