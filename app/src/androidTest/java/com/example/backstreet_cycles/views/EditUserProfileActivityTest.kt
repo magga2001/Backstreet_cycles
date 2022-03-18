@@ -22,7 +22,7 @@ class EditUserProfileActivityTest{
     @Before
     fun setUp() {
         logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("msjanbey@gmail.com","123456")
+        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
 

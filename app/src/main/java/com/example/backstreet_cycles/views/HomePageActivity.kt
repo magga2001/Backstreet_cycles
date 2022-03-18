@@ -237,7 +237,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
         nextPageButton  = findViewById(R.id.nextPageButton)
-        nextPageButton.isEnabled = false
+        nextPageButton.isEnabled = true
 
         createListOfItems()
         itemTouchMethods()
@@ -274,6 +274,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun createListOfItems(){
         homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        homePageViewModel.addStop(Locations("BackStreet Cyclist Hub", 51.5014, -0.1419))
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
@@ -497,7 +498,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently useing." +
+        builder.setMessage("There is already a planned journey that you are currently using." +
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->

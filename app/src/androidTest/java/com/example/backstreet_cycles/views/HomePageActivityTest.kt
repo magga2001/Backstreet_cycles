@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.views
 
+import android.app.Application
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -17,18 +19,27 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.MockitoRule
 
 class HomePageActivityTest {
-
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel;
 
     @Before
     fun setUp() {
         GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
         GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
         GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+        logInRegisterViewModel= LogInRegisterViewModel(Application())
+        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+
     }
 
     @Test
@@ -87,20 +98,9 @@ class HomePageActivityTest {
     }
 
     @Test
-    fun test_currentLocationbtn_is_not_clickable(){
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.myLocationButton)).check(matches(isNotClickable()))
-    }
-    @Test
     fun test_nextPage_is_disabled(){
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
-    }
-
-    @Test
-    fun test_nextPage_is_not_clickable(){
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.nextPageButton)).check(matches(isNotClickable()))
     }
 
     @Test
@@ -272,7 +272,7 @@ class HomePageActivityTest {
     fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
     fun ViewInteraction.isInvisible() = getViewAssertion(ViewMatchers.Visibility.INVISIBLE)
     private fun getViewAssertion(visibility: ViewMatchers.Visibility): ViewAssertion? {
-        return ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility))
+    return ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility))
     }
 
     @Test
@@ -285,4 +285,10 @@ class HomePageActivityTest {
         pressBack()
         onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
     }
+
+//    @Test
+//    fun testingshit(){
+//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()
+//    }
+
 }
