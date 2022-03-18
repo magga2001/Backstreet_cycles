@@ -7,6 +7,7 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     EditUserProfileActivityTest::class,
     HomePageActivityTest::class,
+    JourneyActivityTest::class,
     LogInActivityTest::class,
     NavMenuTest::class,
     SignUpActivityTest::class,

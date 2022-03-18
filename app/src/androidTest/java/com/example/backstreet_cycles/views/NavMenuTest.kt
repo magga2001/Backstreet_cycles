@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -73,14 +74,14 @@ class NavMenuTest {
     }
 
     /*@Test
-    fun test_aboutButton_???()
+    fun test_aboutButton_to_aboutActivity()
     {
         val activityScenario = ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.nav_view)).perform(click())
         onView(withId(R.id.about)).perform(ViewActions.click())
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
-    }
-     */
+    }*/
+
 
     @Test
     fun test_nav_showUserName(){
