@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Users
+import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -13,11 +12,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.utils.MapHelper
 import com.example.backstreet_cycles.utils.PlannerHelper
-import com.mapbox.geojson.Point
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val plannerInterface: PlannerInterface): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 

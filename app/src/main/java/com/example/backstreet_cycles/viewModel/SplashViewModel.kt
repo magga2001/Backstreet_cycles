@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.LocationRepository
 
 class SplashViewModel(application: Application) : AndroidViewModel(application) {

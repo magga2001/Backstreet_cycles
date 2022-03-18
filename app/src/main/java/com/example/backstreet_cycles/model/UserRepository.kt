@@ -5,7 +5,7 @@ import android.content.ContentValues.TAG
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Users
+import com.example.backstreet_cycles.DTO.Users
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

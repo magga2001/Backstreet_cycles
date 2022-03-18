@@ -1,6 +1,6 @@
 package com.example.backstreet_cycles.utils
 
-import com.example.backstreet_cycles.dto.Dock
+import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.model.LocationRepository
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point

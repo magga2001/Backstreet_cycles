@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Maneuver
+import com.example.backstreet_cycles.DTO.Maneuver
 
 
 class ManeuverAdapter(private val context: Context, private var maneuvers: List<Maneuver>): RecyclerView.Adapter<ManeuverAdapter.ViewHolder>() {

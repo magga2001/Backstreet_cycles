@@ -4,12 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.dto.Locations
-import com.example.backstreet_cycles.dto.Maneuver
+import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.DTO.Maneuver
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.example.backstreet_cycles.utils.MapHelper
 import com.google.common.reflect.TypeToken
@@ -42,8 +41,6 @@ import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.lang.reflect.Type
 import kotlin.math.ceil

@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.utils
 
-import android.util.Log
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.MapRepository
 import com.mapbox.geojson.Point

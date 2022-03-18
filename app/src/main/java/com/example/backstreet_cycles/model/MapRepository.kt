@@ -8,8 +8,8 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import com.example.backstreet_cycles.dto.Locations
-import com.example.backstreet_cycles.dto.Maneuver
+import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.DTO.Maneuver
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions

@@ -7,8 +7,7 @@ import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Dock
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository

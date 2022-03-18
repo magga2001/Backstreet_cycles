@@ -3,10 +3,9 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository
 import com.mapbox.geojson.Point
