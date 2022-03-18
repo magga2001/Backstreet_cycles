@@ -27,7 +27,7 @@ class NavMenuTest {
     @Before
     fun setUp() {
         logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("msjanbey@gmail.com","123456")
+        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
 

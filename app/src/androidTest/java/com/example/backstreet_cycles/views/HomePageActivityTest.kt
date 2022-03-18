@@ -19,6 +19,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,12 +30,16 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.junit.MockitoRule
 
 class HomePageActivityTest {
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel;
 
     @Before
     fun setUp() {
         GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
         GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
         GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+        logInRegisterViewModel= LogInRegisterViewModel(Application())
+        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+
     }
 
     @Test

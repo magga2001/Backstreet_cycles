@@ -7,12 +7,36 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.GrantPermissionRule
+import com.google.firebase.auth.FirebaseUser
+
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.model.UserRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import android.app.Application
+
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class LogInActivityTest{
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val userRepository: UserRepository =
+        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+
+
+    @Before
+    fun setUp() {
+        if (firebaseAuth.currentUser != null){
+            userRepository.logout()
+        }
+
+    }
+
     @Test
     fun test_activity_is_in_view() {
         ActivityScenario.launch(LogInActivity::class.java)

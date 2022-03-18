@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.views
 
+import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -8,6 +9,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.model.UserRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -16,6 +22,20 @@ import org.junit.runner.RunWith
 
 
 class SignUpActivityTest {
+
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val userRepository: UserRepository =
+        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+
+
+    @Before
+    fun setUp() {
+        if (firebaseAuth.currentUser != null){
+            userRepository.logout()
+        }
+
+    }
 
     @Test
     fun test_activity_is_in_view() {
