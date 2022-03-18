@@ -498,7 +498,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently useing." +
+        builder.setMessage("There is already a planned journey that you are currently using." +
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->

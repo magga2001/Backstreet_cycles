@@ -267,7 +267,7 @@ class HomePageActivityTest {
     fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
     fun ViewInteraction.isInvisible() = getViewAssertion(ViewMatchers.Visibility.INVISIBLE)
     private fun getViewAssertion(visibility: ViewMatchers.Visibility): ViewAssertion? {
-        return ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility))
+    return ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility))
     }
 
     @Test
