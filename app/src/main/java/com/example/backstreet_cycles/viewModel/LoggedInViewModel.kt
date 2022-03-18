@@ -7,6 +7,7 @@ import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -50,4 +51,8 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
+
+//    suspend fun getUser(): QuerySnapshot {
+//        return userRepository.getUser()
+//    }
 }

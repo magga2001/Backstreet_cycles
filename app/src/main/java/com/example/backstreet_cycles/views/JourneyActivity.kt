@@ -22,6 +22,7 @@ import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.MapHelper
 import com.example.backstreet_cycles.utils.TflHelper
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapboxMap
@@ -85,6 +86,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var mapboxMap: MapboxMap
     private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var journeyViewModel: JourneyViewModel
+    private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     //    private lateinit var mAdapter: PlannerAdapter
@@ -102,6 +104,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         setContentView(R.layout.activity_journey)
 
         journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
+        loggedInViewModel = ViewModelProvider(this).get(LoggedInViewModel::class.java)
 
         Log.i("mutable live data", journeyViewModel.getIsReadyMutableLiveData().value.toString())
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
@@ -234,9 +237,16 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         }
 
         finish_journey.setOnClickListener {
-            journeyViewModel.clearListLocations()
-            val intent = Intent(this, HomePageActivity::class.java)
-            startActivity(intent)
+            loggedInViewModel.getUserDetails()
+            loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+                if (userDetails != null){
+                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
+                    journeyViewModel.clearListLocations()
+                    val intent = Intent(this, HomePageActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+
         }
 
 

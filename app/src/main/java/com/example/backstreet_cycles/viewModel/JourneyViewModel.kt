@@ -7,7 +7,10 @@ import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.dto.Locations
+import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.JourneyRepository
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -27,9 +30,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     private val journeyRepository: JourneyRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
+    private val firestore = Firebase.firestore
 
     init {
-        journeyRepository = JourneyRepository(application)
+        journeyRepository = JourneyRepository(application, firestore)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
     }
 
@@ -134,6 +138,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     fun clearListLocations(){
         journeyRepository.clearListLocations()
+    }
+
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) {
+        journeyRepository.addJourneyToJourneyHistory(locations, userDetails)
     }
 
 }

@@ -1,18 +1,28 @@
 package com.example.backstreet_cycles.model
 
 import android.app.Application
+import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.distinctUntilChanged
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Locations
 import com.example.backstreet_cycles.dto.Maneuver
+import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.viewModel.HomePageViewModel
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
@@ -42,19 +52,24 @@ import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.wait
 import org.json.JSONObject
+import timber.log.Timber
 import java.lang.reflect.Type
 import kotlin.math.roundToInt
 
-class JourneyRepository(private val application: Application): MapRepository(application) {
+class JourneyRepository(private val application: Application,
+                        fireStore: FirebaseFirestore,): MapRepository(application) {
 
-    private lateinit var sharedPref: SharedPreferences
+    private var sharedPref: SharedPreferences
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
     private lateinit var routeOptions: RouteOptions
-
+    private val dataBase = fireStore
     lateinit var pointAnnotationManager: PointAnnotationManager
+    private val loggedInViewModel: LoggedInViewModel
 
     companion object
     {
@@ -62,6 +77,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     init {
+        loggedInViewModel = LoggedInViewModel(application)
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
         sharedPref = application.getSharedPreferences(
@@ -195,7 +211,6 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-//        sharedPref =
 
         if (getListLocations().isEmpty()){
             overrideListLocation(locations)
@@ -390,6 +405,41 @@ class JourneyRepository(private val application: Application): MapRepository(app
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
         mapboxNavigation.unregisterLocationObserver(locationObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
+    }
+
+//    In development
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>,userDetails: Users) =
+    CoroutineScope(Dispatchers.IO).launch {
+
+        val user =  dataBase
+            .collection("users")
+            .whereEqualTo("email", userDetails.email)
+            .get()
+            .await()
+        val gson = Gson()
+        val jsonObject = gson.toJson(locations)
+        userDetails.journeyHistory.add(jsonObject)
+
+        if (user.documents.isNotEmpty()) {
+            for (document in user) {
+
+                try {
+                    dataBase.collection("users")
+                        .document(document.id)
+                        .update("journeyHistory",userDetails.journeyHistory)
+                }
+                catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+
+            }
+        }
+
+
+
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
