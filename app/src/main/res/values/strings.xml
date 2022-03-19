@@ -96,4 +96,5 @@
     <string name="current_journey">Current Jounrney</string>
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
+    <string name="recent_journeys">Recent Journeys</string>
 </resources>

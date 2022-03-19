@@ -226,11 +226,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
-//                R.id.plan_journey -> Toast.makeText(
-//                    applicationContext,
-//                    "clicked sync",
-//                    Toast.LENGTH_SHORT
-//                ).show()
                 R.id.about -> {
                     startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -242,16 +237,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
 
                 R.id.journeyHistory -> {
-                    loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
-                        if (userDetails != null){
-                            val journeys = journeyViewModel.getJourneyHistory(userDetails)
-                            Toast.makeText(application, journeys.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                        val intent = Intent(this@HomePageActivity, JourneyHistoryActivity::class.java)
+                        startActivity(intent)
+                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
                 R.id.currentJourney -> {}
-                R.id.about -> startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
-                R.id.help -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -504,6 +494,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.onDestroy()
     }
 
+//    How to make an util class for the functions below
+
     private fun fetchPoints()
     {
         MapRepository.wayPoints.clear()
@@ -545,7 +537,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             fetchRoute(listPoints)
         }
         builder.show()
-
     }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
