@@ -246,6 +246,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     MapRepository.location = listOfLocations
                     val listPoints = setPoints(listOfLocations)
                     fetchRoute(listPoints)
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
