@@ -317,7 +317,7 @@ class JourneyRepository(private val application: Application,
 
         distanceMutableLiveData.postValue(distances.sum().toString())
         durationMutableLiveData.postValue((durations.sum()/60).toString())
-        priceMutableLiveData.postValue(prices.toString())
+        priceMutableLiveData.postValue((prices*numberOfUsers).toString())
     }
 
     fun getInstructions(route:DirectionsRoute)
