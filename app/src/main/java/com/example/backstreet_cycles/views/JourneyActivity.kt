@@ -17,6 +17,7 @@ import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.PlannerHelper
+import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -80,18 +81,22 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var loggedInViewModel: LoggedInViewModel
+    private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
 
-        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
-        loggedInViewModel = ViewModelProvider(this).get(LoggedInViewModel::class.java)
+        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
+        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
+        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
 
         Log.i("mutable live data", journeyViewModel.getIsReadyMutableLiveData().value.toString())
         journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
@@ -143,9 +148,11 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onStart() {
         super.onStart()
-//        MapboxNavigationProvider.destroy()
-        PlannerHelper.calcBicycleRental(1, plannerInterface = this)
+        journeyViewModel.setNumberOfUsers(intent.getIntExtra("NUM_USERS",1))
+        PlannerHelper.calcBicycleRental(journeyViewModel.getNumberOfUsers(), plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+
+
     }
 
     private fun init() {
@@ -300,6 +307,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         nAdapter.getAllBoxesCheckedMutableLiveData()
             .observe(this) {allBoxesChecked ->
                 finish_journey.isEnabled = allBoxesChecked
+            }
+        nAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
     }
 
