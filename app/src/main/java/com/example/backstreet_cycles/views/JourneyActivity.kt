@@ -308,6 +308,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             .observe(this) {allBoxesChecked ->
                 finish_journey.isEnabled = allBoxesChecked
             }
+        nAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

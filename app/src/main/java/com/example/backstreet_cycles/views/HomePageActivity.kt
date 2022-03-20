@@ -290,6 +290,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         })
 
         myLocationButton.setOnClickListener {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
