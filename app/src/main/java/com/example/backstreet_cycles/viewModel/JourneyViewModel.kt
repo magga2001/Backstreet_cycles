@@ -184,4 +184,12 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.getJourneyHistory(userDetails)
     }
 
+    fun getNumberOfUsers():Int {
+        return journeyRepository.getNumberOfUsers()
+    }
+
+    fun setNumberOfUsers(numUsers: Int) {
+        journeyRepository.setNumberOfUsers(numUsers)
+    }
+
 }

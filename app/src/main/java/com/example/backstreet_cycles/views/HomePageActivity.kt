@@ -130,7 +130,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
-//                homePageViewModel.setNumberOfUsersMutableLiveData(numberOfUsers)
                 fetchPoints()
             }
         }

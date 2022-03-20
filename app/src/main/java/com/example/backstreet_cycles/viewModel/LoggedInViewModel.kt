@@ -13,8 +13,7 @@ import com.google.firebase.ktx.Firebase
 
 class LoggedInViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userRepository: UserRepository =
-        UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
+    private val userRepository: UserRepository = UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
     private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = userRepository.getLoggedOutMutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()

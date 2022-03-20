@@ -30,8 +30,6 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 
 class HomePageRepository(private val application: Application) {
 
-    private val numUsersMutableLiveData: MutableLiveData<Int> = MutableLiveData()
-
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
         return mapboxMap.locationComponent
@@ -105,11 +103,4 @@ class HomePageRepository(private val application: Application) {
         )
     }
 
-    fun setNumberOfUsersMutableLiveData(numUsers: Int) {
-        numUsersMutableLiveData.postValue(numUsers)
-    }
-
-    fun getNumberOfUsersMutableLiveData() :MutableLiveData<Int>{
-        return numUsersMutableLiveData
-    }
 }

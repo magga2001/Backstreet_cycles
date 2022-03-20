@@ -111,12 +111,4 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     {
         locationRepository.getDocks()
     }
-
-    fun setNumberOfUsersMutableLiveData(numUsers: Int){
-        homePageRepository.setNumberOfUsersMutableLiveData(numUsers)
-    }
-
-    fun getNumberOfUsersMutableLiveData() :MutableLiveData<Int>{
-       return homePageRepository.getNumberOfUsersMutableLiveData()
-    }
 }

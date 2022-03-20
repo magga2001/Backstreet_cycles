@@ -148,9 +148,8 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onStart() {
         super.onStart()
-//        val numUsers = homePageViewModel.getNumberOfUsersMutableLiveData().value
-        val numUsers = intent.getIntExtra("NUM_USERS",1)
-        PlannerHelper.calcBicycleRental(numUsers, plannerInterface = this)
+        journeyViewModel.setNumberOfUsers(intent.getIntExtra("NUM_USERS",1))
+        PlannerHelper.calcBicycleRental(journeyViewModel.getNumberOfUsers(), plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
 
 
