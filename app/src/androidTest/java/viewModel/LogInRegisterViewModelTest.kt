@@ -1,0 +1,3 @@
+package viewModel
+
+class LogInRegisterViewModelTest

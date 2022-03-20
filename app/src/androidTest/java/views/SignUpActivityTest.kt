@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.views.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -34,7 +35,6 @@ class SignUpActivityTest {
         if (firebaseAuth.currentUser != null){
             userRepository.logout()
         }
-
     }
 
     @Test

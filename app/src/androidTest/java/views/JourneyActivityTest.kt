@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
@@ -17,7 +17,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import org.junit.Assert.*
+import com.example.backstreet_cycles.views.HomePageActivity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class JourneyActivityTest{
 
-    lateinit var logInRegisterViewModel:LogInRegisterViewModel
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
 
     @Before
@@ -37,7 +37,7 @@ class JourneyActivityTest{
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
 
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.nextPageButton)).perform(ViewActions.click())
+        onView(withId(R.id.nextPageButton)).perform(click())
 
         /*if (viewExists(android.R.id.button1)){
             onView(withId(android.R.id.button1)).perform(click())
@@ -74,7 +74,7 @@ class JourneyActivityTest{
 
     @Test
     fun test_stops_text_field_displayed(){
-        onView(withId(R.id.stopsText)).check(matches(ViewMatchers.withText("stops:")))
+        onView(withId(R.id.stopsText)).check(matches(withText("stops:")))
     }
 
     @Test
@@ -89,17 +89,17 @@ class JourneyActivityTest{
 
     @Test
     fun test_start_navigation_clicked_goes_to_navigation_activity(){
-        onView(withId(R.id.start_navigation)).perform(ViewActions.click())
+        onView(withId(R.id.start_navigation)).perform(click())
         onView(withId(R.id.navigationActivity)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_button_expand() {
         onView(withId(R.id.bottom_sheet_view_journey)).check(matches(isDisplayed()))
-        onView(ViewMatchers.withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
-        onView(ViewMatchers.withId(R.id.plan_journey_recycling_view)).perform(RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(0))
+        onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.plan_journey_recycling_view)).perform(RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(0))
 
-        onView(ViewMatchers.withId(R.id.plan_journey_recycling_view))
+        onView(withId(R.id.plan_journey_recycling_view))
             // scrollTo will fail the test if no item matches.
             .perform(RecyclerViewActions.actionOnItemAtPosition<PlanJourneyAdapter.ViewHolder>(0, click()))
         onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
@@ -117,7 +117,7 @@ class JourneyActivityTest{
     @Test
     fun test_stop_clicked_set_navigation_displayed(){
         onView(withId(R.id.bottom_sheet_view_journey)).check(matches(isDisplayed()))
-        onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.scrollTo())
+        onView(withId(R.id.bottom_sheet_view_journey)).perform(scrollTo())
         //onView(withId(R.id.button_expand)).perform(ViewActions.)
         onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
         onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
@@ -127,7 +127,7 @@ class JourneyActivityTest{
 
     @Test
     fun test_stop_clicked_images_displayed(){
-        onView(withId(R.id.button_expand)).perform(ViewActions.click())
+        onView(withId(R.id.button_expand)).perform(click())
         onView(withId(R.id.imageView13)).check(matches(isDisplayed()))
         onView(withId(R.id.imageView14)).check(matches(isDisplayed()))
     }

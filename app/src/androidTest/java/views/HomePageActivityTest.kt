@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
@@ -19,6 +19,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.views.HomePageActivity
 import org.junit.Before
 import org.junit.Test
 
@@ -111,7 +112,7 @@ class HomePageActivityTest {
     @Test
     fun test_cardView_is_swipeable(){
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.cardView)).perform(ViewActions.swipeLeft())
+        onView(withId(R.id.cardView)).perform(swipeLeft())
     }
 
     @Test
@@ -170,7 +171,7 @@ class HomePageActivityTest {
         // Checking whether bottom sheet is displayed
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
         //Click increment button
-        onView(withId(R.id.incrementButton)).perform(ViewActions.click())
+        onView(withId(R.id.incrementButton)).perform(click())
         //Checking if number of users changed to two
         onView(withId(R.id.UserNumber)).check(matches(withText("2")))
 
@@ -182,11 +183,11 @@ class HomePageActivityTest {
         // Checking whether bottom sheet is displayed
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
         //Click increment button
-        onView(withId(R.id.incrementButton)).perform(ViewActions.click())
+        onView(withId(R.id.incrementButton)).perform(click())
         //Checking if number of users changed to two
         onView(withId(R.id.UserNumber)).check(matches(withText("2")))
         //Click decrement button
-        onView(withId(R.id.decrementButton)).perform(ViewActions.click())
+        onView(withId(R.id.decrementButton)).perform(click())
         //Checking if number of users changed back to one
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
@@ -194,8 +195,8 @@ class HomePageActivityTest {
     @Test
     fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
-        onView(withId(R.id.changePassword)).perform(ViewActions.click())
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.changePassword)).perform(click())
         onView(withId(R.id.changeEmailOrPassword)).check(matches(isDisplayed()))
         pressBack()
         onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
@@ -204,8 +205,8 @@ class HomePageActivityTest {
     @Test
     fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
-        onView(withId(R.id.profile)).perform(ViewActions.click())
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.profile)).perform(click())
         onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
         pressBack()
         onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
@@ -261,11 +262,11 @@ class HomePageActivityTest {
     }
 
     //helpers for visibility of a view
-    fun ViewInteraction.isGone() = getViewAssertion(Visibility.GONE)
-    fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
-    fun ViewInteraction.isInvisible() = getViewAssertion(ViewMatchers.Visibility.INVISIBLE)
-    private fun getViewAssertion(visibility: ViewMatchers.Visibility): ViewAssertion? {
-    return ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(visibility))
+    private fun ViewInteraction.isGone() = getViewAssertion(Visibility.GONE)
+    private fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
+    private fun ViewInteraction.isInvisible() = getViewAssertion(Visibility.INVISIBLE)
+    private fun getViewAssertion(visibility: Visibility): ViewAssertion? {
+    return matches(withEffectiveVisibility(visibility))
     }
 
     @Test

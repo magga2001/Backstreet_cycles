@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.app.Application
+import com.example.backstreet_cycles.views.LogInActivity
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)

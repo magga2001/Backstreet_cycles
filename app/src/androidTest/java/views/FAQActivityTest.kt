@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 //
 //import android.app.Application
 //import androidx.test.core.app.ActivityScenario

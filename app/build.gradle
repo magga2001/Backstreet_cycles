@@ -12,6 +12,9 @@ plugins {
 ////apply plugin: 'realm-android'
 //apply plugin: 'jacoco'
 
+jacoco {
+    toolVersion = '0.8.7' //Use latest version
+}
 
 android {
     compileSdk 31
@@ -32,9 +35,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug{
-            debuggable true
-            minifyEnabled false
-            multiDexEnabled true
+            //debuggable true
+            //minifyEnabled false
+            //multiDexEnabled true
             testCoverageEnabled true
         }
     }
@@ -50,25 +53,23 @@ android {
         viewBinding true
     }
 
-    testOptions {
-        //execution 'ANDROID_TEST_ORCHESTRATOR'
-        animationsDisabled true
-        unitTests {
-            includeAndroidResources = true
-            returnDefaultValues = true
-        }
-    }
+//    testOptions {
+//        execution 'ANDROID_TEST_ORCHESTRATOR'
+//        animationsDisabled true
+//        unitTests {
+//            includeAndroidResources = true
+//            returnDefaultValues = true
+//        }
+//    }
 
 
 
 }
 
-jacoco {
-    toolVersion = '0.8.3' //Use latest version
-}
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
+
+//def coverageSourceDirs = [
+//        'src/main/java'
+//]
 
 dependencies {
 
@@ -178,4 +179,14 @@ dependencies {
     }
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+}
+
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
-package com.example.backstreet_cycles.views
+package views
 import android.app.Application
+import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -12,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.views.EditUserProfileActivity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +27,8 @@ class EditUserProfileActivityTest{
     fun setUp() {
         logInRegisterViewModel= LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        logInRegisterViewModel.getMutableLiveData().value?.email?.let { Log.i("currentuser", it) }
+
         ActivityScenario.launch(EditUserProfileActivity::class.java)
 
     }
@@ -56,7 +60,7 @@ class EditUserProfileActivityTest{
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
         pressBack()
-        onView(ViewMatchers.withId(R.id.HomePageActivity)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.viewModel
+package com.example.backstreet_cycles.model
 
 import android.app.Activity
 import android.app.Application
@@ -22,7 +22,7 @@ import org.mockito.MockitoAnnotations
 import java.lang.Exception
 import java.util.concurrent.Executor
 
-class UserRepositoryTestClass {
+class UserRepositoryTest {
 
     @Mock
     lateinit var mutableFirebaseUser: MutableLiveData<FirebaseAuth>

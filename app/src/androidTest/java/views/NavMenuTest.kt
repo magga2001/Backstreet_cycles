@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
@@ -12,10 +12,11 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.UserRepository
-import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.views.HomePageActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,15 +24,24 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+//    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
+
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val userRepository: UserRepository =
+        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
 
     @Before
     fun setUp() {
-        logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+//        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        if (firebaseAuth.currentUser != null){
+            userRepository.logout()
+            userRepository.login("backstreet.cycles.test.user@gmail.com","123456")
+        } else {
+            userRepository.login("backstreet.cycles.test.user@gmail.com","123456")
+        }
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
-
     }
 
     @Test
