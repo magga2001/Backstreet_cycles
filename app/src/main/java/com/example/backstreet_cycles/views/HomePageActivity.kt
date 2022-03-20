@@ -241,7 +241,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                         startActivity(intent)
                         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
-                R.id.currentJourney -> {}
+                R.id.currentJourney -> {
+                    val listOfLocations = journeyViewModel.getListLocations().toMutableList()
+                    MapRepository.location = listOfLocations
+                    val listPoints = setPoints(listOfLocations)
+                    fetchRoute(listPoints)
+                }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -522,7 +527,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
         builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to change the journey to the current one or keep the same one?")
+                "Do you want to continue with the current journey or with the newly created one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             val listOfLocations = journeyViewModel.getListLocations().toMutableList()
