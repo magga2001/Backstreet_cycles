@@ -7,9 +7,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.utils.BitmapHelper
+import com.google.firebase.auth.FirebaseUser
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -28,6 +30,7 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 
 class HomePageRepository(private val application: Application) {
 
+    private val numUsersMutableLiveData: MutableLiveData<Int> = MutableLiveData()
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -100,5 +103,13 @@ class HomePageRepository(private val application: Application) {
                     .build()
             ), 4000
         )
+    }
+
+    fun setNumberOfUsersMutableLiveData(numUsers: Int) {
+        numUsersMutableLiveData.postValue(numUsers)
+    }
+
+    fun getNumberOfUsersMutableLiveData() :MutableLiveData<Int>{
+        return numUsersMutableLiveData
     }
 }

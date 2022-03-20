@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -53,6 +54,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         }
     }
 
+    private fun expandableButtonVisibility() {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_plan_journey, parent, false)
         val viewHolder = ViewHolder(view)
@@ -60,6 +63,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         return viewHolder
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val location = locations[position]

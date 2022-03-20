@@ -119,7 +119,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
-                startActivity(Intent(this, JourneyActivity::class.java))
+                val intent = Intent(this, JourneyActivity::class.java)
+                intent.putExtra("NUM_USERS",numberOfUsers)
+                startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
@@ -128,6 +130,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
+//                homePageViewModel.setNumberOfUsersMutableLiveData(numberOfUsers)
                 fetchPoints()
             }
         }

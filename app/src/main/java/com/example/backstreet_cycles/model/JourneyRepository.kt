@@ -65,13 +65,16 @@ class JourneyRepository(private val application: Application,
     private val dataBase = fireStore
     lateinit var pointAnnotationManager: PointAnnotationManager
     private val loggedInViewModel: LoggedInViewModel
+    private var numberOfUsers: Int
 
     companion object
     {
         lateinit var result: RoutesUpdatedResult
+        const val MAX_TIME_TO_USE_THE_BIKE_FOR_FREE = 30
     }
 
     init {
+        numberOfUsers = 0
         loggedInViewModel = LoggedInViewModel(application)
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
@@ -93,6 +96,14 @@ class JourneyRepository(private val application: Application,
                     .build()
             )
         })
+    }
+
+    fun getNumberOfUsers():Int {
+        return numberOfUsers
+    }
+
+    fun setNumberOfUsers(numUsers: Int) {
+        numberOfUsers = numUsers
     }
 
     fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
@@ -176,14 +187,11 @@ class JourneyRepository(private val application: Application,
     }
 
     fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-
         if (getListLocations().isEmpty()){
             overrideListLocation(locations)
             return false
         }
         return true
-//    Need to pop up with a message saying that they are currently in a journey. Should it
-//    proceed with the already save journey or start the new one.
     }
 
     fun overrideListLocation(locations: MutableList<Locations>) {
@@ -295,7 +303,7 @@ class JourneyRepository(private val application: Application,
         distances.add(route.distance())
         durations.add(route.duration())
 
-        var prices = ceil(((((durations.sum()/60) - 30) / minutesRate))) * 2
+        var prices = ceil(((((durations.sum()/60) - MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / minutesRate))) * 2
 
         if(prices < 0)
         {
