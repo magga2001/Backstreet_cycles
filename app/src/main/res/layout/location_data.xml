@@ -3,27 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="70dp"
     android:layout_margin="10dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="8dp"
     app:cardMaxElevation="5dp">
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/card_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginStart="6dp"
+        android:text="@string/title"
+        android:textColor="@color/baby_blue"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/card_name"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="6dp"
-            android:text="@string/title"
-            android:textColor="@color/baby_blue"
-            android:textSize="25sp"
-            android:textStyle="bold" />
 
-    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -60,7 +60,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private val requestCodeAutocomplete = 7171
 
-    private lateinit var addStopButton: FloatingActionButton
+    private lateinit var addStopButton: Button
     private lateinit var myLocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
