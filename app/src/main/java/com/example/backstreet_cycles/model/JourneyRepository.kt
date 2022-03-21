@@ -364,7 +364,7 @@ class JourneyRepository(private val application: Application,
             prices++
         }
 
-        distanceMutableLiveData.postValue(distances.sum().roundToInt().toString())
+        distanceMutableLiveData.postValue((distances.sum()/1000).roundToInt().toString())
         durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
         priceMutableLiveData.postValue((prices*numberOfUsers).toString())
     }

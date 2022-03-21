@@ -90,11 +90,15 @@
     <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
     <string name="Q3">How do I set the navigation?</string>
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
+    <string name="from_startingpoint">From:</string>
     <string name="from_to_">from to</string>
+    <string name="to_destination">To:</string>
     <string name="done_journey">Done</string>
     <string name="journey_history">Jounrey History</string>
     <string name="current_journey">Current Jounrney</string>
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
+    <string name="openArrow">v</string>
+    <string name="closeArrow">></string>
 </resources>

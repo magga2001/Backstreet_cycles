@@ -31,59 +31,137 @@
                     android:id="@+id/overview_journey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Journey overview" />
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:text="Journey overview"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/start_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Start Navigation" />
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:text="Start Navigation"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/santander_link"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hire a bike" />
+                    android:layout_gravity="center_horizontal|center_vertical"
+
+                    android:text="Hire a bike"
+                    android:textSize="12sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="TODO"
+                        android:src="@drawable/distance_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/distances"
+                        app:layout_constraintHorizontal_bias="0.44"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.48" />
+
+                    <TextView
+                        android:id="@+id/distances"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distance:"
+                        android:textColor="@color/baby_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.278"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="31dp"
+                        android:src="@drawable/duration_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/durations"
+                        app:layout_constraintHorizontal_bias="0.44"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/durations"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Duration:"
+                        android:textColor="@color/baby_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.284"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/price_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/prices"
+                        app:layout_constraintHorizontal_bias="0.45"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.48" />
+
+                    <TextView
+                        android:id="@+id/prices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price:"
+                        android:textColor="@color/baby_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.262"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <TextView
-                    android:id="@+id/distances"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Distances:"
+                    android:layout_height="42dp"
+                    android:gravity="bottom"
+                    android:text="Journeys:"
                     android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/durations"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Durations:"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/prices"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Prices:"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="stops:"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/plan_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="208dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -96,7 +174,7 @@
 
     <Button
         android:id="@+id/finish_journey"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Finish Journey" />
 
