@@ -18,16 +18,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
-import com.example.backstreet_cycles.utils.Constants
 import com.example.backstreet_cycles.DTO.Dock
+import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
-import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.CallbackListener
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.service.NetworkManager
 import com.example.backstreet_cycles.service.WorkHelper
+import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
@@ -53,7 +52,6 @@ import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
-import java.lang.Exception
 import java.util.*
 
 
@@ -129,6 +127,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             {
                 val intent = Intent(this, JourneyActivity::class.java)
                 intent.putExtra("NUM_USERS",numberOfUsers)
+                SharedPrefHelper.initialiseSharedPref(application,"NUM_USERS")
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
