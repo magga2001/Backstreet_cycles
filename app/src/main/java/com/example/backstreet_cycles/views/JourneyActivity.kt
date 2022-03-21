@@ -23,6 +23,7 @@ import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.service.NetworkManager
+import com.example.backstreet_cycles.utils.MapHelper
 import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
@@ -500,8 +501,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
-//        SharedPrefHelper.overrideSharedPref(points)
-//        SharedPrefHelper.checkIfSharedPrefEmpty()
+
+
+//        MapHelper.getClosestDocks(points[0].longitude(),)
+        SharedPrefHelper.initialiseSharedPref(application,"DOCKS_LOCATIONS")
+        SharedPrefHelper.overrideSharedPref(points)
+        SharedPrefHelper.getSharedPref<List<Point>>()
+        val check = SharedPrefHelper.checkIfSharedPrefEmpty("DOCKS_LOCATIONS")
 //        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }

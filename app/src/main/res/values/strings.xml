@@ -99,6 +99,7 @@
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
+    <string name="finish_journey">Finish Journey</string>
     <string name="openArrow">v</string>
     <string name="closeArrow">></string>
 </resources>

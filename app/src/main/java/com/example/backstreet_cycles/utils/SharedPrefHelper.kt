@@ -14,23 +14,24 @@ class SharedPrefHelper {
     {
         private lateinit var sharedPref: SharedPreferences
         private lateinit var key:String
+        private lateinit var application: Application
 
         fun initialiseSharedPref(application: Application, key: String)
         {
-            setKey(application, key)
-
+//            setKey(application, key)
+            this.application = application
+            this.key = key
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
         }
 
-        fun checkIfSharedPrefEmpty():Boolean {
-            if (getSharedPref().isEmpty()){
-                return true
-            }
-            return false
+        fun checkIfSharedPrefEmpty(key: String):Boolean {
+            val serializedObject: String? =
+                sharedPref.getString(key, null)
+            return serializedObject?.isEmpty()!!
         }
 
-        fun overrideSharedPref(values: Any) {
+        fun <T> overrideSharedPref(values: MutableList<T>) {
             val gson = Gson();
             val json = gson.toJson(values);
             with (sharedPref.edit()) {
@@ -46,20 +47,21 @@ class SharedPrefHelper {
             }
         }
 
-        fun getSharedPref(): List<Any> {
+        fun <T> getSharedPref(): List<T> {
             val serializedObject: String? =
                 sharedPref.getString(key, null)
             return if (serializedObject != null) {
                 val gson = Gson()
-                val type: Type = object : TypeToken<List<Any?>?>() {}.getType()
+                val type: Type = object : TypeToken<List<T>?>() {}.getType()
                 gson.fromJson(serializedObject, type)
             } else {
                 emptyList()
             }
         }
 
-        fun setKey(application: Application,key:String)
+        fun chengeSharedPref(key:String)
         {
+            this.key = key
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
         }
