@@ -57,7 +57,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
-        val currentDocks = SharedPrefHelper.getSharedPref()
+        val currentDocks = SharedPrefHelper.getSharedPref<Any?>()
 
         Log.i("currentDocks", currentDocks.size.toString())
 
