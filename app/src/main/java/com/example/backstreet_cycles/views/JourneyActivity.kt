@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.utils.PlannerHelper
+import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
@@ -45,6 +47,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_journey.*
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
+
+    private lateinit var sharedPref: SharedPrefHelper
 
     /**
      * RouteLine: This class is responsible for rendering route line related mutations generated
@@ -83,6 +87,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
+
 
     private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
@@ -143,6 +148,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         mapboxMap = mapView.getMapboxMap()
 //        MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
         init()
     }
 
@@ -373,8 +379,16 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
+        sharedPref.overrideSharedPref(points)
+        val check = sharedPref.checkIfSharedPrefEmpty()
+//        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }
+
+//    private fun updateSharedPref(points: MutableList<Point>) {
+//        sharedPref.overrideSharedPref(points)
+//        Toast.makeText(application, sharedPref.getSharedPref().toString(), Toast.LENGTH_SHORT).show()
+//    }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()
