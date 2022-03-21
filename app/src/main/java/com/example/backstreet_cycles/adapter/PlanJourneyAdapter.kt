@@ -54,6 +54,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 if (expandableLayout.visibility == View.GONE) {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.VISIBLE
+
                 } else {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.GONE
@@ -139,12 +140,26 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
     private fun enableExpandButton(holder: ViewHolder){
         holder.expandButton.isEnabled = !holder.checkBoxButton.isChecked
+        checkCurrentCheckBox(holder)
+        checkAllBoxes()
+    }
+
+    private fun checkCurrentCheckBox(holder:ViewHolder){
+        if(holder.checkBoxButton.isEnabled){
+            holder.expandableLayout.visibility = View.GONE
+        }
+    }
+
+    private fun checkAllBoxes(){
         if (viewHolders.all { it.checkBoxButton.isChecked }) {
             allBoxesCheckedMutableLiveData.postValue(true)
+
         } else {
             allBoxesCheckedMutableLiveData.postValue(false)
         }
     }
+
+
 
     private fun shortenName(name: String): List<String> {
         val delimiter = ","
