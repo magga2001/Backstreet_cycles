@@ -17,6 +17,8 @@ class SharedPrefHelper {
 
         fun initialiseSharedPref(application: Application, key: String)
         {
+            setKey(application, key)
+
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
         }
@@ -56,7 +58,7 @@ class SharedPrefHelper {
             }
         }
 
-        fun changeKey(application: Application,key:String)
+        fun setKey(application: Application,key:String)
         {
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
