@@ -7,13 +7,13 @@ import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class LoggedInViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userRepository: UserRepository =
-        UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
+    private val userRepository: UserRepository = UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
     private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = userRepository.getLoggedOutMutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
@@ -50,4 +50,8 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
+
+//    suspend fun getUser(): QuerySnapshot {
+//        return userRepository.getUser()
+//    }
 }

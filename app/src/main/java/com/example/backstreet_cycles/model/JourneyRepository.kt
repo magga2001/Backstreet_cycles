@@ -6,13 +6,17 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.DTO.Maneuver
+import com.example.backstreet_cycles.DTO.Users
+import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
@@ -46,28 +50,37 @@ import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
+import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 import java.lang.reflect.Type
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-class JourneyRepository(private val application: Application): MapRepository(application) {
+class JourneyRepository(private val application: Application,
+                        fireStore: FirebaseFirestore,): MapRepository(application) {
 
-    private lateinit var sharedPref: SharedPreferences
+    private var sharedPref: SharedPreferences
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
     private lateinit var routeOptions: RouteOptions
-
+    private val dataBase = fireStore
     lateinit var pointAnnotationManager: PointAnnotationManager
+    private val loggedInViewModel: LoggedInViewModel
+    private var numberOfUsers: Int
 
     companion object
     {
         lateinit var result: RoutesUpdatedResult
+        const val MAX_TIME_TO_USE_THE_BIKE_FOR_FREE = 30
     }
 
     init {
+        numberOfUsers = 0
+        loggedInViewModel = LoggedInViewModel(application)
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
         distanceMutableLiveData = MutableLiveData()
@@ -126,6 +139,15 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
+    fun getNumberOfUsers():Int {
+        return numberOfUsers
+    }
+
+    fun setNumberOfUsers(numUsers: Int) {
+        numberOfUsers = numUsers
+    }
+
+    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
     {
         return RoutesObserver { routeUpdateResult ->
             // RouteLine: wrap the DirectionRoute objects and pass them
@@ -215,15 +237,11 @@ class JourneyRepository(private val application: Application): MapRepository(app
     }
 
     fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-//        sharedPref =
-
         if (getListLocations().isEmpty()){
             overrideListLocation(locations)
             return false
         }
         return true
-//    Need to pop up with a message saying that they are currently in a journey. Should it
-//    proceed with the already save journey or start the new one.
     }
 
     fun overrideListLocation(locations: MutableList<Locations>) {
@@ -336,7 +354,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
         distances.add(route.distance())
         durations.add(route.duration())
 
-        var prices = ceil(((((durations.sum()/60) - 30) / minutesRate))) * 2
+        var prices = ceil(((((durations.sum()/60) - MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / minutesRate))) * 2
 
         if(prices <= 0)
         {
@@ -350,7 +368,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
         distanceMutableLiveData.postValue(distances.sum().toString())
         durationMutableLiveData.postValue((durations.sum()/60).toString())
-        priceMutableLiveData.postValue(prices.toString())
+        priceMutableLiveData.postValue((prices*numberOfUsers).toString())
     }
 
     fun getInstructions(route:DirectionsRoute)
@@ -436,6 +454,53 @@ class JourneyRepository(private val application: Application): MapRepository(app
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
         mapboxNavigation.unregisterLocationObserver(locationObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
+    }
+
+
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>,userDetails: Users) =
+    CoroutineScope(Dispatchers.IO).launch {
+
+        val user =  dataBase
+            .collection("users")
+            .whereEqualTo("email", userDetails.email)
+            .get()
+            .await()
+        val gson = Gson()
+        val jsonObject = gson.toJson(locations)
+        userDetails.journeyHistory.add(jsonObject)
+
+        if (user.documents.isNotEmpty()) {
+            for (document in user) {
+
+                try {
+                    dataBase.collection("users")
+                        .document(document.id)
+                        .update("journeyHistory",userDetails.journeyHistory)
+                }
+                catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun convertJSON(serializedObject: String): List<Locations> {
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+        return gson.fromJson(serializedObject, type)
+
+    }
+
+    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
+        val listLocations = emptyList<List<Locations>>().toMutableList()
+        for (journey in userDetails.journeyHistory){
+            val serializedObject: String = journey
+            listLocations.add(convertJSON(serializedObject))
+        }
+        return listLocations
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>

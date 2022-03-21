@@ -7,8 +7,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.utils.BitmapHelper
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -27,7 +27,6 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 
 class HomePageRepository(private val application: Application) {
-
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -54,21 +53,24 @@ class HomePageRepository(private val application: Application) {
     }
 
     fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>) {
-        val textSize = 10.0F
+        val textSize = 15.0F
         val textColor = "black"
+
 
         val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
         symbolManager.iconAllowOverlap = true
-        val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.marker_map) as Bitmap
-        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 10, 15, false))
+        val bitmap = BitmapHelper.bitmapFromDrawableRes(application, R.drawable.tourist_attraction_icon) as Bitmap
+        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 100, 120, false))
         for (attraction in data) {
                 symbolManager.create(
                     SymbolOptions()
                         .withLatLng(LatLng(attraction.lat, attraction.lon))
                         .withIconImage("myMarker")
+                        .withIconAnchor("right")
                         .withTextField(attraction.name)
                         .withTextSize(textSize)
                         .withTextColor(textColor)
+                        .withTextAnchor("left")
                 )
         }
     }
@@ -82,6 +84,7 @@ class HomePageRepository(private val application: Application) {
             .accessToken(application.getString(R.string.mapbox_access_token)).
             placeOptions(
                 PlaceOptions.builder()
+                    .bbox(-0.309133,51.416601,0.075759,51.605545)
                     .country("GB") // Restricts searches to just Great Britain
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)
@@ -100,4 +103,5 @@ class HomePageRepository(private val application: Application) {
             ), 4000
         )
     }
+
 }

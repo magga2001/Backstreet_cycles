@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,10 @@ import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.service.NetworkManager
 import com.example.backstreet_cycles.utils.PlannerHelper
+import com.example.backstreet_cycles.utils.SharedPrefHelper
+import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.geojson.Point
 import com.mapbox.maps.EdgeInsets
@@ -59,6 +63,8 @@ import kotlinx.coroutines.delay
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
+
+    private lateinit var sharedPref: SharedPrefHelper
 
     private val pixelDensity = Resources.getSystem().displayMetrics.density
     private val overviewPadding: EdgeInsets by lazy {
@@ -139,16 +145,26 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var mapboxMap: MapboxMap
     private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var journeyViewModel: JourneyViewModel
+    private lateinit var loggedInViewModel: LoggedInViewModel
+    private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
+
 
     private lateinit var nAdapter: PlanJourneyAdapter
     private val currentRoute = MapRepository.currentRoute
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
 
+        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
+        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
+        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
+
+        Log.i("mutable live data", journeyViewModel.getIsReadyMutableLiveData().value.toString())
         journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
@@ -192,13 +208,17 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         mapboxMap = mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
         init()
     }
 
     override fun onStart() {
         super.onStart()
-        PlannerHelper.calcBicycleRental(1, plannerInterface = this)
+        journeyViewModel.setNumberOfUsers(intent.getIntExtra("NUM_USERS",1))
+        PlannerHelper.calcBicycleRental(journeyViewModel.getNumberOfUsers(), plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+
+
     }
 
     private fun init() {
@@ -286,6 +306,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
             val intent = Intent(this, NavigationActivity::class.java)
             startActivity(intent)
             finish()
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
         overview_journey.setOnClickListener {
@@ -313,12 +334,20 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         }
 
         finish_journey.setOnClickListener {
-            clear()
-            MapRepository.location.clear()
-            journeyViewModel.clearListLocations()
-            val intent = Intent(this, HomePageActivity::class.java)
-            startActivity(intent)
-            finish()
+            loggedInViewModel.getUserDetails()
+            loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+                if (userDetails != null){
+                    clear()
+                    MapRepository.location.clear()
+                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
+                    journeyViewModel.clearListLocations()
+                    val intent = Intent(this, HomePageActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+                }
+            }
+
         }
     }
 
@@ -389,6 +418,10 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         nAdapter.getAllBoxesCheckedMutableLiveData()
             .observe(this) {allBoxesChecked ->
                 finish_journey.isEnabled = allBoxesChecked
+            }
+        nAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
     }
 
@@ -467,8 +500,16 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
+        sharedPref.overrideSharedPref(points)
+        val check = sharedPref.checkIfSharedPrefEmpty()
+//        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }
+
+//    private fun updateSharedPref(points: MutableList<Point>) {
+//        sharedPref.overrideSharedPref(points)
+//        Toast.makeText(application, sharedPref.getSharedPref().toString(), Toast.LENGTH_SHORT).show()
+//    }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()
@@ -489,5 +530,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         clear()
         MapRepository.location.clear()
         finish()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 }

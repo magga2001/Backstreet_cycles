@@ -7,9 +7,12 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository
 import com.example.backstreet_cycles.views.NavigationActivity
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -39,9 +42,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
 
+    private val firestore = Firebase.firestore
 
     init {
-        journeyRepository = JourneyRepository(application)
+        journeyRepository = JourneyRepository(application, firestore)
         locationRepository = LocationRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
         isReadyDockMutableLiveData = locationRepository.getIsReadyMutableLiveData()
@@ -169,6 +173,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository.clearListLocations()
     }
 
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) {
+        journeyRepository.addJourneyToJourneyHistory(locations, userDetails)
+    }
+
     fun getIsReadyDockMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyDockMutableLiveData
@@ -177,6 +185,18 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     fun getDocks()
     {
         locationRepository.getDocks()
+    }
+
+    fun getJourneyHistory(userDetails: Users) : MutableList<List<Locations>> {
+        return journeyRepository.getJourneyHistory(userDetails)
+    }
+
+    fun getNumberOfUsers():Int {
+        return journeyRepository.getNumberOfUsers()
+    }
+
+    fun setNumberOfUsers(numUsers: Int) {
+        journeyRepository.setNumberOfUsers(numUsers)
     }
 
 }

@@ -11,6 +11,7 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,14 +89,23 @@ UserRepository(private val application: Application,
             }
     }
 
+//    suspend fun getUser() : QuerySnapshot{
+//        val user = dataBase
+//            .collection("users")
+//            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
+//            .get()
+//            .await()
+//        return user
+//    }
+
     fun updateUserDetails(firstName: String, lastName: String) =
         CoroutineScope(Dispatchers.IO).launch {
 
-            val user = dataBase
-                .collection("users")
-                .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
-                .get()
-                .await()
+            val user =  dataBase
+            .collection("users")
+            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
+            .get()
+            .await()
 
             if (user.documents.isNotEmpty()) {
                 for (document in user) {

@@ -73,6 +73,7 @@ class EditUserProfileActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 
 }

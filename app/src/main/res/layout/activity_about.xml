@@ -7,10 +7,10 @@
     tools:context=".views.AboutActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/aboutTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="About us"
+        android:text="@string/about_us"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.109" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/aboutDescription"
         android:layout_width="340dp"
         android:layout_height="259dp"
         android:text="@string/about_paragraph"

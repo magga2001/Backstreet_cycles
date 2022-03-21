@@ -13,13 +13,24 @@
         android:icon="@drawable/ic_baseline_profile_24"/>
 
     <item
+        android:id="@+id/journeyHistory"
+        android:title="@string/journey_history"
+        android:icon="@android:drawable/ic_menu_recent_history"/>
+
+    <item
+        android:id="@+id/currentJourney"
+        android:title="@string/current_journey"
+        android:icon="@android:drawable/ic_menu_directions"/>
+
+
+    <item
         android:id="@+id/about"
         android:title="@string/about"
         android:icon="@drawable/ic_baseline_about"/>
 
     <item
-        android:id="@+id/help"
-        android:title="@string/help"
+        android:id="@+id/faq"
+        android:title="@string/FAQ"
         android:icon="@drawable/ic_baseline_help"/>
 
     <item

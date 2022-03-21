@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.adapter
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -15,11 +17,18 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
 import com.example.backstreet_cycles.utils.PlannerHelper
+import com.example.backstreet_cycles.views.JourneyActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.activity_journey.*
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val plannerInterface: PlannerInterface): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
+
+    //private var sheetBehavior: BottomSheetBehavior<Application>
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
@@ -53,6 +62,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         }
     }
 
+    private fun expandableButtonVisibility() {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_plan_journey, parent, false)
         val viewHolder = ViewHolder(view)
@@ -60,6 +71,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         return viewHolder
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val location = locations[position]
@@ -79,6 +91,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["startingPoint"]!!,
                 journeyPoints["pickUpPoint"]!!
             ))
+            collapseBottomSheet.postValue(true)
+
         }
 
         holder.setNav2.setOnClickListener {
@@ -89,6 +103,10 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["pickUpPoint"]!!,
                 journeyPoints["dropOffPoint"]!!
             ))
+            collapseBottomSheet.postValue(true)
+
+//            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+
         }
 
         holder.setNav3.setOnClickListener {
@@ -99,6 +117,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["dropOffPoint"]!!,
                 journeyPoints["destination"]!!
             ))
+            collapseBottomSheet.postValue(true)
         }
     }
 
@@ -112,6 +131,10 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
     fun getAllBoxesCheckedMutableLiveData(): LiveData<Boolean> {
         return allBoxesCheckedMutableLiveData
+    }
+
+    fun getCollapseBottomSheet(): LiveData<Boolean> {
+        return collapseBottomSheet
     }
 
     private fun enableExpandButton(holder: ViewHolder){

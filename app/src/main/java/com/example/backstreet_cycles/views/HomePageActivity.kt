@@ -68,7 +68,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private val requestCodeAutocomplete = 7171
 
-    private lateinit var addStopButton: FloatingActionButton
+    private lateinit var addStopButton: Button
     private lateinit var myLocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
@@ -98,7 +98,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
-
         IncrementAndDecrementUsersFunc()
 
         homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
@@ -112,6 +111,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 if (loggedOut) {
                     startActivity(Intent(this@HomePageActivity, LogInActivity::class.java))
                     finish()
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
                 }
             }
 
@@ -127,8 +127,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
-                startActivity(Intent(this, JourneyActivity::class.java))
+                val intent = Intent(this, JourneyActivity::class.java)
+                intent.putExtra("NUM_USERS",numberOfUsers)
+                startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
 
@@ -153,8 +156,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         textOfNumberOfUsers.text = ""+numberOfUsers
 
+
         plusBtn.setOnClickListener(){
-            textOfNumberOfUsers.text = ""+ ++numberOfUsers
+          if(numberOfUsers>3){
+              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
+          }
+          else{
+              textOfNumberOfUsers.text = ""+ ++numberOfUsers
+          }
+
+
         }
 
         minusBtn.setOnClickListener(){
@@ -209,6 +220,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
 
 //                    if(this.javaClass == HomePageActivity::class.java) {
 //                        drawerLayout.close()
@@ -220,18 +232,37 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
-//                R.id.plan_journey -> Toast.makeText(
-//                    applicationContext,
-//                    "clicked sync",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-                R.id.about -> startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
-                R.id.help -> startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
+                R.id.about -> {
+                    startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
+
+                R.id.faq -> {
+                    startActivity(Intent(this@HomePageActivity, FAQActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
+
+                R.id.journeyHistory -> {
+                        val intent = Intent(this@HomePageActivity, JourneyHistoryActivity::class.java)
+                        startActivity(intent)
+                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
+                R.id.currentJourney -> {
+                    val listOfLocations = journeyViewModel.getListLocations().toMutableList()
+                    MapRepository.location = listOfLocations
+                    val listPoints = setPoints(listOfLocations)
+                    fetchRoute(listPoints)
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                     WorkHelper.cancelWork(applicationContext)
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
+
+
             }
             true
         }
@@ -267,6 +298,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         })
 
         myLocationButton.setOnClickListener {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
@@ -493,6 +525,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.onDestroy()
     }
 
+//    How to make an util class for the functions below
+
     private fun fetchPoints()
     {
         MapRepository.wayPoints.clear()
@@ -519,7 +553,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
         builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to change the journey to the current one or keep the same one?")
+                "Do you want to continue with the current journey or with the newly created one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             val listOfLocations = journeyViewModel.getListLocations().toMutableList()
@@ -534,7 +568,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             fetchRoute(listPoints)
         }
         builder.show()
-
     }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
