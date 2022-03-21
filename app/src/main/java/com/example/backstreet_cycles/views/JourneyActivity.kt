@@ -506,6 +506,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 //        MapHelper.getClosestDocks(points[0].longitude(),)
         SharedPrefHelper.initialiseSharedPref(application,"DOCKS_LOCATIONS")
         SharedPrefHelper.overrideSharedPref(points)
+        SharedPrefHelper.getSharedPref<List<Point>>()
         val check = SharedPrefHelper.checkIfSharedPrefEmpty("DOCKS_LOCATIONS")
 //        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
