@@ -60,7 +60,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private val requestCodeAutocomplete = 7171
 
-    private lateinit var addStopButton: FloatingActionButton
+    private lateinit var addStopButton: Button
     private lateinit var myLocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
@@ -290,6 +290,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         })
 
         myLocationButton.setOnClickListener {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
