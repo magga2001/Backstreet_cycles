@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         internal var setNav1: Button = view.findViewById(R.id.setNav1)
         internal var setNav2: Button = view.findViewById(R.id.setNav2)
         internal var setNav3: Button = view.findViewById(R.id.setNav3)
+        internal var textView2: TextView= view.findViewById(R.id.textView2)
 
         init {
             initListener()
@@ -54,10 +56,12 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 if (expandableLayout.visibility == View.GONE) {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.VISIBLE
+                    expandButton.text = "-"
 
                 } else {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.GONE
+                    expandButton.text = "+"
                 }
             }
         }
@@ -81,7 +85,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             enableExpandButton(holder)
         }
 
-        holder.expandButton.text = "From: ${shortenName(location.name).first()} " +
+        holder.textView2.text = "From: ${shortenName(location.name).first()} " +
                 "To: ${shortenName(locations[position+1].name).first()}"
 
         holder.setNav1.setOnClickListener{
