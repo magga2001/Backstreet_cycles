@@ -489,7 +489,6 @@ class JourneyRepository(private val application: Application,
         val gson = Gson()
         val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
         return gson.fromJson(serializedObject, type)
-
     }
 
     fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
