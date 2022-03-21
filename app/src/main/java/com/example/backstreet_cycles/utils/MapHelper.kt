@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.utils
 
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.model.LocationRepository
+import com.example.backstreet_cycles.service.NetworkManager
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import kotlin.math.abs
@@ -12,12 +13,12 @@ class MapHelper {
     {
         fun getClosestDocks(point: Point, numUser: Int): Dock {
 
-            LocationRepository.docks.filter { it.nbSpaces >= numUser }
-            LocationRepository.docks.sortBy {
+            NetworkManager.docks.filter { it.nbSpaces >= numUser }
+            NetworkManager.docks.sortBy {
                 abs(it.lat - point.latitude()) + abs(it.lon - point.longitude())
             }
 
-            return LocationRepository.docks.first()
+            return NetworkManager.docks.first()
         }
 
         fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute

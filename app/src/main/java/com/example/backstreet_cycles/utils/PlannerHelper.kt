@@ -19,11 +19,13 @@ class PlannerHelper {
             val startingPoint = Point.fromLngLat(fromLocation.lon, fromLocation.lat)
 
             //Find closest pick up dock station
-            val findClosestPickUp = MapHelper.getClosestDocks(
-                Point.fromLngLat(
-                    startingPoint.longitude(),
-                    startingPoint.latitude()
-                ), numUser
+
+            val findClosestPickUp =
+                MapHelper.getClosestDocks(
+                    Point.fromLngLat(
+                        startingPoint.longitude(),
+                        startingPoint.latitude()
+                    ), numUser
             )
             val pickUpPoint = Point.fromLngLat(findClosestPickUp.lon, findClosestPickUp.lat)
 

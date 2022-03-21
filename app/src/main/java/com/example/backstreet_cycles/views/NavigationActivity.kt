@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.views
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -368,6 +369,8 @@ class NavigationActivity : AppCompatActivity() {
     {
         // initialize view interactions
         stop.setOnClickListener {
+            val intent = Intent(this, JourneyActivity::class.java)
+            startActivity(intent)
             clearRouteAndStopNavigation()
             finish()
         }
@@ -473,6 +476,14 @@ class NavigationActivity : AppCompatActivity() {
         speechApi.cancel()
         voiceInstructionsPlayer.shutdown()
         mapboxNavigation.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, JourneyActivity::class.java)
+        startActivity(intent)
+        clearRouteAndStopNavigation()
+        finish()
     }
 
     override fun finish() {

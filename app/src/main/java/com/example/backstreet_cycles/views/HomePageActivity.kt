@@ -4,6 +4,7 @@ package com.example.backstreet_cycles.views
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
@@ -17,10 +18,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
+import com.example.backstreet_cycles.utils.Constants
+import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.interfaces.CallbackListener
 import com.example.backstreet_cycles.model.MapRepository
+import com.example.backstreet_cycles.service.NetworkManager
+import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
@@ -46,6 +53,7 @@ import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
+import java.lang.Exception
 import java.util.*
 
 
@@ -60,7 +68,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private val requestCodeAutocomplete = 7171
 
-    private lateinit var addStopButton: FloatingActionButton
+    private lateinit var addStopButton: Button
     private lateinit var myLocationButton: FloatingActionButton
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
@@ -127,19 +135,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
-        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
-            if(ready)
-            {
-                fetchPoints()
-            }
-        }
+//        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
+//            if(ready)
+//            {
+//                fetchPoints()
+//            }
+//        }
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
-
-
     }
 
     private fun IncrementAndDecrementUsersFunc(){
@@ -252,6 +258,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
+                    WorkHelper.cancelWork(applicationContext)
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
 
@@ -276,6 +283,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun bottomSheetFunctionality(){
         initBottomSheet()
+
         addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, requestCodeAutocomplete)
@@ -297,7 +305,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-            homePageViewModel.getDocks()
+            NetworkManager.getDock(context = applicationContext,
+
+                object : CallbackListener<MutableList<Dock>> {
+                    override fun getResult(objects: MutableList<Dock>) {
+                        Log.i("Dock Application", objects.size.toString())
+
+                        fetchPoints()
+                    }
+                }
+            )
             Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
@@ -439,8 +456,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             locationComponent = homePageViewModel.initialiseLocationComponent(mapboxMap)
             homePageViewModel.initialiseCurrentLocation(loadedMapStyle, locationComponent)
 
-            longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
-            latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
+            try{
+                longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
+                latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
+            }catch (e: Exception)
+            {
+                Log.i("exception...", e.toString())
+            }
 
             bottomSheetFunctionality()
 
