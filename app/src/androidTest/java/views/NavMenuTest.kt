@@ -12,7 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
-//import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -67,12 +66,26 @@ class NavMenuTest {
         onView(withId(R.id.about)).check(matches(isDisplayed()))
 //        onView(withId(R.id.help)).check(matches(isDisplayed()))
         onView(withId(R.id.logout)).check(matches(isDisplayed()))
+        onView(withId(R.id.currentJourney)).check(matches(isDisplayed()))
+        onView(withId(R.id.journeyHistory)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_viewProfileButton_toEditProfileActivity() {
         onView(withId(R.id.profile)).perform(click())
         onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_viewCurrentJourney_toJourneyActivity() {
+        onView(withId(R.id.currentJourney)).perform(click())
+        onView(withId(R.id.journey_activity)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_viewJourneyHistory_toJourneyHistoryActivity() {
+        onView(withId(R.id.journeyHistory)).perform(click())
+        onView(withId(R.id.journeyHistoryActivity)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -88,14 +101,14 @@ class NavMenuTest {
         onView(withId(R.id.changeEmailOrPassword)).check(matches(isDisplayed()))
     }
 
-    /*@Test
+    @Test
     fun test_aboutButton_to_aboutActivity()
     {
         val activityScenario = ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.nav_view)).perform(click())
         onView(withId(R.id.about)).perform(ViewActions.click())
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
-    }*/
+    }
 
 
     @Test

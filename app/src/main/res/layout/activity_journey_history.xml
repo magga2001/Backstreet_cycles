@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.JourneyHistoryActivity">
+    tools:context=".views.JourneyHistoryActivity"
+    android:id="@+id/journeyHistoryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/journey_history_recycler_view"

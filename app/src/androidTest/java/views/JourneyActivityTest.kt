@@ -150,4 +150,72 @@ class JourneyActivityTest{
             false
         }
     }
+
+    @Test
+    fun test_hire_button_visible(){
+        onView(withId(R.id.santander_link)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_finish_journey_button_visible(){
+        onView(withId(R.id.finish_journey)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_checkbox_visible(){
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_duration_text_field_displayed(){
+        onView(withId(R.id.durations)).check(matches(withText("stops:")))
+    }
+
+    @Test
+    fun test_distance_text_field_displayed(){
+        onView(withId(R.id.distances)).check(matches(withText("stops:")))
+    }
+
+    @Test
+    fun test_price_text_field_displayed(){
+        onView(withId(R.id.prices)).check(matches(withText("stops:")))
+    }
+
+    @Test
+    fun test_check_not_checked(){
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+    }
+
+    @Test
+    fun test_finish_not_clickable(){
+        onView(withId(R.id.finish_journey)).check(matches(isNotClickable()))
+    }
+
+    @Test
+    fun test_not_checked_stop_clickable(){
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+        onView(withId(R.id.button_expand)).check(matches(isClickable()))
+    }
+
+    @Test
+    fun test_not_checked_finish_not_clickable(){
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+        onView(withId(R.id.finish_journey)).check(matches(isNotClickable()))
+    }
+
+    @Test
+    fun test_checked_stop_not_clickable(){
+        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
+        onView(withId(R.id.button_expand)).check(matches(isNotClickable()))
+    }
+
+    @Test
+    fun test_checked_finish_clickable(){
+        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
+        onView(withId(R.id.finish_journey)).check(matches(isClickable()));
+    }
+
+
 }
