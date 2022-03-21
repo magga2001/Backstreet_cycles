@@ -43,6 +43,9 @@
         <activity
             android:name=".views.SignUpActivity"
             android:parentActivityName=".views.LogInActivity" />
+        <activity
+            android:name=".views.ForgotPasswordActivity"
+            android:parentActivityName=".views.LogInActivity" />
         <activity android:name=".views.JourneyActivity" />
     </application>
 
