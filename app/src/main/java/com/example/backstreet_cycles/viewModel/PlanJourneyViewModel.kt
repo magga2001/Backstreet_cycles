@@ -6,6 +6,8 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.model.JourneyRepository
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.core.MapboxNavigation
 
@@ -13,10 +15,10 @@ class PlanJourneyViewModel(application: Application) : AndroidViewModel(applicat
 
     private val mapRepository: JourneyRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
-
+    private val firebase = Firebase.firestore
 
     init {
-        mapRepository = JourneyRepository(application)
+        mapRepository = JourneyRepository(application,firebase)
         isReadyMutableLiveData = mapRepository.getIsReadyMutableLiveData()
 
     }

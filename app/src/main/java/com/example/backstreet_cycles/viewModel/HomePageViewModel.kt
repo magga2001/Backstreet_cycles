@@ -12,6 +12,8 @@ import com.example.backstreet_cycles.model.HomePageRepository
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository
 import com.example.backstreet_cycles.views.HomePageActivity
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapView
@@ -24,8 +26,9 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     private val homePageRepository: HomePageRepository = HomePageRepository(application)
     private val locationRepository: LocationRepository = LocationRepository(application)
     var stops: MutableLiveData<MutableList<Locations>> = MutableLiveData(locationRepository.getStops())
+    private val firestore = Firebase.firestore
 
-    private val mapRepository: JourneyRepository = JourneyRepository(application)
+    private val mapRepository: JourneyRepository = JourneyRepository(application,firestore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = mapRepository.getIsReadyMutableLiveData()
     private val isReadyDockMutableLiveData: MutableLiveData<Boolean> = locationRepository.getIsReadyMutableLiveData()
 

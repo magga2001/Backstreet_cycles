@@ -6,10 +6,12 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
+import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,14 +89,23 @@ UserRepository(private val application: Application,
             }
     }
 
+//    suspend fun getUser() : QuerySnapshot{
+//        val user = dataBase
+//            .collection("users")
+//            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
+//            .get()
+//            .await()
+//        return user
+//    }
+
     fun updateUserDetails(firstName: String, lastName: String) =
         CoroutineScope(Dispatchers.IO).launch {
 
-            val user = dataBase
-                .collection("users")
-                .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
-                .get()
-                .await()
+            val user =  dataBase
+            .collection("users")
+            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
+            .get()
+            .await()
 
             if (user.documents.isNotEmpty()) {
                 for (document in user) {
@@ -167,6 +178,7 @@ UserRepository(private val application: Application,
                 if (task.isSuccessful){
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
                         mutableLiveData.postValue(firebaseAuth.currentUser)
+                        WorkHelper.setPeriodicallySendingLogs(application)
                     }
                     else{
                         createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")

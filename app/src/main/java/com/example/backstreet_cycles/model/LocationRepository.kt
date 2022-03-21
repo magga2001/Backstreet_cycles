@@ -3,11 +3,12 @@ package com.example.backstreet_cycles.model
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
+import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.R
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types

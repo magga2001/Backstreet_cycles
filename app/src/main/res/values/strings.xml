@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Backstreet_cycles</string>
-    <string name="mapbox_access_token" tools:ignore="Typos">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
     <string name="user_location_permission_explanation">Permission needed</string>
     <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
@@ -80,8 +80,8 @@
     <string name="distance_unit">%1$s feets</string>
     <string name="blankData">---</string>
     <string name="preference_file_Locations">\"LOCATIONS\"</string>
-    <string name="continue_with_current_journey">Continue With Current Journey</string>
-    <string name="continue_with_newly_set_journey">Continue with the Newly Created Journey</string>
+    <string name="continue_with_current_journey">Current Journey</string>
+    <string name="continue_with_newly_set_journey">Newly Created Journey</string>
     <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
     <string name="FAQ">Frequently Asked Question</string>
     <string name="Q1">Where can I hire bikes from?</string>
@@ -92,5 +92,9 @@
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
     <string name="from_to_">From To</string>
     <string name="done_journey">Done</string>
+    <string name="journey_history">Jounrey History</string>
+    <string name="current_journey">Current Jounrney</string>
+    <string name="about_us">About us</string>
     <string name="add_stop_button" />
+    <string name="recent_journeys">Recent Journeys</string>
 </resources>
