@@ -18,8 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
-import com.example.backstreet_cycles.utils.Constants
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
@@ -131,81 +129,86 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 intent.putExtra("NUM_USERS",numberOfUsers)
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
-                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
-//        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
-//            if(ready)
-//            {
-//                fetchPoints()
-//            }
-//        }
+        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) { ready ->
+            if (ready) {
+                fetchPoints()
+            }
+        }
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
+
+
     }
 
-    private fun IncrementAndDecrementUsersFunc(){
+    private fun IncrementAndDecrementUsersFunc() {
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
 
 
-        textOfNumberOfUsers.text = ""+numberOfUsers
+        textOfNumberOfUsers.text = "" + numberOfUsers
 
 
-        plusBtn.setOnClickListener(){
-          if(numberOfUsers>3){
-              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
-          }
-          else{
-              textOfNumberOfUsers.text = ""+ ++numberOfUsers
-          }
+        plusBtn.setOnClickListener() {
+            if (numberOfUsers > 3) {
+                Toast.makeText(this, "Cannot have more than 4 users", Toast.LENGTH_SHORT).show()
+            } else {
+                textOfNumberOfUsers.text = "" + ++numberOfUsers
+            }
 
 
         }
 
-        minusBtn.setOnClickListener(){
+        minusBtn.setOnClickListener() {
 
-            if(numberOfUsers>=2){
-                textOfNumberOfUsers.text = ""+ --numberOfUsers
-            }
-            else{
-                Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()
+            if (numberOfUsers >= 2) {
+                textOfNumberOfUsers.text = "" + --numberOfUsers
+            } else {
+                Toast.makeText(this, "Cannot have less than one user", Toast.LENGTH_SHORT).show()
             }
         }
 
     }
 
-    private fun addInfo(name:String, lat: Double, long: Double) {
+    private fun addInfo(name: String, lat: Double, long: Double) {
         LayoutInflater.from(this)
-        homePageViewModel.addStop(Locations(name,lat, long))
+        homePageViewModel.addStop(Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Adding Stop", Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
 
     }
 
-    private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
+    private fun addAndRemoveInfo(name: String, lat: Double, long: Double) {
         homePageViewModel.removeStop(stops[positionOfStop])
         LayoutInflater.from(this)
-        homePageViewModel.addStop(positionOfStop,Locations(name,lat, long))
+        homePageViewModel.addStop(positionOfStop, Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Changing Location Of Stop", Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
     }
 
-    private fun enableMyLocationButton(){
-        val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
+    private fun enableMyLocationButton() {
+        val currentLocation = homePageViewModel.getCurrentLocation(locationComponent)
+        myLocationButton.isEnabled = !stops.contains(
+            Locations(
+                "Current Location",
+                currentLocation!!.latitude,
+                currentLocation.longitude
+            )
+        )
     }
 
-    private fun enableNextPageButton(){
+    private fun enableNextPageButton() {
         nextPageButton.isEnabled = stops.size >= 2
     }
 
@@ -219,8 +222,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             when (it.itemId) {
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
-                    startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
-                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                    startActivity(
+                        Intent(
+                            this@HomePageActivity,
+                            ChangeEmailOrPasswordActivity::class.java
+                        )
+                    )
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 
 //                    if(this.javaClass == HomePageActivity::class.java) {
 //                        drawerLayout.close()
@@ -231,9 +239,19 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
-                    startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
-                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                    startActivity(
+                        Intent(
+                            this@HomePageActivity,
+                            EditUserProfileActivity::class.java
+                        )
+                    )
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
+//                R.id.plan_journey -> Toast.makeText(
+//                    applicationContext,
+//                    "clicked sync",
+//                    Toast.LENGTH_SHORT
+//                ).show()
                 R.id.about -> {
                     startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -267,12 +285,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             true
         }
     }
+
     private fun initBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
         addStopButton = findViewById(R.id.addingBtn)
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
-        nextPageButton  = findViewById(R.id.nextPageButton)
+        nextPageButton = findViewById(R.id.nextPageButton)
         nextPageButton.isEnabled = false
 
         createListOfItems()
@@ -281,19 +300,20 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     }
 
-    private fun bottomSheetFunctionality(){
+    private fun bottomSheetFunctionality() {
         initBottomSheet()
 
         addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
             startActivityForResult(intent, requestCodeAutocomplete)
         }
-        stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener{
+        stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 updateInfo = true
-                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                val intent =
+                    homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
                 startActivityForResult(intent, requestCodeAutocomplete)
-                this@HomePageActivity.positionOfStop =position
+                this@HomePageActivity.positionOfStop = position
             }
         })
 
@@ -319,15 +339,23 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-    private fun createListOfItems(){
-        homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+    private fun createListOfItems() {
+
+        homePageViewModel.addStop(
+            Locations(
+                "Current Location",
+
+                homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,
+                homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
+            )
+        )
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
     }
 
-    private fun itemTouchMethods(){
-        val touchScreenCallBack = object : TouchScreenCallBack(){
+    private fun itemTouchMethods() {
+        val touchScreenCallBack = object : TouchScreenCallBack() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder.absoluteAdapterPosition != 0) {
                     val position = viewHolder.absoluteAdapterPosition
@@ -335,9 +363,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
                     enableNextPageButton()
-                }
-                else{
-                    Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this@HomePageActivity,
+                        "Cannot remove location",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -349,7 +380,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val fromPosition = viewHolder.absoluteAdapterPosition
                 val toPosition = target.absoluteAdapterPosition
                 Collections.swap(stops, fromPosition, toPosition)
-                recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
+                recyclerView.adapter!!.notifyItemMoved(fromPosition, toPosition)
                 return true
             }
 
@@ -369,7 +400,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
+            homePageViewModel.displayingAttractions(
+                mapView,
+                mapboxMap,
+                style,
+                homePageViewModel.getTouristAttractions()
+            )
             setUpSource(style)
             setUpLayer(style)
 
