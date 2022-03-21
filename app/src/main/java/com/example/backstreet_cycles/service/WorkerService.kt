@@ -57,25 +57,43 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
-        val currentDocks = SharedPrefHelper.getSharedPref<Any?>()
+        val currentDocks = SharedPrefHelper.getSharedPref()
+        SharedPrefHelper.changeSharedPref("NUM_USERS")
+        //val numUser = SharedPrefHelper.getSharedPref<Int>()
 
-        Log.i("currentDocks", currentDocks.size.toString())
+        Log.i("currentDocks", currentDocks?.size.toString())
+        Log.i("currentDockFirst", currentDocks.toString())
+//        Log.i("numUser", numUser?.first().toString())
+        Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
+        Log.i("Json dock", "hi")
 
-//        docks.filter { currentDocks.contains(it) }
 
-        docks.filter {
-            val point = Point.fromLngLat(it.lon, it.lat)
-            currentDocks.contains(point)
+
+        val currentPoint = mutableListOf<Point>()
+
+        for(point in currentDocks!!)
+        {
+            val lon = point.longitude()
+            val lat = point.latitude()
+
+            currentPoint.add(Point.fromLngLat(lon,lat))
         }
+
+//        currentDocks.map { Point.fromLngLat(it.longitude(),it.latitude()) }
+
+        val filteredDock = docks.filter {
+            val point = Point.fromLngLat(it.lon, it.lat)
+            currentPoint.contains(point)
+        }
+
+        Log.i("dock size change", filteredDock.size.toString())
 
         //1 is for numUser
-        for(dock in docks)
-        {
-            if(!currentDocks.contains(dock) || dock.nbSpaces < 1)
-            {
-                return false
-            }
-        }
+//        for(dock in filteredDock)
+//            if(dock.nbSpaces >= numUser!!.first()  && filteredDock.size == currentPoint.size)
+//            {
+//                return false
+//            }
 
         return true
     }
