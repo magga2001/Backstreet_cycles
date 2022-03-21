@@ -285,4 +285,5 @@ class HomePageActivityTest {
 //        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()
 //    }
 
+
 }
