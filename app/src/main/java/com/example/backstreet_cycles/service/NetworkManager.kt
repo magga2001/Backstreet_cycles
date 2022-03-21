@@ -11,6 +11,7 @@ import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.interfaces.CallbackListener
 import org.json.JSONArray
+import kotlin.concurrent.thread
 
 object NetworkManager {
 
@@ -18,27 +19,31 @@ object NetworkManager {
 
     fun getDock(context: Context, listener: CallbackListener<MutableList<Dock>>)
     {
-        // Instantiate the RequestQueue.
-        val queue = Volley.newRequestQueue(context)
-        val url = context.getString(R.string.tfl_url)
 
-        // Request a string response from the provided URL.
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            { response ->
+        thread(start = true)
+        {
+            // Instantiate the RequestQueue.
+            val queue = Volley.newRequestQueue(context)
+            val url = context.getString(R.string.tfl_url)
 
-                val json = JSONArray(response)
-                docks = fetchDocks(json)
-                listener.getResult(docks)
-            },
-            {
-                Toast.makeText(context,it.message.toString(), Toast.LENGTH_LONG).show()
-                Log.i("ERROR", "Fail to fetch data")
-            })
+            // Request a string response from the provided URL.
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+
+                    val json = JSONArray(response)
+                    docks = fetchDocks(json)
+                    listener.getResult(docks)
+                },
+                {
+                    Toast.makeText(context,it.message.toString(), Toast.LENGTH_LONG).show()
+                    Log.i("ERROR", "Fail to fetch data")
+                })
 
 
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest)
+        }
     }
 
     private fun fetchDocks(json: JSONArray): MutableList<Dock>

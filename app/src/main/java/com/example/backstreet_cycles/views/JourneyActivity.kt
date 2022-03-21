@@ -208,7 +208,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         mapboxMap = mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
-        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
+//        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
         init()
     }
 
@@ -500,8 +500,8 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
-        sharedPref.overrideSharedPref(points)
-        val check = sharedPref.checkIfSharedPrefEmpty()
+        SharedPrefHelper.overrideSharedPref(points)
+        SharedPrefHelper.checkIfSharedPrefEmpty()
 //        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }

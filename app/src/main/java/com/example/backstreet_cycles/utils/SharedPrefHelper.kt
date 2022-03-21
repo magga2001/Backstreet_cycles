@@ -8,52 +8,58 @@ import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import java.lang.reflect.Type
 
-class SharedPrefHelper(private val application: Application, key:String) {
+class SharedPrefHelper {
 
-    private var sharedPref: SharedPreferences
-    private var key:String
+    companion object
+    {
+        private lateinit var sharedPref: SharedPreferences
+        private lateinit var key:String
 
-    init {
-        sharedPref = application.getSharedPreferences(
-            key, Context.MODE_PRIVATE)
-        this.key = key
-    }
-
-    fun checkIfSharedPrefEmpty():Boolean {
-        if (getSharedPref().isEmpty()){
-            return true
+        fun initialiseSharedPref(application: Application, key: String)
+        {
+            sharedPref = application.getSharedPreferences(
+                key, Context.MODE_PRIVATE)
         }
-        return false
-    }
 
-    fun overrideSharedPref(values: Any) {
-        val gson = Gson();
-        val json = gson.toJson(values);
-        with (sharedPref.edit()) {
-            putString(key, json)
-            apply()
+        fun checkIfSharedPrefEmpty():Boolean {
+            if (getSharedPref().isEmpty()){
+                return true
+            }
+            return false
+        }
+
+        fun overrideSharedPref(values: Any) {
+            val gson = Gson();
+            val json = gson.toJson(values);
+            with (sharedPref.edit()) {
+                putString(key, json)
+                apply()
+            }
+        }
+
+        fun clearListLocations() {
+            with (sharedPref.edit()) {
+                clear()
+                apply()
+            }
+        }
+
+        fun getSharedPref(): List<Any> {
+            val serializedObject: String? =
+                sharedPref.getString(key, null)
+            return if (serializedObject != null) {
+                val gson = Gson()
+                val type: Type = object : TypeToken<List<Any?>?>() {}.getType()
+                gson.fromJson(serializedObject, type)
+            } else {
+                emptyList()
+            }
+        }
+
+        fun changeKey(application: Application,key:String)
+        {
+            sharedPref = application.getSharedPreferences(
+                key, Context.MODE_PRIVATE)
         }
     }
-
-    fun clearListLocations() {
-        with (sharedPref.edit()) {
-            clear()
-            apply()
-        }
-    }
-
-    fun getSharedPref(): List<Any> {
-        val values: List<Any>
-        val serializedObject: String? =
-            sharedPref.getString(key, null)
-        if (serializedObject != null) {
-            val gson = Gson()
-            val type: Type = object : TypeToken<List<Any?>?>() {}.getType()
-            values = gson.fromJson<List<Any>>(serializedObject, type)
-        } else {
-            values = emptyList()
-        }
-        return values
-    }
-
 }

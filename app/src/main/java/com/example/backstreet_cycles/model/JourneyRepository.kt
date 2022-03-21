@@ -138,7 +138,6 @@ class JourneyRepository(private val application: Application,
         }
     }
 
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     fun getNumberOfUsers():Int {
         return numberOfUsers
     }
@@ -147,7 +146,7 @@ class JourneyRepository(private val application: Application,
         numberOfUsers = numUsers
     }
 
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
+    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     {
         return RoutesObserver { routeUpdateResult ->
             // RouteLine: wrap the DirectionRoute objects and pass them

@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.service
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
+import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -10,6 +11,8 @@ class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        SharedPrefHelper.initialiseSharedPref(this, "DOCKS_LOCATIONS")
 
         Handler(Looper.myLooper()!!).postDelayed({
             if(FirebaseAuth.getInstance().currentUser != null)
