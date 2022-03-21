@@ -500,8 +500,8 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
-        SharedPrefHelper.overrideSharedPref(points)
-        SharedPrefHelper.checkIfSharedPrefEmpty()
+//        SharedPrefHelper.overrideSharedPref(points)
+//        SharedPrefHelper.checkIfSharedPrefEmpty()
 //        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }

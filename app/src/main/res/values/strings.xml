@@ -97,4 +97,5 @@
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
+    <string name="finish_journey">Finish Journey</string>
 </resources>
