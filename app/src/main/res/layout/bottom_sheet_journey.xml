@@ -73,6 +73,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/stopsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="stops:"
@@ -83,7 +84,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/plan_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent">
 
                 </androidx.recyclerview.widget.RecyclerView>
 

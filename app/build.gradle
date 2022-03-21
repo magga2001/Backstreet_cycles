@@ -2,11 +2,19 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android-extensions'
-
+    id 'com.google.gms.google-services'
+    id 'jacoco'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.android.application'
+//apply plugin: 'com.google.gms.google-services'
+////apply plugin: 'com.getkeepsafe.dexcount'
+////apply plugin: 'realm-android'
+//apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.7' //Use latest version
+}
 
 android {
     compileSdk 31
@@ -25,6 +33,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            //debuggable true
+            //minifyEnabled false
+            //multiDexEnabled true
+            testCoverageEnabled true
         }
     }
     compileOptions {
@@ -71,11 +85,11 @@ dependencies {
     //JSON object volley dependency
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.2.1'
     //UI testing
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    //androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //Mapbox dependencies
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
@@ -125,7 +139,8 @@ dependencies {
     // Mockito
     testImplementation "org.mockito:mockito-core:2.25.1"
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.9'
-    //
+    testImplementation'org.mockito:mockito-inline:2.13.0'
+    implementation 'androidx.arch.core:core-testing:2.1.0'
 
     //Lifecycle
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -134,7 +149,7 @@ dependencies {
 
     //BottomSheetBehaviour
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.5.0'
 
     //UI testing
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -156,4 +171,25 @@ dependencies {
     //GIF Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
 
+    androidTestImplementation'com.android.support.test:rules:1.0.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2'){
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'com.android.support:support-v4:28.0.0'
+        exclude group: 'com.android.support', module: 'support-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude module: 'com.android.support:support-annotations:28.0.0'
+        exclude module: 'recyclerview-v7'
+    }
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+}
+
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.views
+package views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.views.SplashScreenActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -14,13 +15,13 @@ import org.junit.runner.RunWith
 class SplashScreenActivityTest{
     @Test
     fun test_splash_screen_activity_is_in_view() {
-        val activityScenario= ActivityScenario.launch(SplashScreenActivity::class.java)
+        ActivityScenario.launch(SplashScreenActivity::class.java)
         onView(withId(R.id.splashScreenActivity)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_progress_bar_is_in_view() {
-        val activityScenario= ActivityScenario.launch(SplashScreenActivity::class.java)
+        ActivityScenario.launch(SplashScreenActivity::class.java)
         onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
     }
 }

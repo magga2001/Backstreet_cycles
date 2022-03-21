@@ -134,18 +134,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
-
-//        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
-//            if(ready)
-//            {
-//                fetchPoints()
-//            }
-//        }
+        homePageViewModel.checkPermission(this, activity = this)
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
+
+
     }
 
     private fun IncrementAndDecrementUsersFunc(){
@@ -273,7 +269,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
         nextPageButton  = findViewById(R.id.nextPageButton)
-        nextPageButton.isEnabled = false
+        nextPageButton.isEnabled = true
 
         createListOfItems()
         itemTouchMethods()
@@ -321,6 +317,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun createListOfItems(){
         homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        homePageViewModel.addStop(Locations("BackStreet Cyclist Hub", 51.5014, -0.1419))
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
@@ -554,7 +551,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         builder.setTitle("Planner Alert")
         builder.setMessage("There is already a planned journey that you are currently using." +
                 "Do you want to continue with the current journey or with the newly created one?")
-
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             val listOfLocations = journeyViewModel.getListLocations().toMutableList()
             MapRepository.location = listOfLocations

@@ -103,5 +103,4 @@ class HomePageRepository(private val application: Application) {
             ), 4000
         )
     }
-
 }
