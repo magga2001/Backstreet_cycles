@@ -14,10 +14,12 @@ class SharedPrefHelper {
     {
         private lateinit var sharedPref: SharedPreferences
         private lateinit var key:String
+        private lateinit var application: Application
 
         fun initialiseSharedPref(application: Application, key: String)
         {
 //            setKey(application, key)
+            this.application = application
             this.key = key
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
@@ -57,8 +59,9 @@ class SharedPrefHelper {
             }
         }
 
-        fun setKey(application: Application,key:String)
+        fun chengeSharedPref(key:String)
         {
+            this.key = key
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
         }
