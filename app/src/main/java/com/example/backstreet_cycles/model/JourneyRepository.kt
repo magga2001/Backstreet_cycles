@@ -284,7 +284,6 @@ class JourneyRepository(private val application: Application,
             .coordinatesList(points)
             // set it to true if you want to receive alternate routes to your destination
             .alternatives(true)
-            .enableRefresh(true)
             .build()
     }
 
@@ -365,8 +364,8 @@ class JourneyRepository(private val application: Application,
             prices++
         }
 
-        distanceMutableLiveData.postValue(distances.sum().toString())
-        durationMutableLiveData.postValue((durations.sum()/60).toString())
+        distanceMutableLiveData.postValue(distances.sum().roundToInt().toString())
+        durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
         priceMutableLiveData.postValue((prices*numberOfUsers).toString())
     }
 
