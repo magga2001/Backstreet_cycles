@@ -20,6 +20,7 @@ import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.example.backstreet_cycles.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.mapbox.geojson.Point
 import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
 
 class WorkerService(context: Context, userParameters: WorkerParameters) :
@@ -60,7 +61,12 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         Log.i("currentDocks", currentDocks.size.toString())
 
-        docks.filter { currentDocks.contains(it) }
+//        docks.filter { currentDocks.contains(it) }
+
+        docks.filter {
+            val point = Point.fromLngLat(it.lon, it.lat)
+            currentDocks.contains(point)
+        }
 
         //1 is for numUser
         for(dock in docks)
