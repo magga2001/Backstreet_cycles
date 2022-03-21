@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.utils.SnackbarHelper
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 
@@ -24,11 +25,7 @@ class EditUserProfileActivity : AppCompatActivity() {
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
-                Toast.makeText(
-                    this@EditUserProfileActivity,
-                    getString(R.string.profile_updated),
-                    Toast.LENGTH_SHORT
-                ).show()
+                SnackbarHelper.displaySnackbar(editUserProfile,"Profile Updated Successfully")
                 val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

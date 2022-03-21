@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,12 +27,14 @@ import com.example.backstreet_cycles.service.NetworkManager
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.utils.SharedPrefHelper
+import com.example.backstreet_cycles.utils.SnackbarHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
@@ -59,6 +60,7 @@ import java.util.*
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
+    //private lateinit var snackbarHelper: SnackbarHelper
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
@@ -98,6 +100,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
         IncrementAndDecrementUsersFunc()
+
 
         homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
         homePageViewModel.stops.observe(this) { stops = it }
@@ -160,7 +163,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         plusBtn.setOnClickListener(){
           if(numberOfUsers>3){
-              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
+              SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
           }
           else{
               textOfNumberOfUsers.text = ""+ ++numberOfUsers
@@ -175,7 +178,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 textOfNumberOfUsers.text = ""+ --numberOfUsers
             }
             else{
-                Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()
+                SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
+
             }
         }
 
@@ -185,7 +189,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(Locations(name,lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
+        SnackbarHelper.displaySnackbar(HomePageActivity, "Adding Stop")
         enableNextPageButton()
         enableMyLocationButton()
 
@@ -196,7 +200,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop,Locations(name,lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
+        SnackbarHelper.displaySnackbar(HomePageActivity, "Changing Location Of Stop")
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -300,14 +304,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         myLocationButton.setOnClickListener {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-            Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
         }
 
         nextPageButton.setOnClickListener{
             NetworkManager.getDock(context = applicationContext,
-
                 object : CallbackListener<MutableList<Dock>> {
                     override fun getResult(objects: MutableList<Dock>) {
                         Log.i("Dock Application", objects.size.toString())
@@ -316,7 +318,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     }
                 }
             )
-            Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -338,7 +339,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     enableNextPageButton()
                 }
                 else{
-                    Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+                    SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot remove location")
                 }
             }
 
@@ -440,7 +441,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
             }
             else{
-                Toast.makeText(this, "Location already in stops.", Toast.LENGTH_SHORT).show()
+                SnackbarHelper.displaySnackbar(HomePageActivity, "Location already in list")
             }
         }
     }
@@ -484,16 +485,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
-        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG)
-            .show()
+        SnackbarHelper.displaySnackbar(HomePageActivity, R.string.user_location_permission_explanation.toString())
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if (granted) {
             mapboxMap.getStyle { style -> enableLocationComponent(style) }
         } else {
-            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG)
-                .show()
+            SnackbarHelper.displaySnackbar(HomePageActivity, R.string.user_location_permission_not_granted.toString())
             finish()
         }
     }
