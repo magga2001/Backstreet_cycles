@@ -11,13 +11,13 @@ import com.google.firebase.ktx.Firebase
 
 class LogInRegisterViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository =
+        UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
     private val mutableLiveData: MutableLiveData<FirebaseUser>
 
 
 
     init {
-        userRepository = UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
         mutableLiveData = userRepository.getMutableLiveData()
 //        mutableLiveData = MutableLiveData()
     }

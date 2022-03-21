@@ -11,26 +11,31 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.EditUserProfileActivity
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class EditUserProfileActivityTest{
 
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+
+//    @get:Rule val fineLocPermissionRule: GrantPermissionRule =
+//        GrantPermissionRule.grant(
+//            android.Manifest.permission.ACCESS_FINE_LOCATION,
+//            android.Manifest.permission.ACCESS_NETWORK_STATE,
+//            android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {
-        logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
-        logInRegisterViewModel.getMutableLiveData().value?.email?.let { Log.i("currentuser", it) }
+        Application().onCreate()
 
         ActivityScenario.launch(EditUserProfileActivity::class.java)
-
     }
     @Test
     fun test_activity_is_in_view() {
@@ -58,11 +63,9 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
+    fun test_on_pressBack_go_to_HomePageActivity(){
         pressBack()
         onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
     }
-
-
 
 }

@@ -12,7 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
-import com.example.backstreet_cycles.dto.Users
+//import com.example.backstreet_cycles.dto.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +28,8 @@ import org.junit.runner.RunWith
 class NavMenuTest {
 //    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
+    private val email: String = "backstreet.cycles.test.user@gmail.com"
+    private val password: String =" 123456"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val userRepository: UserRepository =
@@ -36,12 +38,13 @@ class NavMenuTest {
     @Before
     fun setUp() {
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
-        if (firebaseAuth.currentUser != null){
-            userRepository.logout()
-            userRepository.login("backstreet.cycles.test.user@gmail.com","123456")
-        } else {
-            userRepository.login("backstreet.cycles.test.user@gmail.com","123456")
-        }
+//        if (firebaseAuth.currentUser != null){
+//            firebaseAuth.signOut()
+//            userRepository.login(email,password)
+////            userRepository.getMutableLiveData().postValue(firebaseAuth.currentUser)
+//        } else {
+//            userRepository.login(email, password)
+//        }
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
     }
@@ -62,7 +65,7 @@ class NavMenuTest {
         onView(withId(R.id.profile)).check(matches(isDisplayed()))
         onView(withId(R.id.changePassword)).check(matches(isDisplayed()))
         onView(withId(R.id.about)).check(matches(isDisplayed()))
-        onView(withId(R.id.help)).check(matches(isDisplayed()))
+//        onView(withId(R.id.help)).check(matches(isDisplayed()))
         onView(withId(R.id.logout)).check(matches(isDisplayed()))
     }
 

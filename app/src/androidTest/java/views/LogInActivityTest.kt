@@ -19,7 +19,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.app.Application
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
+import org.junit.After
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -29,10 +31,11 @@ class LogInActivityTest{
     private val userRepository: UserRepository =
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
 
+    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
     @Before
     fun setUp() {
-        if (firebaseAuth.currentUser != null){
+        if (firebaseAuth.currentUser != null) {
             userRepository.logout()
         }
     }
@@ -95,6 +98,12 @@ class LogInActivityTest{
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
         pressBack()
         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+    }
+
+    @After
+    fun tearDown(){
+        logInRegisterViewModel = LogInRegisterViewModel(Application())
+        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com", "123456")
     }
 
 }

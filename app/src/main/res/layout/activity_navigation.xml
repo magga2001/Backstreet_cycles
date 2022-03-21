@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:visibility="visible"
-    android:id="@+id/navigationActivity">
+    android:id="@+id/navigation_activity">
 
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"

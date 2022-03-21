@@ -16,6 +16,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
+import com.example.backstreet_cycles.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.HomePageActivity
 import org.junit.Before
@@ -25,16 +26,17 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class JourneyActivityTest{
 
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    //lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    lateinit var journeyViewModel:JourneyViewModel
 
 
     @Before
     fun setUp() {
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
-        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
-        logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
+//        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+//        logInRegisterViewModel= LogInRegisterViewModel(Application())
+//        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
 
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.nextPageButton)).perform(click())
@@ -42,7 +44,9 @@ class JourneyActivityTest{
         /*if (viewExists(android.R.id.button1)){
             onView(withId(android.R.id.button1)).perform(click())
         }*/
-        onView(withId(android.R.id.button1)).perform(click())
+        if (journeyViewModel.getListLocations().isNotEmpty()) {
+            onView(withId(android.R.id.button1)).perform(click())
+        }
 
     }
 
@@ -90,7 +94,7 @@ class JourneyActivityTest{
     @Test
     fun test_start_navigation_clicked_goes_to_navigation_activity(){
         onView(withId(R.id.start_navigation)).perform(click())
-        onView(withId(R.id.navigationActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.navigation_activity)).check(matches(isDisplayed()))
     }
 
     @Test

@@ -28,11 +28,11 @@ class HomePageActivityTest {
 
     @Before
     fun setUp() {
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
-        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
-        logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
+//        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+//        logInRegisterViewModel= LogInRegisterViewModel(Application())
+//        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
 
     }
 
