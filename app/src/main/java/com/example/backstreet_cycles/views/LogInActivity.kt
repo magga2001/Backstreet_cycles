@@ -55,8 +55,14 @@ class LogInActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
+        buttonForgotPassword.setOnClickListener{
+            startActivity(Intent(this@LogInActivity, ForgotPasswordActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+        }
+
         PermissionHelper.checkPermission(context = this, activity = this)
     }
+
 
     override fun onBackPressed() {
 
