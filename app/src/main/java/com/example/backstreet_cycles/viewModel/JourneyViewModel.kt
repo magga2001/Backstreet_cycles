@@ -3,11 +3,13 @@ package com.example.backstreet_cycles.viewModel
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.LocationRepository
+import com.example.backstreet_cycles.views.NavigationActivity
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
@@ -17,11 +19,15 @@ import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
+import com.mapbox.navigation.ui.maps.camera.NavigationCamera
+import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
+import kotlinx.android.synthetic.main.bottom_sheet_journey.*
+
 
 class JourneyViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -64,9 +70,9 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseLocationComponent(mapView)
     }
 
-    fun initialiseLocationObserver(mapView: MapView): LocationObserver
+    fun initialiseLocationObserver(navigationCamera: NavigationCamera, viewportDataSource: MapboxNavigationViewportDataSource): LocationObserver
     {
-        return journeyRepository.initialiseLocationObserver(mapView)
+        return journeyRepository.initialiseLocationObserver(navigationCamera,viewportDataSource)
     }
 
     fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
@@ -74,19 +80,20 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
     }
 
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
+    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     {
-        return journeyRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView)
+        return journeyRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView, viewportDataSource)
     }
 
     fun initialiseRouteProgressObserver(mapboxMap: MapboxMap,
                                         routeLineApi: MapboxRouteLineApi,
                                         routeLineView: MapboxRouteLineView,
                                         routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView
+                                        routeArrowView: MapboxRouteArrowView,
+                                        viewportDataSource: MapboxNavigationViewportDataSource
     ): RouteProgressObserver
     {
-        return journeyRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView)
+        return journeyRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView,viewportDataSource)
     }
 
     fun checkPermission(context: Context, activity: Activity)

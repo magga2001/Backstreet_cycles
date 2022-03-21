@@ -145,4 +145,12 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.9'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:8.1.1@aar'
 
+    //Notification
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+
+    //WorkManager
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
+
 }

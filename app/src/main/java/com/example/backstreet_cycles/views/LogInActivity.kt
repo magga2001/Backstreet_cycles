@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.utils.PermissionHelper
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.*
@@ -40,7 +41,8 @@ class LogInActivity : AppCompatActivity() {
                     et_password.error = "Please enter a password"
                 }
 
-                else -> loginRegisterViewModel.login(
+                else ->
+                    loginRegisterViewModel.login(
                     et_email.text.trim().toString(),
                     et_password.text.trim().toString()
                 )

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
@@ -34,8 +35,12 @@ import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.directions.session.RoutesUpdatedResult
+import com.mapbox.navigation.core.trip.session.LocationMatcherResult
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
+import com.mapbox.navigation.ui.maps.camera.NavigationCamera
+import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
+import com.mapbox.navigation.ui.maps.camera.transition.NavigationCameraTransitionOptions
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
@@ -85,7 +90,42 @@ class JourneyRepository(private val application: Application): MapRepository(app
         })
     }
 
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): RoutesObserver
+    fun initialiseLocationObserver(navigationCamera: NavigationCamera, viewportDataSource: MapboxNavigationViewportDataSource): LocationObserver
+    {
+        return object : LocationObserver {
+            var firstLocationUpdateReceived = false
+
+            override fun onNewRawLocation(rawLocation: Location) {
+                // not handled
+            }
+
+            override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
+                val enhancedLocation = locationMatcherResult.enhancedLocation
+                // update location puck's position on the map
+                navigationLocationProvider.changePosition(
+                    location = enhancedLocation,
+                    keyPoints = locationMatcherResult.keyPoints,
+                )
+
+                // update camera position to account for new location
+                viewportDataSource.onLocationChanged(enhancedLocation)
+                viewportDataSource.evaluate()
+
+                // if this is the first location update the activity has received,
+                // it's best to immediately move the camera to the current user location
+                if (!firstLocationUpdateReceived) {
+                    firstLocationUpdateReceived = true
+                    navigationCamera.requestNavigationCameraToOverview(
+                        stateTransitionOptions = NavigationCameraTransitionOptions.Builder()
+                            .maxDuration(0) // instant transition
+                            .build()
+                    )
+                }
+            }
+        }
+    }
+
+    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     {
         return RoutesObserver { routeUpdateResult ->
             // RouteLine: wrap the DirectionRoute objects and pass them
@@ -104,6 +144,9 @@ class JourneyRepository(private val application: Application): MapRepository(app
                     routeLineView.renderRouteDrawData(this, value)
                 }
             }
+
+            viewportDataSource.onRouteChanged(routeUpdateResult.routes.first())
+            viewportDataSource.evaluate()
         }
     }
 
@@ -111,10 +154,14 @@ class JourneyRepository(private val application: Application): MapRepository(app
                                         routeLineApi: MapboxRouteLineApi,
                                         routeLineView: MapboxRouteLineView,
                                         routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView
+                                        routeArrowView: MapboxRouteArrowView,
+                                        viewportDataSource: MapboxNavigationViewportDataSource
     ): RouteProgressObserver
     {
         return RouteProgressObserver { routeProgress ->
+
+            viewportDataSource.onRouteProgressChanged(routeProgress)
+            viewportDataSource.evaluate()
             // RouteLine: This line is only necessary if the vanishing route line feature
             // is enabled.
             routeLineApi.updateWithRouteProgress(routeProgress) { result ->
@@ -140,6 +187,8 @@ class JourneyRepository(private val application: Application): MapRepository(app
                    profile: String,
                    info: Boolean)
     {
+
+        Log.i("Waypoint route", "Success")
 
         location.distinct()
         points.distinct()
@@ -218,6 +267,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
             .coordinatesList(points)
             // set it to true if you want to receive alternate routes to your destination
             .alternatives(true)
+            .enableRefresh(true)
             .build()
     }
 
@@ -288,7 +338,7 @@ class JourneyRepository(private val application: Application): MapRepository(app
 
         var prices = ceil(((((durations.sum()/60) - 30) / minutesRate))) * 2
 
-        if(prices < 0)
+        if(prices <= 0)
         {
             prices = 0.0
         }

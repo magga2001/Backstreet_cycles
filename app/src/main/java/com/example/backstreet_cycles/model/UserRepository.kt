@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
+import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -167,6 +168,7 @@ UserRepository(private val application: Application,
                 if (task.isSuccessful){
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
                         mutableLiveData.postValue(firebaseAuth.currentUser)
+                        WorkHelper.setPeriodicallySendingLogs(application)
                     }
                     else{
                         createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
