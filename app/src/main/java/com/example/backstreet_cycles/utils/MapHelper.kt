@@ -23,9 +23,9 @@ class MapHelper {
 
         fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
         {
-            routes.sortedBy { it.duration() }
+            val route = routes.sortedBy { it.duration() }
 
-            return routes.first()
+            return route.first()
 
         }
 

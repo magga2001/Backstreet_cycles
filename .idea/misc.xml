@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/bottom_sheet_journey.xml" value="0.1" />
         <entry key="..\:/Users/Shahmir/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/drawable/tourist_attraction_icon.xml" value="0.1" />
         <entry key="..\:/Users/Shahmir/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/activity_homepage.xml" value="0.1" />
         <entry key="..\:/Users/Shahmir/AndroidStudioProjects/Backstreet_cycles/app/src/main/res/layout/activity_journey.xml" value="0.2128623188405797" />
@@ -42,18 +43,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.174" />
-        <entry key="app/src/main/res/layout/activity_change_email_or_password.xml" value="0.1586147926464301" />
-        <entry key="app/src/main/res/layout/activity_edit_user_profile.xml" value="0.16228467815049863" />
-        <entry key="app/src/main/res/layout/activity_faq.xml" value="0.16228467815049863" />
-        <entry key="app/src/main/res/layout/activity_forgot_password.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_homepage.xml" value="0.11951525282072713" />
-        <entry key="app/src/main/res/layout/activity_journey.xml" value="0.16228467815049863" />
-        <entry key="app/src/main/res/layout/activity_journey_history.xml" value="0.1586147926464301" />
-        <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.16228467815049863" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/bottom_sheet_journey.xml" value="0.16228467815049863" />
-        <entry key="app/src/main/res/layout/homepage_bottom_sheet.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/layout_recent_journeys_card.xml" value="0.10987601539119282" />
         <entry key="app/src/main/res/layout/location_data.xml" value="0.10925925925925926" />
       </map>
     </option>

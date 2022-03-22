@@ -317,7 +317,7 @@ class JourneyRepository(private val application: Application,
                     }
                     else
                     {
-                        currentRoute.add(MapHelper.getFastestRoute(routes))
+                        currentRoute.add(fastestRoute)
                         isReadyMutableLiveData.postValue(true)
                     }
                 }
@@ -351,6 +351,9 @@ class JourneyRepository(private val application: Application,
 
         distances.add(route.distance())
         durations.add(route.duration())
+
+        Log.i("distance size", distances.size.toString())
+        Log.i("duration size", durations.size.toString())
 
         var prices = ceil(((((durations.sum()/60) - MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / minutesRate))) * 2
 

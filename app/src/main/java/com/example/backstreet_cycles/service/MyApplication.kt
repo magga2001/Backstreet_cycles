@@ -7,7 +7,7 @@ import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.google.firebase.auth.FirebaseAuth
 
 
-class Application : Application() {
+class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,6 +24,7 @@ class Application : Application() {
             {
                 WorkHelper.cancelWork(context = applicationContext)
             }
+//            WorkHelper.cancelWork(context = applicationContext)
         },5000)
 
     }
