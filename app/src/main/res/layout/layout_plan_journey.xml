@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="79dp"
+        android:layout_width="398dp"
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:orientation="vertical">
@@ -31,13 +31,13 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/tv_from"
                         android:layout_width="185dp"
                         android:layout_height="35dp"
                         android:layout_marginTop="12dp"
                         android:text="@string/from_startingpoint"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.485"
                         app:layout_constraintStart_toStartOf="parent"
@@ -45,12 +45,12 @@
 
                     <TextView
                         android:id="@+id/tv_to"
-                        android:textColor="@color/black"
                         android:layout_width="185dp"
                         android:layout_height="35dp"
                         android:layout_marginBottom="4dp"
                         android:text="@string/to_destination"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@color/black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.485"
@@ -100,7 +100,7 @@
                 <LinearLayout
                     android:id="@+id/expandableLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="234dp"
                     android:layout_marginTop="5dp"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -126,7 +126,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:elevation="0dp"
-                            android:text="set navigation"
+                            android:text="@string/set_navigation"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +134,7 @@
                             app:layout_constraintHorizontal_bias="0.89"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
+                            app:layout_constraintVertical_bias="0.4" />
 
                         <ImageView
                             android:id="@+id/imageView"
@@ -162,9 +162,10 @@
                             android:src="@drawable/cycle_from_dock"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/setNav2"
+                            app:layout_constraintHorizontal_bias="0.491"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="1.0" />
+                            app:layout_constraintVertical_bias="0.0" />
 
                         <Button
                             android:id="@+id/setNav2"
@@ -172,7 +173,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:elevation="0dp"
-                            android:text="set navigation"
+                            android:text="@string/set_navigation"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -207,7 +208,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:elevation="0dp"
-                            android:text="set navigation"
+                            android:text="@string/set_navigation"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="parent"
