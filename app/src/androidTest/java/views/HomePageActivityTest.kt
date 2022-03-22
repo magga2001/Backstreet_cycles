@@ -18,6 +18,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.HomePageActivity
 import org.junit.Before
@@ -25,6 +26,7 @@ import org.junit.Test
 
 class HomePageActivityTest {
     lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    //lateinit var homePageViewModel: HomePageViewModel
 
     @Before
     fun setUp() {
@@ -33,6 +35,12 @@ class HomePageActivityTest {
 //        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
 //        logInRegisterViewModel= LogInRegisterViewModel(Application())
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+
+    }
+
+    @Test
+    fun abc(){
+        ActivityScenario.launch(HomePageActivity::class.java)
 
     }
 

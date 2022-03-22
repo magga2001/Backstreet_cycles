@@ -13,6 +13,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,17 +26,16 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
-//    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
-    private val email: String = "backstreet.cycles.test.user@gmail.com"
-    private val password: String =" 123456"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private val userRepository: UserRepository =
-        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
     @Before
     fun setUp() {
+        if (firebaseAuth.currentUser == null) {
+            logInRegisterViewModel= LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        }
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
 //        if (firebaseAuth.currentUser != null){
 //            firebaseAuth.signOut()
@@ -84,7 +84,7 @@ class NavMenuTest {
 
     @Test
     fun test_viewJourneyHistory_toJourneyHistoryActivity() {
-        onView(withId(R.id.journeyHistory)).perform(click())
+        onView(withId(R.id.journeyHistory)).perform(ViewActions.click())
         onView(withId(R.id.journeyHistoryActivity)).check(matches(isDisplayed()))
     }
 
@@ -104,8 +104,6 @@ class NavMenuTest {
     @Test
     fun test_aboutButton_to_aboutActivity()
     {
-        val activityScenario = ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.nav_view)).perform(click())
         onView(withId(R.id.about)).perform(ViewActions.click())
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
     }
@@ -122,7 +120,7 @@ class NavMenuTest {
     }
 
     @Test
-    fun test_nav_equalCurrentUserName(){
+    fun test_nav_equalCurrentUserName(){ //*****
         val testUserName = FirebaseFirestore.getInstance().collection("users")
             .whereEqualTo("email", FirebaseAuth.getInstance().currentUser!!.email)
             .get().result.toObjects(Users::class.java)[0].firstName

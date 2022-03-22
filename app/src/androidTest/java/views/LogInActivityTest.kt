@@ -17,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.app.Application
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
@@ -74,7 +75,7 @@ class LogInActivityTest{
     @Test
     fun test_navigation_createAccount() {
         test_buttonCreateAccount_is_visible()
-        onView(withId(R.id.buttonCreateAccount)).perform(click())
+        onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
 
     }
