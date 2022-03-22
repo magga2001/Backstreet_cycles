@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+<!-- Generic -->
     <string name="app_name">Backstreet Cycles</string>
     <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
@@ -11,7 +12,6 @@
     <string name="plan_a_journey">Plan A Journey</string>
     <string name="view_profile">View Profile</string>
     <string name="about">About</string>
-    <string name="help">Help</string>
     <string name="from">From: </string>
     <string name="current_location">Current Location</string>
     <string name="to">To: </string>
@@ -80,25 +80,17 @@
     <string name="preference_file_Locations">\"LOCATIONS\"</string>
     <string name="continue_with_current_journey">Current Journey</string>
     <string name="continue_with_newly_set_journey">Newly Created Journey</string>
-    <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
-    <string name="FAQ">Frequently Asked Question</string>
-    <string name="Q1">Where can I hire bikes from?</string>
-    <string name="A1">You can hire bikes using the following link which redirects you to TFL’s Santander cycle hire app or just hire them at the docking station which our application tells you.</string>
-    <string name="A2">TFL’s Santander cycles only allows you to hire up to four cycles at a time, so the app restricts you to cycle alongside four cyclists as well since it’s easier for you to find empty docks as well.</string>
-    <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
-    <string name="Q3">How do I set the navigation?</string>
-    <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
     <string name="from_startingpoint">From:</string>
-    <string name="from_to_">from to</string>
     <string name="to_destination">To:</string>
     <string name="done_journey">Done</string>
     <string name="journey_history">Journey History</string>
     <string name="current_journey">Current Journey</string>
-    <string name="about_us">About us</string>
+
     <string name="add_stop_button" />
-    <string name="recent_journeys">Recent Journeys</string>
-    <string name="finish_journey">Finish Journey</string>
+    <string name="recent_journeys">Recent  Journeys</string>
     <string name="forgot_password">Forgot Password?</string>
+
+<!-- Strings on Journey Activity and all the other views in the  -->
     <string name="openArrow">v</string>
     <string name="closeArrow">></string>
     <string name="start_navigation_journey">Start Navigation</string>
@@ -108,5 +100,29 @@
     <string name="duration">Duration:</string>
     <string name="price">Price:</string>
     <string name="journeys">Journeys:</string>
-    <string name="list_of_stops">List of stops:</string>
+    <string name="set_navigation">set navigation</string>
+    <string name="finish_journey">Finish Journey</string>
+
+<!-- Strings for the menu items -->
+    <!-- Journey History -->
+    <string name="list_of_stops">Journey summary:</string>
+    <string name="from_to_">from to</string>
+
+    <!-- About -->
+    <string name="about_us">About us</string>
+    <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
+
+    <!-- FAQ -->
+    <string name="FAQ">Frequently Asked Question</string>
+    <string name="Q1">Where can I hire bikes from?</string>
+    <string name="A1">You can hire bikes using the following link which redirects you to TFL’s Santander cycle hire app or just hire them at the docking station which our application tells you.</string>
+    <string name="A2">TFL’s Santander cycles only allows you to hire up to four cycles at a time, so the app restricts you to cycle alongside four cyclists as well since it’s easier for you to find empty docks as well.</string>
+    <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
+    <string name="Q3">How do I set the navigation?</string>
+    <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
+
+    <!-- Change password -->
+
+    <!-- View profile -->
+
 </resources>

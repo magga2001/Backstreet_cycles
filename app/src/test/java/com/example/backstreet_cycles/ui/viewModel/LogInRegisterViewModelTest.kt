@@ -1,0 +1,3 @@
+package com.example.backstreet_cycles.ui.viewModel
+
+class LogInRegisterViewModelTest

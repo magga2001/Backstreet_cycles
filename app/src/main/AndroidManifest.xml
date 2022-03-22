@@ -10,7 +10,7 @@
     <uses-permission android:name = "android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
-        android:name = ".service.MyApplication"
+        android:name = ".common.BackstreetApplication"
         android:allowBackup = "true"
         android:icon = "@mipmap/app_icon"
         android:roundIcon = "@mipmap/app_icon_round"
@@ -18,19 +18,19 @@
         android:supportsRtl = "true"
         android:theme = "@style/Theme.Backstreet_cycles">
         <activity
-            android:name = ".views.JourneyHistoryActivity"
+            android:name = "com.example.backstreet_cycles.ui.views.JourneyHistoryActivity"
             android:exported = "false" />
         <activity
-            android:name = ".views.FAQActivity"
-            android:parentActivityName = ".views.HomePageActivity" />
+            android:name = "com.example.backstreet_cycles.ui.views.FAQActivity"
+            android:parentActivityName = "com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
-            android:name = ".views.AboutActivity"
-            android:parentActivityName = ".views.HomePageActivity" />
+            android:name = "com.example.backstreet_cycles.ui.views.AboutActivity"
+            android:parentActivityName = "com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
-            android:name = ".views.NavigationActivity"
+            android:name = "com.example.backstreet_cycles.ui.views.NavigationActivity"
             android:exported = "false" />
         <activity
-            android:name = ".views.SplashScreenActivity"
+            android:name = "com.example.backstreet_cycles.ui.views.SplashScreenActivity"
             android:exported = "true">
             <intent-filter>
                 <action android:name = "android.intent.action.MAIN" />
@@ -38,21 +38,21 @@
                 <category android:name = "android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name = ".views.HomePageActivity" />
-        <activity android:name = ".views.LogInActivity" />
+        <activity android:name = "com.example.backstreet_cycles.ui.views.HomePageActivity" />
+        <activity android:name = "com.example.backstreet_cycles.ui.views.LogInActivity" />
         <activity
-            android:name=".views.ChangeEmailOrPasswordActivity"
-            android:parentActivityName=".views.HomePageActivity" />
+            android:name="com.example.backstreet_cycles.ui.views.ChangeEmailOrPasswordActivity"
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
-            android:name=".views.EditUserProfileActivity"
-            android:parentActivityName=".views.HomePageActivity" />
+            android:name="com.example.backstreet_cycles.ui.views.EditUserProfileActivity"
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
-            android:name=".views.SignUpActivity"
-            android:parentActivityName=".views.LogInActivity" />
+            android:name="com.example.backstreet_cycles.ui.views.SignUpActivity"
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
         <activity
-            android:name=".views.ForgotPasswordActivity"
-            android:parentActivityName=".views.LogInActivity" />
-        <activity android:name=".views.JourneyActivity" />
+            android:name="com.example.backstreet_cycles.ui.views.ForgotPasswordActivity"
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
+        <activity android:name="com.example.backstreet_cycles.ui.views.JourneyActivity" />
     </application>
 
 </manifest>
