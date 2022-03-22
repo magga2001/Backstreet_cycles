@@ -24,17 +24,6 @@ import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
-import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.DTO.Locations
-import com.example.backstreet_cycles.interfaces.CallbackListener
-import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.remote.dto.TflHelper
-import com.example.backstreet_cycles.domain.useCase.PlannerHelper
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.geojson.Point
 import com.mapbox.maps.EdgeInsets
@@ -445,10 +434,8 @@ class JourneyActivity : AppCompatActivity(), Planner {
 
         //To destroy and not let it overlap to next mapbox activity
         mapboxNavigation.setRoutes(listOf())
-//        MapboxNavigationProvider.destroy()
         routeLineView.cancel()
         routeLineApi.cancel()
-//        mapboxNavigation.onDestroy()
     }
 
     override fun onSelectedJourney(location: Locations, profile: String, points : MutableList<Point>) {

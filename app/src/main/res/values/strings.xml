@@ -101,16 +101,6 @@
     <string name="preference_file_Locations" />
     <string name="UPDATE_FAILED" />
 
-
-    <string name="from_to_">From To</string>
-    <string name="done_journey">Done</string>
-    <string name="journey_history">Journey History</string>
-    <string name="current_journey">Current Journey</string>
-    <string name="about_us">About us</string>
-    <string name="add_stop_button" />
-    <string name="recent_journeys">Recent Journeys</string>
-    <string name="finish_journey">Finish Journey</string>
-
     <!--Journey info-->
     <string name="journey_distances">Total Distance: %1$s km</string>
     <string name="journey_durations">Total Duration: %1$s minutes</string>

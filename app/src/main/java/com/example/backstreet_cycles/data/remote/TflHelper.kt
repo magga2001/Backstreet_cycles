@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/com/example/backstreet_cycles/data/remote/TflHelper.kt
 package com.example.backstreet_cycles.data.remote
-========
-package com.example.backstreet_cycles.data.remote.dto
->>>>>>>> origin/version2-refactor:app/src/main/java/com/example/backstreet_cycles/data/remote/dto/TflHelper.kt
 
 import android.content.Context
 import android.util.Log

@@ -12,8 +12,6 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.ui.viewModel.NavigationViewModel
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.ui.viewModel.NavigationViewModel
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.maps.EdgeInsets
 import com.mapbox.maps.MapView

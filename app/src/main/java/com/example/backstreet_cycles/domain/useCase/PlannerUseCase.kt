@@ -36,8 +36,8 @@ object PlannerUseCase {
         }
 
         SharedPrefHelper.initialiseSharedPref(application, "DOCKS_LOCATIONS")
-        SharedPrefHelper.overrideSharedPref(points)
-        SharedPrefHelper.getSharedPref()
+        SharedPrefHelper.overrideSharedPref(points, Point::class.java)
+        SharedPrefHelper.getSharedPref(Point::class.java)
     }
 
     fun calcRoutePlanner(

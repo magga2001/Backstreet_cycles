@@ -1,19 +1,12 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import androidx.lifecycle.MutableLiveData
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.example.backstreet_cycles.DTO.Dock
-import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import org.json.JSONArray
 import timber.log.Timber
 
 
@@ -77,76 +70,4 @@ class LocationRepository(private val application: Application) {
     fun getStops(): MutableList<Locations> {
         return stops
     }
-<<<<<<< HEAD
-=======
-
-    private fun loadDocks()
-    {
-        isReadyMutableLiveData.postValue(false)
-        // Instantiate the RequestQueue.
-        val queue = Volley.newRequestQueue(application)
-        val url = application.getString(R.string.tfl_url)
-
-        val stringRequest = StringRequest(
-            Request.Method.GET, url,
-            { response ->
-                val json = JSONArray(response)
-                addDocks(json)
-            },
-            {
-                Timber.tag("ERROR").w("Fail to fetch data")
-                isReadyMutableLiveData.postValue(false)
-            })
-
-        queue.add(stringRequest)
-    }
-
-    private fun addDocks(json: JSONArray)
-    {
-        for(i in 0 until json.length())
-        {
-            val id = json.getJSONObject(i).getString("id")
-            val name = json.getJSONObject(i).getString("commonName")
-            val lat = json.getJSONObject(i).getDouble("lat")
-            val lon = json.getJSONObject(i).getDouble("lon")
-            val nbBikes = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(6).getString("value"))
-            val nbSpaces = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(7).getString("value"))
-            val nbDocks = checkValidity(json.getJSONObject(i).getJSONArray("additionalProperties").getJSONObject(8).getString("value"))
-
-            //Check if dock is broken
-            if(validDock(nbBikes,nbSpaces,nbDocks))
-            {
-                val dock = Dock(id,name,lat,lon,nbBikes,nbSpaces,nbDocks)
-                docks.add(dock)
-                Timber.tag("Dock_station $i").w(dock.toString())
-            }
-        }
-        isReadyMutableLiveData.postValue(true)
-    }
-
-    fun getDocks(): MutableList<Dock> {
-        docks.clear()
-        loadDocks()
-        return docks
-    }
-
-    private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean
-    {
-        return (nbDocks - (nbBikes + nbSpaces) == 0)
-    }
-
-    private fun checkValidity(value : String): Int
-    {
-        return try {
-            value.toInt()
-        } catch (e: Exception) {
-            // handler
-            0
-        }
-    }
-
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
-    }
->>>>>>> origin/version2-refactor
 }
