@@ -25,6 +25,7 @@ import com.example.backstreet_cycles.interfaces.CallbackListener
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.service.NetworkManager
 import com.example.backstreet_cycles.service.WorkHelper
+import com.example.backstreet_cycles.utils.PlannerHelper
 import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.utils.SnackbarHelper
 import com.example.backstreet_cycles.utils.TouchScreenCallBack
@@ -131,6 +132,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val intent = Intent(this, JourneyActivity::class.java)
                 intent.putExtra("NUM_USERS",numberOfUsers)
                 SharedPrefHelper.initialiseSharedPref(application,"NUM_USERS")
+                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers))
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
