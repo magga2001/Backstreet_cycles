@@ -8,9 +8,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/light_blue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/underLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +32,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout7"
                 android:layout_width="351dp"
-                android:layout_height="86dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded"
-                >
+                android:background="@drawable/rounded">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/linearLayout6"
@@ -52,6 +51,7 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
                     android:text="@string/list_of_stops"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/indigo"
@@ -64,9 +64,11 @@
 
                 <TextView
                     android:id="@+id/tv_recent_journey"
-                    android:layout_width="337dp"
-                    android:layout_height="21dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_width="341dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/from_to_"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/black"
@@ -76,7 +78,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView"
-                    app:layout_constraintVertical_bias="0.239" />
+                    app:layout_constraintVertical_bias="0.0" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
