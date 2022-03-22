@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class EditUserProfileActivityTest{
 
-    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+//    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
 //    @get:Rule val fineLocPermissionRule: GrantPermissionRule =
 //        GrantPermissionRule.grant(
@@ -33,7 +33,7 @@ class EditUserProfileActivityTest{
 
     @Before
     fun setUp() {
-        Application().onCreate()
+//        Application().onCreate()
 
         ActivityScenario.launch(EditUserProfileActivity::class.java)
     }

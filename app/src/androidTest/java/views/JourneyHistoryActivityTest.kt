@@ -29,8 +29,6 @@ class JourneyHistoryActivityTest {
         logInRegisterViewModel = LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com", "123456")
         ActivityScenario.launch(JourneyHistoryActivity::class.java)
-
-
     }
 
     @Test

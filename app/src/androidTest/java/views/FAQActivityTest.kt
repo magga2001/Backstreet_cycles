@@ -10,6 +10,7 @@ package views
 //import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 //import com.example.backstreet_cycles.R
 //import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+//import com.example.backstreet_cycles.views.HomePageActivity
 //import org.junit.Before
 //import org.junit.Test
 //import org.junit.runner.RunWith
@@ -22,62 +23,61 @@ package views
 //    fun setUp() {
 //
 //        ActivityScenario.launch(HomePageActivity::class.java)
-//        Espresso.onView(ViewMatchers.withId(R.id.nav_view)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.nav_view)).perform(ViewActions.click())
 //    }
 //
 //    @Test
 //    fun test_about_help_to_FAQActivity() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
-//        Espresso.onView(withId(R.id.FAQActivity)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//        Espresso.onView(withId(R.id.faq)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.FAQ_activity)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_FAQtitle_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
-//        Espresso.onView(withId(R.id.FAQTitle)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//        Espresso.onView(withId(R.id.FAQ_activity)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.faq_title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_title1_is_displayed() {
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.title1)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_text1_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(ViewMatchers.withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.text1)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_title2_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.title2)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_text2_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.text2)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_title3_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(ViewMatchers.withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.title3)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //
 //    @Test
 //    fun test_text3_is_displayed() {
 //
-//        Espresso.onView(ViewMatchers.withId(R.id.help)).perform(ViewActions.click())
+//        Espresso.onView(ViewMatchers.withId(R.id.FAQ_activity)).perform(ViewActions.click())
 //        Espresso.onView(withId(R.id.text3)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 //    }
 //

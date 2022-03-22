@@ -34,9 +34,10 @@ class CurrentJourneyTest {
     fun test_activity_is_in_view() {
         onView(withId(R.id.journey_activity)).check(matches(isDisplayed()))
     }
-    @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
-        Espresso.pressBack()
-        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-    }
+
+//    @Test
+//    fun test_on_pressBack_go_to_HomePageActivity() {
+//        Espresso.pressBack()
+//        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+//    }
 }

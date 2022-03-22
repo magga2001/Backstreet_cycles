@@ -29,6 +29,7 @@ class SplashScreenActivityTest{
 
     @Before
     fun setUp() {
+        Application().onCreate()
         /*logInRegisterViewModel= LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")*/
         ActivityScenario.launch(SplashScreenActivity::class.java)
@@ -61,14 +62,14 @@ class SplashScreenActivityTest{
         onView(withId(R.id.motto)).check(matches(isDisplayed()))
     }*/
 
-    @Test
-    fun test_if_logged_HomePage_else_LoginPage(){
-        if(firebaseAuth.currentUser != null){
-            onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-        }
-        else{
-            onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-        }
-    }
+//    @Test
+//    fun test_if_logged_HomePage_else_LoginPage(){
+//        if(firebaseAuth.currentUser != null){
+//            onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+//        }
+//        else{
+//            onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+//        }
+//    }
 
 }
