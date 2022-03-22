@@ -212,8 +212,12 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         journeyViewModel.setNumberOfUsers(intent.getIntExtra("NUM_USERS",1))
         PlannerHelper.calcBicycleRental(application,journeyViewModel.getNumberOfUsers(), plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+    }
 
-
+    override fun onStop() {
+        super.onStop()
+        MapRepository.distances.clear()
+        MapRepository.durations.clear()
     }
 
     private fun init() {
