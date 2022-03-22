@@ -468,24 +468,26 @@ class JourneyRepository(private val application: Application,
             .await()
         val gson = Gson()
         val jsonObject = gson.toJson(locations)
-        userDetails.journeyHistory.add(jsonObject)
+        if (jsonObject.isNotEmpty()){
+            userDetails.journeyHistory.add(jsonObject)
+            if (user.documents.isNotEmpty()) {
+                for (document in user) {
 
-        if (user.documents.isNotEmpty()) {
-            for (document in user) {
-
-                try {
-                    dataBase.collection("users")
-                        .document(document.id)
-                        .update("journeyHistory",userDetails.journeyHistory)
-                }
-                catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                    try {
+                        dataBase.collection("users")
+                            .document(document.id)
+                            .update("journeyHistory",userDetails.journeyHistory)
+                    }
+                    catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-
             }
         }
+
+
     }
 
     fun convertJSON(serializedObject: String): List<Locations> {

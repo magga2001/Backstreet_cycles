@@ -14,6 +14,8 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.lang.reflect.Type
 import com.mapbox.geojson.Point
+import java.lang.reflect.ParameterizedType
+import java.util.*
 
 class SharedPrefHelper {
 
@@ -22,13 +24,14 @@ class SharedPrefHelper {
         private lateinit var sharedPref: SharedPreferences
         private lateinit var key:String
         private lateinit var application: Application
-        private val pointType = Types.newParameterizedType(List::class.java, Point::class.java)
+//        private lateinit var parameterizedType: ParameterizedType
 
         fun initialiseSharedPref(application: Application, key: String)
         {
 //            setKey(application, key)
             this.application = application
             this.key = key
+
             sharedPref = application.getSharedPreferences(
                 key, Context.MODE_PRIVATE)
         }
@@ -39,9 +42,8 @@ class SharedPrefHelper {
             return serializedObject?.isEmpty()!!
         }
 
-        fun <T> overrideSharedPref(values: MutableList<T>) {
-            val gson = Gson();
-            val json = gson.toJson(values);
+        fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
+            val json = objectToString(values, type)
             with (sharedPref.edit()) {
                 putString(key, json)
                 apply()
@@ -55,21 +57,29 @@ class SharedPrefHelper {
             }
         }
 
-        fun getSharedPref(): List<Point>? {
+        fun <T> getSharedPref(type: Class<T>): List<T>? {
             val serializedObject: String? =
                 sharedPref.getString(key, null)
             Log.i("serializedObject", serializedObject.toString())
             return if (serializedObject != null) {
-//                val gson = Gson()
-//                val type: Type = object : TypeToken<List<T>?>() {}.type
-//                gson.fromJson(serializedObject, type)
-                val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-                val adapter: JsonAdapter<List<Point>> = moshi.adapter(pointType)
-                Log.i("adapter", adapter.fromJson(serializedObject).toString())
-                adapter.fromJson(serializedObject)
+                  stringToObject(serializedObject, type)
             } else {
                 emptyList()
             }
+        }
+
+        fun <T> stringToObject(text: String,  type: Class<T>): List<T>? {
+            val parameterizedType = Types.newParameterizedType(List::class.java,type)
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
+            return adapter.fromJson(text)
+        }
+
+        fun <T> objectToString(values: List<T>,  type: Class<T>): String{
+            val parameterizedType = Types.newParameterizedType(List::class.java,type)
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
+            return adapter.toJson(values)
         }
 
         fun changeSharedPref(key:String)

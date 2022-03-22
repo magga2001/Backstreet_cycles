@@ -132,7 +132,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val intent = Intent(this, JourneyActivity::class.java)
                 intent.putExtra("NUM_USERS",numberOfUsers)
                 SharedPrefHelper.initialiseSharedPref(application,"NUM_USERS")
-                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers))
+                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
