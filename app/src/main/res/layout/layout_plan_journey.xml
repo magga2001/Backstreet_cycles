@@ -31,6 +31,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/black"
                         android:id="@+id/tv_from"
                         android:layout_width="185dp"
                         android:layout_height="35dp"
@@ -44,6 +45,7 @@
 
                     <TextView
                         android:id="@+id/tv_to"
+                        android:textColor="@color/black"
                         android:layout_width="185dp"
                         android:layout_height="35dp"
                         android:layout_marginBottom="4dp"

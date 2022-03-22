@@ -50,19 +50,18 @@
                     android:layout_marginBottom="10dp">
 
                     <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="35dp"
                         android:src="@drawable/santander_cycle_icon"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/santander_link"
-                        app:layout_constraintHorizontal_bias="0.153"
+                        app:layout_constraintHorizontal_bias="0.296"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.454" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
                         android:id="@+id/santander_link"
-                        android:layout_width="280dp"
+                        android:layout_width="285dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:text="@string/hire_a_bike"
@@ -97,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/distance"
-                        android:textColor="@color/baby_blue"
+                        android:textColor="@color/indigo"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -128,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/duration"
-                        android:textColor="@color/baby_blue"
+                        android:textColor="@color/indigo"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -160,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/price"
-                        android:textColor="@color/baby_blue"
+                        android:textColor="@color/indigo"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -183,7 +182,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/plan_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="224dp">
+                    android:layout_height="240dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 

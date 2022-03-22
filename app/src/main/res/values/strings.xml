@@ -15,8 +15,6 @@
     <string name="from">From: </string>
     <string name="current_location">Current Location</string>
     <string name="to">To: </string>
-    <string name="origin">e.g. Waterloo</string>
-    <string name="destination">e.g. Shoreditch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Depart">Depart</string>
     <string name="Arrive">Arrive</string>
@@ -27,7 +25,7 @@
     <string name="log_in">Log In</string>
     <string name="previous">Previous</string>
 
-    <string name="log_in_title">backstreet cycles.</string>
+    <string name="log_in_title">Backstreet Cycles</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -37,7 +35,7 @@
     <string name="next">Next</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="sign_up_title">create an account.</string>
+    <string name="sign_up_title">Create an account</string>
     <string name="sign_up">Sign Up</string>
     <string name="f_name">First Name</string>
     <string name="l_name">Last Name</string>
@@ -52,7 +50,7 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="LOG_IN_FAILED">Log in failed</string>
-    <string name="NO_PERSON_MATCH">No persons matched the query.</string>
+    <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="UPDATE_FAILED">Update Failed</string>
     <string name="PASSWORD_CHANGED">Password Changed</string>
     <string name="REGISTRATION_FAILED">Registration failed</string>
@@ -94,8 +92,8 @@
     <string name="from_to_">from to</string>
     <string name="to_destination">To:</string>
     <string name="done_journey">Done</string>
-    <string name="journey_history">Jounrey History</string>
-    <string name="current_journey">Current Jounrney</string>
+    <string name="journey_history">Journey History</string>
+    <string name="current_journey">Current Journey</string>
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
@@ -110,4 +108,5 @@
     <string name="duration">Duration:</string>
     <string name="price">Price:</string>
     <string name="journeys">Journeys:</string>
+    <string name="list_of_stops">List of stops:</string>
 </resources>
