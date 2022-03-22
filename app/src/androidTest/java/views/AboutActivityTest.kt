@@ -44,7 +44,6 @@ class AboutActivityTest {
 
     @Test
     fun test_about_button_to_AboutActivity() {
-
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
     }
 
