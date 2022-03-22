@@ -205,7 +205,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun enableMyLocationButton(){
         val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
+        var isEnabled: Boolean = false
+        myLocationButton.isEnabled = false
+//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
+          for(location in stops){
+              if(location.name.equals("Current Location")){
+                  isEnabled = false
+                  break
+              }
+              else{
+                  isEnabled = true
+              }
+          }
+        myLocationButton.isEnabled = isEnabled
+
+
     }
 
     private fun enableNextPageButton(){
@@ -317,6 +331,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
             )
         }
+
+        stopsAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
     }
 
     private fun createListOfItems(){
