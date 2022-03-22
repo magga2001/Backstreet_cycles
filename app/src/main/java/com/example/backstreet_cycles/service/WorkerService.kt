@@ -1,12 +1,10 @@
 package com.example.backstreet_cycles.service
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -15,10 +13,11 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.data.remote.dto.TflHelper
 import com.example.backstreet_cycles.interfaces.CallbackListener
-import com.example.backstreet_cycles.utils.SharedPrefHelper
-import com.example.backstreet_cycles.views.HomePageActivity
-import com.example.backstreet_cycles.views.LogInActivity
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.ui.views.HomePageActivity
+import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
@@ -35,7 +34,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
     private fun attemptNotification()
     {
-        NetworkManager.getDock(context = applicationContext,
+        TflHelper.getDock(context = applicationContext,
 
             object : CallbackListener<MutableList<Dock>> {
                 override fun getResult(objects: MutableList<Dock>) {
