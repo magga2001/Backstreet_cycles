@@ -171,14 +171,14 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         journeyViewModel.getDistanceMutableLiveData().observe(this){ distance ->
             if(distance != null)
             {
-                distances.text = "Distance: ${distance} metres"
+                distances.text = "Distance: ${distance} km"
             }
         }
 
         journeyViewModel.getDurationMutableLiveData().observe(this){ duration ->
             if(duration != null)
             {
-                durations.text = "Duration: ${duration} minutes"
+                durations.text = "Duration: ${duration} mins"
             }
         }
 

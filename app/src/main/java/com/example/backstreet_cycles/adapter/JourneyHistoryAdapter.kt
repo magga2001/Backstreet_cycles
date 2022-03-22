@@ -45,11 +45,16 @@ class JourneyHistoryAdapter(
     }
 
     private fun constructString(newList: List<String>): String {
-        var str = "List of stops "
+        var str = ""
         for (i in 0 until newList.size) {
-            str += "\n ${i+1}: ${newList[i]}"
+            str += "\n ${i+1}: ${shortenName(newList[i]).first()}"
         }
         return str
+    }
+
+    private fun shortenName(name: String): List<String> {
+        val delimiter = ","
+        return name.split(delimiter)
     }
 
     override fun getItemCount(): Int {

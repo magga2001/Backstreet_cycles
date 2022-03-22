@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Backstreet_cycles</string>
+    <string name="app_name">Backstreet Cycles</string>
     <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
     <string name="user_location_permission_explanation">Permission needed</string>
@@ -15,8 +15,6 @@
     <string name="from">From: </string>
     <string name="current_location">Current Location</string>
     <string name="to">To: </string>
-    <string name="origin">e.g. Waterloo</string>
-    <string name="destination">e.g. Shoreditch</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Depart">Depart</string>
     <string name="Arrive">Arrive</string>
@@ -27,7 +25,7 @@
     <string name="log_in">Log In</string>
     <string name="previous">Previous</string>
 
-    <string name="log_in_title">backstreet cycles.</string>
+    <string name="log_in_title">Backstreet Cycles</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -37,7 +35,7 @@
     <string name="next">Next</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="sign_up_title">create an account.</string>
+    <string name="sign_up_title">Create an account</string>
     <string name="sign_up">Sign Up</string>
     <string name="f_name">First Name</string>
     <string name="l_name">Last Name</string>
@@ -52,7 +50,7 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="LOG_IN_FAILED">Log in failed</string>
-    <string name="NO_PERSON_MATCH">No persons matched the query.</string>
+    <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="UPDATE_FAILED">Update Failed</string>
     <string name="PASSWORD_CHANGED">Password Changed</string>
     <string name="REGISTRATION_FAILED">Registration failed</string>
@@ -72,7 +70,7 @@
     <string name="add_button">Add Button</string>
     <string name="location_button">Location Button</string>
     <string name="next_page_button">Next Page Button</string>
-    <string name="users_number">Users:</string>
+    <string name="cyclists_number">Cyclists:</string>
     <string name="decrement">-</string>
     <string name="increment">+</string>
     <string name="start_journey">Start journey</string>
@@ -90,13 +88,25 @@
     <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
     <string name="Q3">How do I set the navigation?</string>
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
-    <string name="from_to_">From To</string>
+    <string name="from_startingpoint">From:</string>
+    <string name="from_to_">from to</string>
+    <string name="to_destination">To:</string>
     <string name="done_journey">Done</string>
-    <string name="journey_history">Jounrey History</string>
-    <string name="current_journey">Current Jounrney</string>
+    <string name="journey_history">Journey History</string>
+    <string name="current_journey">Current Journey</string>
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
     <string name="finish_journey">Finish Journey</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="openArrow">v</string>
+    <string name="closeArrow">></string>
+    <string name="start_navigation_journey">Start Navigation</string>
+    <string name="hire_a_bike">Hire a bike</string>
+    <string name="journey_overview">Journey overview</string>
+    <string name="distance">Distance:</string>
+    <string name="duration">Duration:</string>
+    <string name="price">Price:</string>
+    <string name="journeys">Journeys:</string>
+    <string name="list_of_stops">List of stops:</string>
 </resources>
