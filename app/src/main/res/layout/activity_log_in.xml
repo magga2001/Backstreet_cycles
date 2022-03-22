@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logInActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/logInActivity"
     tools:context=".views.LogInActivity">
 
 
@@ -40,7 +40,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintVertical_bias="0.183" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -54,8 +54,8 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/vintage_cycle_016_by_onedollarshop_classic_bicycles_11563245064vlzjdbjdby"
-            android:contentDescription="@string/vintage_cycle_image" />
+            android:contentDescription="@string/vintage_cycle_image"
+            app:srcCompat="@drawable/vintage_cycle_016_by_onedollarshop_classic_bicycles_11563245064vlzjdbjdby" />
     </FrameLayout>
 
     <LinearLayout
@@ -125,13 +125,17 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/buttonForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:minHeight="48dp"
         android:text="Forgot Password?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.889"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.523" />
 </androidx.constraintlayout.widget.ConstraintLayout>
