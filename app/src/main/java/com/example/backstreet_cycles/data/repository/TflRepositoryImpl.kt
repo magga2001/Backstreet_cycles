@@ -1,12 +1,9 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.content.Context
 import android.util.Log
 import com.example.backstreet_cycles.data.remote.TflApi
 import com.example.backstreet_cycles.data.remote.dto.DockDto
-import com.example.backstreet_cycles.domain.model.DTO.Dock
-import com.example.backstreet_cycles.domain.repository.TflRepository
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import javax.inject.Inject
 
 class TflRepositoryImpl @Inject constructor(

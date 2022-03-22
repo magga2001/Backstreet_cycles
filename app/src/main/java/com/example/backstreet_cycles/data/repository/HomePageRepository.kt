@@ -7,10 +7,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import com.example.backstreet_cycles.domain.model.DTO.Locations
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.utils.BitmapHelper
-import com.mapbox.geojson.Point
+import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng

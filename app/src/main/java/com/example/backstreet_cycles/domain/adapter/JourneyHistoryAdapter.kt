@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.model.DTO.Locations
+import com.example.backstreet_cycles.domain.model.dto.Locations
 
 class JourneyHistoryAdapter(
     private var locations: MutableList<List<Locations>>

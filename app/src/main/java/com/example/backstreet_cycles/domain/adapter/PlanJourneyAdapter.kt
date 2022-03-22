@@ -13,9 +13,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.model.DTO.Locations
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.interfaces.Planner
-import com.example.backstreet_cycles.domain.use_case.PlannerUseCase
+import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {

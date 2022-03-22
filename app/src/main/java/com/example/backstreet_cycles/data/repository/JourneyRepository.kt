@@ -7,13 +7,13 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.domain.model.DTO.Locations
-import com.example.backstreet_cycles.domain.model.DTO.Users
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.utils.BitmapHelper
-import com.example.backstreet_cycles.domain.use_case.MapInfoUseCase
-import com.example.backstreet_cycles.presentation.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.domain.utils.BitmapHelper
+import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
@@ -296,7 +296,7 @@ class JourneyRepository(private val application: Application,
 
         val numUser = 1
 
-        distanceMutableLiveData.postValue(distances.sum().roundToInt().toString())
+        distanceMutableLiveData.postValue((distances.sum()/1000).roundToInt().toString())
         durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
         priceMutableLiveData.postValue((prices*numUser).toString())
     }

@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.data.remote
 import android.content.Context
 import android.util.Log
 import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.domain.use_case.MapInfoUseCase
+import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions

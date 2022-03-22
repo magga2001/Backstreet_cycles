@@ -1,9 +1,8 @@
 package com.example.backstreet_cycles.data.local
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.model.DTO.Locations
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types

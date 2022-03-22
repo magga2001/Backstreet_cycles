@@ -3,9 +3,8 @@ package com.example.backstreet_cycles.common
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import com.example.backstreet_cycles.service.WorkHelper
-import com.example.backstreet_cycles.utils.SharedPrefHelper
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.HiltAndroidApp
 
