@@ -65,7 +65,6 @@ class SharedPrefHelper {
 //                gson.fromJson(serializedObject, type)
                 val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
                 val adapter: JsonAdapter<List<Point>> = moshi.adapter(pointType)
-                //Log.i("adapter", adapter.toString())
                 Log.i("adapter", adapter.fromJson(serializedObject).toString())
                 adapter.fromJson(serializedObject)
             } else {
