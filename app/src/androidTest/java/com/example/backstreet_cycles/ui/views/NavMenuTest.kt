@@ -42,7 +42,7 @@ class NavMenuTest {
         onView(withId(R.id.profile)).check(matches(isDisplayed()))
         onView(withId(R.id.changePassword)).check(matches(isDisplayed()))
         onView(withId(R.id.about)).check(matches(isDisplayed()))
-        onView(withId(R.id.help)).check(matches(isDisplayed()))
+        onView(withId(R.id.faq)).check(matches(isDisplayed()))
         onView(withId(R.id.logout)).check(matches(isDisplayed()))
     }
 

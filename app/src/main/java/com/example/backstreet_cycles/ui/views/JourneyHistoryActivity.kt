@@ -35,7 +35,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey_history)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]

@@ -34,7 +34,8 @@
                 android:layout_width="351dp"
                 android:layout_height="86dp"
                 android:layout_gravity="center"
-                android:background="#fff">
+                android:background="@drawable/rounded"
+                >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/linearLayout6"
@@ -63,8 +64,9 @@
 
                 <TextView
                     android:id="@+id/tv_recent_journey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="337dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="6dp"
                     android:text="@string/from_to_"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/black"

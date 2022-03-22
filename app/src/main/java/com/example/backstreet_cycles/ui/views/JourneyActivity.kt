@@ -154,6 +154,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
