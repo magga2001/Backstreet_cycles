@@ -1,4 +1,4 @@
-package views
+//package views
 //import android.app.Application
 //import android.util.Log
 //import androidx.test.core.app.ActivityScenario
