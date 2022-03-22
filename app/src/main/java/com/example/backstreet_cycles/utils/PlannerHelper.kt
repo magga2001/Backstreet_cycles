@@ -2,10 +2,9 @@ package com.example.backstreet_cycles.utils
 
 import android.app.Application
 import android.util.Log
-import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.model.MapRepository
-import com.example.backstreet_cycles.service.MyApplication
+import com.example.backstreet_cycles.data.repository.MapRepository
 import com.mapbox.geojson.Point
 
 class PlannerHelper {

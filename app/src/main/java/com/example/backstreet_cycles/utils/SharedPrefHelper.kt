@@ -4,15 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.backstreet_cycles.DTO.Locations
-import com.example.backstreet_cycles.R
-import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.lang.reflect.Type
 import com.mapbox.geojson.Point
 
 class SharedPrefHelper {

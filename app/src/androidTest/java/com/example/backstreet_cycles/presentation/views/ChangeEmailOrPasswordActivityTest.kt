@@ -1,0 +1,3 @@
+package com.example.backstreet_cycles.presentation.views
+
+class ChangeEmailOrPasswordActivityTest

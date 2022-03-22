@@ -1,6 +1,6 @@
 package com.example.backstreet_cycles.interfaces
 
-import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.mapbox.geojson.Point
 
 interface PlannerInterface {
