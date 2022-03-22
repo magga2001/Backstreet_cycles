@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,9 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.DTO.Locations
+import com.example.backstreet_cycles.interfaces.PlannerInterface
+import com.example.backstreet_cycles.domain.useCase.PlannerHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
@@ -36,6 +40,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         internal var setNav1: Button = view.findViewById(R.id.setNav1)
         internal var setNav2: Button = view.findViewById(R.id.setNav2)
         internal var setNav3: Button = view.findViewById(R.id.setNav3)
+        internal var tvFrom: TextView= view.findViewById(R.id.tv_from)
+        internal var tvTo:TextView = view.findViewById(R.id.tv_to)
 
         init {
             initListener()
@@ -51,10 +57,12 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 if (expandableLayout.visibility == View.GONE) {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.VISIBLE
+                    expandButton.text = "v"
 
                 } else {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.GONE
+                    expandButton.text = ">"
                 }
             }
         }
@@ -78,8 +86,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             enableExpandButton(holder)
         }
 
-        holder.expandButton.text = "From: ${shortenName(location.name).first()} " +
-                "To: ${shortenName(locations[position+1].name).first()}"
+        holder.tvFrom.text = "From: ${shortenName(location.name).first()} "
+
+        holder.tvTo.text =   "To: ${shortenName(locations[position+1].name).first()}"
 
         holder.setNav1.setOnClickListener{
 
@@ -144,6 +153,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
     private fun checkCurrentCheckBox(holder:ViewHolder){
         if(holder.checkBoxButton.isEnabled){
             holder.expandableLayout.visibility = View.GONE
+            holder.expandButton.text = ">"
         }
     }
 

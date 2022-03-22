@@ -25,6 +25,10 @@ import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.domain.adapter.StopsAdapter
+import com.example.backstreet_cycles.interfaces.CallbackListener
+import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.data.remote.dto.TflHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
@@ -130,7 +134,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val intent = Intent(this, JourneyActivity::class.java)
                 intent.putExtra("NUM_USERS",numberOfUsers)
                 SharedPrefHelper.initialiseSharedPref(application,"NUM_USERS")
-                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers))
+                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -198,7 +202,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun enableMyLocationButton(){
         val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
+        var isEnabled: Boolean = false
+        myLocationButton.isEnabled = false
+//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
+          for(location in stops){
+              if(location.name.equals("Current Location")){
+                  isEnabled = false
+                  break
+              }
+              else{
+                  isEnabled = true
+              }
+          }
+        myLocationButton.isEnabled = isEnabled
+
+
     }
 
     private fun enableNextPageButton(){
@@ -312,6 +330,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
             )
         }
+
+        stopsAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
     }
 
     private fun createListOfItems(){

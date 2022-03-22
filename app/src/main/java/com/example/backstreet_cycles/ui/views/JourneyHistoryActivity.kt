@@ -16,6 +16,11 @@ import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
+import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
+import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -38,7 +43,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey_history)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]

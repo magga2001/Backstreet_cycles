@@ -14,6 +14,9 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.domain.utils.BitmapHelper
+import com.example.backstreet_cycles.domain.useCase.MapHelper
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
@@ -362,24 +365,26 @@ class JourneyRepository(private val application: Application,
             .await()
         val gson = Gson()
         val jsonObject = gson.toJson(locations)
-        userDetails.journeyHistory.add(jsonObject)
+        if (jsonObject.isNotEmpty()){
+            userDetails.journeyHistory.add(jsonObject)
+            if (user.documents.isNotEmpty()) {
+                for (document in user) {
 
-        if (user.documents.isNotEmpty()) {
-            for (document in user) {
-
-                try {
-                    dataBase.collection("users")
-                        .document(document.id)
-                        .update("journeyHistory",userDetails.journeyHistory)
-                }
-                catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                    try {
+                        dataBase.collection("users")
+                            .document(document.id)
+                            .update("journeyHistory",userDetails.journeyHistory)
+                    }
+                    catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-
             }
         }
+
+
     }
 
     fun convertJSON(serializedObject: String): List<Locations> {

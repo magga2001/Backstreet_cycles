@@ -1,87 +1,67 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Backstreet_cycles</string>
-    <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
-    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
-    <string name="user_location_permission_explanation">Permission needed</string>
-    <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
-    <string name="start_navigation">start navigation</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="home">Home</string>
-    <string name="plan_a_journey">Plan A Journey</string>
-    <string name="view_profile">View Profile</string>
-    <string name="about">About</string>
-    <string name="help">Help</string>
-    <string name="from">From: </string>
-    <string name="current_location">Current Location</string>
-    <string name="to">To: </string>
-    <string name="origin">e.g. Waterloo</string>
-    <string name="destination">e.g. Shoreditch</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="Depart">Depart</string>
-    <string name="Arrive">Arrive</string>
 
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="log_in">Log In</string>
-    <string name="previous">Previous</string>
-
-    <string name="log_in_title">backstreet cycles.</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Login and sign up -->
+    <string name="log_in_title">Backstreet Cycles</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up_title">Create an account</string>
     <string name="create_account">Create Account</string>
-    <string name="title_activity_sign_up">SignUpActivity</string>
-    <string name="next">Next</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="sign_up_title">create an account.</string>
-    <string name="sign_up">Sign Up</string>
     <string name="f_name">First Name</string>
     <string name="l_name">Last Name</string>
-    <string name="log_out">Log Out</string>
-    <string name="home_activity">Home Activity</string>
-    <string name="profile_details">Profile Details</string>
-    <string name="update_profile">Save</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="firstname">FirstName</string>
-    <string name="last_name">Last Name</string>
-    <string name="change_password">Change Password</string>
-    <string name="current_password">Current Password</string>
-    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="LOG_IN_FAILED">Log in failed</string>
-    <string name="NO_PERSON_MATCH">No persons matched the query.</string>
-    <string name="UPDATE_FAILED">Update Failed</string>
-    <string name="PASSWORD_CHANGED">Password Changed</string>
-    <string name="REGISTRATION_FAILED">Registration failed</string>
     <string name="enter_first_name">Please enter your first name</string>
     <string name="enter_last_name">Please enter your last name</string>
     <string name="enter_email">Please enter your email</string>
-    <string name="enter_password">Please enter a password</string>
-    <string name="enter_confirmed_password">Please confirm your password</string>
-    <string name="password_not_match">Passwords do not match</string>
-    <string name="profile_updated">Profile updated successfully</string>
-    <string name="vintage_cycle_image">Vintage Cycle Image</string>
+    <string name="forgot_password">Forgot Password?</string>
+
+    <!-- Homepage Strings -->
+    <string name="current_location">Current Location</string>
     <string name="title">Title</string>
-    <string name="latitude">latitude</string>
-    <string name="longitude">longitude</string>
-    <string name="name_goes_here">(name goes here)</string>
-    <string name="email_goes_here">(email goes here)</string>
-    <string name="add_button">Add Button</string>
     <string name="location_button">Location Button</string>
     <string name="next_page_button">Next Page Button</string>
-    <string name="users_number">Users:</string>
+    <string name="cyclists_number">Cyclists:</string>
     <string name="decrement">-</string>
     <string name="increment">+</string>
-    <string name="start_journey">Start journey</string>
-    <string name="go">Go</string>
-    <string name="distance_unit">%1$s feets</string>
-    <string name="blankData">---</string>
-    <string name="preference_file_Locations">\"LOCATIONS\"</string>
     <string name="continue_with_current_journey">Current Journey</string>
     <string name="continue_with_newly_set_journey">Newly Created Journey</string>
+    <string name="add_stop_button" />
+
+    <!-- Journey Strings  -->
+    <string name="openArrow">v</string>
+    <string name="closeArrow">></string>
+    <string name="start_navigation">start navigation</string>
+    <string name="start_navigation_journey">Start Navigation</string>
+    <string name="hire_a_bike">Hire a bike</string>
+    <string name="journey_overview">Journey overview</string>
+    <string name="distance">Distance:</string>
+    <string name="duration">Duration:</string>
+    <string name="price">Price:</string>
+    <string name="journeys">Journeys:</string>
+    <string name="set_navigation">set navigation</string>
+    <string name="finish_journey">Finish Journey</string>
+    <string name="from_startingpoint">From:</string>
+    <string name="to_destination">To:</string>
+    <string name="done_journey">Done</string>
+
+    <!-- Strings for the menu items -->
+    <string name="view_profile">View Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="journey_history">Journey History</string>
+    <string name="current_journey">Current Journey</string>
+    <string name="about">About</string>
+    <string name="log_out">Log Out</string>
+
+    <!-- Journey History -->
+    <string name="list_of_stops">Journey summary:</string>
+    <string name="from_to_">from to</string>
+    <string name="recent_journeys">Recent Journeys</string>
+
+    <!-- About -->
+    <string name="about_us">About us</string>
     <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
 
     <!-- FAQ -->
@@ -92,6 +72,35 @@
     <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
     <string name="Q3">How do I set the navigation?</string>
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
+
+    <!-- Change password -->
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="PASSWORD_CHANGED">Password Changed</string>
+    <string name="REGISTRATION_FAILED">Registration failed</string>
+    <string name="enter_password">Please enter a password</string>
+    <string name="enter_confirmed_password">Please confirm your password</string>
+    <string name="password_not_match">Passwords do not match</string>
+
+    <!-- View profile -->
+    <string name="profile_details">Profile Details</string>
+    <string name="update_profile">Save</string>
+    <string name="profile_updated">Profile updated successfully</string>
+
+    <!-- Other strings -->
+    <string name="app_name">Backstreet Cycles</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
+    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
+    <string name="user_location_permission_explanation">Permission needed</string>
+    <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="previous">Previous</string>
+    <string name="NO_PERSON_MATCH">No people matched the query.</string>
+    <string name="vintage_cycle_image">backstreet_cycle_logo</string>
+    <string name="preference_file_Locations" />
+    <string name="UPDATE_FAILED" />
+
 
     <string name="from_to_">From To</string>
     <string name="done_journey">Done</string>

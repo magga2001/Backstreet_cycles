@@ -4,11 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 
 class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
+
+    private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
 
     private lateinit var clickListener: OnItemClickListener
 
@@ -39,6 +43,7 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
         val newList = stops[position]
         val addressName = shortenName(newList.name)
         holder.name.text = addressName.first()
+        collapseBottomSheet.postValue(true)
     }
 
     override fun getItemCount(): Int {
@@ -48,6 +53,10 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
     private fun shortenName(name: String): List<String> {
         val delimiter = ","
         return name.split(delimiter)
+    }
+
+    fun getCollapseBottomSheet(): LiveData<Boolean> {
+        return collapseBottomSheet
     }
 
 }

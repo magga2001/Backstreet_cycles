@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.domain.useCase.PermissionHelper
+import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 
@@ -62,7 +64,7 @@ class LogInActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
 
-        buttonForgotPassword.setOnClickListener{
+        clickForgotPassword.setOnClickListener{
             startActivity(Intent(this@LogInActivity, ForgotPasswordActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }

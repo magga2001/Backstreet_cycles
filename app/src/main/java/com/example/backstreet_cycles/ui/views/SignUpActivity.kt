@@ -69,6 +69,8 @@ class SignUpActivity : AppCompatActivity() {
                         val password: String = et_password.text.toString().trim { it <= ' '}
 
                         loginRegisterViewModel.register(firstName, lastName, email, password)
+                        val intent = Intent(this, LogInActivity::class.java)
+                        startActivity(intent)
                     }
                 }
             }

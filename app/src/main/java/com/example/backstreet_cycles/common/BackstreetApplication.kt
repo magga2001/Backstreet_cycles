@@ -14,8 +14,6 @@ class BackstreetApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        //Log.i("Starting application", "...")
-
         SharedPrefHelper.initialiseSharedPref(this, "DOCKS_LOCATIONS")
 
         Handler(Looper.myLooper()!!).postDelayed({
