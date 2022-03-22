@@ -4,16 +4,15 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.domain.model.DTO.Locations
-import com.example.backstreet_cycles.domain.model.DTO.Maneuver
 import com.example.backstreet_cycles.domain.model.DTO.Users
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.utils.BitmapHelper
-import com.example.backstreet_cycles.utils.MapHelper
+import com.example.backstreet_cycles.domain.use_case.MapInfoUseCase
 import com.example.backstreet_cycles.presentation.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,13 +37,8 @@ import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
-import com.mapbox.navigation.core.directions.session.RoutesUpdatedResult
-import com.mapbox.navigation.core.trip.session.LocationMatcherResult
-import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import com.mapbox.navigation.ui.maps.camera.NavigationCamera
 import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
-import com.mapbox.navigation.ui.maps.camera.transition.NavigationCameraTransitionOptions
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
@@ -52,7 +46,6 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import org.json.JSONObject
 import java.lang.reflect.Type
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -65,28 +58,18 @@ class JourneyRepository(private val application: Application,
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
-    private lateinit var routeOptions: RouteOptions
     private val dataBase = fireStore
     lateinit var pointAnnotationManager: PointAnnotationManager
     private val loggedInViewModel: LoggedInViewModel
-    private var numberOfUsers: Int
-
-    companion object
-    {
-        lateinit var result: RoutesUpdatedResult
-        const val MAX_TIME_TO_USE_THE_BIKE_FOR_FREE = 30
-    }
 
     init {
-        numberOfUsers = 0
         loggedInViewModel = LoggedInViewModel(application)
         isReadyMutableLiveData = MutableLiveData()
         isReadyMutableLiveData.value = false
         distanceMutableLiveData = MutableLiveData()
         durationMutableLiveData = MutableLiveData()
         priceMutableLiveData = MutableLiveData()
-        sharedPref = application.getSharedPreferences(
-            R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+        sharedPref = application.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
     }
 
     override fun initialiseMapboxNavigation(): MapboxNavigation
@@ -102,56 +85,12 @@ class JourneyRepository(private val application: Application,
         })
     }
 
-    fun initialiseLocationObserver(navigationCamera: NavigationCamera, viewportDataSource: MapboxNavigationViewportDataSource): LocationObserver
-    {
-        return object : LocationObserver {
-            var firstLocationUpdateReceived = false
-
-            override fun onNewRawLocation(rawLocation: Location) {
-                // not handled
-            }
-
-            override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
-                val enhancedLocation = locationMatcherResult.enhancedLocation
-                // update location puck's position on the map
-                navigationLocationProvider.changePosition(
-                    location = enhancedLocation,
-                    keyPoints = locationMatcherResult.keyPoints,
-                )
-
-                // update camera position to account for new location
-                viewportDataSource.onLocationChanged(enhancedLocation)
-                viewportDataSource.evaluate()
-
-                // if this is the first location update the activity has received,
-                // it's best to immediately move the camera to the current user location
-                if (!firstLocationUpdateReceived) {
-                    firstLocationUpdateReceived = true
-                    navigationCamera.requestNavigationCameraToOverview(
-                        stateTransitionOptions = NavigationCameraTransitionOptions.Builder()
-                            .maxDuration(0) // instant transition
-                            .build()
-                    )
-                }
-            }
-        }
-    }
-
-    fun getNumberOfUsers():Int {
-        return numberOfUsers
-    }
-
-    fun setNumberOfUsers(numUsers: Int) {
-        numberOfUsers = numUsers
-    }
-
     fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     {
         return RoutesObserver { routeUpdateResult ->
             // RouteLine: wrap the DirectionRoute objects and pass them
             // to the MapboxRouteLineApi to generate the data necessary to draw the route(s)
             // on the map.
-            result = routeUpdateResult
             val routeLines = routeUpdateResult.routes.map { RouteLine(it, null) }
 
             routeLineApi.setRoutes(
@@ -208,7 +147,7 @@ class JourneyRepository(private val application: Application,
                    info: Boolean)
     {
 
-        Log.i("Waypoint route", "Success")
+        val routeOptions: RouteOptions
 
         location.distinct()
         points.distinct()
@@ -218,7 +157,6 @@ class JourneyRepository(private val application: Application,
             distances.clear()
             durations.clear()
             wayPoints.addAll(points)
-            centerPoint = MapHelper.getCenterViewPoint(points)
 
             routeOptions = when(profile)
             {
@@ -307,9 +245,7 @@ class JourneyRepository(private val application: Application,
 
                     Log.i("retrieving route", "success")
 
-                    val fastestRoute = MapHelper.getFastestRoute(routes)
-                    getInstructions(fastestRoute)
-
+                    val fastestRoute = MapInfoUseCase.getFastestRoute(routes)
                     if(info)
                     {
                         getJourneyInfo(fastestRoute)
@@ -343,18 +279,10 @@ class JourneyRepository(private val application: Application,
 
     private fun getJourneyInfo(route: DirectionsRoute)
     {
-        val minutesRate = 30
-
-        Log.i("DistanceJSON", route.distance().toString())
-        Log.i("DurationJSON", route.duration().toString())
-
         distances.add(route.distance())
         durations.add(route.duration())
 
-        Log.i("distance size", distances.size.toString())
-        Log.i("duration size", durations.size.toString())
-
-        var prices = ceil(((((durations.sum()/60) - MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / minutesRate))) * 2
+        var prices = ceil(((((durations.sum()/60) - Constants.MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / Constants.MINUTE_RATE))) * 2
 
         if(prices <= 0)
         {
@@ -366,40 +294,11 @@ class JourneyRepository(private val application: Application,
             prices++
         }
 
+        val numUser = 1
+
         distanceMutableLiveData.postValue(distances.sum().roundToInt().toString())
         durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
-        priceMutableLiveData.postValue((prices*numberOfUsers).toString())
-    }
-
-    fun getInstructions(route:DirectionsRoute)
-    {
-        val json = JSONObject(route.toJson())
-        val legs = JSONObject(json.getJSONArray("legs").getString(0))
-        val steps = legs.getJSONArray("steps")
-
-        for(i in 0 until steps.length())
-        {
-            val maneuver = JSONObject(steps.getString(i)).getString("maneuver")
-            val instruction = JSONObject(maneuver).getString("instruction")
-            val type = JSONObject(maneuver).getString("type")
-            var modifier = ""
-            val distance = JSONObject(steps.getString(i)).getString("distance")
-
-            Log.i("distance", distance)
-
-            if(JSONObject(maneuver).has("modifier"))
-            {
-                modifier = JSONObject(maneuver).getString("modifier")
-                Log.i("modifier $i",modifier )
-            }
-
-            Log.i("maneuver $i", maneuver)
-            Log.i("instruction $i", instruction + "type: " + type)
-
-            val theManeuver = Maneuver(instruction, type, modifier, distance.toDouble().roundToInt())
-            maneuvers.add(theManeuver)
-        }
-
+        priceMutableLiveData.postValue((prices*numUser).toString())
     }
 
     fun addAnnotationToMap(context: Context, mapView: MapView) {
@@ -437,22 +336,18 @@ class JourneyRepository(private val application: Application,
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
                           routesObserver: RoutesObserver,
-                          locationObserver: LocationObserver,
                           routeProgressObserver: RouteProgressObserver
     )
     {
         mapboxNavigation.registerRoutesObserver(routesObserver)
-        mapboxNavigation.registerLocationObserver(locationObserver)
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
     }
 
     fun unregisterObservers(mapboxNavigation: MapboxNavigation,
                             routesObserver: RoutesObserver,
-                            locationObserver: LocationObserver,
                             routeProgressObserver: RouteProgressObserver)
     {
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
-        mapboxNavigation.unregisterLocationObserver(locationObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
     }
 

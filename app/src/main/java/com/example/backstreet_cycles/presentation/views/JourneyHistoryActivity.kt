@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.presentation.adapter.JourneyHistoryAdapter
+import com.example.backstreet_cycles.data.remote.TflApi
+import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.model.DTO.Dock
+import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.presentation.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.presentation.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.presentation.viewModel.LoggedInViewModel
@@ -50,12 +54,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
             }
         }
 
-        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) { ready ->
-            if (ready) {
-                fetchPoints()
-            }
-        }
-
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
             if (userDetails != null) {
@@ -63,23 +61,28 @@ class JourneyHistoryActivity : AppCompatActivity() {
             }
             init()
         }
-
-//        locationComponent = homePageViewModel.initialiseLocationComponent(mapboxMap)
-
     }
 
     fun init() {
         initCardView()
     }
 
-    fun initCardView() {
+    private fun initCardView() {
 
         nAdapter = JourneyHistoryAdapter(journeys)
         nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 stops.addAll(journeys[position])
 //                replaceCurrentLocation()
-                homePageViewModel.getDocks()
+                //Get Dock
+//                homePageViewModel.getDocks()
+                TflHelper.getDock(context = applicationContext,
+                    object : Assests<MutableList<Dock>> {
+                        override fun getResult(objects: MutableList<Dock>) {
+                            fetchPoints()
+                        }
+                    }
+                )
             }
         })
         journey_history_recycler_view.layoutManager = LinearLayoutManager(this)
@@ -106,7 +109,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
     {
         MapRepository.wayPoints.clear()
         MapRepository.currentRoute.clear()
-        MapRepository.maneuvers.clear()
 
         MapRepository.location.addAll(stops)
 

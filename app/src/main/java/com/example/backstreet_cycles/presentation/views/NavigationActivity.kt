@@ -8,8 +8,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.presentation.viewModel.NavigationViewModel
+import com.example.backstreet_cycles.domain.use_case.PermissionUseCase
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.maps.EdgeInsets
 import com.mapbox.maps.MapView
@@ -51,10 +53,6 @@ import kotlinx.android.synthetic.main.activity_navigation.mapView
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
-
-    private companion object {
-        private const val BUTTON_ANIMATION_DURATION = 1500L
-    }
     /**
      * Mapbox Maps entry point obtained from the [MapView].
      * You need to get a new reference to this object whenever the [MapView] is recreated.
@@ -145,10 +143,10 @@ class NavigationActivity : AppCompatActivity() {
         set(value) {
             field = value
             if (value) {
-                soundButton.muteAndExtend(BUTTON_ANIMATION_DURATION)
+                soundButton.muteAndExtend(Constants.BUTTON_ANIMATION_DURATION)
                 voiceInstructionsPlayer.volume(SpeechVolume(0f))
             } else {
-                soundButton.unmuteAndExtend(BUTTON_ANIMATION_DURATION)
+                soundButton.unmuteAndExtend(Constants.BUTTON_ANIMATION_DURATION)
                 voiceInstructionsPlayer.volume(SpeechVolume(1f))
             }
         }
@@ -184,7 +182,7 @@ class NavigationActivity : AppCompatActivity() {
         MapboxNavigationProvider.destroy()
 
         navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
-        navigationViewModel.checkPermission(context = this, activity = this)
+        PermissionUseCase.checkPermission(context = this, activity = this)
 
         mapboxMap = mapView.getMapboxMap()
         mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()
@@ -210,7 +208,6 @@ class NavigationActivity : AppCompatActivity() {
         initialiseObservers()
         initialisePadding()
         initialiseViewListener()
-        initBottomSheet()
     }
 
     private fun initialiseObservers()
@@ -374,11 +371,11 @@ class NavigationActivity : AppCompatActivity() {
         }
         recenter.setOnClickListener {
             navigationCamera.requestNavigationCameraToFollowing()
-            routeOverview.showTextAndExtend(BUTTON_ANIMATION_DURATION)
+            routeOverview.showTextAndExtend(Constants.BUTTON_ANIMATION_DURATION)
         }
         routeOverview.setOnClickListener {
             navigationCamera.requestNavigationCameraToOverview()
-            recenter.showTextAndExtend(BUTTON_ANIMATION_DURATION)
+            recenter.showTextAndExtend(Constants.BUTTON_ANIMATION_DURATION)
         }
         soundButton.setOnClickListener {
             // mute/unmute voice instructions
@@ -387,14 +384,6 @@ class NavigationActivity : AppCompatActivity() {
 
         // set initial sounds button state
         soundButton.unmute()
-    }
-
-    private fun initBottomSheet()
-    {
-//        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_navigation)
-//        mAdapter = PlanJourneyAdapter(this, MapRepository.maneuvers)
-//        maneuver_navigation_recycling_view.layoutManager = LinearLayoutManager(this)
-//        maneuver_navigation_recycling_view.adapter = mAdapter
     }
 
     override fun onStart() {
@@ -410,23 +399,6 @@ class NavigationActivity : AppCompatActivity() {
 
         //Pass in route here
         setRouteAndStartNavigation(currentRoute)
-
-//If route is empty, (future interaction)
-
-//        if (mapboxNavigation.getRoutes().isEmpty()) {
-//            // if simulation is enabled (ReplayLocationEngine set to NavigationOptions)
-//            // but we're not simulating yet,
-//            // push a single location sample to establish origin
-//            mapboxReplayer.pushEvents(
-//                listOf(
-//                    ReplayRouteMapper.mapToUpdateLocation(
-//                        eventTimestamp = 0.0,
-//                        point = Point.fromLngLat(-122.39726512303575, 37.785128345296805)
-//                    )
-//                )
-//            )
-//            mapboxReplayer.playFirstLocation()
-//        }
     }
 
     private fun setRouteAndStartNavigation(routes: List<DirectionsRoute>) {

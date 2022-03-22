@@ -49,8 +49,4 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
-
-//    suspend fun getUser(): QuerySnapshot {
-//        return userRepository.getUser()
-//    }
 }

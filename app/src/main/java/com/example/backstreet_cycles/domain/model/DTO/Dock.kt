@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.domain.model.DTO
 
+import com.example.backstreet_cycles.data.remote.dto.BikeStatusInfo
+
 data class Dock(
     val id : String = "",
     val name: String = "",
@@ -9,3 +11,5 @@ data class Dock(
     val nbSpaces: Int = 0,
     val nbDocks: Int = 0
 )
+
+

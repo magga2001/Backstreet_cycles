@@ -1,29 +1,29 @@
-package com.example.backstreet_cycles.data.repository
+package com.example.backstreet_cycles.data.local
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import timber.log.Timber
 
-
-class LocationRepository(private val application: Application) {
+object TouristAttractionFile {
 
     private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
-    private var stops: MutableList<Locations>
+    private lateinit var stops: MutableList<Locations>
     private val touristAttractions = mutableListOf<Locations>()
 
-    init {
-        val touristAttractionText = getTextFromResources(R.raw.touristattraction)
+    fun loadLocations(application: Application)
+    {
+        val touristAttractionText = getTextFromResources(application, R.raw.touristattraction)
         stops = mutableListOf()
         addTouristLocations(touristAttractionText)
     }
 
-    private fun getTextFromResources(resourceId: Int): String{
+    private fun getTextFromResources(application: Application, resourceId: Int): String{
         return application.resources.openRawResource(resourceId).use { it ->
             it.bufferedReader().use {
                 it.readText()
@@ -66,7 +66,6 @@ class LocationRepository(private val application: Application) {
     fun removeStopAt(index: Int){
         stops.removeAt(index)
     }
-
 
     fun getStops(): MutableList<Locations> {
         return stops

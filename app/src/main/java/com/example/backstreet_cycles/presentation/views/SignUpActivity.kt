@@ -32,7 +32,12 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        buttonSignUp.setOnClickListener {
+        initListener()
+    }
+
+        private fun initListener()
+        {
+            buttonSignUp.setOnClickListener {
                 when {
                     TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
                         et_firstName.error = getString(R.string.enter_first_name)

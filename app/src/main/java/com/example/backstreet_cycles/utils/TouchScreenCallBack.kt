@@ -5,8 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
 
-
-
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder

@@ -20,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.domain.model.DTO.Dock
 import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.presentation.adapter.StopsAdapter
-import com.example.backstreet_cycles.interfaces.CallbackListener
+import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.domain.adapter.StopsAdapter
+import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.data.remote.TflApi
+import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.utils.SnackbarHelper
@@ -65,7 +67,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var mapboxMap: MapboxMap
     private lateinit var locationComponent: LocationComponent
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    private val requestCodeAutocomplete = 7171
 
     private lateinit var addStopButton: Button
     private lateinit var myLocationButton: FloatingActionButton
@@ -136,13 +137,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
-
-//        homePageViewModel.getIsDockReadyMutableLiveData().observe(this) {ready ->
-//            if(ready)
-//            {
-//                fetchPoints()
-//            }
-//        }
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -289,13 +283,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         addStopButton.setOnClickListener {
             val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
-            startActivityForResult(intent, requestCodeAutocomplete)
+            startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
         }
         stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
-                startActivityForResult(intent, requestCodeAutocomplete)
+                startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
                 this@HomePageActivity.positionOfStop =position
             }
         })
@@ -307,11 +301,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-            TflApi.getDock(context = applicationContext,
-                object : CallbackListener<MutableList<Dock>> {
+            TflHelper.getDock(context = applicationContext,
+                object : Assests<MutableList<Dock>> {
                     override fun getResult(objects: MutableList<Dock>) {
-                        Log.i("Dock Application", objects.size.toString())
 
+//                        val bundle = Bundle()
+//                        bundle.putSerializable("current_route", MapRepository.currentRoute)
+//                        intent.putExtra("current_bundle",bundle)
                         fetchPoints()
                     }
                 }
@@ -398,7 +394,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == requestCodeAutocomplete) {
+        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_AUTO_COMPLETE) {
             val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             val style = mapboxMap.style
             val location = Locations(
@@ -449,7 +445,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
 
-    @SuppressLint("MissingPermission")
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
@@ -529,7 +524,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     {
         MapRepository.wayPoints.clear()
         MapRepository.currentRoute.clear()
-        MapRepository.maneuvers.clear()
 
         MapRepository.location.addAll(stops)
 

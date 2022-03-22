@@ -4,9 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.PermissionChecker.checkPermission
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.utils.PermissionHelper
+import com.example.backstreet_cycles.domain.use_case.PermissionUseCase
 import com.example.backstreet_cycles.presentation.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.*
 
@@ -31,6 +32,14 @@ class LogInActivity : AppCompatActivity() {
                 }
             }
 
+        initListener()
+
+        PermissionUseCase.checkPermission(context = this, activity = this)
+    }
+
+    private fun initListener()
+    {
+
         buttonLogin.setOnClickListener {
             when {
                 TextUtils.isEmpty(et_email.text.toString().trim { it <= ' ' }) -> {
@@ -43,9 +52,9 @@ class LogInActivity : AppCompatActivity() {
 
                 else ->
                     loginRegisterViewModel.login(
-                    et_email.text.trim().toString(),
-                    et_password.text.trim().toString()
-                )
+                        et_email.text.trim().toString(),
+                        et_password.text.trim().toString()
+                    )
             }
         }
 
@@ -58,16 +67,6 @@ class LogInActivity : AppCompatActivity() {
             startActivity(Intent(this@LogInActivity, ForgotPasswordActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
-
-        PermissionHelper.checkPermission(context = this, activity = this)
     }
-
-
-    override fun onBackPressed() {
-
-    }
-
-
-
 
 }

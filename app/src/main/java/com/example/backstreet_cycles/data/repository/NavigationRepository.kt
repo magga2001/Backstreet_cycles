@@ -61,7 +61,7 @@ class NavigationRepository(private val application: Application): MapRepository(
      */
     private val replayProgressObserver = ReplayProgressObserver(mapboxReplayer)
 
-    override fun initialiseLocationComponent(mapView: MapView): LocationComponentPlugin
+    fun initialiseLocationComponent(mapView: MapView): LocationComponentPlugin
     {
         return mapView.location.apply {
             this.locationPuck = LocationPuck2D(

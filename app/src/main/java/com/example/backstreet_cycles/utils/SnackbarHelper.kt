@@ -12,14 +12,13 @@ import com.google.android.material.snackbar.Snackbar
 
 
 
-class SnackbarHelper {
-     companion object {
-        fun displaySnackbar(view: View?, s: String?) {
-            val snack = Snackbar.make(view!!, s!!, Snackbar.LENGTH_LONG)
-            //al sbview: View = snack.view
-            //  sbview.setBackgroundColor(ContextCompat.getColor(this, R.color.holo_purple))
-            // val textView = sbview.findViewById(android.support.design.R.id.snackbar_text) as TextView
-            snack.show()
-        }
+object SnackbarHelper {
+
+    fun displaySnackbar(view: View?, s: String?) {
+        val snack = Snackbar.make(view!!, s!!, Snackbar.LENGTH_LONG)
+        //al sbview: View = snack.view
+        //  sbview.setBackgroundColor(ContextCompat.getColor(this, R.color.holo_purple))
+        // val textView = sbview.findViewById(android.support.design.R.id.snackbar_text) as TextView
+        snack.show()
     }
 }

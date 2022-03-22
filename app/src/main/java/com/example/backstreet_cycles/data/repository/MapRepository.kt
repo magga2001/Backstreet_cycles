@@ -1,29 +1,12 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.Manifest
-import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.example.backstreet_cycles.domain.model.DTO.Locations
-import com.example.backstreet_cycles.domain.model.DTO.Maneuver
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.EdgeInsets
-import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.plugin.animation.MapAnimationOptions
-import com.mapbox.maps.plugin.animation.camera
-import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
-import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.trip.session.LocationMatcherResult
-import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
@@ -35,13 +18,10 @@ abstract class MapRepository(private val application: Application)
     companion object
     {
         var currentRoute = mutableListOf<DirectionsRoute>()
-        val maneuvers = mutableListOf<Maneuver>()
         val distances = mutableListOf<Double>()
         val durations = mutableListOf<Double>()
         val wayPoints = mutableListOf<Point>()
         var location = mutableListOf<Locations>()
-        lateinit var centerPoint: Point
-        lateinit var enhancedLocation: Location
     }
 
     /**
@@ -49,74 +29,6 @@ abstract class MapRepository(private val application: Application)
      * to the Maps SDK in order to update the user location indicator on the map.
      */
     protected val navigationLocationProvider = NavigationLocationProvider()
-
-    /**
-     * Test
-     */
-    fun checkPermission(context: Context, activity: Activity)
-    {
-        val TAG_CODE_PERMISSION_LOCATION = 0
-
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //ActivityCompat#requestPermissions
-            ActivityCompat.requestPermissions(
-                activity, arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                TAG_CODE_PERMISSION_LOCATION
-            )
-        }
-    }
-
-    open fun initialiseLocationComponent(mapView: MapView): LocationComponentPlugin
-    {
-        Log.i("current location", "Success")
-
-        return mapView.location.apply {
-//            setLocationProvider(navigationLocationProvider)
-//             When true, the blue circular puck is shown on the map. If set to false, user
-            // location in the form of puck will not be shown on the map.
-            enabled = true
-        }
-    }
-
-    fun initialiseLocationObserver(mapView: MapView): LocationObserver
-    {
-        return object : LocationObserver {
-            override fun onNewRawLocation(rawLocation: Location) {}
-            override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
-                enhancedLocation = locationMatcherResult.enhancedLocation
-                navigationLocationProvider.changePosition(
-                    location = enhancedLocation,
-                    keyPoints = locationMatcherResult.keyPoints,
-                )
-//                    updateCamera(Point.fromLngLat(enhancedLocation.longitude, enhancedLocation.latitude),
-//                    enhancedLocation.bearing.toDouble(),mapView)
-            }
-        }
-    }
-
-    fun updateCamera(point: Point, bearing: Double?, zoomLevel: Double, mapView: MapView) {
-        val mapAnimationOptionsBuilder = MapAnimationOptions.Builder()
-        mapView.camera.easeTo(
-            CameraOptions.Builder()
-                .center(point)
-                .bearing(bearing)
-                //                .pitch(45.0)
-                .zoom(zoomLevel)
-                .padding(EdgeInsets(1000.0, 0.0, 0.0, 0.0))
-                .build(),
-            mapAnimationOptionsBuilder.build()
-        )
-    }
 
     fun initialiseRouteLineResources(): RouteLineResources
     {

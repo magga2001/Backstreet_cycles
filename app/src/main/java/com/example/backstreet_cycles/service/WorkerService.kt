@@ -14,7 +14,8 @@ import androidx.work.WorkerParameters
 import com.example.backstreet_cycles.domain.model.DTO.Dock
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.data.remote.TflApi
-import com.example.backstreet_cycles.interfaces.CallbackListener
+import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.example.backstreet_cycles.presentation.views.HomePageActivity
 import com.example.backstreet_cycles.presentation.views.LogInActivity
@@ -37,9 +38,9 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         Log.i("Starting attempt", "Success")
 
-        TflApi.getDock(context = applicationContext,
+        TflHelper.getDock(context = applicationContext,
 
-            object : CallbackListener<MutableList<Dock>> {
+            object : Assests<MutableList<Dock>> {
                 override fun getResult(objects: MutableList<Dock>) {
 
                     //Do whatever with shared preference...
@@ -65,11 +66,11 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
         SharedPrefHelper.changeSharedPref("NUM_USERS")
         //val numUser = SharedPrefHelper.getSharedPref<Int>()
 
-        Log.i("currentDocks", currentDocks?.size.toString())
-        Log.i("currentDockFirst", currentDocks.toString())
-//        Log.i("numUser", numUser?.first().toString())
-        Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
-        Log.i("Json dock", "hi")
+//        Log.i("currentDocks", currentDocks?.size.toString())
+//        Log.i("currentDockFirst", currentDocks.toString())
+////        Log.i("numUser", numUser?.first().toString())
+//        Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
+//        Log.i("Json dock", "hi")
 
 
 

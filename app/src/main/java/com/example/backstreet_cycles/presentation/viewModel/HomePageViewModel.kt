@@ -30,7 +30,6 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
 
     private val mapRepository: JourneyRepository = JourneyRepository(application,firestore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = mapRepository.getIsReadyMutableLiveData()
-    private val isReadyDockMutableLiveData: MutableLiveData<Boolean> = locationRepository.getIsReadyMutableLiveData()
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -87,11 +86,6 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
         return mapRepository.initialiseMapboxNavigation()
     }
 
-    fun checkPermission(context: Context, activity: Activity)
-    {
-        mapRepository.checkPermission(context, activity)
-    }
-
     fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, wayPoints: MutableList<Point>, profile: String, info:Boolean) {
 
         mapRepository.fetchRoute(context,mapboxNavigation, wayPoints, profile, info)
@@ -100,15 +94,5 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
-    }
-
-    fun getIsDockReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
-        return isReadyDockMutableLiveData
-    }
-
-    fun getDocks()
-    {
-        locationRepository.getDocks()
     }
 }

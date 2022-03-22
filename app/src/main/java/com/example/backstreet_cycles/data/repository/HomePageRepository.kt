@@ -10,6 +10,7 @@ import android.location.Location
 import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.utils.BitmapHelper
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -46,9 +47,7 @@ class HomePageRepository(private val application: Application) {
         )
 
         locationComponent.isLocationComponentEnabled = true
-
         locationComponent.cameraMode = CameraMode.TRACKING
-
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
@@ -77,6 +76,7 @@ class HomePageRepository(private val application: Application) {
 
     fun getCurrentLocation(locationComponent: LocationComponent): Location? {
         return locationComponent.lastKnownLocation
+
     }
 
     fun initialisePlaceAutoComplete(activity: Activity): Intent {

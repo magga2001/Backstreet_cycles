@@ -21,13 +21,6 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_change_email_or_password)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        val callback = this.onBackPressedDispatcher.addCallback(this) {
-//            // Handle the back button event
-//            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
-//        }
-
-        //supportActionBar?.setShowHideAnimationEnabled(true)
-        //overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->

@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android-extensions'
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 
 }
 
@@ -85,6 +87,7 @@ dependencies {
     implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
         transitive(true)
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-plugin-annotation-v8'
@@ -155,4 +158,9 @@ dependencies {
     //GIF Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
 
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 }

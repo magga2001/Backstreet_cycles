@@ -83,6 +83,8 @@
     <string name="continue_with_current_journey">Current Journey</string>
     <string name="continue_with_newly_set_journey">Newly Created Journey</string>
     <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
+
+    <!-- FAQ -->
     <string name="FAQ">Frequently Asked Question</string>
     <string name="Q1">Where can I hire bikes from?</string>
     <string name="A1">You can hire bikes using the following link which redirects you to TFL’s Santander cycle hire app or just hire them at the docking station which our application tells you.</string>
@@ -90,12 +92,18 @@
     <string name="Q2">Why can I choose up only up to four users to cycle with me?</string>
     <string name="Q3">How do I set the navigation?</string>
     <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
+
     <string name="from_to_">From To</string>
     <string name="done_journey">Done</string>
-    <string name="journey_history">Jounrey History</string>
-    <string name="current_journey">Current Jounrney</string>
+    <string name="journey_history">Journey History</string>
+    <string name="current_journey">Current Journey</string>
     <string name="about_us">About us</string>
     <string name="add_stop_button" />
     <string name="recent_journeys">Recent Journeys</string>
     <string name="finish_journey">Finish Journey</string>
+
+    <!--Journey info-->
+    <string name="journey_distances">Total Distance: %1$s km</string>
+    <string name="journey_durations">Total Duration: %1$s minutes</string>
+    <string name="journey_prices">Price: £%1$s</string>
 </resources>

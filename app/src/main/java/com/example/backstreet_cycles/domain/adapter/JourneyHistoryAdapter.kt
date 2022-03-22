@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.presentation.adapter
+package com.example.backstreet_cycles.domain.adapter
 
 import android.view.LayoutInflater
 import android.view.View

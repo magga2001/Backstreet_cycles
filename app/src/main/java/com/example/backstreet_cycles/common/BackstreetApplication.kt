@@ -7,8 +7,9 @@ import android.util.Log
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.utils.SharedPrefHelper
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.HiltAndroidApp
 
-
+@HiltAndroidApp
 class BackstreetApplication : Application() {
 
     override fun onCreate() {

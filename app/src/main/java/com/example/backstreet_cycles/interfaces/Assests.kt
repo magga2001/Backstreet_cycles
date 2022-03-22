@@ -1,6 +1,6 @@
 package com.example.backstreet_cycles.interfaces
 
-interface CallbackListener<T> {
+interface Assests<T> {
 
     fun getResult(objects: T)
 }

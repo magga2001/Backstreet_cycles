@@ -13,6 +13,12 @@ class ForgotPasswordActivity  : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
 
+        initListener()
+
+    }
+
+    private fun initListener()
+    {
         button_send_password_reset.setOnClickListener{
             val email:String=et_email_forgot_password.text.toString().trim{it<=' ' }
             if (email.isEmpty()){
@@ -20,11 +26,11 @@ class ForgotPasswordActivity  : AppCompatActivity() {
             }
             else{
                 FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
-                    task -> if (task.isSuccessful){
-                        Toast.makeText(this@ForgotPasswordActivity, "Email reset email sent", Toast.LENGTH_LONG).show()
+                        task -> if (task.isSuccessful){
+                    Toast.makeText(this@ForgotPasswordActivity, "Email reset email sent", Toast.LENGTH_LONG).show()
                     finish()
-                    }
-                    else{
+                }
+                else{
                     Toast.makeText(this@ForgotPasswordActivity, task.exception!!.message.toString(), Toast.LENGTH_LONG).show()
 
                 }
@@ -32,7 +38,6 @@ class ForgotPasswordActivity  : AppCompatActivity() {
             }
 
         }
-
     }
 
 

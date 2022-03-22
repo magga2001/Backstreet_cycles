@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.interfaces
 import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.mapbox.geojson.Point
 
-interface PlannerInterface {
+interface Planner {
 
     fun onSelectedJourney(location: Locations, profile: String, points: MutableList<Point>)
 

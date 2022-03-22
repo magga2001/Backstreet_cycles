@@ -4,21 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.presentation.viewModel.SplashViewModel
+import com.example.backstreet_cycles.presentation.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.presentation.viewModel.TestViewModel
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 
-class SplashScreenActivity: AppCompatActivity() {
+@AndroidEntryPoint
+class SplashScreenActivity(): AppCompatActivity() {
 
-    private lateinit var splashViewModel: SplashViewModel
-    private val SPLASH_TIME: Long = 2500
+    private val testViewModel :TestViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        testViewModel.getDocks()
 
         supportActionBar?.hide()
         Handler(Looper.getMainLooper()).postDelayed( {

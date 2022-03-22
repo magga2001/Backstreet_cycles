@@ -9,6 +9,7 @@ import com.example.backstreet_cycles.domain.model.DTO.Locations
 import com.example.backstreet_cycles.domain.model.DTO.Users
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
+import com.example.backstreet_cycles.data.repository.MapRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
@@ -34,7 +35,6 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
     private val journeyRepository: JourneyRepository
     private val locationRepository: LocationRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
-    private val isReadyDockMutableLiveData: MutableLiveData<Boolean>
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
@@ -45,7 +45,6 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository = JourneyRepository(application, firestore)
         locationRepository = LocationRepository(application)
         isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
-        isReadyDockMutableLiveData = locationRepository.getIsReadyMutableLiveData()
         distanceMutableLiveData = journeyRepository.getDistanceMutableLiveData()
         durationMutableLiveData = journeyRepository.getDurationMutableLiveData()
         priceMutableLiveData = journeyRepository.getPriceMutableLiveData()
@@ -66,21 +65,6 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseRouteLineResources()
     }
 
-    fun initialiseLocationComponent(mapView: MapView) : LocationComponentPlugin
-    {
-        return journeyRepository.initialiseLocationComponent(mapView)
-    }
-
-    fun initialiseLocationObserver(navigationCamera: NavigationCamera, viewportDataSource: MapboxNavigationViewportDataSource): LocationObserver
-    {
-        return journeyRepository.initialiseLocationObserver(navigationCamera,viewportDataSource)
-    }
-
-    fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
-    {
-        return journeyRepository.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
-    }
-
     fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
     {
         return journeyRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView, viewportDataSource)
@@ -97,21 +81,10 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return journeyRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView,viewportDataSource)
     }
 
-    fun checkPermission(context: Context, activity: Activity)
-    {
-        journeyRepository.checkPermission(context, activity)
-    }
-
-    fun updateCamera(point: Point, bearing: Double?, zoomLevel:Double, mapView: MapView)
-    {
-        journeyRepository.updateCamera(point, bearing, zoomLevel, mapView)
-    }
-
     fun addAnnotationToMap(context: Context, mapView: MapView)
     {
         journeyRepository.addAnnotationToMap(context,mapView)
     }
-
 
     fun removeAnnotations()
     {
@@ -120,18 +93,16 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
                           routesObserver: RoutesObserver,
-                          locationObserver: LocationObserver,
                           routeProgressObserver: RouteProgressObserver)
     {
-        journeyRepository.registerObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
+        journeyRepository.registerObservers(mapboxNavigation,routesObserver,routeProgressObserver)
     }
 
     fun unregisterObservers(mapboxNavigation: MapboxNavigation,
                           routesObserver: RoutesObserver,
-                          locationObserver: LocationObserver,
                           routeProgressObserver: RouteProgressObserver)
     {
-        journeyRepository.unregisterObservers(mapboxNavigation,routesObserver,locationObserver,routeProgressObserver)
+        journeyRepository.unregisterObservers(mapboxNavigation,routesObserver,routeProgressObserver)
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
@@ -174,26 +145,14 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         journeyRepository.addJourneyToJourneyHistory(locations, userDetails)
     }
 
-    fun getIsReadyDockMutableLiveData(): MutableLiveData<Boolean>
-    {
-        return isReadyDockMutableLiveData
-    }
-
-    fun getDocks()
-    {
-        locationRepository.getDocks()
-    }
-
     fun getJourneyHistory(userDetails: Users) : MutableList<List<Locations>> {
         return journeyRepository.getJourneyHistory(userDetails)
     }
 
-    fun getNumberOfUsers():Int {
-        return journeyRepository.getNumberOfUsers()
-    }
-
-    fun setNumberOfUsers(numUsers: Int) {
-        journeyRepository.setNumberOfUsers(numUsers)
+    fun clear()
+    {
+        MapRepository.wayPoints.clear()
+        MapRepository.currentRoute.clear()
     }
 
 }

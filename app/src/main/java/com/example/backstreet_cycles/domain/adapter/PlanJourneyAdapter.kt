@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.presentation.adapter
+package com.example.backstreet_cycles.domain.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,11 +14,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.DTO.Locations
-import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.utils.PlannerHelper
+import com.example.backstreet_cycles.interfaces.Planner
+import com.example.backstreet_cycles.domain.use_case.PlannerUseCase
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val plannerInterface: PlannerInterface): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
+class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -83,9 +83,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav1.setOnClickListener{
 
-            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            plannerInterface.onSelectedJourney(location,"walking", mutableListOf(
+            planner.onSelectedJourney(location,"walking", mutableListOf(
                 journeyPoints["startingPoint"]!!,
                 journeyPoints["pickUpPoint"]!!
             ))
@@ -95,9 +95,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav2.setOnClickListener {
 
-            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            plannerInterface.onSelectedJourney(location,"cycling", mutableListOf(
+            planner.onSelectedJourney(location,"cycling", mutableListOf(
                 journeyPoints["pickUpPoint"]!!,
                 journeyPoints["dropOffPoint"]!!
             ))
@@ -109,9 +109,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav3.setOnClickListener {
 
-            val journeyPoints = PlannerHelper.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            plannerInterface.onSelectedJourney(location,"walking", mutableListOf(
+            planner.onSelectedJourney(location,"walking", mutableListOf(
                 journeyPoints["dropOffPoint"]!!,
                 journeyPoints["destination"]!!
             ))
@@ -156,17 +156,8 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         }
     }
 
-
-
     private fun shortenName(name: String): List<String> {
         val delimiter = ","
         return name.split(delimiter)
-    }
-
-    fun updateList(locations: List<Locations>)
-    {
-        this.locations = locations
-
-        notifyDataSetChanged()
     }
 }

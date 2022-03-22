@@ -38,11 +38,6 @@ class NavigationViewModel(application: Application) : AndroidViewModel(applicati
         navigationRepository = NavigationRepository(application)
     }
 
-    fun checkPermission(context: Context, activity: Activity)
-    {
-        navigationRepository.checkPermission(context, activity)
-    }
-
     fun initialiseMapboxNavigation(): MapboxNavigation
     {
         return navigationRepository.initialiseMapboxNavigation()
