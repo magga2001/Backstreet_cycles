@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="Journey overview"
+                    android:text="@string/journey_overview"
                     android:textSize="12sp" />
 
                 <Button
@@ -40,17 +40,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="Start Navigation"
+                    android:text="@string/start_navigation_journey"
                     android:textSize="12sp" />
 
-                <Button
-                    android:id="@+id/santander_link"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp">
 
-                    android:text="Hire a bike"
-                    android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/santander_cycle_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/santander_link"
+                        app:layout_constraintHorizontal_bias="0.153"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.454" />
+
+                    <Button
+                        android:id="@+id/santander_link"
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="@string/hire_a_bike"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.947"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -61,7 +84,6 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:contentDescription="TODO"
                         android:src="@drawable/distance_icon"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/distances"
@@ -74,7 +96,7 @@
                         android:id="@+id/distances"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Distance:"
+                        android:text="@string/distance"
                         android:textColor="@color/baby_blue"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -105,7 +127,7 @@
                         android:id="@+id/durations"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Duration:"
+                        android:text="@string/duration"
                         android:textColor="@color/baby_blue"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -137,7 +159,7 @@
                         android:id="@+id/prices"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price:"
+                        android:text="@string/price"
                         android:textColor="@color/baby_blue"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -153,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="42dp"
                     android:gravity="bottom"
-                    android:text="Journeys:"
+                    android:text="@string/journeys"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
