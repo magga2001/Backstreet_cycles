@@ -43,7 +43,6 @@ class HomePageActivityTest {
     @Test
     fun abc(){
         ActivityScenario.launch(HomePageActivity::class.java)
-
     }
 
     @Test
