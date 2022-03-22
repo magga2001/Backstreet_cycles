@@ -57,13 +57,14 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
-        val currentDocks = SharedPrefHelper.getSharedPref()
+        val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.changeSharedPref("NUM_USERS")
-        //val numUser = SharedPrefHelper.getSharedPref<Int>()
+        var numUser = SharedPrefHelper.getSharedPref(String::class.java)
+        numUser?.map { it.toInt() }
 
         Log.i("currentDocks", currentDocks?.size.toString())
         Log.i("currentDockFirst", currentDocks.toString())
-//        Log.i("numUser", numUser?.first().toString())
+        Log.i("numUser", numUser?.first().toString())
         Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
         Log.i("Json dock", "hi")
 
@@ -89,11 +90,11 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
         Log.i("dock size change", filteredDock.size.toString())
 
         //1 is for numUser
-//        for(dock in filteredDock)
-//            if(dock.nbSpaces >= numUser!!.first()  && filteredDock.size == currentPoint.size)
-//            {
-//                return false
-//            }
+        for(dock in filteredDock)
+            if(dock.nbSpaces >= numUser!!.first().toInt() && filteredDock.size == currentPoint.size)
+            {
+                return false
+            }
 
         return true
     }
