@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,6 @@ import com.example.backstreet_cycles.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.DTO.Locations
 import com.example.backstreet_cycles.interfaces.CallbackListener
 import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.model.JourneyRepository
 import com.example.backstreet_cycles.model.MapRepository
 import com.example.backstreet_cycles.service.NetworkManager
 import com.example.backstreet_cycles.utils.PlannerHelper
@@ -57,9 +54,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey.mapView
-import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
-import kotlinx.coroutines.delay
 
 
 class JourneyActivity : AppCompatActivity(), PlannerInterface {
@@ -215,7 +210,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     override fun onStart() {
         super.onStart()
         journeyViewModel.setNumberOfUsers(intent.getIntExtra("NUM_USERS",1))
-        PlannerHelper.calcBicycleRental(journeyViewModel.getNumberOfUsers(), plannerInterface = this)
+        PlannerHelper.calcBicycleRental(application,journeyViewModel.getNumberOfUsers(), plannerInterface = this)
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
 
 
@@ -500,8 +495,12 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onFetchJourney(points : MutableList<Point>) {
         Log.i("fetching distance", "Success")
+
+
+//        MapHelper.getClosestDocks(points[0].longitude(),)
+//        SharedPrefHelper.initialiseSharedPref(application,"DOCKS_LOCATIONS")
 //        SharedPrefHelper.overrideSharedPref(points)
-//        SharedPrefHelper.checkIfSharedPrefEmpty()
+//        SharedPrefHelper.getSharedPref()
 //        updateSharedPref(points)
         journeyViewModel.fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
     }

@@ -98,6 +98,6 @@
         android:id="@+id/finish_journey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Finish Journey" />
+        android:text="@string/finish_journey" />
 
 </LinearLayout>
