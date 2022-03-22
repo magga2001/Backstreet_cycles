@@ -72,7 +72,7 @@
     <string name="add_button">Add Button</string>
     <string name="location_button">Location Button</string>
     <string name="next_page_button">Next Page Button</string>
-    <string name="users_number">Users:</string>
+    <string name="cyclists_number">Cyclists:</string>
     <string name="decrement">-</string>
     <string name="increment">+</string>
     <string name="start_journey">Start journey</string>

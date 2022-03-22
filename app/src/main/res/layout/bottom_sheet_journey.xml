@@ -50,7 +50,7 @@
                     android:layout_gravity="center_horizontal|center_vertical"
 
                     android:text="Hire a bike"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -161,7 +161,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/plan_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="208dp">
+                    android:layout_height="224dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
