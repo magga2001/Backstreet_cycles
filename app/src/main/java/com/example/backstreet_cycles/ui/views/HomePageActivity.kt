@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
 //---------------------------------
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -19,21 +20,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.data.remote.TflHelper
-
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
-import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
-import com.example.backstreet_cycles.common.CallbackResource
+import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -130,10 +129,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             if(ready)
             {
                 val intent = Intent(this, JourneyActivity::class.java)
-                intent.putExtra("NUM_USERS",numberOfUsers)
-                SharedPrefHelper.initialiseSharedPref(application,"NUM_USERS")
+                intent.putExtra(Constants.NUM_USERS,numberOfUsers)
+                SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
                 SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
-                SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                 SharedPrefHelper.overrideSharedPref(MapRepository.location,Locations::class.java)
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
@@ -265,7 +264,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
                 R.id.currentJourney -> {
 //                    val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-                    SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+                    SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                     val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
                     MapRepository.location = listOfLocations
                     val listPoints = PlannerHelper.setPoints(listOfLocations)
@@ -552,8 +551,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         MapRepository.location.addAll(stops)
 
 //        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
-        SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
-        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty("LOCATIONS")
+        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!checkForARunningJourney){
             alertDialog(MapRepository.location)
         } else{
@@ -575,7 +574,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
 //            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-            SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             MapRepository.location = listOfLocations
             val listPoints = PlannerHelper.setPoints(listOfLocations)
@@ -585,7 +584,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
             val listPoints = PlannerHelper.setPoints(newStops)
 //            journeyViewModel.overrideListLocation(newStops)
-            SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
             SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
             fetchRoute(listPoints)
         }

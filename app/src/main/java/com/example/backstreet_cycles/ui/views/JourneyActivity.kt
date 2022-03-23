@@ -17,7 +17,6 @@ import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
@@ -26,10 +25,6 @@ import com.example.backstreet_cycles.domain.useCase.MapAnnotationUseCase
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.interfaces.Planner
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -301,7 +296,7 @@ class JourneyActivity : AppCompatActivity() {
                 if (userDetails != null){
                     journeyViewModel.clear()
                     MapRepository.location.clear()
-                    SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+                    SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                     journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java),userDetails)
 
 //                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
