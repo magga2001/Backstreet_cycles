@@ -1,18 +1,20 @@
 package com.example.backstreet_cycles.ui.views
 
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
+import com.example.backstreet_cycles.data.remote.dto.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
@@ -113,7 +115,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         MapRepository.location.addAll(stops)
 
-        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
+//        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
+        SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty("LOCATIONS")
         if (checkForARunningJourney){
             alertDialog(MapRepository.location)
         } else{
@@ -134,7 +138,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 "Do you want to change the journey to the current one or keep the same one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
+            SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+//            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
             MapRepository.location = listOfLocations
             val listPoints = setPoints(listOfLocations)
             fetchRoute(listPoints)
@@ -142,7 +148,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
             val listPoints = setPoints(newStops)
-            journeyViewModel.overrideListLocation(newStops)
+            SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
+//            journeyViewModel.overrideListLocation(newStops)
             fetchRoute(listPoints)
         }
         builder.show()

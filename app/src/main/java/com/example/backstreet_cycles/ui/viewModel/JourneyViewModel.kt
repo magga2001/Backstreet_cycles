@@ -16,6 +16,11 @@ import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
+import com.example.backstreet_cycles.data.repository.JourneyRepository
+import com.example.backstreet_cycles.data.repository.LocationRepository
+import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson

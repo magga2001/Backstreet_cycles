@@ -6,10 +6,11 @@ import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.data.repository.HomePageRepository
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

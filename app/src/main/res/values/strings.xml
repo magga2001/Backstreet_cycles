@@ -98,8 +98,10 @@
     <string name="previous">Previous</string>
     <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
-    <string name="preference_file_Locations" />
     <string name="UPDATE_FAILED" />
+
+
+
 
     <!--Journey info-->
     <string name="journey_distances">Total Distance: %1$s km</string>

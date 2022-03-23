@@ -11,11 +11,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.data.remote.dto.TflHelper
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.interfaces.Assests
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -64,7 +64,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.changeSharedPref("NUM_USERS")
         var numUser = SharedPrefHelper.getSharedPref(String::class.java)
-        numUser?.map { it.toInt() }
+        numUser.map { it.toInt() }
 
         Log.i("currentDocks", currentDocks?.size.toString())
         Log.i("currentDockFirst", currentDocks.toString())

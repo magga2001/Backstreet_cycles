@@ -1,3 +1,5 @@
+
+package com.example.backstreet_cycles.data.remote.dto
 package com.example.backstreet_cycles.data.remote
 
 import android.content.Context
@@ -6,8 +8,8 @@ import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.interfaces.Assests
 import org.json.JSONArray
 import kotlin.concurrent.thread
