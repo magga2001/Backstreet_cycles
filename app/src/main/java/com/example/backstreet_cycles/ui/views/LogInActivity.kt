@@ -8,8 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.domain.useCase.PermissionHelper
-import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 

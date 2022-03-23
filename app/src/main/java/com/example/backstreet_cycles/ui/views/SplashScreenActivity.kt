@@ -12,6 +12,7 @@ import com.example.backstreet_cycles.ui.viewModel.TestViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class SplashScreenActivity(): AppCompatActivity() {
 

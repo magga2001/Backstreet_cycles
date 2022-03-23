@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.google.gson.Gson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -30,9 +29,13 @@ class SharedPrefHelper {
         }
 
         fun checkIfSharedPrefEmpty(key: String):Boolean {
-            val serializedObject: String? =
-                sharedPref.getString(key, null)
-            return serializedObject?.isEmpty()!!
+            val serializedObject: String? = sharedPref.getString(key, null)
+            sharedPref.contains(key)
+            Log.i("Serialized123:", serializedObject.toString())
+            if (serializedObject == null){
+                return true
+            }
+            return false
         }
 
         fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
@@ -50,14 +53,14 @@ class SharedPrefHelper {
             }
         }
 
-        fun <T> getSharedPref(type: Class<T>): List<T>? {
+        fun <T> getSharedPref(type: Class<T>): MutableList<T> {
             val serializedObject: String? =
                 sharedPref.getString(key, null)
             Log.i("serializedObject", serializedObject.toString())
             return if (serializedObject != null) {
-                  stringToObject(serializedObject, type)
+                stringToObject(serializedObject, type)!!.toMutableList()
             } else {
-                emptyList()
+                emptyList<T>().toMutableList()
             }
         }
 

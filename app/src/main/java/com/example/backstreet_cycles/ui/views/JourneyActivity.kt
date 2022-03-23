@@ -12,26 +12,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.interfaces.Planner
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
-import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.DTO.Locations
-import com.example.backstreet_cycles.interfaces.CallbackListener
-import com.example.backstreet_cycles.interfaces.PlannerInterface
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.data.remote.dto.TflHelper
-import com.example.backstreet_cycles.domain.useCase.PlannerHelper
+import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
+import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
+import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -60,7 +50,6 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
 
 
@@ -305,8 +294,12 @@ class JourneyActivity : AppCompatActivity(), Planner {
                 if (userDetails != null){
                     journeyViewModel.clear()
                     MapRepository.location.clear()
-                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
-                    journeyViewModel.clearListLocations()
+                    SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+                    journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java),userDetails)
+
+//                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
+//                    journeyViewModel.clearListLocations()
+                    SharedPrefHelper.clearListLocations()
                     val intent = Intent(this, HomePageActivity::class.java)
                     startActivity(intent)
                     finish()

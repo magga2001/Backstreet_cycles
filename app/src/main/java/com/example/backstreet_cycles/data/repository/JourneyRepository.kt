@@ -2,20 +2,16 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.domain.utils.BitmapHelper
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
-import com.example.backstreet_cycles.domain.useCase.MapHelper
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
@@ -47,8 +43,11 @@ import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 import kotlin.math.ceil
 import kotlin.math.roundToInt
@@ -56,7 +55,7 @@ import kotlin.math.roundToInt
 class JourneyRepository(private val application: Application,
                         fireStore: FirebaseFirestore,): MapRepository(application) {
 
-    private var sharedPref: SharedPreferences
+//    private var sharedPref: SharedPreferences
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
@@ -72,7 +71,7 @@ class JourneyRepository(private val application: Application,
         distanceMutableLiveData = MutableLiveData()
         durationMutableLiveData = MutableLiveData()
         priceMutableLiveData = MutableLiveData()
-        sharedPref = application.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+//        sharedPref = application.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
     }
 
     override fun initialiseMapboxNavigation(): MapboxNavigation
@@ -175,42 +174,42 @@ class JourneyRepository(private val application: Application,
         }
     }
 
-    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-        if (getListLocations().isEmpty()){
-            overrideListLocation(locations)
-            return false
-        }
-        return true
-    }
-
-    fun overrideListLocation(locations: MutableList<Locations>) {
-        val gson = Gson();
-        val json = gson.toJson(locations);
-        with (sharedPref.edit()) {
-            putString(R.string.preference_file_Locations.toString(), json)
-            apply()
-        }
-    }
-
-    fun clearListLocations() {
-        with (sharedPref.edit()) {
-            clear()
-            apply()
-        }
-    }
-
-    fun getListLocations(): List<Locations> {
-        val locations: List<Locations>
-        val serializedObject: String? = sharedPref.getString(R.string.preference_file_Locations.toString(), null)
-        if (serializedObject != null) {
-            val gson = Gson()
-            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-            locations = gson.fromJson<List<Locations>>(serializedObject, type)
-        }else {
-            locations = emptyList()
-        }
-        return locations
-    }
+//    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
+//        if (getListLocations().isEmpty()){
+//            overrideListLocation(locations)
+//            return false
+//        }
+//        return true
+//    }
+//
+//    fun overrideListLocation(locations: MutableList<Locations>) {
+//        val gson = Gson();
+//        val json = gson.toJson(locations);
+//        with (sharedPref.edit()) {
+//            putString("LOCATIONS", json)
+//            apply()
+//        }
+//    }
+//
+//    fun clearListLocations() {
+//        with (sharedPref.edit()) {
+//            clear()
+//            apply()
+//        }
+//    }
+//
+//    fun getListLocations(): List<Locations> {
+//        val locations: List<Locations>
+//        val serializedObject: String? = sharedPref.getString("LOCATIONS", null)
+//        if (serializedObject != null) {
+//            val gson = Gson()
+//            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+//            locations = gson.fromJson<List<Locations>>(serializedObject, type)
+//        }else {
+//            locations = emptyList()
+//        }
+//        return locations
+//    }
 
     private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
     {

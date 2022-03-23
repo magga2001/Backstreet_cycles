@@ -4,15 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
 import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.DTO.Locations
-import com.example.backstreet_cycles.DTO.Users
-import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.LocationRepository
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
@@ -124,21 +120,21 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return priceMutableLiveData
     }
 
-    fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {
-        return journeyRepository.addLocationSharedPreferences(locations)
-    }
-
-    fun getListLocations(): List<Locations> {
-        return journeyRepository.getListLocations()
-    }
-
-    fun overrideListLocation(locations: MutableList<Locations>){
-        journeyRepository.overrideListLocation(locations)
-    }
-
-    fun clearListLocations(){
-        journeyRepository.clearListLocations()
-    }
+//    fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {
+//        return journeyRepository.addLocationSharedPreferences(locations)
+//    }
+//
+//    fun getListLocations(): List<Locations> {
+//        return journeyRepository.getListLocations()
+//    }
+//
+//    fun overrideListLocation(locations: MutableList<Locations>){
+//        journeyRepository.overrideListLocation(locations)
+//    }
+//
+//    fun clearListLocations(){
+//        journeyRepository.clearListLocations()
+//    }
 
     fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) {
         journeyRepository.addJourneyToJourneyHistory(locations, userDetails)

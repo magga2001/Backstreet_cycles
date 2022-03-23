@@ -2,10 +2,10 @@ package com.example.backstreet_cycles.domain.useCase
 
 import android.app.Application
 import android.util.Log
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.interfaces.Planner
 import com.mapbox.geojson.Point
 
 object PlannerUseCase {
@@ -36,8 +36,8 @@ object PlannerUseCase {
         }
 
         SharedPrefHelper.initialiseSharedPref(application, "DOCKS_LOCATIONS")
-        SharedPrefHelper.overrideSharedPref(points)
-        SharedPrefHelper.getSharedPref()
+        SharedPrefHelper.overrideSharedPref(points,Point::class.java)
+        SharedPrefHelper.getSharedPref(Point::class.java)
     }
 
     fun calcRoutePlanner(
