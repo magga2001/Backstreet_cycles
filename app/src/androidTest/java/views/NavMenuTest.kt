@@ -101,14 +101,12 @@ class NavMenuTest {
         onView(withId(R.id.changeEmailOrPassword)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_aboutButton_to_aboutActivity()
-//    {
-//        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.nav_view)).perform(click())
-//        onView(withId(R.id.about)).perform(ViewActions.click())
-//        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_aboutButton_to_aboutActivity()
+    {
+        onView(withId(R.id.about)).perform(ViewActions.click())
+        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
+    }
 
 
     @Test

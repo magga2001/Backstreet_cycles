@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
 import org.junit.After
+import java.lang.Thread.sleep
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -32,7 +33,6 @@ class LogInActivityTest{
 
     private val userRepository: UserRepository =
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-
     private lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
     @Before
@@ -42,6 +42,7 @@ class LogInActivityTest{
             userRepository.logout()
         }
         ActivityScenario.launch(LogInActivity::class.java)
+        sleep(100)
     }
 
     @Test
@@ -49,54 +50,45 @@ class LogInActivityTest{
         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_title_is_visible() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_title_is_visible() {
+        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_buttonCreateAccount_is_visible() {
-//        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
-
     }
 
-//    @Test
-//    fun test_buttonLogin_is_visible() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_buttonLogin_is_visible() {
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+    }
 
-//    @Test
-//    fun test_et_email_is_visible() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_et_email_is_visible() {
+        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
+    }
 
-//    @Test
-//    fun test_et_password_is_visible() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        onView(withId(R.id.et_password)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_et_password_is_visible() {
+        onView(withId(R.id.et_password)).check(matches(isDisplayed()))
+    }
 
-//    @Test
-//    fun test_navigation_createAccount() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        onView(withId(R.id.buttonCreateAccount)).perform(click())
-//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
-//
-//    }
-//    @Test
-//    fun test_backPress_onLogInActivity() {
-////        ActivityScenario.launch(LogInActivity::class.java)
-//        pressBack()
-//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_navigation_createAccount() {
+        onView(withId(R.id.buttonCreateAccount)).perform(click())
+        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+
+    }
+    @Test
+    fun test_backPress_onLogInActivity() {
+        pressBack()
+        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_backPress_toLogInActivity() {
-//        ActivityScenario.launch(LogInActivity::class.java)
         onView(withId(R.id.buttonCreateAccount)).perform(click())
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
         pressBack()
