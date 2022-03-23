@@ -77,11 +77,21 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <Button
+                    android:id="@+id/finish_journey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/finish_journey"
+                    android:textAllCaps="false"
+                    android:textSize="14sp" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:id="@+id/journeyLayout"
+                    >
 
                     <ImageView
                         android:layout_width="30dp"
@@ -196,12 +206,12 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/finish_journey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/finish_journey"
-        android:textAllCaps="false"
-        android:textSize="14sp" />
+<!--    <Button-->
+<!--        android:id="@+id/finish_journey"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/finish_journey"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textSize="14sp" />-->
 
 </LinearLayout>
