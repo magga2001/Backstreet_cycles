@@ -22,6 +22,7 @@ import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
+import dagger.hilt.android.internal.Contexts.getApplication
 
 class WorkerService(context: Context, userParameters: WorkerParameters) :
     Worker(context, userParameters) {
@@ -62,6 +63,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.changeSharedPref(Constants.NUM_USERS)
         var numUser = SharedPrefHelper.getSharedPref(String::class.java)
