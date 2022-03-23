@@ -9,6 +9,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.RotateAnimation
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -143,6 +147,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
+    private lateinit var reloadImage: ImageView
 
 
     private lateinit var nAdapter: PlanJourneyAdapter
@@ -205,7 +210,9 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
 //        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
+
         init()
+
     }
 
     override fun onStart() {
@@ -432,8 +439,11 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         return super.onCreateOptionsMenu(menu)
     }
 
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
+        val rotate = AnimationUtils.loadAnimation(this, R.anim.rotate)
         return when (item.itemId) {
             R.id.reload_button -> {
                 clear()

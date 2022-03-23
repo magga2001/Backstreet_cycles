@@ -35,8 +35,8 @@
     <string name="closeArrow">></string>
     <string name="start_navigation">start navigation</string>
     <string name="start_navigation_journey">Start Navigation</string>
-    <string name="hire_a_bike">Hire a bike</string>
-    <string name="journey_overview">Journey overview</string>
+    <string name="hire_a_bike">Hire A Bike</string>
+    <string name="journey_overview">Journey Overview</string>
     <string name="distance">Distance:</string>
     <string name="duration">Duration:</string>
     <string name="price">Price:</string>
@@ -56,8 +56,8 @@
     <string name="log_out">Log Out</string>
 
     <!-- Journey History -->
-    <string name="list_of_stops">Journey summary:</string>
-    <string name="from_to_">from to</string>
+    <string name="list_of_stops">Journey Summary:</string>
+    <string name="from_to_">From To</string>
     <string name="recent_journeys">Recent Journeys</string>
 
     <!-- About -->

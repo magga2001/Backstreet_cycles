@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 class SplashScreenActivity: AppCompatActivity() {
 
     private lateinit var splashViewModel: SplashViewModel
-    private val SPLASH_TIME: Long = 2500
+    private val SPLASH_TIME: Long = 3500
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
