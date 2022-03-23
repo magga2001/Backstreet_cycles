@@ -42,7 +42,7 @@
         tools:ignore="TextContrastCheck" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/signUp_linear_layout"
         android:layout_width="353dp"
         android:layout_height="448dp"
         android:layout_marginBottom="156dp"

@@ -20,6 +20,7 @@ import com.example.backstreet_cycles.views.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -67,27 +68,57 @@ class SignUpActivityTest {
 
     @Test
     fun test_et_first_name_is_visible() {
-        onView(withId(R.id.et_firstName)).perform(typeText(firstName)).check(matches(withText(firstName)))
+        //onView(withId(R.id.et_firstName)).perform(typeText(firstName)).check(matches(withText(firstName)))
+        onView(
+            Matchers.allOf(
+                withId(R.id.et_firstName),
+                withParent(withId(R.id.signUp_linear_layout))
+            )
+        ).perform(typeText(firstName)).check(matches(withText(firstName)))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
-        onView(withId(R.id.et_lastName)).perform(typeText(lastName)).check(matches(withText(lastName)))
+        //onView(withId(R.id.et_lastName)).perform(typeText(lastName)).check(matches(withText(lastName)))
+        onView(
+            Matchers.allOf(
+                withId(R.id.et_lastName),
+                withParent(withId(R.id.signUp_linear_layout))
+            )
+        ).perform(typeText(lastName)).check(matches(withText(lastName)))
     }
 
     @Test
     fun test_et_email_is_visible() {
-        onView(withId(R.id.et_email)).perform(typeText(email)).check(matches(withText(email)))
+        //onView(withId(R.id.et_email)).perform(typeText(email)).check(matches(withText(email)))
+        onView(
+            Matchers.allOf(
+                withId(R.id.et_email),
+                withParent(withId(R.id.signUp_linear_layout))
+            )
+        ).perform(typeText(email)).check(matches(withText(email)))
     }
 
     @Test
     fun test_et_password_is_visible() {
-        onView(withId(R.id.et_password)).perform(typeText(password)).check(matches(withText(password)))
+        //onView(withId(R.id.et_password)).perform(typeText(password)).check(matches(withText(password)))
+        onView(
+            Matchers.allOf(
+                withId(R.id.et_password),
+                withParent(withId(R.id.signUp_linear_layout))
+            )
+        ).perform(typeText(password)).check(matches(withText(password)))
     }
 
     @Test
     fun test_et_confirmPassword_is_visible() {
-        onView(withId(R.id.et_confirmPassword)).perform(typeText(password)).check(matches(withText(password)))
+        //onView(withId(R.id.et_confirmPassword)).perform(typeText(password)).check(matches(withText(password)))
+        onView(
+            Matchers.allOf(
+                withId(R.id.et_confirmPassword),
+                withParent(withId(R.id.signUp_linear_layout))
+            )
+        ).perform(typeText(password)).check(matches(withText(password)))
     }
 
     @Test
