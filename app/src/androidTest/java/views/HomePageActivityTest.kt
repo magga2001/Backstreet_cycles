@@ -23,6 +23,7 @@ import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.HomePageActivity
 import org.junit.Before
 import org.junit.Test
+import java.lang.Thread.sleep
 
 class HomePageActivityTest {
     lateinit var logInRegisterViewModel: LogInRegisterViewModel
@@ -37,7 +38,7 @@ class HomePageActivityTest {
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
-
+        sleep(100)
     }
 
     @Test

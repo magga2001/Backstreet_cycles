@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SplashScreenActivityTest{
@@ -33,8 +34,7 @@ class SplashScreenActivityTest{
         /*logInRegisterViewModel= LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")*/
         ActivityScenario.launch(SplashScreenActivity::class.java)
-
-
+        sleep(100)
     }
 
     @Test

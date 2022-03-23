@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
 import org.junit.After
+import java.lang.Thread.sleep
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -42,6 +43,7 @@ class LogInActivityTest{
             userRepository.logout()
         }
         ActivityScenario.launch(LogInActivity::class.java)
+        sleep(100)
     }
 
     @Test
