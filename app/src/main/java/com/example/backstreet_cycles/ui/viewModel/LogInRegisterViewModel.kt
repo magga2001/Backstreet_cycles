@@ -19,8 +19,8 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
         mutableLiveData = userRepository.getMutableLiveData()
     }
 
-    fun register(firstName:String, lastName:String, email:String, password:String){
-        userRepository.register(firstName,lastName,email,password)
+    fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
+        return userRepository.register(firstName,lastName,email,password)
     }
 
 

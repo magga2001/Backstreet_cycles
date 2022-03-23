@@ -24,11 +24,10 @@ class SignUpActivity : AppCompatActivity() {
         loginRegisterViewModel = ViewModelProvider(this)[LogInRegisterViewModel::class.java]
         loginRegisterViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+//                val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
+//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                startActivity(intent)
+//                finish()
             }
         }
 
@@ -71,6 +70,7 @@ class SignUpActivity : AppCompatActivity() {
                         loginRegisterViewModel.register(firstName, lastName, email, password)
                         val intent = Intent(this, LogInActivity::class.java)
                         startActivity(intent)
+                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
                     }
                 }
             }

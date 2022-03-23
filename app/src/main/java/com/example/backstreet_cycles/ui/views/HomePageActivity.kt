@@ -264,7 +264,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
 
                 R.id.currentJourney -> {
-//                    val listOfLocations = journeyViewModel.getListLocations().toMutableList()
                     SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                     if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
                         val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)

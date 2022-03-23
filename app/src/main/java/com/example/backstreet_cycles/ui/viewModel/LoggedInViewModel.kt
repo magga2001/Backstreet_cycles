@@ -27,7 +27,7 @@ class LoggedInViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateEmailAndPassword(password: String, newPassword: String) {
-        userRepository.updateEmailAndPassword(password, newPassword)
+        userRepository.updatePassword(password, newPassword)
     }
 
     fun getUserDetails() {

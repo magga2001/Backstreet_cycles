@@ -42,11 +42,11 @@ UserRepository(private val application: Application,
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-
+                    mutableLiveData.postValue(firebaseAuth.currentUser)
                     emailVerification(fName,lName,email)
 
                 } else {
-                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
+                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
                 }
             }
         return firebaseAuth.currentUser
@@ -61,10 +61,9 @@ UserRepository(private val application: Application,
                 createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
-                mutableLiveData.postValue(firebaseAuth.currentUser)
             }
             else{
-                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
+                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
 
             }
 
@@ -87,15 +86,6 @@ UserRepository(private val application: Application,
 
             }
     }
-
-//    suspend fun getUser() : QuerySnapshot{
-//        val user = dataBase
-//            .collection("users")
-//            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
-//            .get()
-//            .await()
-//        return user
-//    }
 
     fun updateUserDetails(firstName: String, lastName: String) =
         CoroutineScope(Dispatchers.IO).launch {
@@ -128,7 +118,7 @@ UserRepository(private val application: Application,
             }
         }
 
-    fun updateEmailAndPassword(password: String, newPassword: String) {
+    fun updatePassword(password: String, newPassword: String) {
 
         val credential =
             EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
@@ -184,7 +174,7 @@ UserRepository(private val application: Application,
                     }
                 }
                 else {
-                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
+                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
                 }
             }
         return firebaseAuth.currentUser
