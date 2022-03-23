@@ -15,10 +15,12 @@ class GetDockUseCase @Inject constructor(
     private val tflRepository: TflRepository
 ) {
     operator fun invoke(): Flow<Resource<MutableList<Dock>>> = flow {
-        Log.i("Dock usecase", "Starting...")
         try {
             emit(Resource.Loading())
-            val docks = tflRepository.getDocks().map { it.toDock() }.toMutableList()
+            val docks = tflRepository.getDocks()
+                .map { it.toDock() }
+                .filter { (it.nbDocks - (it.nbBikes + it.nbSpaces) == 0) }
+                .toMutableList()
             emit(Resource.Success(docks))
         } catch(e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))

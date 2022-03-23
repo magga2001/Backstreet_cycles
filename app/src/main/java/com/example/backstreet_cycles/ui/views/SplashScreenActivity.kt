@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SplashScreenActivity(): AppCompatActivity() {
 
     private val journeyViewModel : JourneyViewModel by viewModels()
+    private val homePageViewModel : HomePageViewModel by viewModels()
 //    private val journeyViewModel: JourneyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

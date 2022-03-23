@@ -66,11 +66,11 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
         var numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
 
-        Log.i("currentDocks", currentDocks?.size.toString())
-        Log.i("currentDockFirst", currentDocks.toString())
-        Log.i("numUser", numUser?.first().toString())
-        Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
-        Log.i("Json dock", "hi")
+//        Log.i("currentDocks", currentDocks?.size.toString())
+//        Log.i("currentDockFirst", currentDocks.toString())
+//        Log.i("numUser", numUser?.first().toString())
+//        Log.i("new Dock first", Point.fromLngLat(docks.first().lon, docks.first().lat).toString())
+//        Log.i("Json dock", "hi")
 
 
 

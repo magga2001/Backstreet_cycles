@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.data.remote
 
 import android.content.Context
 import android.util.Log
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.mapbox.api.directions.v5.DirectionsCriteria
@@ -17,54 +18,10 @@ import com.mapbox.navigation.core.MapboxNavigation
 
 object MapboxApi {
 
-    fun fetchRoute(context: Context,
-                   mapboxNavigation: MapboxNavigation,
-                   points: MutableList<Point>,
-                   profile: String,
-                   info: Boolean)
-    {
-
-        val routeOptions: RouteOptions
-
-        MapRepository.location.distinct()
-        points.distinct()
-
-        if(!info)
-        {
-            MapRepository.distances.clear()
-            MapRepository.durations.clear()
-            MapRepository.wayPoints.addAll(points)
-
-            routeOptions = when(profile)
-            {
-                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
-                else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-            }
-
-            requestRoute(mapboxNavigation, routeOptions, info)
-        }else
-        {
-            routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-            requestRoute(mapboxNavigation, routeOptions, info)
-        }
-    }
-
-    private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
-    {
-        return RouteOptions.builder()
-            // applies the default parameters to route options
-            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
-            .applyLanguageAndVoiceUnitOptions(context)
-            .profile(criteria)
-            // lists the coordinate pair i.e. origin and destination
-            // If you want to specify waypoints you can pass list of points instead of null
-            .coordinatesList(points)
-            // set it to true if you want to receive alternate routes to your destination
-            .alternatives(true)
-            .build()
-    }
-
-    private fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, info: Boolean)
+    fun requestRoute(mapboxNavigation: MapboxNavigation,
+                             routeOptions: RouteOptions,
+                             info: Boolean,
+                             listener: CallbackResource<DirectionsRoute>)
     {
 
         Log.i("retrieving the route", "success")
@@ -90,7 +47,10 @@ object MapboxApi {
                     }
                     else
                     {
-                        MapRepository.currentRoute.add(fastestRoute) }
+                        MapRepository.currentRoute.add(fastestRoute)
+                    }
+
+                    listener.getResult(fastestRoute)
                 }
 
                 /**

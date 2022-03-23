@@ -405,12 +405,14 @@ class JourneyActivity : AppCompatActivity() {
                 journeyViewModel.clear()
                 MapRepository.distances.clear()
                 MapRepository.durations.clear()
+                journeyViewModel.getDock()
+
                 TflHelper.getDock(context = applicationContext,
                     object :
                         CallbackResource<MutableList<Dock>> {
                         override fun getResult(objects: MutableList<Dock>) {
-                            val points = PlannerHelper.setPoints(MapRepository.location)
-                            journeyViewModel.fetchRoute(mapboxNavigation, points, "cycling", false)
+//                            val points = PlannerHelper.setPoints(MapRepository.location)
+//                            journeyViewModel.fetchRoute(mapboxNavigation, points, "cycling", false)
 
                             //Problem with not loading fast enough...
                             startActivity(intent)

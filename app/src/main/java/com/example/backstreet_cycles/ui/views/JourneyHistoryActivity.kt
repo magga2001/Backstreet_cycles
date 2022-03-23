@@ -31,8 +31,9 @@ import kotlinx.android.synthetic.main.activity_journey_history.*
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var mapboxMap: MapboxMap
-    private lateinit var homePageViewModel: HomePageViewModel
+//    private lateinit var homePageViewModel: HomePageViewModel
     private val journeyViewModel : JourneyViewModel by viewModels()
+    private val homePageViewModel : HomePageViewModel by viewModels()
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var nAdapter: JourneyHistoryAdapter
     private lateinit var mapboxNavigation: MapboxNavigation
@@ -46,7 +47,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
-        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
+//        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
 
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)

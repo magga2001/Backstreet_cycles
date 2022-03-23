@@ -18,6 +18,7 @@ import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -78,6 +79,29 @@ class JourneyViewModel @Inject constructor(
     }
 
     //NEW CODE
+
+    fun getDock()
+    {
+        getDockUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    Log.i("New dock", result.data?.size.toString())
+                    val points = PlannerHelper.setPoints(MapRepository.location)
+                    //fetchRoute(mapboxNavigation, points, "cycling", false)
+
+                    isReadyMutableLiveData.postValue(true)
+                }
+
+                is Resource.Error -> {
+                    Log.i("New dock", "Error")
+
+                }
+                is Resource.Loading -> {
+                    Log.i("New dock", "Loading...")
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
 
     fun linkingToCycleHire(intent: Intent)
     {

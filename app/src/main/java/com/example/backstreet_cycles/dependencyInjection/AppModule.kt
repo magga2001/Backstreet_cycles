@@ -1,9 +1,13 @@
 package com.example.backstreet_cycles.dependencyInjection
 
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
+import com.example.backstreet_cycles.data.repository.MapboxRepositoryImpl
 import com.example.backstreet_cycles.data.repository.TflRepositoryImpl
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.mapbox.mapboxsdk.Mapbox
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +37,15 @@ object AppModule {
         return TflRepositoryImpl(api)
     }
 
+    @Provides
+    @Singleton
+    fun provideMapboxApi(): MapboxApi {
+        return MapboxApi
+    }
+
+    @Provides
+    @Singleton
+    fun provideMapboxRepository(api: MapboxApi): MapboxRepository {
+        return MapboxRepositoryImpl(api)
+    }
 }
