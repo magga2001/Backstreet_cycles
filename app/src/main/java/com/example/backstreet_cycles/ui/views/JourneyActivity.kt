@@ -147,7 +147,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
-    private lateinit var reloadImage: ImageView
 
 
     private lateinit var nAdapter: PlanJourneyAdapter
@@ -443,7 +442,6 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
-        val rotate = AnimationUtils.loadAnimation(this, R.anim.rotate)
         return when (item.itemId) {
             R.id.reload_button -> {
                 clear()
