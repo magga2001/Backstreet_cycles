@@ -31,7 +31,7 @@ import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -52,7 +52,6 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import com.mapbox.maps.MapConstants
 import com.mapbox.navigation.core.MapboxNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
@@ -320,7 +319,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
             TflHelper.getDock(context = applicationContext,
-                object : Assests<MutableList<Dock>> {
+                object : CallbackResource<MutableList<Dock>> {
                     override fun getResult(objects: MutableList<Dock>) {
 
 //                        val bundle = Bundle()

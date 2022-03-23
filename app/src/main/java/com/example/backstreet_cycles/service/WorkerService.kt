@@ -15,7 +15,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +39,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         TflHelper.getDock(context = applicationContext,
 
-            object : Assests<MutableList<Dock>> {
+            object : CallbackResource<MutableList<Dock>> {
                 override fun getResult(objects: MutableList<Dock>) {
 
                     //Do whatever with shared preference...

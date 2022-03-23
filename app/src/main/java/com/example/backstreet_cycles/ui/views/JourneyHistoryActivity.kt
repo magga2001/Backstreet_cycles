@@ -15,7 +15,7 @@ import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -80,7 +80,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 //Get Dock
 //                homePageViewModel.getDocks()
                 TflHelper.getDock(context = applicationContext,
-                    object : Assests<MutableList<Dock>> {
+                    object : CallbackResource<MutableList<Dock>> {
                         override fun getResult(objects: MutableList<Dock>) {
                             fetchPoints()
                         }

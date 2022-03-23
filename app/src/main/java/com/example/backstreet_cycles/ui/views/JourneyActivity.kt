@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.remote.TflHelper
@@ -406,7 +407,7 @@ class JourneyActivity : AppCompatActivity() {
                 MapRepository.durations.clear()
                 TflHelper.getDock(context = applicationContext,
                     object :
-                        com.example.backstreet_cycles.interfaces.Assests<MutableList<Dock>> {
+                        CallbackResource<MutableList<Dock>> {
                         override fun getResult(objects: MutableList<Dock>) {
                             val points = PlannerHelper.setPoints(MapRepository.location)
                             journeyViewModel.fetchRoute(mapboxNavigation, points, "cycling", false)
