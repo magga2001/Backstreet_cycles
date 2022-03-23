@@ -6,15 +6,21 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.views.LogInActivity
 import com.example.backstreet_cycles.views.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,13 +50,13 @@ class SignUpActivityTest {
             userRepository.logout()
         }
         ActivityScenario.launch(SignUpActivity::class.java)
-        //sleep(10000)
+        Intents.init()
     }
 
     @Test
     fun test_activity_is_in_view() {
 
-        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(SignUpActivity::class.qualifiedName))
     }
 
     @Test
@@ -87,5 +93,10 @@ class SignUpActivityTest {
     @Test
     fun test_buttonSignUp_is_visible() {
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
     }
 }

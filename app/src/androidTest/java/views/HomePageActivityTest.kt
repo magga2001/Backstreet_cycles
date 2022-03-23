@@ -13,6 +13,10 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
@@ -20,7 +24,8 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.views.HomePageActivity
+import com.example.backstreet_cycles.views.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.lang.Thread.sleep
@@ -38,7 +43,7 @@ class HomePageActivityTest {
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
-        //sleep(10000)
+        Intents.init()
     }
 
 
@@ -57,7 +62,7 @@ class HomePageActivityTest {
     @Test
     fun test_drawer_layout_shown() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
 //    @Test
@@ -196,36 +201,36 @@ class HomePageActivityTest {
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
 
-//    @Test
-//    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withContentDescription(R.string.open)).perform(click())
-//        onView(withId(R.id.changePassword)).perform(click())
-//        onView(withId(R.id.changeEmailOrPassword)).check(matches(isDisplayed()))
-//        pressBack()
-//        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.changePassword)).perform(click())
+        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
+        pressBack()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
 
-//    @Test
-//    fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withContentDescription(R.string.open)).perform(click())
-//        onView(withId(R.id.profile)).perform(click())
-//        onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
-//        pressBack()
-//        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.profile)).perform(click())
+        intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
+        pressBack()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
 
-    /* @Test
+     @Test
      fun back_button_from_SignUpActivity_to_LogInActivity() {
          ActivityScenario.launch(HomePageActivity::class.java)
          onView(withContentDescription(R.string.open)).perform(ViewActions.click())
          onView(withId(R.id.logout)).perform(ViewActions.click())
-         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+         intending(hasComponent(LogInActivity::class.qualifiedName))
          onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
          pressBack()
-         onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-     }*/
+         intending(hasComponent(LogInActivity::class.qualifiedName))
+     }
 
 //    @Test
 //    fun test_current_location_button_disabled_when_already_in_recyclerView(){
@@ -273,21 +278,25 @@ class HomePageActivityTest {
     return matches(withEffectiveVisibility(visibility))
     }
 
-//    @Test
-//    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.HomePageActivity)).isVisible()
-//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
-//            (0, click()))
-//        onView(withId(R.id.HomePageActivity)).isGone()
-//        pressBack()
-//        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.HomePageActivity)).isVisible()
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
+            (0, click()))
+        onView(withId(R.id.HomePageActivity)).isGone()
+        pressBack()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
 
 //    @Test
 //    fun testingshit(){
 //        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()
-//    }
+    //    }
+        @After
+        fun tearDown(){
+            Intents.release()
+        }
 
 
 }

@@ -21,9 +21,15 @@ import org.junit.runner.RunWith
 import android.app.Application
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
+import com.example.backstreet_cycles.views.SignUpActivity
 import org.junit.After
 import java.lang.Thread.sleep
 
@@ -41,18 +47,17 @@ class LogInActivityTest{
 
     @Before
     fun setUp() {
-//        Application().onCreate()
         if (firebaseAuth.currentUser != null) {
             userRepository.logout()
         }
         ActivityScenario.launch(LogInActivity::class.java)
-        //sleep(10000)
+        Intents.init()
     }
 
-//    @Test
-//    fun test_activity_is_in_view() {
-//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_activity_is_in_view() {
+        intending(hasComponent(LogInActivity::class.qualifiedName))
+    }
 
 //    @Test
 //    fun test_title_is_visible() {
@@ -79,30 +84,30 @@ class LogInActivityTest{
         onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
     }
 
-//    @Test
-//    fun test_navigation_createAccount() {
-//        onView(withId(R.id.buttonCreateAccount)).perform(click())
-//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
-//
-//    }
-//    @Test
-//    fun test_backPress_onLogInActivity() {
-//        pressBack()
-//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_navigation_createAccount() {
+        onView(withId(R.id.buttonCreateAccount)).perform(click())
+        intending(hasComponent(SignUpActivity::class.qualifiedName))
+
+    }
+    @Test
+    fun test_backPress_onLogInActivity() {
+        pressBack()
+        intending(hasComponent(LogInActivity::class.qualifiedName))
+    }
 
     @Test
     fun test_backPress_toLogInActivity() {
         onView(withId(R.id.buttonCreateAccount)).perform(click())
-        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(SignUpActivity::class.qualifiedName))
         pressBack()
-        onView(withId(R.id.LogInActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
     @After
     fun tearDown(){
         logInRegisterViewModel = LogInRegisterViewModel(Application())
         logInRegisterViewModel.login(email, password)
+        Intents.release()
     }
-
 }

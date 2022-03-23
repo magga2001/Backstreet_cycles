@@ -43,7 +43,7 @@ class SplashScreenActivityTest{
 
     @Test
     fun test_splash_screen_activity_is_in_view() {
-        onView(withId(R.id.splashScreenActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(SplashScreenActivity::class.qualifiedName))
     }
 
 
