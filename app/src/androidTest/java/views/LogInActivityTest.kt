@@ -96,7 +96,7 @@ class LogInActivityTest{
         onView(withId(R.id.buttonCreateAccount)).perform(click())
         onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
         pressBack()
-        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.LogInActivity)).check(matches(isDisplayed()))
     }
 
     @After

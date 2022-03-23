@@ -1,40 +1,44 @@
 package views
 
 import android.app.Application
+import android.content.ComponentName
+import android.support.test.InstrumentationRegistry.getTargetContext
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.views.ChangeEmailOrPasswordActivity
+import com.example.backstreet_cycles.views.HomePageActivity
+import com.example.backstreet_cycles.views.LogInActivity
 import com.example.backstreet_cycles.views.SplashScreenActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SplashScreenActivityTest{
 
     lateinit var logInRegisterViewModel: LogInRegisterViewModel
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val userRepository: UserRepository =
-        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+//    private val userRepository: UserRepository =
+//        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
 
     @Before
     fun setUp() {
-        Application().onCreate()
-        /*logInRegisterViewModel= LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")*/
+        Intents.init()
         ActivityScenario.launch(SplashScreenActivity::class.java)
-        //sleep(10000)
     }
 
     @Test
@@ -42,10 +46,6 @@ class SplashScreenActivityTest{
         onView(withId(R.id.splashScreenActivity)).check(matches(isDisplayed()))
     }
 
-   /* @Test
-    fun test_progress_bar_is_in_view() {
-        onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
-    }*/
 
     @Test
     fun test_image_is_in_view() {
@@ -67,14 +67,19 @@ class SplashScreenActivityTest{
         onView(withId(R.id.motto)).check(matches(isDisplayed()))
     }*/
 
-//    @Test
-//    fun test_if_logged_HomePage_else_LoginPage(){
-//        if(firebaseAuth.currentUser != null){
-//            onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
-//        }
-//        else{
-//            onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//        }
-//    }
+    @Test
+    fun test_if_logged_HomePage_else_LoginPage(){
 
+        if(firebaseAuth.currentUser != null){
+            intending(hasComponent(HomePageActivity::class.qualifiedName))
+        } else{
+            intending(hasComponent(LogInActivity::class.qualifiedName))
+        }
+
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
+    }
 }

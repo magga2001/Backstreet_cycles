@@ -58,11 +58,4 @@ class LogInActivity : AppCompatActivity() {
         PermissionHelper.checkPermission(context = this, activity = this)
     }
 
-    override fun onBackPressed() {
-
-    }
-
-
-
-
 }
