@@ -27,52 +27,52 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
     override fun doWork(): Result {
 
-        attemptNotification()
+//        attemptNotification()
 
         return Result.success()
     }
 
-    private fun attemptNotification()
-    {
-        NetworkManager.getDock(context = applicationContext,
+//    private fun attemptNotification()
+//    {
+//        NetworkManager.getDock(context = applicationContext,
+//
+//            object : CallbackListener<MutableList<Dock>> {
+//                override fun getResult(objects: MutableList<Dock>) {
+//
+//                    //Do whatever with shared preference...
+//
+//                    if(checkUpdate(objects))
+//                    {
+//                        createNotificationChannel(context = applicationContext)
+//                        notificationTapAction(context = applicationContext)
+//                    }
+//
+//                }
+//            }
+//        )
+//    }
 
-            object : CallbackListener<MutableList<Dock>> {
-                override fun getResult(objects: MutableList<Dock>) {
-
-                    //Do whatever with shared preference...
-
-                    if(checkUpdate(objects))
-                    {
-                        createNotificationChannel(context = applicationContext)
-                        notificationTapAction(context = applicationContext)
-                    }
-
-                }
-            }
-        )
-    }
-
-    private fun checkUpdate(docks: MutableList<Dock>): Boolean
-    {
-        Log.i("Dock Application", docks.size.toString())
-
-        val currentDocks = SharedPrefHelper.getSharedPref()
-
-        Log.i("currentDocks", currentDocks.size.toString())
-
-        docks.filter { currentDocks.contains(it) }
-
-        //1 is for numUser
-        for(dock in docks)
-        {
-            if(!currentDocks.contains(dock) || dock.nbSpaces < 1)
-            {
-                return false
-            }
-        }
-
-        return true
-    }
+//    private fun checkUpdate(docks: MutableList<Dock>): Boolean
+//    {
+//        Log.i("Dock Application", docks.size.toString())
+//
+////        val currentDocks = SharedPrefHelper.getSharedPref()
+//
+//        Log.i("currentDocks", currentDocks.size.toString())
+//
+//        docks.filter { currentDocks.contains(it) }
+//
+//        //1 is for numUser
+//        for(dock in docks)
+//        {
+//            if(!currentDocks.contains(dock) || dock.nbSpaces < 1)
+//            {
+//                return false
+//            }
+//        }
+//
+//        return true
+//    }
 
     private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because

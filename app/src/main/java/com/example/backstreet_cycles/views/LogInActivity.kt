@@ -34,18 +34,18 @@ class LogInActivity : AppCompatActivity() {
 
         buttonLogin.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_email.text.toString().trim { it <= ' ' }) -> {
-                    et_email.error = "Please enter your email"
+                TextUtils.isEmpty(et_email_log_in.text.toString().trim { it <= ' ' }) -> {
+                    et_email_log_in.error = "Please enter your email"
                 }
 
-                TextUtils.isEmpty(et_password.text.toString().trim { it <= ' ' }) -> {
-                    et_password.error = "Please enter a password"
+                TextUtils.isEmpty(et_password_log_in.text.toString().trim { it <= ' ' }) -> {
+                    et_password_log_in.error = "Please enter a password"
                 }
 
                 else ->
                     loginRegisterViewModel.login(
-                    et_email.text.trim().toString(),
-                    et_password.text.trim().toString()
+                    et_email_log_in.text.trim().toString(),
+                    et_password_log_in.text.trim().toString()
                 )
             }
         }

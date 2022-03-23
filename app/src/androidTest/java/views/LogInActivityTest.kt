@@ -20,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import android.app.Application
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
@@ -35,57 +36,60 @@ class LogInActivityTest{
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
     private lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
+    private val email = "backstreet.cycles.test.user@gmail.com"
+    private val password = "123456"
+
     @Before
     fun setUp() {
-        Application().onCreate()
+//        Application().onCreate()
         if (firebaseAuth.currentUser != null) {
             userRepository.logout()
         }
         ActivityScenario.launch(LogInActivity::class.java)
-        sleep(100)
+        //sleep(10000)
+    }
+
+//    @Test
+//    fun test_activity_is_in_view() {
+//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+//    }
+
+//    @Test
+//    fun test_title_is_visible() {
+//        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun test_buttonCreateAccount_is_visible() {
+//        onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
+//    }
+
+//    @Test
+//    fun test_buttonLogin_is_visible() {
+//        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+//    }
+
+    @Test
+    fun test_email_text_box_validate_input() {
+        onView(withId(R.id.et_email_log_in)).perform(typeText(email)).check(matches(withText(email)))
     }
 
     @Test
-    fun test_activity_is_in_view() {
-        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+    fun test_password_text_box_validate_input() {
+        onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
     }
 
-    @Test
-    fun test_title_is_visible() {
-        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_buttonCreateAccount_is_visible() {
-        onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_buttonLogin_is_visible() {
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_et_email_is_visible() {
-        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_et_password_is_visible() {
-        onView(withId(R.id.et_password)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_navigation_createAccount() {
-        onView(withId(R.id.buttonCreateAccount)).perform(click())
-        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
-
-    }
-    @Test
-    fun test_backPress_onLogInActivity() {
-        pressBack()
-        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_navigation_createAccount() {
+//        onView(withId(R.id.buttonCreateAccount)).perform(click())
+//        onView(withId(R.id.signUpActivity)).check(matches(isDisplayed()))
+//
+//    }
+//    @Test
+//    fun test_backPress_onLogInActivity() {
+//        pressBack()
+//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_backPress_toLogInActivity() {
@@ -98,7 +102,7 @@ class LogInActivityTest{
     @After
     fun tearDown(){
         logInRegisterViewModel = LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com", "123456")
+        logInRegisterViewModel.login(email, password)
     }
 
 }

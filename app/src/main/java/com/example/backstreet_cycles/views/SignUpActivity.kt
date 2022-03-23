@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import kotlinx.android.synthetic.main.activity_log_in.et_email
-import kotlinx.android.synthetic.main.activity_log_in.et_password
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {

@@ -23,12 +23,12 @@ class SharedPrefHelper {
                 key, Context.MODE_PRIVATE)
         }
 
-        fun checkIfSharedPrefEmpty():Boolean {
-            if (getSharedPref().isEmpty()){
-                return true
-            }
-            return false
-        }
+//        fun checkIfSharedPrefEmpty():Boolean {
+//            if (getSharedPref().isEmpty()){
+//                return true
+//            }
+//            return false
+//        }
 
         fun overrideSharedPref(values: Any) {
             val gson = Gson();
@@ -46,17 +46,17 @@ class SharedPrefHelper {
             }
         }
 
-        fun getSharedPref(): List<Any> {
-            val serializedObject: String? =
-                sharedPref.getString(key, null)
-            return if (serializedObject != null) {
-                val gson = Gson()
-                val type: Type = object : TypeToken<List<Any?>?>() {}.getType()
-                gson.fromJson(serializedObject, type)
-            } else {
-                emptyList()
-            }
-        }
+//        fun getSharedPref(): List<Any> {
+//            val serializedObject: String? =
+//                sharedPref.getString(key, null)
+//            return if (serializedObject != null) {
+//                val gson = Gson()
+//                val type: Type = object : TypeToken<List<Any?>?>() {}.getType()
+//                gson.fromJson(serializedObject, type)
+//            } else {
+//                emptyList()
+//            }
+//        }
 
         fun setKey(application: Application,key:String)
         {

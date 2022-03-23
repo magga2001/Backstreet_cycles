@@ -57,7 +57,7 @@
         app:layout_constraintVertical_bias="0.175">
 
         <EditText
-            android:id="@+id/et_firstName"
+            android:id="@+id/et_firstName_edit_user"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -72,7 +72,7 @@
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/et_lastName"
+            android:id="@+id/et_lastName_edit_user"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"

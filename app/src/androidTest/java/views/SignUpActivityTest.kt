@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
@@ -30,6 +31,12 @@ class SignUpActivityTest {
     private val userRepository: UserRepository =
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
 
+    private val firstName = "Test"
+    private val lastName = "User"
+    private val email = "backstreet.cycles.test.user@gmail.com"
+    private val password = "123456"
+
+
 
     @Before
     fun setUp() {
@@ -37,7 +44,7 @@ class SignUpActivityTest {
             userRepository.logout()
         }
         ActivityScenario.launch(SignUpActivity::class.java)
-        sleep(100)
+        //sleep(10000)
     }
 
     @Test
@@ -48,43 +55,37 @@ class SignUpActivityTest {
 
     @Test
     fun test_title_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_create_account_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_create_account_title)).check(matches(isDisplayed())).check(matches(
+            withText(R.string.sign_up_title)))
     }
 
     @Test
     fun test_et_first_name_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_firstName)).perform(typeText(firstName)).check(matches(withText(firstName)))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_lastName)).perform(typeText(lastName)).check(matches(withText(lastName)))
     }
 
     @Test
     fun test_et_email_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_email)).perform(typeText(email)).check(matches(withText(email)))
     }
 
     @Test
     fun test_et_password_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_password)).perform(typeText(password)).check(matches(withText(password)))
     }
 
     @Test
     fun test_et_confirmPassword_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_confirmPassword)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_confirmPassword)).perform(typeText(password)).check(matches(withText(password)))
     }
 
     @Test
     fun test_buttonSignUp_is_visible() {
-//        ActivityScenario.launch(SignUpActivity::class.java)
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
 }

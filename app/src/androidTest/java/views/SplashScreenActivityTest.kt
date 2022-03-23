@@ -34,7 +34,7 @@ class SplashScreenActivityTest{
         /*logInRegisterViewModel= LogInRegisterViewModel(Application())
         logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")*/
         ActivityScenario.launch(SplashScreenActivity::class.java)
-        sleep(100)
+        //sleep(10000)
     }
 
     @Test

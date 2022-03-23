@@ -25,7 +25,7 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                et_email.text = firebaseUser.email
+                et_email_change_password.text = firebaseUser.email
             }
         }
 

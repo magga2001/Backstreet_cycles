@@ -39,22 +39,22 @@ class EditUserProfileActivity : AppCompatActivity() {
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
             if (details != null) {
-                et_firstName.setText(details.firstName)
-                et_lastName.setText(details.lastName)
+                et_firstName_edit_user.setText(details.firstName)
+                et_lastName_edit_user.setText(details.lastName)
             }
         }
 
         buttonUpdateProfile.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
-                    et_firstName.error = getString(R.string.enter_first_name)
+                TextUtils.isEmpty(et_firstName_edit_user.text.toString().trim { it <= ' ' }) -> {
+                    et_firstName_edit_user.error = getString(R.string.enter_first_name)
                 }
-                TextUtils.isEmpty(et_lastName.text.toString().trim { it <= ' ' }) -> {
-                    et_lastName.error = getString(R.string.enter_last_name)
+                TextUtils.isEmpty(et_lastName_edit_user.text.toString().trim { it <= ' ' }) -> {
+                    et_lastName_edit_user.error = getString(R.string.enter_last_name)
                 }
                 else -> {
-                    val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
-                    val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
+                    val firstName: String = et_firstName_edit_user.text.toString().trim { it <= ' ' }
+                    val lastName: String = et_lastName_edit_user.text.toString().trim { it <= ' ' }
                     loggedInViewModel.updateUserDetails(firstName, lastName)
                 }
             }

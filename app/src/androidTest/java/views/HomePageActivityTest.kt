@@ -38,13 +38,9 @@ class HomePageActivityTest {
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
-        sleep(100)
+        //sleep(10000)
     }
 
-    @Test
-    fun abc(){
-        ActivityScenario.launch(HomePageActivity::class.java)
-    }
 
     @Test
     fun test_map_on_homepage_is_displayed() {
