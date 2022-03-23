@@ -52,6 +52,11 @@ class SplashScreenActivityTest{
         onView(withId(R.id.GifImage)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun progress_bar_is_displayed(){
+        onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
+    }
+
     /*@Test
     fun test_logo_is_in_view() {
         onView(withId(R.id.logo)).check(matches(isDisplayed()))

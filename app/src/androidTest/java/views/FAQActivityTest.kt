@@ -1,5 +1,3 @@
-package views
-
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -43,7 +41,6 @@ class FAQActivityTest {
 
     @Test
     fun test_FAQtitle_is_displayed() {
-
         onView(withId(R.id.FAQTitle)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
