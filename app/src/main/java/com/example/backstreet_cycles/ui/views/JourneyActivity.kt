@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.remote.dto.TflHelper
+import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
@@ -25,10 +25,6 @@ import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.geojson.Point
 import com.mapbox.maps.EdgeInsets

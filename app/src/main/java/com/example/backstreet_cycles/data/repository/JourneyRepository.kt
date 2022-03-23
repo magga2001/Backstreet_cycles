@@ -13,7 +13,6 @@ import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
