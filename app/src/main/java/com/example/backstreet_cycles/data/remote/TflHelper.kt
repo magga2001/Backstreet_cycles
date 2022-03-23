@@ -10,7 +10,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Dock
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.common.CallbackResource
 import org.json.JSONArray
 import kotlin.concurrent.thread
 
@@ -18,7 +18,7 @@ object TflHelper {
 
     var docks = mutableListOf<Dock>()
 
-    fun getDock(context: Context, listener: Assests<MutableList<Dock>>)
+    fun getDock(context: Context, listener: CallbackResource<MutableList<Dock>>)
     {
         thread(start = true)
         {

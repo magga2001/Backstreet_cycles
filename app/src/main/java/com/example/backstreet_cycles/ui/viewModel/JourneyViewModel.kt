@@ -1,103 +1,117 @@
 package com.example.backstreet_cycles.ui.viewModel
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
+import android.content.Intent
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.LocationRepository
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.interfaces.Planner
+import com.google.common.reflect.TypeToken
+import com.example.backstreet_cycles.data.repository.JourneyRepository
+import com.example.backstreet_cycles.data.repository.LocationRepository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
+import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
-import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
+import dagger.hilt.android.internal.Contexts
+import dagger.hilt.android.internal.Contexts.getApplication
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.lang.reflect.Type
+import javax.inject.Inject
 
+@HiltViewModel
+class JourneyViewModel @Inject constructor(
+    private val getDockUseCase: GetDockUseCase,
+    @ApplicationContext applicationContext: Context
+): ViewModel(), Planner{
 
-class JourneyViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val journeyRepository: JourneyRepository
-    private val locationRepository: LocationRepository
     private val isReadyMutableLiveData: MutableLiveData<Boolean>
     private val distanceMutableLiveData: MutableLiveData<String>
     private val durationMutableLiveData: MutableLiveData<String>
     private val priceMutableLiveData: MutableLiveData<String>
-
+    private var sharedPref: SharedPreferences
     private val firestore = Firebase.firestore
+    private val mApplication = getApplication(applicationContext)
 
     init {
-        journeyRepository = JourneyRepository(application, firestore)
-        locationRepository = LocationRepository(application)
-        isReadyMutableLiveData = journeyRepository.getIsReadyMutableLiveData()
-        distanceMutableLiveData = journeyRepository.getDistanceMutableLiveData()
-        durationMutableLiveData = journeyRepository.getDurationMutableLiveData()
-        priceMutableLiveData = journeyRepository.getPriceMutableLiveData()
+        isReadyMutableLiveData = MutableLiveData()
+        isReadyMutableLiveData.value = false
+        distanceMutableLiveData = MutableLiveData()
+        durationMutableLiveData = MutableLiveData()
+        priceMutableLiveData = MutableLiveData()
+        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
     {
-        return journeyRepository.initialiseMapboxNavigation()
+        return (if (MapboxNavigationProvider.isCreated()) {
+            MapboxNavigationProvider.retrieve()
+        } else {
+            MapboxNavigationProvider.create(
+                NavigationOptions.Builder(mApplication)
+                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
+                    .build()
+            )
+        })
     }
 
-    fun fetchRoute(context: Context, mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, info: Boolean)
+    //NEW CODE
+
+    fun linkingToCycleHire(intent: Intent)
     {
-        journeyRepository.fetchRoute(context,mapboxNavigation,points, profile, info)
+
     }
 
-    fun initialiseRouteLineResources(): RouteLineResources
+    fun clear()
     {
-        return journeyRepository.initialiseRouteLineResources()
+        MapRepository.wayPoints.clear()
+        MapRepository.currentRoute.clear()
     }
 
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
+    fun clearInfo()
     {
-        return journeyRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView, viewportDataSource)
-    }
-
-    fun initialiseRouteProgressObserver(mapboxMap: MapboxMap,
-                                        routeLineApi: MapboxRouteLineApi,
-                                        routeLineView: MapboxRouteLineView,
-                                        routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView,
-                                        viewportDataSource: MapboxNavigationViewportDataSource
-    ): RouteProgressObserver
-    {
-        return journeyRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView,viewportDataSource)
-    }
-
-    fun addAnnotationToMap(context: Context, mapView: MapView)
-    {
-        journeyRepository.addAnnotationToMap(context,mapView)
-    }
-
-    fun removeAnnotations()
-    {
-        journeyRepository.removeAnnotations()
+        MapRepository.distances.clear()
+        MapRepository.durations.clear()
     }
 
     fun registerObservers(mapboxNavigation: MapboxNavigation,
                           routesObserver: RoutesObserver,
-                          routeProgressObserver: RouteProgressObserver)
+                          routeProgressObserver: RouteProgressObserver
+    )
     {
-        journeyRepository.registerObservers(mapboxNavigation,routesObserver,routeProgressObserver)
+        mapboxNavigation.registerRoutesObserver(routesObserver)
+        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
     }
 
     fun unregisterObservers(mapboxNavigation: MapboxNavigation,
-                          routesObserver: RoutesObserver,
-                          routeProgressObserver: RouteProgressObserver)
+                            routesObserver: RoutesObserver,
+                            routeProgressObserver: RouteProgressObserver
+    )
     {
-        journeyRepository.unregisterObservers(mapboxNavigation,routesObserver,routeProgressObserver)
+        mapboxNavigation.unregisterRoutesObserver(routesObserver)
+        mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
@@ -120,34 +134,129 @@ class JourneyViewModel(application: Application) : AndroidViewModel(application)
         return priceMutableLiveData
     }
 
-//    fun addLocationSharedPreferences(locations: MutableList<Locations>): Boolean {
-//        return journeyRepository.addLocationSharedPreferences(locations)
-//    }
-//
-//    fun getListLocations(): List<Locations> {
-//        return journeyRepository.getListLocations()
-//    }
-//
-//    fun overrideListLocation(locations: MutableList<Locations>){
-//        journeyRepository.overrideListLocation(locations)
-//    }
-//
-//    fun clearListLocations(){
-//        journeyRepository.clearListLocations()
-//    }
-
-    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) {
-        journeyRepository.addJourneyToJourneyHistory(locations, userDetails)
-    }
-
-    fun getJourneyHistory(userDetails: Users) : MutableList<List<Locations>> {
-        return journeyRepository.getJourneyHistory(userDetails)
-    }
-
-    fun clear()
+    fun calcBicycleRental(users: Int)
     {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
+        PlannerUseCase.calcBicycleRental(mApplication, users, plannerInterface = this)
     }
 
+    fun fetchRoute(mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, info: Boolean)
+    {
+        //Mapbox api
+    }
+
+    override fun onSelectedJourney(
+        location: Locations,
+        profile: String,
+        points: MutableList<Point>
+    ) {
+        clear()
+        //fetchRoute(context = this, mapboxNavigation, points, profile, false)
+    }
+
+    override fun onFetchJourney(points: MutableList<Point>) {
+        //fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
+    }
+
+    fun getPlannerInterface(): Planner
+    {
+        return this
+    }
+
+    fun setRoute()
+    {
+
+    }
+
+    fun clearRoute()
+    {
+
+    }
+
+
+//--------------------------------
+    //Tish stuff
+
+    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
+        if (getListLocations().isEmpty()){
+            overrideListLocation(locations)
+            return false
+        }
+        return true
+    }
+
+    fun overrideListLocation(locations: MutableList<Locations>) {
+        val gson = Gson();
+        val json = gson.toJson(locations);
+        with (sharedPref.edit()) {
+            putString("LOCATIONS", json)
+            apply()
+        }
+    }
+
+    fun clearListLocations() {
+        with (sharedPref.edit()) {
+            clear()
+            apply()
+        }
+    }
+
+    fun getListLocations(): List<Locations> {
+        val locations: List<Locations>
+        val serializedObject: String? = sharedPref.getString("LOCATIONS", null)
+        if (serializedObject != null) {
+            val gson = Gson()
+            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+            locations = gson.fromJson<List<Locations>>(serializedObject, type)
+        }else {
+            locations = emptyList()
+        }
+        return locations
+    }
+
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val user =  firestore
+                .collection("users")
+                .whereEqualTo("email", userDetails.email)
+                .get()
+                .await()
+            val gson = Gson()
+            val jsonObject = gson.toJson(locations)
+            if (jsonObject.isNotEmpty()){
+                userDetails.journeyHistory.add(jsonObject)
+                if (user.documents.isNotEmpty()) {
+                    for (document in user) {
+
+                        try {
+                            firestore.collection("users")
+                                .document(document.id)
+                                .update("journeyHistory",userDetails.journeyHistory)
+                        }
+                        catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                //Toast.makeText(application,e.message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+    fun convertJSON(serializedObject: String): List<Locations> {
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+        return gson.fromJson(serializedObject, type)
+    }
+
+    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
+        val listLocations = emptyList<List<Locations>>().toMutableList()
+        for (journey in userDetails.journeyHistory){
+            val serializedObject: String = journey
+            listLocations.add(convertJSON(serializedObject))
+        }
+        return listLocations
+    }
 }

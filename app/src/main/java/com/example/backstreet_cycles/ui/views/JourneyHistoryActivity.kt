@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.ui.views
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -10,12 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.data.remote.TflHelper
 
+import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.interfaces.Assests
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -23,14 +25,16 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.navigation.core.MapboxNavigation
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 
+@AndroidEntryPoint
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var mapboxMap: MapboxMap
     private lateinit var homePageViewModel: HomePageViewModel
-    private lateinit var journeyViewModel: JourneyViewModel
+    private val journeyViewModel : JourneyViewModel by viewModels()
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var nAdapter: JourneyHistoryAdapter
     private lateinit var mapboxNavigation: MapboxNavigation
@@ -44,7 +48,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
-        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
 
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
@@ -79,7 +82,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 //Get Dock
 //                homePageViewModel.getDocks()
                 TflHelper.getDock(context = applicationContext,
-                    object : Assests<MutableList<Dock>> {
+                    object : CallbackResource<MutableList<Dock>> {
                         override fun getResult(objects: MutableList<Dock>) {
                             fetchPoints()
                         }

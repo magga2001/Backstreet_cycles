@@ -29,29 +29,4 @@ abstract class MapRepository(private val application: Application)
      * to the Maps SDK in order to update the user location indicator on the map.
      */
     protected val navigationLocationProvider = NavigationLocationProvider()
-
-    fun initialiseRouteLineResources(): RouteLineResources
-    {
-        return RouteLineResources.Builder()
-            /**
-             * Route line related colors can be customized via the [RouteLineColorResources]. If using the
-             * default colors the [RouteLineColorResources] does not need to be set as seen here, the
-             * defaults will be used internally by the builder.
-             */
-            .routeLineColorResources(RouteLineColorResources.Builder().build())
-            .build()
-    }
-
-    fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
-    {
-        return  OnIndicatorPositionChangedListener { point ->
-            val result = routeLineApi.updateTraveledRouteLine(point)
-            mapboxMap.getStyle()?.apply {
-                // Render the result to update the map.
-                routeLineView.renderRouteLineUpdate(this, result)
-            }
-        }
-    }
-
-    abstract fun initialiseMapboxNavigation(): MapboxNavigation
 }

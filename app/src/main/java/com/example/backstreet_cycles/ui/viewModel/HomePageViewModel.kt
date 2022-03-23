@@ -28,7 +28,7 @@ class HomePageViewModel(application: Application) : AndroidViewModel(application
     private val firestore = Firebase.firestore
 
     private val mapRepository: JourneyRepository = JourneyRepository(application,firestore)
-    private val isReadyMutableLiveData: MutableLiveData<Boolean> = mapRepository.getIsReadyMutableLiveData()
+    private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {

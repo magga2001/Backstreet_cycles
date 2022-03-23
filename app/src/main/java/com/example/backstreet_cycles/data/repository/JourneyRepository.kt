@@ -2,31 +2,18 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -35,46 +22,12 @@ import com.mapbox.navigation.base.route.RouterFailure
 import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
-import com.mapbox.navigation.core.directions.session.RoutesObserver
-import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
-import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
 class JourneyRepository(private val application: Application,
                         fireStore: FirebaseFirestore,): MapRepository(application) {
 
-//    private var sharedPref: SharedPreferences
-    private val isReadyMutableLiveData: MutableLiveData<Boolean>
-    private val distanceMutableLiveData: MutableLiveData<String>
-    private val durationMutableLiveData: MutableLiveData<String>
-    private val priceMutableLiveData: MutableLiveData<String>
-    private val dataBase = fireStore
-    lateinit var pointAnnotationManager: PointAnnotationManager
-    private val loggedInViewModel: LoggedInViewModel
-
-    init {
-        loggedInViewModel = LoggedInViewModel(application)
-        isReadyMutableLiveData = MutableLiveData()
-        isReadyMutableLiveData.value = false
-        distanceMutableLiveData = MutableLiveData()
-        durationMutableLiveData = MutableLiveData()
-        priceMutableLiveData = MutableLiveData()
-//        sharedPref = application.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
-    }
-
-    override fun initialiseMapboxNavigation(): MapboxNavigation
+    fun initialiseMapboxNavigation(): MapboxNavigation
     {
         return (if (MapboxNavigationProvider.isCreated()) {
             MapboxNavigationProvider.retrieve()
@@ -85,61 +38,6 @@ class JourneyRepository(private val application: Application,
                     .build()
             )
         })
-    }
-
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView, viewportDataSource: MapboxNavigationViewportDataSource): RoutesObserver
-    {
-        return RoutesObserver { routeUpdateResult ->
-            // RouteLine: wrap the DirectionRoute objects and pass them
-            // to the MapboxRouteLineApi to generate the data necessary to draw the route(s)
-            // on the map.
-            val routeLines = routeUpdateResult.routes.map { RouteLine(it, null) }
-
-            routeLineApi.setRoutes(
-                routeLines
-            ) { value ->
-                // RouteLine: The MapboxRouteLineView expects a non-null reference to the map style.
-                // the data generated by the call to the MapboxRouteLineApi above must be rendered
-                // by the MapboxRouteLineView in order to visualize the changes on the map.
-                mapboxMap.getStyle()?.apply {
-                    routeLineView.renderRouteDrawData(this, value)
-                }
-            }
-
-            viewportDataSource.onRouteChanged(routeUpdateResult.routes.first())
-            viewportDataSource.evaluate()
-        }
-    }
-
-    fun initialiseRouteProgressObserver(mapboxMap: MapboxMap,
-                                        routeLineApi: MapboxRouteLineApi,
-                                        routeLineView: MapboxRouteLineView,
-                                        routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView,
-                                        viewportDataSource: MapboxNavigationViewportDataSource
-    ): RouteProgressObserver
-    {
-        return RouteProgressObserver { routeProgress ->
-
-            viewportDataSource.onRouteProgressChanged(routeProgress)
-            viewportDataSource.evaluate()
-            // RouteLine: This line is only necessary if the vanishing route line feature
-            // is enabled.
-            routeLineApi.updateWithRouteProgress(routeProgress) { result ->
-                mapboxMap.getStyle()?.apply {
-                    routeLineView.renderRouteLineUpdate(this, result)
-                }
-            }
-
-            // RouteArrow: The next maneuver arrows are driven by route progress events.
-            // Generate the next maneuver arrow update data and pass it to the view class
-            // to visualize the updates on the map.
-            val arrowUpdate = routeArrowApi.addUpcomingManeuverArrow(routeProgress)
-            mapboxMap.getStyle()?.apply {
-                // Render the result to update the map.
-                routeArrowView.renderManeuverUpdate(this, arrowUpdate)
-            }
-        }
     }
 
     fun fetchRoute(context: Context,
@@ -173,43 +71,6 @@ class JourneyRepository(private val application: Application,
             requestRoute(mapboxNavigation, routeOptions, info)
         }
     }
-
-//    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-//        if (getListLocations().isEmpty()){
-//            overrideListLocation(locations)
-//            return false
-//        }
-//        return true
-//    }
-//
-//    fun overrideListLocation(locations: MutableList<Locations>) {
-//        val gson = Gson();
-//        val json = gson.toJson(locations);
-//        with (sharedPref.edit()) {
-//            putString("LOCATIONS", json)
-//            apply()
-//        }
-//    }
-//
-//    fun clearListLocations() {
-//        with (sharedPref.edit()) {
-//            clear()
-//            apply()
-//        }
-//    }
-//
-//    fun getListLocations(): List<Locations> {
-//        val locations: List<Locations>
-//        val serializedObject: String? = sharedPref.getString("LOCATIONS", null)
-//        if (serializedObject != null) {
-//            val gson = Gson()
-//            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-//            locations = gson.fromJson<List<Locations>>(serializedObject, type)
-//        }else {
-//            locations = emptyList()
-//        }
-//        return locations
-//    }
 
     private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
     {
@@ -255,7 +116,7 @@ class JourneyRepository(private val application: Application,
                     else
                     {
                         currentRoute.add(fastestRoute)
-                        isReadyMutableLiveData.postValue(true)
+                        //isReadyMutableLiveData.postValue(true)
                     }
                 }
 
@@ -298,126 +159,8 @@ class JourneyRepository(private val application: Application,
 
         val numUser = 1
 
-        distanceMutableLiveData.postValue((distances.sum()/1000).roundToInt().toString())
-        durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
-        priceMutableLiveData.postValue((prices*numUser).toString())
-    }
-
-    fun addAnnotationToMap(context: Context, mapView: MapView) {
-
-        Log.i("wayPoints", wayPoints.size.toString())
-        // Create an instance of the Annotation API and get the PointAnnotationManager.
-        val raw_bitmap = BitmapHelper.bitmapFromDrawableRes(context, R.drawable.dock_station) as Bitmap
-        val bitmap = Bitmap.createScaledBitmap(raw_bitmap, 150, 150, false)
-        bitmap.let {
-            // Set options for the resulting symbol layer.
-            val annotationApi = mapView.annotations
-            pointAnnotationManager = annotationApi.createPointAnnotationManager()
-
-            for(i in wayPoints.indices)
-            {
-                val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
-                    // Define a geographic coordinate.
-                    .withPoint(wayPoints[i])
-                    // Specify the bitmap you assigned to the point annotation
-                    // The bitmap will be added to map style automatically.
-                    .withIconImage(it)
-                    .withTextAnchor(textAnchor = TextAnchor.TOP)
-                    .withTextField((i + 65).toChar().toString())
-                    .withTextSize(10.00)
-                // Add the resulting pointAnnotation to the map.
-                pointAnnotationManager.create(pointAnnotationOptions)
-            }
-        }
-    }
-
-    fun removeAnnotations()
-    {
-        pointAnnotationManager.deleteAll()
-    }
-
-    fun registerObservers(mapboxNavigation: MapboxNavigation,
-                          routesObserver: RoutesObserver,
-                          routeProgressObserver: RouteProgressObserver
-    )
-    {
-        mapboxNavigation.registerRoutesObserver(routesObserver)
-        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
-    }
-
-    fun unregisterObservers(mapboxNavigation: MapboxNavigation,
-                            routesObserver: RoutesObserver,
-                            routeProgressObserver: RouteProgressObserver)
-    {
-        mapboxNavigation.unregisterRoutesObserver(routesObserver)
-        mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
-    }
-
-
-    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
-    CoroutineScope(Dispatchers.IO).launch {
-
-        val user =  dataBase
-            .collection("users")
-            .whereEqualTo("email", userDetails.email)
-            .get()
-            .await()
-        val gson = Gson()
-        val jsonObject = gson.toJson(locations)
-        if (jsonObject.isNotEmpty()){
-            userDetails.journeyHistory.add(jsonObject)
-            if (user.documents.isNotEmpty()) {
-                for (document in user) {
-
-                    try {
-                        dataBase.collection("users")
-                            .document(document.id)
-                            .update("journeyHistory",userDetails.journeyHistory)
-                    }
-                    catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(application,e.message,Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-        }
-
-
-    }
-
-    fun convertJSON(serializedObject: String): List<Locations> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-        return gson.fromJson(serializedObject, type)
-    }
-
-    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
-        val listLocations = emptyList<List<Locations>>().toMutableList()
-        for (journey in userDetails.journeyHistory){
-            val serializedObject: String = journey
-            listLocations.add(convertJSON(serializedObject))
-        }
-        return listLocations
-    }
-
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
-        return isReadyMutableLiveData
-    }
-
-    fun getDistanceMutableLiveData(): MutableLiveData<String>
-    {
-        return distanceMutableLiveData
-    }
-
-    fun getDurationMutableLiveData(): MutableLiveData<String>
-    {
-        return durationMutableLiveData
-    }
-
-    fun getPriceMutableLiveData(): MutableLiveData<String>
-    {
-        return priceMutableLiveData
+//        distanceMutableLiveData.postValue((distances.sum()/1000).roundToInt().toString())
+//        durationMutableLiveData.postValue((durations.sum()/60).roundToInt().toString())
+//        priceMutableLiveData.postValue((prices*numUser).toString())
     }
 }

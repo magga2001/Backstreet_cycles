@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.NavigationViewModel
@@ -41,6 +42,7 @@ import com.mapbox.navigation.ui.maps.route.arrow.model.RouteArrowOptions
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
+import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import com.mapbox.navigation.ui.tripprogress.api.MapboxTripProgressApi
 import com.mapbox.navigation.ui.tripprogress.model.*
@@ -52,6 +54,18 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
+
+    private val routeLineResources: RouteLineResources by lazy {
+        RouteLineResources.Builder()
+            /**
+             * Route line related colors can be customized via the [RouteLineColorResources]. If using the
+             * default colors the [RouteLineColorResources] does not need to be set as seen here, the
+             * defaults will be used internally by the builder.
+             */
+            .routeLineColorResources(RouteLineColorResources.Builder().build())
+            .build()
+    }
+
     /**
      * Mapbox Maps entry point obtained from the [MapView].
      * You need to get a new reference to this object whenever the [MapView] is recreated.
@@ -67,44 +81,6 @@ class NavigationActivity : AppCompatActivity() {
      * Produces the camera frames based on the location and routing data for the [navigationCamera] to execute.
      */
     private lateinit var viewportDataSource: MapboxNavigationViewportDataSource
-
-    /*
-     * Below are generated camera padding values to ensure that the route fits well on screen while
-     * other elements are overlaid on top of the map (including instruction view, buttons, etc.)
-     */
-    private val pixelDensity = Resources.getSystem().displayMetrics.density
-    private val overviewPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            140.0 * pixelDensity,
-            40.0 * pixelDensity,
-            120.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
-    private val landscapeOverviewPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            30.0 * pixelDensity,
-            380.0 * pixelDensity,
-            110.0 * pixelDensity,
-            20.0 * pixelDensity
-        )
-    }
-    private val followingPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            180.0 * pixelDensity,
-            40.0 * pixelDensity,
-            150.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
-    private val landscapeFollowingPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            30.0 * pixelDensity,
-            380.0 * pixelDensity,
-            110.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
 
     /**
      * Generates updates for the [MapboxManeuverView] to display the upcoming maneuver instructions
@@ -170,7 +146,6 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var voiceInstructionsObserver: VoiceInstructionsObserver
     private lateinit var replayProgressObserver: ReplayProgressObserver
     private lateinit var onPositionChangedListener: OnIndicatorPositionChangedListener
-    private lateinit var routeLineResources: RouteLineResources
     private lateinit var mapboxNavigation: MapboxNavigation
     private val currentRoute = MapRepository.currentRoute
 
@@ -185,7 +160,6 @@ class NavigationActivity : AppCompatActivity() {
 
         mapboxMap = mapView.getMapboxMap()
         mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()
-        routeLineResources = navigationViewModel.initialiseRouteLineResources()
 
         initialisation()
 
@@ -283,14 +257,14 @@ class NavigationActivity : AppCompatActivity() {
     {
         //set the padding values depending on screen orientation and visible view layout
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            viewportDataSource.overviewPadding = landscapeOverviewPadding
+            viewportDataSource.overviewPadding = MapboxConstants.landscapeOverviewPadding
         } else {
-            viewportDataSource.overviewPadding = overviewPadding
+            viewportDataSource.overviewPadding = MapboxConstants.overviewPadding
         }
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            viewportDataSource.followingPadding = landscapeFollowingPadding
+            viewportDataSource.followingPadding = MapboxConstants.landscapeFollowingPadding
         } else {
-            viewportDataSource.followingPadding = followingPadding
+            viewportDataSource.followingPadding = MapboxConstants.followingPadding
         }
     }
 

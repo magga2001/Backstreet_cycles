@@ -14,8 +14,6 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
     private val userRepository: UserRepository
     private val mutableLiveData: MutableLiveData<FirebaseUser>
 
-
-
     init {
         userRepository = UserRepository(application, Firebase.firestore, FirebaseAuth.getInstance())
         mutableLiveData = userRepository.getMutableLiveData()
@@ -33,6 +31,5 @@ class LogInRegisterViewModel(application: Application) : AndroidViewModel(applic
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData
     }
-
 
 }

@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.ui.views
 
 //---------------------------------
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,14 +23,17 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.remote.TflHelper
 
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
-import com.example.backstreet_cycles.interfaces.Assests
-import com.example.backstreet_cycles.service.WorkHelper
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -52,12 +55,13 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.navigation.core.MapboxNavigation
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
 
-
+@AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
@@ -86,13 +90,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
-    private lateinit var journeyViewModel: JourneyViewModel
+//    private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var mapboxNavigation: MapboxNavigation
-
-    companion object {
-        private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
-        private const val symbolIconId = "SymbolIconId"
-    }
+    private val journeyViewModel : JourneyViewModel by viewModels()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,7 +125,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
-        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
+//        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
@@ -268,7 +268,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
                     val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
                     MapRepository.location = listOfLocations
-                    val listPoints = setPoints(listOfLocations)
+                    val listPoints = PlannerHelper.setPoints(listOfLocations)
                     fetchRoute(listPoints)
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
@@ -321,7 +321,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
             TflHelper.getDock(context = applicationContext,
-                object : Assests<MutableList<Dock>> {
+                object : CallbackResource<MutableList<Dock>> {
                     override fun getResult(objects: MutableList<Dock>) {
 
 //                        val bundle = Bundle()
@@ -399,21 +399,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 null
             )
             val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
-            style.addImage(symbolIconId, bitmapUtils!!)
+            style.addImage(MapboxConstants.SYMBOL_ICON_ID, bitmapUtils!!)
         }
     }
 
     private fun setUpLayer(loadedMapStyle: Style) {
         loadedMapStyle.addLayer(
-            SymbolLayer("SYMBOL_LAYER_ID", geoJsonSourceLayerId).withProperties(
-                PropertyFactory.iconImage(symbolIconId),
+            SymbolLayer("SYMBOL_LAYER_ID", MapboxConstants.GEO_JSON_SOURCE_LAYER_ID).withProperties(
+                PropertyFactory.iconImage(MapboxConstants.SYMBOL_ICON_ID),
                 PropertyFactory.iconOffset(arrayOf(0f, -8f))
             )
         )
     }
 
     private fun setUpSource(loadedMapStyle: Style) {
-        loadedMapStyle.addSource(GeoJsonSource(geoJsonSourceLayerId))
+        loadedMapStyle.addSource(GeoJsonSource(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -431,7 +431,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     latitude = selectedCarmenFeature.center()!!.latitude()
                     longitude = selectedCarmenFeature.center()!!.longitude()
 
-                    style.getSourceAs<GeoJsonSource>(geoJsonSourceLayerId)?.setGeoJson(
+                    style.getSourceAs<GeoJsonSource>(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID)?.setGeoJson(
                         FeatureCollection.fromFeatures(
                             arrayOf(
                                 Feature.fromJson(
@@ -557,7 +557,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         if (!checkForARunningJourney){
             alertDialog(MapRepository.location)
         } else{
-            val locationPoints = setPoints(MapRepository.location)
+            val locationPoints = PlannerHelper.setPoints(MapRepository.location)
             fetchRoute(locationPoints)
         }
     }
@@ -578,25 +578,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             MapRepository.location = listOfLocations
-            val listPoints = setPoints(listOfLocations)
+            val listPoints = PlannerHelper.setPoints(listOfLocations)
             fetchRoute(listPoints)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            val listPoints = setPoints(newStops)
+            val listPoints = PlannerHelper.setPoints(newStops)
 //            journeyViewModel.overrideListLocation(newStops)
             SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
             SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
             fetchRoute(listPoints)
         }
         builder.show()
-    }
-
-    private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
-        val listPoints = emptyList<Point>().toMutableList()
-        for (i in 0 until newStops.size){
-            listPoints.add(Point.fromLngLat(newStops[i].lon, newStops[i].lat))
-        }
-        return listPoints
     }
 }
