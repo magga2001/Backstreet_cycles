@@ -204,10 +204,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableMyLocationButton(){
-        val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
+        //val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
         var isEnabled: Boolean = false
         myLocationButton.isEnabled = false
-//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
+       // myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
           for(location in stops){
               if(location.name.equals("Current Location")){
                   isEnabled = false
@@ -218,7 +218,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
               }
           }
         myLocationButton.isEnabled = isEnabled
-
 
     }
 
