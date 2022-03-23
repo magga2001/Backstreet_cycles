@@ -86,11 +86,6 @@ class NavigationViewModel(application: Application) : AndroidViewModel(applicati
         return navigationRepository.initialiseVoiceInstructionsObserver(speechApi,voiceInstructionsPlayer)
     }
 
-    fun initialiseRouteLineResources(): RouteLineResources
-    {
-        return navigationRepository.initialiseRouteLineResources()
-    }
-
     fun setRouteAndStartNavigation(routes: List<DirectionsRoute>, mapboxNavigation: MapboxNavigation, navigationCamera: NavigationCamera) {
         navigationRepository.setRouteAndStartNavigation(routes,mapboxNavigation, navigationCamera)
     }

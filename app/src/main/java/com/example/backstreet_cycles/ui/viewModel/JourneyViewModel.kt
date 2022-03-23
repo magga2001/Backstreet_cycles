@@ -18,9 +18,6 @@ import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -64,7 +61,7 @@ class JourneyViewModel @Inject constructor(
         distanceMutableLiveData = MutableLiveData()
         durationMutableLiveData = MutableLiveData()
         priceMutableLiveData = MutableLiveData()
-        sharedPref = applicationContext.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
@@ -191,7 +188,7 @@ class JourneyViewModel @Inject constructor(
         val gson = Gson();
         val json = gson.toJson(locations);
         with (sharedPref.edit()) {
-            putString(com.example.backstreet_cycles.R.string.preference_file_Locations.toString(), json)
+            putString("LOCATIONS", json)
             apply()
         }
     }
@@ -205,7 +202,7 @@ class JourneyViewModel @Inject constructor(
 
     fun getListLocations(): List<Locations> {
         val locations: List<Locations>
-        val serializedObject: String? = sharedPref.getString(R.string.preference_file_Locations.toString(), null)
+        val serializedObject: String? = sharedPref.getString("LOCATIONS", null)
         if (serializedObject != null) {
             val gson = Gson()
             val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()

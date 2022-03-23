@@ -2,32 +2,15 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
-import com.example.backstreet_cycles.domain.utils.BitmapHelper
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -36,22 +19,7 @@ import com.mapbox.navigation.base.route.RouterFailure
 import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
-import com.mapbox.navigation.core.directions.session.RoutesObserver
-import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
-import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
 class JourneyRepository(private val application: Application,
                         fireStore: FirebaseFirestore,): MapRepository(application) {

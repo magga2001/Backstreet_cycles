@@ -59,7 +59,7 @@ class TestViewModel @Inject constructor(
         distanceMutableLiveData = MutableLiveData()
         durationMutableLiveData = MutableLiveData()
         priceMutableLiveData = MutableLiveData()
-        sharedPref = applicationContext.getSharedPreferences(R.string.preference_file_Locations.toString(), Context.MODE_PRIVATE)
+        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
         Log.i("New dock", "Starting...")
         getDocks()
         val s = applicationContext.resources.getString(R.string.tfl_url)
@@ -184,93 +184,5 @@ class TestViewModel @Inject constructor(
     fun getPlannerInterface(): Planner
     {
         return this
-    }
-
-
-//--------------------------------
-    //Tish stuff
-
-    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-        if (getListLocations().isEmpty()){
-            overrideListLocation(locations)
-            return false
-        }
-        return true
-    }
-
-    fun overrideListLocation(locations: MutableList<Locations>) {
-        val gson = Gson();
-        val json = gson.toJson(locations);
-        with (sharedPref.edit()) {
-            putString(com.example.backstreet_cycles.R.string.preference_file_Locations.toString(), json)
-            apply()
-        }
-    }
-
-    fun clearListLocations() {
-        with (sharedPref.edit()) {
-            clear()
-            apply()
-        }
-    }
-
-    fun getListLocations(): List<Locations> {
-        val locations: List<Locations>
-        val serializedObject: String? = sharedPref.getString(R.string.preference_file_Locations.toString(), null)
-        if (serializedObject != null) {
-            val gson = Gson()
-            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-            locations = gson.fromJson<List<Locations>>(serializedObject, type)
-        }else {
-            locations = emptyList()
-        }
-        return locations
-    }
-
-    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val user =  firestore
-                .collection("users")
-                .whereEqualTo("email", userDetails.email)
-                .get()
-                .await()
-            val gson = Gson()
-            val jsonObject = gson.toJson(locations)
-            if (jsonObject.isNotEmpty()){
-                userDetails.journeyHistory.add(jsonObject)
-                if (user.documents.isNotEmpty()) {
-                    for (document in user) {
-
-                        try {
-                            firestore.collection("users")
-                                .document(document.id)
-                                .update("journeyHistory",userDetails.journeyHistory)
-                        }
-                        catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                //Toast.makeText(application,e.message, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-            }
-
-
-        }
-
-    fun convertJSON(serializedObject: String): List<Locations> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-        return gson.fromJson(serializedObject, type)
-    }
-
-    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
-        val listLocations = emptyList<List<Locations>>().toMutableList()
-        for (journey in userDetails.journeyHistory){
-            val serializedObject: String = journey
-            listLocations.add(convertJSON(serializedObject))
-        }
-        return listLocations
     }
 }

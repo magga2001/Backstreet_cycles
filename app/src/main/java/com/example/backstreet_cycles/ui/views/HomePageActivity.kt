@@ -20,20 +20,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.data.remote.dto.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.interfaces.Assests
-import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -585,8 +583,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
             val listPoints = PlannerHelper.setPoints(newStops)
-            journeyViewModel.overrideListLocation(newStops)
-            val listPoints = setPoints(newStops)
 //            journeyViewModel.overrideListLocation(newStops)
             SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
             SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
