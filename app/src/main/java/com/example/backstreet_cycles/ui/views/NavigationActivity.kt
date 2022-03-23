@@ -42,6 +42,7 @@ import com.mapbox.navigation.ui.maps.route.arrow.model.RouteArrowOptions
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
+import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import com.mapbox.navigation.ui.tripprogress.api.MapboxTripProgressApi
 import com.mapbox.navigation.ui.tripprogress.model.*
@@ -54,6 +55,18 @@ import kotlinx.android.synthetic.main.activity_navigation.mapView
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
+
+    private val routeLineResources: RouteLineResources by lazy {
+        RouteLineResources.Builder()
+            /**
+             * Route line related colors can be customized via the [RouteLineColorResources]. If using the
+             * default colors the [RouteLineColorResources] does not need to be set as seen here, the
+             * defaults will be used internally by the builder.
+             */
+            .routeLineColorResources(RouteLineColorResources.Builder().build())
+            .build()
+    }
+
     /**
      * Mapbox Maps entry point obtained from the [MapView].
      * You need to get a new reference to this object whenever the [MapView] is recreated.
@@ -134,7 +147,6 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var voiceInstructionsObserver: VoiceInstructionsObserver
     private lateinit var replayProgressObserver: ReplayProgressObserver
     private lateinit var onPositionChangedListener: OnIndicatorPositionChangedListener
-    private lateinit var routeLineResources: RouteLineResources
     private lateinit var mapboxNavigation: MapboxNavigation
     private val currentRoute = MapRepository.currentRoute
 
@@ -149,7 +161,6 @@ class NavigationActivity : AppCompatActivity() {
 
         mapboxMap = mapView.getMapboxMap()
         mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()
-        routeLineResources = navigationViewModel.initialiseRouteLineResources()
 
         initialisation()
 

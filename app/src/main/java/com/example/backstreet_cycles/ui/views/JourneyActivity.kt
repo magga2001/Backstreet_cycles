@@ -230,7 +230,7 @@ class JourneyActivity : AppCompatActivity() {
         mapboxMap.loadStyleUri(
             Style.MAPBOX_STREETS,
             {
-                MapAnnotationUseCase.addAnnotationToMap(this, mapView)
+//                MapAnnotationUseCase.addAnnotationToMap(this, mapView)
                 updateUI()
             },
             object : OnMapLoadErrorListener {

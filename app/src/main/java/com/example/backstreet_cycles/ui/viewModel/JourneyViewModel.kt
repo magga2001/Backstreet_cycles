@@ -160,6 +160,16 @@ class JourneyViewModel @Inject constructor(
         return this
     }
 
+    fun setRoute()
+    {
+
+    }
+
+    fun clearRoute()
+    {
+
+    }
+
 
 //--------------------------------
     //Tish stuff

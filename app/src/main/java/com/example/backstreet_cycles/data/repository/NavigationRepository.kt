@@ -12,6 +12,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.plugin.LocationPuck2D
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
+import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -87,6 +88,17 @@ class NavigationRepository(private val application: Application): MapRepository(
                     .locationEngine(replayLocationEngine)
                     .build()
             )
+        }
+    }
+
+    fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
+    {
+        return  OnIndicatorPositionChangedListener { point ->
+            val result = routeLineApi.updateTraveledRouteLine(point)
+            mapboxMap.getStyle()?.apply {
+                // Render the result to update the map.
+                routeLineView.renderRouteLineUpdate(this, result)
+            }
         }
     }
 

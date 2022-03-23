@@ -44,4 +44,7 @@ object MapboxConstants {
             40.0 * pixelDensity
         )
     }
+
+    const val GEO_JSON_SOURCE_LAYER_ID = "GeoJsonSourceLayerId"
+    const val SYMBOL_ICON_ID = "SymbolIconId"
 }
