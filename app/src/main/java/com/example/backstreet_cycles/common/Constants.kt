@@ -21,4 +21,11 @@ object Constants {
 
     //TFL_URL
     const val BASE_URL = "https://api.tfl.gov.uk"
+
+    //Cycle hire app id
+    const val CYCLE_APP_ID = "uk.gov.tfl.cyclehire"
+    //Google play cycle hire
+    const val GOOGLE_PLAY_CYCLE_ID = "https://play.google.com/store/apps/details?id=uk.gov.tfl.cyclehire"
+    //Android package vending path
+    const val ANDROID_VENDING = "com.android.vending"
 }

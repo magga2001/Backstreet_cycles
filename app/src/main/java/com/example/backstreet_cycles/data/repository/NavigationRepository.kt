@@ -75,7 +75,7 @@ class NavigationRepository(private val application: Application): MapRepository(
         }
     }
 
-    override fun initialiseMapboxNavigation(): MapboxNavigation
+    fun initialiseMapboxNavigation(): MapboxNavigation
     {
         return if (MapboxNavigationProvider.isCreated()) {
             MapboxNavigationProvider.retrieve()

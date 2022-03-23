@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.ui.viewModel.NavigationViewModel
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
@@ -68,44 +69,6 @@ class NavigationActivity : AppCompatActivity() {
      * Produces the camera frames based on the location and routing data for the [navigationCamera] to execute.
      */
     private lateinit var viewportDataSource: MapboxNavigationViewportDataSource
-
-    /*
-     * Below are generated camera padding values to ensure that the route fits well on screen while
-     * other elements are overlaid on top of the map (including instruction view, buttons, etc.)
-     */
-    private val pixelDensity = Resources.getSystem().displayMetrics.density
-    private val overviewPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            140.0 * pixelDensity,
-            40.0 * pixelDensity,
-            120.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
-    private val landscapeOverviewPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            30.0 * pixelDensity,
-            380.0 * pixelDensity,
-            110.0 * pixelDensity,
-            20.0 * pixelDensity
-        )
-    }
-    private val followingPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            180.0 * pixelDensity,
-            40.0 * pixelDensity,
-            150.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
-    private val landscapeFollowingPadding: EdgeInsets by lazy {
-        EdgeInsets(
-            30.0 * pixelDensity,
-            380.0 * pixelDensity,
-            110.0 * pixelDensity,
-            40.0 * pixelDensity
-        )
-    }
 
     /**
      * Generates updates for the [MapboxManeuverView] to display the upcoming maneuver instructions
@@ -284,14 +247,14 @@ class NavigationActivity : AppCompatActivity() {
     {
         //set the padding values depending on screen orientation and visible view layout
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            viewportDataSource.overviewPadding = landscapeOverviewPadding
+            viewportDataSource.overviewPadding = MapboxConstants.landscapeOverviewPadding
         } else {
-            viewportDataSource.overviewPadding = overviewPadding
+            viewportDataSource.overviewPadding = MapboxConstants.overviewPadding
         }
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            viewportDataSource.followingPadding = landscapeFollowingPadding
+            viewportDataSource.followingPadding = MapboxConstants.landscapeFollowingPadding
         } else {
-            viewportDataSource.followingPadding = followingPadding
+            viewportDataSource.followingPadding = MapboxConstants.followingPadding
         }
     }
 

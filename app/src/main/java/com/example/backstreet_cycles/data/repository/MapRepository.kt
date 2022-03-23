@@ -52,6 +52,4 @@ abstract class MapRepository(private val application: Application)
             }
         }
     }
-
-    abstract fun initialiseMapboxNavigation(): MapboxNavigation
 }

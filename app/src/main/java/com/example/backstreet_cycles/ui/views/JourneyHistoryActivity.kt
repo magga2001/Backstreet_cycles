@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,14 +21,16 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.navigation.core.MapboxNavigation
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 
+@AndroidEntryPoint
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var mapboxMap: MapboxMap
     private lateinit var homePageViewModel: HomePageViewModel
-    private lateinit var journeyViewModel: JourneyViewModel
+    private val journeyViewModel : JourneyViewModel by viewModels()
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var nAdapter: JourneyHistoryAdapter
     private lateinit var mapboxNavigation: MapboxNavigation
@@ -41,7 +44,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
-        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
         homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
 
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->

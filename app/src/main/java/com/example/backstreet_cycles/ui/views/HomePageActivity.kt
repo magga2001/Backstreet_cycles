@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -50,12 +51,13 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.navigation.core.MapboxNavigation
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
 
-
+@AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
@@ -84,8 +86,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
-    private lateinit var journeyViewModel: JourneyViewModel
+//    private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var mapboxNavigation: MapboxNavigation
+    private val journeyViewModel : JourneyViewModel by viewModels()
+
 
     companion object {
         private const val geoJsonSourceLayerId = "GeoJsonSourceLayerId"
@@ -123,7 +127,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
-        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
+//        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
