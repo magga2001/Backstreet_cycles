@@ -262,14 +262,20 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                         startActivity(intent)
                         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
+
                 R.id.currentJourney -> {
 //                    val listOfLocations = journeyViewModel.getListLocations().toMutableList()
                     SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-                    val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-                    MapRepository.location = listOfLocations
-                    val listPoints = PlannerHelper.setPoints(listOfLocations)
-                    fetchRoute(listPoints)
-                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                    if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
+                        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+                        MapRepository.location = listOfLocations
+                        val listPoints = PlannerHelper.setPoints(listOfLocations)
+                        fetchRoute(listPoints)
+                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                    } else {
+                        SnackbarHelper.displaySnackbar(HomePageActivity,"There is no current journey")
+                    }
+
                 }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
