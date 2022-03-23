@@ -19,6 +19,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.app.Application
+import android.content.Context
+import android.support.test.InstrumentationRegistry.getContext
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.intent.Intents
@@ -26,10 +30,13 @@ import androidx.test.espresso.intent.Intents.init
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.LogInActivity
 import com.example.backstreet_cycles.views.SignUpActivity
+import com.mapbox.maps.extension.style.expressions.dsl.generated.all
+import org.hamcrest.Matchers.allOf
 import org.junit.After
 import java.lang.Thread.sleep
 
@@ -85,8 +92,8 @@ class LogInActivityTest{
     }
 
     @Test
-    fun test_navigation_createAccount() {
-        onView(withId(R.id.buttonCreateAccount)).perform(click())
+    fun test_launch_sign_up_with_create_button() {
+        onView(allOf(withId(R.id.buttonCreateAccount), withParent(withId(R.id.log_in_linear_layout)))).perform(click())
         intending(hasComponent(SignUpActivity::class.qualifiedName))
 
     }

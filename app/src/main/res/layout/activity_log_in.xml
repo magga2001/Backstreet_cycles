@@ -103,6 +103,7 @@
         android:layout_margin="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:id="@+id/log_in_linear_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
