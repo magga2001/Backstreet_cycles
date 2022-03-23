@@ -296,7 +296,7 @@ class JourneyActivity : AppCompatActivity() {
                 if (userDetails != null){
                     journeyViewModel.clear()
                     MapRepository.location.clear()
-                    SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
+                    SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                     journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java),userDetails)
 
 //                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)

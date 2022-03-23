@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.domain.useCase
 
 import android.app.Application
 import android.util.Log
+import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -35,7 +36,7 @@ object PlannerUseCase {
 
         }
 
-        SharedPrefHelper.initialiseSharedPref(application, "DOCKS_LOCATIONS")
+        SharedPrefHelper.initialiseSharedPref(application, Constants.DOCKS_LOCATIONS)
         SharedPrefHelper.overrideSharedPref(points,Point::class.java)
         SharedPrefHelper.getSharedPref(Point::class.java)
     }

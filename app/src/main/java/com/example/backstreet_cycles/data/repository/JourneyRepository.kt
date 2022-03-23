@@ -6,6 +6,9 @@ import android.util.Log
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
+import com.example.backstreet_cycles.domain.utils.BitmapHelper
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
