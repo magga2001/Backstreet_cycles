@@ -15,6 +15,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.data.remote.TflHelper.docks
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.views.HomePageActivity
@@ -63,11 +64,12 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
-        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.LOCATIONS)
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.DOCKS_LOCATIONS)
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
-        val numUser = SharedPrefHelper.getSharedPref(String::class.java)
+        var numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
+
 
 //        Log.i("currentDocks", currentDocks?.size.toString())
 //        Log.i("currentDockFirst", currentDocks.toString())
@@ -76,7 +78,15 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 //        Log.i("Json dock", "hi")
 
 
+//        if (numUser != null || currentDocks != null){
+//
+//        }
+//        if (currentDocks.first())
+       return checkForNewDock(currentDocks,numUser)
 
+    }
+
+    private fun checkForNewDock(currentDocks: MutableList<Point>, numUser: MutableList<String>): Boolean{
         val currentPoint = mutableListOf<Point>()
 
         for(point in currentDocks)
