@@ -66,20 +66,20 @@ class LogInActivityTest{
         intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
-//    @Test
-//    fun test_title_is_visible() {
-//        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_buttonCreateAccount_is_visible() {
-//        onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_title_is_visible() {
+        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
+    }
 
-//    @Test
-//    fun test_buttonLogin_is_visible() {
-//        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_buttonCreateAccount_is_visible() {
+        onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_buttonLogin_is_visible() {
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_email_text_box_validate_input() {
@@ -96,11 +96,6 @@ class LogInActivityTest{
         onView(allOf(withId(R.id.buttonCreateAccount), withParent(withId(R.id.log_in_linear_layout)))).perform(click())
         intending(hasComponent(SignUpActivity::class.qualifiedName))
 
-    }
-    @Test
-    fun test_backPress_onLogInActivity() {
-        pressBack()
-        intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
     @Test
