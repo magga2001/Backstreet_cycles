@@ -138,7 +138,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val intent = Intent(this, JourneyActivity::class.java)
                 intent.putExtra(Constants.NUM_USERS,homePageViewModel.getNumUsers())
                 SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
-                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
+                SharedPrefHelper.overrideSharedPref(mutableListOf(homePageViewModel.getNumUsers().toString()),String::class.java)
                 SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                 SharedPrefHelper.overrideSharedPref(MapRepository.location,Locations::class.java)
                 startActivity(intent)
