@@ -22,28 +22,50 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.lang.Thread.sleep
 
 class HomePageActivityTest {
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
-    //lateinit var homePageViewModel: HomePageViewModel
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val userRepository: UserRepository =
+        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+
+    private val email = "backstreet.cycles.test.user@gmail.com"
+    private val password = "123456"
+
+
+    @get:Rule
+    val locationRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {
-//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
-//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
-//        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+
 //        logInRegisterViewModel= LogInRegisterViewModel(Application())
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        if (firebaseAuth.currentUser == null) {
+            logInRegisterViewModel = LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login(email, password)
+        }
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         Intents.init()
+
     }
 
 
@@ -221,16 +243,16 @@ class HomePageActivityTest {
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
-     @Test
-     fun back_button_from_SignUpActivity_to_LogInActivity() {
-         ActivityScenario.launch(HomePageActivity::class.java)
-         onView(withContentDescription(R.string.open)).perform(ViewActions.click())
-         onView(withId(R.id.logout)).perform(ViewActions.click())
-         intending(hasComponent(LogInActivity::class.qualifiedName))
-         onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
-         pressBack()
-         intending(hasComponent(LogInActivity::class.qualifiedName))
-     }
+//     @Test
+//     fun back_button_from_HomePageActivity_to_LogInActivity() {
+//         ActivityScenario.launch(HomePageActivity::class.java)
+//         onView(withContentDescription(R.string.open)).perform(ViewActions.click())
+//         onView(withId(R.id.logout)).perform(ViewActions.click())
+//         intending(hasComponent(LogInActivity::class.qualifiedName))
+//         onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
+//         pressBack()
+//         intending(hasComponent(LogInActivity::class.qualifiedName))
+//     }
 
 //    @Test
 //    fun test_current_location_button_disabled_when_already_in_recyclerView(){
@@ -246,7 +268,8 @@ class HomePageActivityTest {
 //        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))
 //        onView(withId(R.id.recyclerView)).perform(
 //            RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(0, swipeLeft()))
-//        //swipeleft usually deletes the card but since it's at the first place, it is not swipeable, the swipe is considered as a click
+//        //swipeleft usu
+//        ally deletes the card but since it's at the first place, it is not swipeable, the swipe is considered as a click
 //        // so press back goes back to the home page and checks the number of items
 //        pressBack()
 //        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))
@@ -262,32 +285,13 @@ class HomePageActivityTest {
 //
 //    }
 
-    @Test
-    fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
-//        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.HomePageActivity)).isVisible()
-        onView(withId(R.id.addingBtn)).perform(click())
-        onView(withId(R.id.HomePageActivity)).isGone()
-    }
-
-    //helpers for visibility of a view
-    private fun ViewInteraction.isGone() = getViewAssertion(Visibility.GONE)
-    private fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
-    private fun ViewInteraction.isInvisible() = getViewAssertion(Visibility.INVISIBLE)
-    private fun getViewAssertion(visibility: Visibility): ViewAssertion? {
-    return matches(withEffectiveVisibility(visibility))
-    }
-
-    @Test
-    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.HomePageActivity)).isVisible()
-        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
-            (0, click()))
-        onView(withId(R.id.HomePageActivity)).isGone()
-        pressBack()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-    }
+//    @Test
+//    fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
+////        ActivityScenario.launch(HomePageActivity::class.java)
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        onView(withId(R.id.addingBtn)).perform(click())
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+//    }
 
     /*@Test
     fun test_refresh_button_is_visible() {
@@ -296,9 +300,16 @@ class HomePageActivityTest {
     }*/
 
 //    @Test
-//    fun testingshit(){
-//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()
-    //    }
+//    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
+//        ActivityScenario.launch(HomePageActivity::class.java)
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
+//            (0, click()))
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+//        pressBack()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//    }
+
         @After
         fun tearDown(){
             Intents.release()

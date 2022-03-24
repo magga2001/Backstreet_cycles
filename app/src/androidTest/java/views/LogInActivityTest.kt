@@ -33,11 +33,13 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.views.HomePageActivity
 import com.example.backstreet_cycles.views.LogInActivity
 import com.example.backstreet_cycles.views.SignUpActivity
 import com.mapbox.maps.extension.style.expressions.dsl.generated.all
 import org.hamcrest.Matchers.allOf
 import org.junit.After
+import org.junit.Rule
 import java.lang.Thread.sleep
 
 
@@ -51,7 +53,12 @@ class LogInActivityTest{
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
-
+    @get:Rule
+    val locationRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
     @Before
     fun setUp() {
         if (firebaseAuth.currentUser != null) {
@@ -106,10 +113,16 @@ class LogInActivityTest{
         intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
+    @Test
+    fun test_homePageActivityLaunched_when_login_clicked(){
+        onView(withId(R.id.et_email_log_in)).perform(typeText(email)).check(matches(withText(email)))
+        onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+
+    }
+
     @After
     fun tearDown(){
-        logInRegisterViewModel = LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login(email, password)
         Intents.release()
     }
 }

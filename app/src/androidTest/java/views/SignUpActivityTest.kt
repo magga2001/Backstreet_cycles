@@ -13,6 +13,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.views.LogInActivity
@@ -23,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.Thread.sleep
@@ -43,7 +45,12 @@ class SignUpActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-
+    @get:Rule
+    val locationRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {

@@ -18,6 +18,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.AboutActivity
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.example.backstreet_cycles.views.JourneyHistoryActivity
@@ -33,7 +34,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
-//    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
+
+    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
     private val email: String = "backstreet.cycles.test.user@gmail.com"
     private val password: String =" 123456"
@@ -52,14 +54,18 @@ class NavMenuTest {
 //        } else {
 //            userRepository.login(email, password)
 //        }
+        if (firebaseAuth.currentUser == null) {
+            logInRegisterViewModel = LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login(email, password)
+        }
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
-        init()
+        Intents.init()
     }
 
     @Test
     fun test_drawer_is_open(){
-        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.nav_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test
