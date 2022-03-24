@@ -110,8 +110,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
 
-//        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
-
         loggedInViewModel.getLoggedOutMutableLiveData()
             .observe(this) { loggedOut ->
                 if (loggedOut) {
