@@ -8,17 +8,25 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.views.AboutActivity
 import com.example.backstreet_cycles.views.HomePageActivity
+import com.example.backstreet_cycles.views.JourneyHistoryActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +34,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
+
     private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
     private val email: String = "backstreet.cycles.test.user@gmail.com"
@@ -49,9 +58,9 @@ class NavMenuTest {
             logInRegisterViewModel = LogInRegisterViewModel(Application())
             logInRegisterViewModel.login(email, password)
         }
-
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
+        init()
     }
 
     @Test
@@ -91,14 +100,16 @@ class NavMenuTest {
     @Test
     fun test_viewJourneyHistory_toJourneyHistoryActivity() {
         onView(withId(R.id.journeyHistory)).perform(click())
-        onView(withId(R.id.journeyHistoryActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(JourneyHistoryActivity::class.qualifiedName))
+
     }
 
-//    @Test
-//    fun test_logOutButton_toLogInActivity() {
-//        onView(withId(R.id.logout)).perform(click())
-//        onView(withId(R.id.logInActivity)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_logOutButton_toLogInActivity() {
+        onView(withId(R.id.logout)).perform(click())
+        intending(hasComponent(LogInActivityTest::class.qualifiedName))
+
+    }
 
 
     @Test
@@ -111,7 +122,8 @@ class NavMenuTest {
     fun test_aboutButton_to_aboutActivity()
     {
         onView(withId(R.id.about)).perform(ViewActions.click())
-        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(AboutActivity::class.qualifiedName))
+
     }
 
 
@@ -141,5 +153,10 @@ class NavMenuTest {
     fun test_nav_equalCurrentUserEmail(){
         val email = FirebaseAuth.getInstance().currentUser?.email
         onView(withId(R.id.tv_email)).check(matches(withText(email)))
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
     }
 }

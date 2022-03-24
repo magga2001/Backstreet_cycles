@@ -17,6 +17,19 @@ import com.google.firebase.auth.FirebaseAuth
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.example.backstreet_cycles.views.HomePageActivity
+import com.example.backstreet_cycles.views.LogInActivity
+import org.junit.After
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class ChangeEmailOrPasswordActivityTest{
@@ -33,7 +46,7 @@ class ChangeEmailOrPasswordActivityTest{
             logInRegisterViewModel.login(email, password)
         }
         ActivityScenario.launch(ChangeEmailOrPasswordActivity::class.java)
-
+        init()
 
     }
     @Test
@@ -61,6 +74,11 @@ class ChangeEmailOrPasswordActivityTest{
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
         Espresso.pressBack()
-        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
     }
 }

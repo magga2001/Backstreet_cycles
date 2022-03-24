@@ -2,6 +2,7 @@ package views
 
 import android.app.Application
 import android.content.ComponentName
+import android.os.SystemClock.sleep
 import android.support.test.InstrumentationRegistry.getTargetContext
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView

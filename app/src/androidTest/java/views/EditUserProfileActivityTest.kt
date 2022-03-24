@@ -4,21 +4,23 @@ import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.EditUserProfileActivity
+import com.example.backstreet_cycles.views.HomePageActivity
+import com.example.backstreet_cycles.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import org.hamcrest.Matchers
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,17 +45,17 @@ class EditUserProfileActivityTest{
     @Before
     fun setUp() {
         if (firebaseAuth.currentUser == null) {
-        logInRegisterViewModel = LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login(email, password)
-    }
+            logInRegisterViewModel = LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login(email, password)
+        }
         Application().onCreate()
         ActivityScenario.launch(EditUserProfileActivity::class.java)
         sleep(100)
+        init()
     }
-
     @Test
     fun test_activity_is_in_view() {
-        onView(withId(R.id.editUserProfile)).check(matches(isDisplayed()))
+        intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
     }
 
     @Test
@@ -68,18 +70,23 @@ class EditUserProfileActivityTest{
 
     @Test
     fun test_et_first_name_field_is_visible() {
-        onView(withId(R.id.et_firstName_edit_user)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_field_is_visible() {
-        onView(withId(R.id.et_lastName_edit_user)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity(){
         pressBack()
-        onView(withId(R.id.HomePageActivity)).check(matches(isDisplayed()))
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
     }
 
 }

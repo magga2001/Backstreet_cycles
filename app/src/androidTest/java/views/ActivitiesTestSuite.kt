@@ -1,6 +1,7 @@
 package views
 import android.app.Application
 import androidx.test.rule.GrantPermissionRule
+import com.example.backstreet_cycles.views.JourneyHistoryActivity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -33,5 +34,7 @@ val locationRule: GrantPermissionRule =
 //    AboutActivityTest::class,
 //    CurrentJourneyTest::class,
     NavMenuTest::class
+    //JourneyHistoryActivity::class
+
 )
 class ActivitiesTestSuite
