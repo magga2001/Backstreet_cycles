@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.views
 
 //---------------------------------
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +14,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,7 +61,7 @@ import java.util.*
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
-    private lateinit var loggedInViewModel: LoggedInViewModel
+//    private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
@@ -84,9 +84,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
-//    private lateinit var journeyViewModel: JourneyViewModel
     private val journeyViewModel : JourneyViewModel by viewModels()
     private val homePageViewModel: HomePageViewModel by viewModels()
+    private val loggedInViewModel: LoggedInViewModel by viewModels()
 
     companion object
     {
@@ -103,11 +103,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         IncrementAndDecrementUsersFunc()
 
         homePageViewModel.getDock()
-
         homePageViewModel.stops.observe(this) { stops = it }
+        homePageViewModel.getShowAlertMutableLiveData().observe(this) { it ->
+            if (it) {
+                alertDialog(MapRepository.location)
+            }
+        }
 
 
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
+//        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
 
         loggedInViewModel.getLoggedOutMutableLiveData()
             .observe(this) { loggedOut ->
@@ -569,26 +573,29 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
     }
 
-//    private fun alertDialog(newStops: MutableList<Locations>) {
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle("Planner Alert")
-//        builder.setMessage("There is already a planned journey that you are currently using." +
-//                "Do you want to continue with the current journey or with the newly created one?")
-//
-//        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-//            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-//            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-//            MapRepository.location = listOfLocations
-//            val listPoints = PlannerHelper.setPoints(listOfLocations)
-//            fetchRoute(listPoints)
-//        }
-//
-//        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-//            val listPoints = PlannerHelper.setPoints(newStops)
-//            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-//            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-//            fetchRoute(listPoints)
-//        }
-//        builder.show()
-//    }
+    fun alertDialog(newStops: MutableList<Locations>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Planner Alert")
+        builder.setMessage("There is already a planned journey that you are currently using." +
+                "Do you want to continue with the current journey or with the newly created one?")
+
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            SharedPrefHelper.initialiseSharedPref(application, Constants.LOCATIONS)
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            MapRepository.location = listOfLocations
+            val listPoints = PlannerHelper.setPoints(listOfLocations)
+            fetchRoute(listPoints)
+            homePageViewModel.setShowAlert(false)
+        }
+
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+            val listPoints = PlannerHelper.setPoints(newStops)
+            SharedPrefHelper.initialiseSharedPref(application, Constants.LOCATIONS)
+            SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+            fetchRoute(listPoints)
+            homePageViewModel.setShowAlert(false)
+        }
+        builder.show()
+
+    }
 }

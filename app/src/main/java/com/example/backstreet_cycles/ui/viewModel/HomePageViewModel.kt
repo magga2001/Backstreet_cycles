@@ -52,6 +52,7 @@ class HomePageViewModel @Inject constructor(
     private val homePageRepository: HomePageRepository = HomePageRepository(mApplication)
     private val locationRepository: LocationRepository = LocationRepository(mApplication)
     var stops: MutableLiveData<MutableList<Locations>> = MutableLiveData(locationRepository.getStops())
+    private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private val firestore = Firebase.firestore
 
     private val mapRepository: JourneyRepository = JourneyRepository(mApplication,firestore)
@@ -227,6 +228,7 @@ class HomePageViewModel @Inject constructor(
         if (!checkForARunningJourney){
 //            AlertHelper.alertDialog(MapRepository.location,mApplication)
 //            alertDialog(MapRepository.location)
+            showAlert.postValue(true)
         } else{
             val locationPoints = PlannerHelper.setPoints(MapRepository.location)
             fetchRoute(mContext, HomePageActivity.mapboxNavigation, locationPoints, "cycling", false)
@@ -256,5 +258,12 @@ class HomePageViewModel @Inject constructor(
         builder.show()
     }
 
+    fun setShowAlert(bool: Boolean){
+        showAlert.postValue(bool)
+    }
+
+    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
+        return showAlert
+    }
 
 }

@@ -66,7 +66,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
         SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.LOCATIONS)
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
-        var numUser = SharedPrefHelper.getSharedPref(String::class.java)
+        val numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
 
 //        Log.i("currentDocks", currentDocks?.size.toString())
@@ -79,7 +79,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         val currentPoint = mutableListOf<Point>()
 
-        for(point in currentDocks!!)
+        for(point in currentDocks)
         {
             val lon = point.longitude()
             val lat = point.latitude()
@@ -98,7 +98,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         //1 is for numUser
         for(dock in filteredDock)
-            if(dock.nbSpaces >= numUser!!.first().toInt() && filteredDock.size == currentPoint.size)
+            if(dock.nbSpaces >= numUser.first().toInt() && filteredDock.size == currentPoint.size)
             {
                 return false
             }
