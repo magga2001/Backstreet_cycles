@@ -162,13 +162,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
               SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
           }
           else{
-              textOfNumberOfUsers.text = "${homePageViewModel.incrementNumUsers()}"
+              homePageViewModel.incrementNumUsers()
+              textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
           }
 
         }
         minusBtn.setOnClickListener{
             if(homePageViewModel.getNumUsers()>=2){
-                textOfNumberOfUsers.text = "${homePageViewModel.decrementNumUsers()}"
+                homePageViewModel.decrementNumUsers()
+                textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
             }
             else{
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
