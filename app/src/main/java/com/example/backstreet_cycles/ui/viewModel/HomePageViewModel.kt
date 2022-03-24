@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.location.Location
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
@@ -10,28 +9,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.CallbackResource
+import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.remote.MapboxApi
-import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.data.repository.HomePageRepository
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.LocationRepository
 import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
-import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.views.HomePageActivity
-import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
@@ -41,23 +32,12 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
-import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
-import com.mapbox.navigation.core.directions.session.RoutesObserver
-import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 @HiltViewModel
@@ -242,9 +222,10 @@ class HomePageViewModel @Inject constructor(
 
         MapRepository.location.addAll(HomePageActivity.stops)
 
-        SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
-        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty("LOCATIONS")
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!checkForARunningJourney){
+//            AlertHelper.alertDialog(MapRepository.location,mApplication)
 //            alertDialog(MapRepository.location)
         } else{
             val locationPoints = PlannerHelper.setPoints(MapRepository.location)
@@ -252,30 +233,28 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
-//    private fun alertDialog(newStops: MutableList<Locations>) {
-//        val builder = AlertDialog.Builder(mContext)
-//        builder.setTitle("Planner Alert")
-//        builder.setMessage("There is already a planned journey that you are currently using." +
-//                "Do you want to continue with the current journey or with the newly created one?")
-//
-//        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-////            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-//            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
-//            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-//            MapRepository.location = listOfLocations
-//            val listPoints = PlannerHelper.setPoints(listOfLocations)
-//            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
-//        }
-//
-//        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-//            val listPoints = PlannerHelper.setPoints(newStops)
-////            journeyViewModel.overrideListLocation(newStops)
-//            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
-//            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-//            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
-//        }
-//        builder.show()
-//    }
+    private fun alertDialog(newStops: MutableList<Locations>) {
+        val builder = AlertDialog.Builder(mContext)
+        builder.setTitle("Planner Alert")
+        builder.setMessage("There is already a planned journey that you are currently using." +
+                "Do you want to continue with the current journey or with the newly created one?")
+
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            MapRepository.location = listOfLocations
+            val listPoints = PlannerHelper.setPoints(listOfLocations)
+            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
+        }
+
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+            val listPoints = PlannerHelper.setPoints(newStops)
+            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
+            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
+            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
+        }
+        builder.show()
+    }
 
 
 }

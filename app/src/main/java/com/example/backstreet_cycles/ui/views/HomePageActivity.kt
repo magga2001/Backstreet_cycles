@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -63,7 +62,6 @@ import java.util.*
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
-    //private lateinit var snackbarHelper: SnackbarHelper
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
@@ -106,7 +104,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         homePageViewModel.getDock()
 
-//        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
         homePageViewModel.stops.observe(this) { stops = it }
 
 
@@ -129,7 +126,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
-//        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
@@ -573,28 +569,26 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
     }
 
-    private fun alertDialog(newStops: MutableList<Locations>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to continue with the current journey or with the newly created one?")
-
-        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-//            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            MapRepository.location = listOfLocations
-            val listPoints = PlannerHelper.setPoints(listOfLocations)
-            fetchRoute(listPoints)
-        }
-
-        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            val listPoints = PlannerHelper.setPoints(newStops)
-//            journeyViewModel.overrideListLocation(newStops)
-            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-            fetchRoute(listPoints)
-        }
-        builder.show()
-    }
+//    private fun alertDialog(newStops: MutableList<Locations>) {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Planner Alert")
+//        builder.setMessage("There is already a planned journey that you are currently using." +
+//                "Do you want to continue with the current journey or with the newly created one?")
+//
+//        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+//            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+//            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+//            MapRepository.location = listOfLocations
+//            val listPoints = PlannerHelper.setPoints(listOfLocations)
+//            fetchRoute(listPoints)
+//        }
+//
+//        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+//            val listPoints = PlannerHelper.setPoints(newStops)
+//            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+//            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
+//            fetchRoute(listPoints)
+//        }
+//        builder.show()
+//    }
 }

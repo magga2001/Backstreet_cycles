@@ -63,9 +63,9 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
     {
         Log.i("Dock Application", docks.size.toString())
 
-        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.LOCATIONS)
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
-        SharedPrefHelper.changeSharedPref(Constants.NUM_USERS)
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
         var numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
 
