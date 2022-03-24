@@ -22,28 +22,50 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.adapter.StopsAdapter
+import com.example.backstreet_cycles.model.UserRepository
 import com.example.backstreet_cycles.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.views.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.lang.Thread.sleep
 
 class HomePageActivityTest {
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
-    //lateinit var homePageViewModel: HomePageViewModel
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private val userRepository: UserRepository =
+        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+
+    private val email = "backstreet.cycles.test.user@gmail.com"
+    private val password = "123456"
+
+
+    @get:Rule
+    val locationRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {
-//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
-//        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
-//        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
+
 //        logInRegisterViewModel= LogInRegisterViewModel(Application())
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        if (firebaseAuth.currentUser == null) {
+            logInRegisterViewModel = LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login(email, password)
+        }
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         Intents.init()
+
     }
 
 
@@ -221,16 +243,16 @@ class HomePageActivityTest {
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
-     @Test
-     fun back_button_from_SignUpActivity_to_LogInActivity() {
-         ActivityScenario.launch(HomePageActivity::class.java)
-         onView(withContentDescription(R.string.open)).perform(ViewActions.click())
-         onView(withId(R.id.logout)).perform(ViewActions.click())
-         intending(hasComponent(LogInActivity::class.qualifiedName))
-         onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
-         pressBack()
-         intending(hasComponent(LogInActivity::class.qualifiedName))
-     }
+//     @Test
+//     fun back_button_from_HomePageActivity_to_LogInActivity() {
+//         ActivityScenario.launch(HomePageActivity::class.java)
+//         onView(withContentDescription(R.string.open)).perform(ViewActions.click())
+//         onView(withId(R.id.logout)).perform(ViewActions.click())
+//         intending(hasComponent(LogInActivity::class.qualifiedName))
+//         onView(withId(R.id.buttonCreateAccount)).perform(ViewActions.click())
+//         pressBack()
+//         intending(hasComponent(LogInActivity::class.qualifiedName))
+//     }
 
 //    @Test
 //    fun test_current_location_button_disabled_when_already_in_recyclerView(){
@@ -246,7 +268,8 @@ class HomePageActivityTest {
 //        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))
 //        onView(withId(R.id.recyclerView)).perform(
 //            RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(0, swipeLeft()))
-//        //swipeleft usually deletes the card but since it's at the first place, it is not swipeable, the swipe is considered as a click
+//        //swipeleft usu
+//        ally deletes the card but since it's at the first place, it is not swipeable, the swipe is considered as a click
 //        // so press back goes back to the home page and checks the number of items
 //        pressBack()
 //        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))

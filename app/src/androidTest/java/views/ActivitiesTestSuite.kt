@@ -28,10 +28,10 @@ val locationRule: GrantPermissionRule =
     SignUpActivityTest::class,
     LogInActivityTest::class,
     HomePageActivityTest::class,
-//    EditUserProfileActivityTest::class,
+    EditUserProfileActivityTest::class,
 //    JourneyActivityTest::class,
 //    AboutActivityTest::class,
 //    CurrentJourneyTest::class,
-//    NavMenuTest::class
+    NavMenuTest::class
 )
 class ActivitiesTestSuite
