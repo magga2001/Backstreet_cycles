@@ -32,7 +32,6 @@ import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -78,12 +77,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private var updateInfo:Boolean=false
 
-    private var numberOfUsers = 1
     private lateinit var textOfNumberOfUsers : TextView
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
-    private val journeyViewModel : JourneyViewModel by viewModels()
     private val homePageViewModel: HomePageViewModel by viewModels()
     private val loggedInViewModel: LoggedInViewModel by viewModels()
 
@@ -99,8 +96,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
-        IncrementAndDecrementUsersFunc()
+        incrementAndDecrementUsersFunc()
+        initialiseObservers()
 
+
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
+
+        initialiseNavigationDrawer()
+    }
+
+    private fun initialiseObservers(){
         homePageViewModel.getDock()
         homePageViewModel.stops.observe(this) { stops = it }
         homePageViewModel.getShowAlertMutableLiveData().observe(this) { it ->
@@ -108,9 +114,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 alertDialog(MapRepository.location)
             }
         }
-
-
-//        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
 
         loggedInViewModel.getLoggedOutMutableLiveData()
             .observe(this) { loggedOut ->
@@ -133,9 +136,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             if(ready)
             {
                 val intent = Intent(this, JourneyActivity::class.java)
-                intent.putExtra(Constants.NUM_USERS,numberOfUsers)
+                intent.putExtra(Constants.NUM_USERS,homePageViewModel.getNumUsers())
                 SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
-                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
+                SharedPrefHelper.overrideSharedPref(mutableListOf(homePageViewModel.getNumUsers().toString()),String::class.java)
                 SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                 SharedPrefHelper.overrideSharedPref(MapRepository.location,Locations::class.java)
                 startActivity(intent)
@@ -143,37 +146,32 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
-
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
-
-        initialiseNavigationDrawer()
     }
 
-    private fun IncrementAndDecrementUsersFunc(){
+    private fun incrementAndDecrementUsersFunc(){
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
 
 
-        textOfNumberOfUsers.text = ""+numberOfUsers
+        textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
 
 
-        plusBtn.setOnClickListener(){
-          if(numberOfUsers>3){
+        plusBtn.setOnClickListener{
+          if(homePageViewModel.getNumUsers()>3){
               SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
           }
           else{
-              textOfNumberOfUsers.text = ""+ ++numberOfUsers
+              textOfNumberOfUsers.text = "${homePageViewModel.incrementNumUsers()}"
           }
 
 
         }
 
-        minusBtn.setOnClickListener(){
+        minusBtn.setOnClickListener{
 
-            if(numberOfUsers>=2){
-                textOfNumberOfUsers.text = ""+ --numberOfUsers
+            if(homePageViewModel.getNumUsers()>=2){
+                textOfNumberOfUsers.text = "${homePageViewModel.decrementNumUsers()}"
             }
             else{
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
