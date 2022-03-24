@@ -25,7 +25,7 @@ class SplashScreenActivity(): AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        journeyViewModel.clear()
+        journeyViewModel.clearView()
 //        journeyViewModel.clear()
 
         supportActionBar?.hide()

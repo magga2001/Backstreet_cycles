@@ -47,4 +47,9 @@ object MapboxConstants {
 
     const val GEO_JSON_SOURCE_LAYER_ID = "GeoJsonSourceLayerId"
     const val SYMBOL_ICON_ID = "SymbolIconId"
+
+    //PROFILE CONSTANT
+
+    const val CYCLING = "cycling"
+    const val WALKING = "walking"
 }

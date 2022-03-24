@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.interfaces.Planner
@@ -91,7 +92,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
             val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            planner.onSelectedJourney(location,"walking", mutableListOf(
+            planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["startingPoint"]!!,
                 journeyPoints["pickUpPoint"]!!
             ))
@@ -103,7 +104,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
             val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            planner.onSelectedJourney(location,"cycling", mutableListOf(
+            planner.onSelectedJourney(location,MapboxConstants.CYCLING, mutableListOf(
                 journeyPoints["pickUpPoint"]!!,
                 journeyPoints["dropOffPoint"]!!
             ))
@@ -117,7 +118,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
             val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
 
-            planner.onSelectedJourney(location,"walking", mutableListOf(
+            planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["dropOffPoint"]!!,
                 journeyPoints["destination"]!!
             ))
@@ -129,7 +130,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         return locations.size - 1
     }
 
-    fun addViewHolder(viewHolder: ViewHolder) {
+    private fun addViewHolder(viewHolder: ViewHolder) {
         viewHolders.add(viewHolder)
     }
 

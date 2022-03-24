@@ -163,11 +163,6 @@ class NavigationActivity : AppCompatActivity() {
 
         initialisation()
 
-        // load map style
-        mapboxMap.loadStyleUri(
-            Style.MAPBOX_STREETS
-        )
-
         // start the trip session to being receiving location updates in free drive
         // and later when a route is set also receiving route progress updates
         mapboxNavigation.startTripSession()
@@ -181,6 +176,7 @@ class NavigationActivity : AppCompatActivity() {
         initialiseObservers()
         initialisePadding()
         initialiseViewListener()
+        initStyle()
     }
 
     private fun initialiseObservers()
@@ -357,6 +353,14 @@ class NavigationActivity : AppCompatActivity() {
 
         // set initial sounds button state
         soundButton.unmute()
+    }
+
+    private fun initStyle ()
+    {
+        // load map style
+        mapboxMap.loadStyleUri(
+            Style.MAPBOX_STREETS
+        )
     }
 
     override fun onStart() {

@@ -251,31 +251,4 @@ class HomePageViewModel @Inject constructor(
             fetchRoute(mContext, HomePageActivity.mapboxNavigation, locationPoints, "cycling", false)
         }
     }
-
-//    private fun alertDialog(newStops: MutableList<Locations>) {
-//        val builder = AlertDialog.Builder(mContext)
-//        builder.setTitle("Planner Alert")
-//        builder.setMessage("There is already a planned journey that you are currently using." +
-//                "Do you want to continue with the current journey or with the newly created one?")
-//
-//        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-////            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-//            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
-//            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-//            MapRepository.location = listOfLocations
-//            val listPoints = PlannerHelper.setPoints(listOfLocations)
-//            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
-//        }
-//
-//        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-//            val listPoints = PlannerHelper.setPoints(newStops)
-////            journeyViewModel.overrideListLocation(newStops)
-//            SharedPrefHelper.initialiseSharedPref(mApplication,"LOCATIONS")
-//            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-//            fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
-//        }
-//        builder.show()
-//    }
-
-
 }

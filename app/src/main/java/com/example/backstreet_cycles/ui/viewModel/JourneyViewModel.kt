@@ -8,27 +8,34 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.useCase.MapAnnotationUseCase
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
-import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.LocationRepository
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
+import com.mapbox.api.directions.v5.DirectionsCriteria
+import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
+import com.mapbox.maps.MapView
+import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
+import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -45,29 +52,12 @@ import javax.inject.Inject
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
     private val getDockUseCase: GetDockUseCase,
+    private val getMapboxUseCase: GetMapboxUseCase,
     @ApplicationContext applicationContext: Context
 ): ViewModel(), Planner{
 
-    private val isReadyMutableLiveData: MutableLiveData<Boolean>
-    private val distanceMutableLiveData: MutableLiveData<String>
-    private val durationMutableLiveData: MutableLiveData<String>
-    private val priceMutableLiveData: MutableLiveData<String>
-    private var sharedPref: SharedPreferences
-    private val firestore = Firebase.firestore
-    private val mApplication = getApplication(applicationContext)
-
-    init {
-        isReadyMutableLiveData = MutableLiveData()
-        isReadyMutableLiveData.value = false
-        distanceMutableLiveData = MutableLiveData()
-        durationMutableLiveData = MutableLiveData()
-        priceMutableLiveData = MutableLiveData()
-        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
-    }
-
-    fun initialiseMapboxNavigation(): MapboxNavigation
-    {
-        return (if (MapboxNavigationProvider.isCreated()) {
+    private val mapboxNavigation: MapboxNavigation by lazy {
+        if (MapboxNavigationProvider.isCreated()) {
             MapboxNavigationProvider.retrieve()
         } else {
             MapboxNavigationProvider.create(
@@ -75,8 +65,41 @@ class JourneyViewModel @Inject constructor(
                     .accessToken(mApplication.getString(R.string.mapbox_access_token))
                     .build()
             )
-        })
+        }
     }
+
+    private var status: String = "UPDATE"
+    private var users: Int = 1
+    private val isReadyMutableLiveData: MutableLiveData<String>
+    private val distanceMutableLiveData: MutableLiveData<String>
+    private val durationMutableLiveData: MutableLiveData<String>
+    private val priceMutableLiveData: MutableLiveData<String>
+    private var sharedPref: SharedPreferences
+    private val firestore = Firebase.firestore
+    private val mApplication = getApplication(applicationContext)
+    private val mContext = applicationContext
+
+    init {
+        isReadyMutableLiveData = MutableLiveData()
+//        isReadyMutableLiveData.value = false
+        distanceMutableLiveData = MutableLiveData()
+        durationMutableLiveData = MutableLiveData()
+        priceMutableLiveData = MutableLiveData()
+        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
+    }
+
+//    fun initialiseMapboxNavigation(): MapboxNavigation
+//    {
+//        return (if (MapboxNavigationProvider.isCreated()) {
+//            MapboxNavigationProvider.retrieve()
+//        } else {
+//            MapboxNavigationProvider.create(
+//                NavigationOptions.Builder(mApplication)
+//                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
+//                    .build()
+//            )
+//        })
+//    }
 
     //NEW CODE
 
@@ -86,10 +109,16 @@ class JourneyViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
-                    val points = PlannerHelper.setPoints(MapRepository.location)
-                    //fetchRoute(mapboxNavigation, points, "cycling", false)
 
-                    isReadyMutableLiveData.postValue(true)
+                    val points = PlannerHelper.setPoints(MapRepository.location)
+
+                    //DONT NEED THIS TECHNICALLY BECAUSE onstart does it already
+//                    status = "IDLE"
+                    calcBicycleRental(users)
+
+                    //Fix logic
+                    status = "REFRESH"
+                    fetchRoute(context = mContext, mapboxNavigation, points, "cycling", false)
                 }
 
                 is Resource.Error -> {
@@ -108,7 +137,7 @@ class JourneyViewModel @Inject constructor(
 
     }
 
-    fun clear()
+    fun clearView()
     {
         MapRepository.wayPoints.clear()
         MapRepository.currentRoute.clear()
@@ -120,7 +149,12 @@ class JourneyViewModel @Inject constructor(
         MapRepository.durations.clear()
     }
 
-    fun registerObservers(mapboxNavigation: MapboxNavigation,
+    fun clearCurrentSession()
+    {
+        MapRepository.location.clear()
+    }
+
+    fun registerObservers(
                           routesObserver: RoutesObserver,
                           routeProgressObserver: RouteProgressObserver
     )
@@ -129,7 +163,7 @@ class JourneyViewModel @Inject constructor(
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
     }
 
-    fun unregisterObservers(mapboxNavigation: MapboxNavigation,
+    fun unregisterObservers(
                             routesObserver: RoutesObserver,
                             routeProgressObserver: RouteProgressObserver
     )
@@ -138,7 +172,136 @@ class JourneyViewModel @Inject constructor(
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    fun calcBicycleRental(users: Int)
+    {
+        PlannerUseCase.calcBicycleRental(mApplication, users, plannerInterface = this)
+    }
+
+    fun getJourneyOverview()
+    {
+        val points = PlannerHelper.setPoints(MapRepository.location)
+        getRoute(mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
+    }
+
+    fun updateMapMarkerAnnotation(mapView: MapView)
+    {
+        MapAnnotationUseCase.removeAnnotations()
+        MapAnnotationUseCase.addAnnotationToMap(context = mContext, mapView)
+    }
+
+    private fun getRoute(context: Context,
+                         mapboxNavigation: MapboxNavigation,
+                         points: MutableList<Point>,
+                         profile: String,
+                         info: Boolean)
+    {
+        status = "UPDATE"
+        fetchRoute(context = context, mapboxNavigation, points, profile, info)
+    }
+
+    private fun fetchRoute(context: Context,
+                   mapboxNavigation: MapboxNavigation,
+                   points: MutableList<Point>,
+                   profile: String,
+                   info: Boolean)
+    {
+
+        MapRepository.location.distinct()
+        points.distinct()
+
+        val routeOptions: RouteOptions
+
+        if(!info) {
+            clearInfo()
+            MapRepository.wayPoints.addAll(points)
+
+            routeOptions = when(profile) {
+                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+                else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            }
+
+            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+
+                isReadyMutableLiveData.postValue(status)
+
+//            distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
+//            durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
+//            priceMutableLiveData.postValue((prices*numUser).toString())
+
+            }.launchIn(viewModelScope)
+
+        }else {
+
+            routeOptions =customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+
+            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+
+//                isReadyMutableLiveData.postValue(status)
+
+//            distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
+//            durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
+//            priceMutableLiveData.postValue((prices*numUser).toString())
+
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
+    {
+        return RouteOptions.builder()
+            // applies the default parameters to route options
+            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
+            .applyLanguageAndVoiceUnitOptions(context)
+            .profile(criteria)
+            // lists the coordinate pair i.e. origin and destination
+            // If you want to specify waypoints you can pass list of points instead of null
+            .coordinatesList(points)
+            // set it to true if you want to receive alternate routes to your destination
+            .alternatives(true)
+            .build()
+    }
+
+    override fun onSelectedJourney(
+        location: Locations,
+        profile: String,
+        points: MutableList<Point>
+    ) {
+        clearView()
+        getRoute(context = mContext, mapboxNavigation, points, profile, false)
+    }
+
+    override fun onFetchJourney(points: MutableList<Point>) {
+        getRoute(context = mContext, mapboxNavigation, points, MapboxConstants.CYCLING, true)
+    }
+
+    fun getPlannerInterface(): Planner
+    {
+        return this
+    }
+
+    fun setRoute()
+    {
+        mapboxNavigation.setRoutes(MapRepository.currentRoute)
+    }
+
+    fun clearRoute()
+    {
+        mapboxNavigation.setRoutes(listOf())
+    }
+
+    fun setUser(user: Int)
+    {
+        this.users = user
+    }
+
+    fun finishJourney(userDetails: Users)
+    {
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java), userDetails)
+        SharedPrefHelper.clearListLocations()
+    }
+
+    fun getIsReadyMutableLiveData(): MutableLiveData<String>
     {
         return isReadyMutableLiveData
     }
@@ -157,45 +320,6 @@ class JourneyViewModel @Inject constructor(
     {
         return priceMutableLiveData
     }
-
-    fun calcBicycleRental(users: Int)
-    {
-        PlannerUseCase.calcBicycleRental(mApplication, users, plannerInterface = this)
-    }
-
-    fun fetchRoute(mapboxNavigation: MapboxNavigation, points: MutableList<Point>, profile: String, info: Boolean)
-    {
-        //Mapbox api
-    }
-
-    override fun onSelectedJourney(
-        location: Locations,
-        profile: String,
-        points: MutableList<Point>
-    ) {
-        clear()
-        //fetchRoute(context = this, mapboxNavigation, points, profile, false)
-    }
-
-    override fun onFetchJourney(points: MutableList<Point>) {
-        //fetchRoute(context = this, mapboxNavigation, points, "cycling", true)
-    }
-
-    fun getPlannerInterface(): Planner
-    {
-        return this
-    }
-
-    fun setRoute()
-    {
-
-    }
-
-    fun clearRoute()
-    {
-
-    }
-
 
 //--------------------------------
     //Tish stuff
@@ -265,8 +389,6 @@ class JourneyViewModel @Inject constructor(
                     }
                 }
             }
-
-
         }
 
     fun convertJSON(serializedObject: String): List<Locations> {

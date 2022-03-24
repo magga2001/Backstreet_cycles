@@ -13,17 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.data.remote.TflHelper
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.useCase.MapAnnotationUseCase
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
@@ -33,7 +28,6 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.extension.observable.eventdata.MapLoadingErrorEventData
 import com.mapbox.maps.plugin.animation.camera
 import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
-import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
@@ -151,11 +145,10 @@ class JourneyActivity : AppCompatActivity() {
      */
     private lateinit var navigationCamera: NavigationCamera
     private lateinit var mapboxMap: MapboxMap
-    private lateinit var mapboxNavigation: MapboxNavigation
+//    private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var planJourneyAdapter: PlanJourneyAdapter
-    private val currentRoute = MapRepository.currentRoute
     private val journeyViewModel : JourneyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,16 +163,18 @@ class JourneyActivity : AppCompatActivity() {
 
         mapboxMap = mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
-        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
     }
 
     override fun onStart() {
         super.onStart()
         val users = intent.getIntExtra("NUM_USERS",1)
+        journeyViewModel.setUser(users)
+        Log.i("number of the users: ", users.toString())
         journeyViewModel.calcBicycleRental(users)
 //        PlannerUseCase.calcBicycleRental(application, users, plannerInterface = this)
-        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
     }
 
     override fun onStop() {
@@ -188,7 +183,7 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        initObservers()
+
         initCamera()
         initPadding()
         initRouteLineUI()
@@ -196,13 +191,18 @@ class JourneyActivity : AppCompatActivity() {
         initStyle()
         initListeners()
         initBottomSheet()
+        initObservers()
     }
 
     private fun initObservers() {
+
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
-            if (ready) {
+            if (ready == "UPDATE") {
                 updateUI()
-                journeyViewModel.getIsReadyMutableLiveData().value = false
+//                journeyViewModel.getIsReadyMutableLiveData().value = false
+            }else{
+                finish()
+                startActivity(intent)
             }
         }
 
@@ -226,13 +226,23 @@ class JourneyActivity : AppCompatActivity() {
                 prices.text = getString(R.string.journey_prices, price)
             }
         }
+
+        planJourneyAdapter.getAllBoxesCheckedMutableLiveData()
+            .observe(this) {allBoxesChecked ->
+                finish_journey.isEnabled = allBoxesChecked
+            }
+
+        planJourneyAdapter.getCollapseBottomSheet()
+            .observe(this) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
     }
 
     private fun initStyle() {
+
         mapboxMap.loadStyleUri(
             Style.MAPBOX_STREETS,
             {
-//                MapAnnotationUseCase.addAnnotationToMap(this, mapView)
                 updateUI()
             },
             object : OnMapLoadErrorListener {
@@ -248,9 +258,9 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
-        mapboxNavigation.setRoutes(currentRoute)
+//        mapboxNavigation.setRoutes(currentRoute)
+        journeyViewModel.setRoute()
         journeyViewModel.registerObservers(
-            mapboxNavigation,
             routesObserver,
             routeProgressObserver
         )
@@ -268,10 +278,8 @@ class JourneyActivity : AppCompatActivity() {
 
         overview_journey.setOnClickListener {
 
-            journeyViewModel.clear()
-            val points = PlannerHelper.setPoints(MapRepository.location)
-
-            journeyViewModel.fetchRoute(mapboxNavigation, points, "cycling", false)
+            journeyViewModel.clearView()
+            journeyViewModel.getJourneyOverview()
         }
 
         santander_link.setOnClickListener {
@@ -291,24 +299,22 @@ class JourneyActivity : AppCompatActivity() {
         }
 
         finish_journey.setOnClickListener {
+
             loggedInViewModel.getUserDetails()
             loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
-                if (userDetails != null){
-                    journeyViewModel.clear()
-                    MapRepository.location.clear()
-                    SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-                    journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java),userDetails)
 
-//                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
-//                    journeyViewModel.clearListLocations()
-                    SharedPrefHelper.clearListLocations()
+                if (userDetails != null)
+                {
+                    journeyViewModel.clearView()
+                    journeyViewModel.clearCurrentSession()
+                    journeyViewModel.finishJourney(userDetails)
+
                     val intent = Intent(this, HomePageActivity::class.java)
                     startActivity(intent)
                     finish()
                     overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
                 }
             }
-
         }
     }
 
@@ -375,20 +381,10 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
-        finish_journey.isEnabled = false
         planJourneyAdapter = PlanJourneyAdapter(this, MapRepository.location, planner = journeyViewModel.getPlannerInterface())
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
-
-        planJourneyAdapter.getAllBoxesCheckedMutableLiveData()
-            .observe(this) {allBoxesChecked ->
-                finish_journey.isEnabled = allBoxesChecked
-            }
-
-        planJourneyAdapter.getCollapseBottomSheet()
-            .observe(this) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-            }
+        finish_journey.isEnabled = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -402,24 +398,9 @@ class JourneyActivity : AppCompatActivity() {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.reload_button -> {
-                journeyViewModel.clear()
-                MapRepository.distances.clear()
-                MapRepository.durations.clear()
+                journeyViewModel.clearView()
+                journeyViewModel.clearInfo()
                 journeyViewModel.getDock()
-
-                TflHelper.getDock(context = applicationContext,
-                    object :
-                        CallbackResource<MutableList<Dock>> {
-                        override fun getResult(objects: MutableList<Dock>) {
-//                            val points = PlannerHelper.setPoints(MapRepository.location)
-//                            journeyViewModel.fetchRoute(mapboxNavigation, points, "cycling", false)
-
-                            //Problem with not loading fast enough...
-                            startActivity(intent)
-                            finish()
-                        }
-                    }
-                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -428,30 +409,29 @@ class JourneyActivity : AppCompatActivity() {
 
     private fun updateUI() {
 
-        mapboxNavigation.setRoutes(currentRoute)
+//        mapboxNavigation.setRoutes(currentRoute)
+        journeyViewModel.setRoute()
         navigationCamera.requestNavigationCameraToOverview()
-        MapAnnotationUseCase.removeAnnotations()
-        MapAnnotationUseCase.addAnnotationToMap(context = this, mapView)
+        journeyViewModel.updateMapMarkerAnnotation(mapView)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         journeyViewModel.unregisterObservers(
-            mapboxNavigation,
             routesObserver,
             routeProgressObserver
         )
-
-        //To destroy and not let it overlap to next mapbox activity
-        mapboxNavigation.setRoutes(listOf())
+//        mapboxNavigation.setRoutes(listOf())
+        journeyViewModel.clearRoute()
         routeLineView.cancel()
         routeLineApi.cancel()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        journeyViewModel.clear()
-        MapRepository.location.clear()
+        journeyViewModel.clearView()
+        journeyViewModel.clearCurrentSession()
         finish()
     }
 

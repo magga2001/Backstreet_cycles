@@ -31,7 +31,6 @@ class GetMapboxUseCase @Inject constructor(
 
         val callBack = object : CallbackResource<DirectionsRoute> {
             override fun getResult(objects: DirectionsRoute) {
-                Log.i("current Route MAGGA:", objects.toString())
                 trySend(objects)
             }
         }
