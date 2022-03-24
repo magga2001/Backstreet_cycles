@@ -11,6 +11,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import kotlinx.android.synthetic.main.activity_change_email_or_password.*
 
+
 class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
     private lateinit var loggedInViewModel: LoggedInViewModel

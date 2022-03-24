@@ -303,12 +303,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
                 startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
-                this@HomePageActivity.positionOfStop =position
+                this@HomePageActivity.positionOfStop = position
             }
         })
 
         myLocationButton.setOnClickListener {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
         }
@@ -321,13 +321,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     }
                 }
             )
-
-
         }
 
         stopsAdapter.getCollapseBottomSheet()
             .observe(this) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
     }
 
