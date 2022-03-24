@@ -1,6 +1,6 @@
 package views
 
-/*
+
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -78,4 +78,4 @@ class AboutActivityTest {
     fun tearDown(){
         Intents.release()
     }
-}*/
+}

@@ -285,37 +285,25 @@ class HomePageActivityTest {
 //
 //    }
 
-    @Test
-    fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
-//        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.HomePageActivity)).isVisible()
-        onView(withId(R.id.addingBtn)).perform(click())
-        onView(withId(R.id.HomePageActivity)).isGone()
-    }
-
-    //helpers for visibility of a view
-    private fun ViewInteraction.isGone() = getViewAssertion(Visibility.GONE)
-    private fun ViewInteraction.isVisible() = getViewAssertion(Visibility.VISIBLE)
-    private fun ViewInteraction.isInvisible() = getViewAssertion(Visibility.INVISIBLE)
-    private fun getViewAssertion(visibility: Visibility): ViewAssertion? {
-    return matches(withEffectiveVisibility(visibility))
-    }
-
-    @Test
-    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withId(R.id.HomePageActivity)).isVisible()
-        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
-            (0, click()))
-        onView(withId(R.id.HomePageActivity)).isGone()
-        pressBack()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-    }
+//    @Test
+//    fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
+////        ActivityScenario.launch(HomePageActivity::class.java)
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        onView(withId(R.id.addingBtn)).perform(click())
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+//    }
 
 //    @Test
-//    fun testingshit(){
-//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()
-    //    }
+//    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
+//        ActivityScenario.launch(HomePageActivity::class.java)
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>
+//            (0, click()))
+//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+//        pressBack()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//    }
+
         @After
         fun tearDown(){
             Intents.release()

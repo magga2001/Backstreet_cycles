@@ -60,12 +60,12 @@ class NavMenuTest {
         }
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
-        init()
+        Intents.init()
     }
 
     @Test
     fun test_drawer_is_open(){
-        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.nav_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test

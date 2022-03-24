@@ -25,16 +25,17 @@ val locationRule: GrantPermissionRule =
 
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
+
     SplashScreenActivityTest::class,
     SignUpActivityTest::class,
     LogInActivityTest::class,
     HomePageActivityTest::class,
     EditUserProfileActivityTest::class,
-//    JourneyActivityTest::class,
-//    AboutActivityTest::class,
+    //JourneyActivityTest::class,
+    AboutActivityTest::class,
+    JourneyHistoryActivityTest::class,
 //    CurrentJourneyTest::class,
-    NavMenuTest::class
-    //JourneyHistoryActivity::class
+    NavMenuTest::class,
 
 )
 class ActivitiesTestSuite

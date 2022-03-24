@@ -61,14 +61,11 @@ class LogInActivityTest{
             android.Manifest.permission.INTERNET)
     @Before
     fun setUp() {
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        GrantPermissionRule.grant(android.Manifest.permission.ACCESS_NETWORK_STATE)
-        GrantPermissionRule.grant(android.Manifest.permission.INTERNET)
         if (firebaseAuth.currentUser != null) {
             userRepository.logout()
         }
         ActivityScenario.launch(LogInActivity::class.java)
-        init()
+        Intents.init()
     }
 
     @Test
@@ -126,8 +123,6 @@ class LogInActivityTest{
 
     @After
     fun tearDown(){
-        logInRegisterViewModel = LogInRegisterViewModel(Application())
-        logInRegisterViewModel.login(email, password)
         Intents.release()
     }
 }

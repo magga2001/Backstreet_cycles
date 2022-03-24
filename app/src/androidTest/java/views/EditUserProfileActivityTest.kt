@@ -70,12 +70,12 @@ class EditUserProfileActivityTest{
 
     @Test
     fun test_et_first_name_field_is_visible() {
-        onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_firstName_edit_user)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_field_is_visible() {
-        onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_lastName_edit_user)).check(matches(isDisplayed()))
     }
 
     @Test
