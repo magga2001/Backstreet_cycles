@@ -202,10 +202,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableMyLocationButton(){
-        val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
         var isEnabled: Boolean = false
         myLocationButton.isEnabled = false
-//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
           for(location in stops){
               if(location.name.equals("Current Location")){
                   isEnabled = false
@@ -237,12 +235,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
 
-//                    if(this.javaClass == HomePageActivity::class.java) {
-//                        drawerLayout.close()
-//                    }
-//                    else {
-//                        startActivity(Intent(this, HomePageActivity::class.java))
-//                    }
                 }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
