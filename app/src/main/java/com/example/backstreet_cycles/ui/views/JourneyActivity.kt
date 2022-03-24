@@ -9,10 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.RotateAnimation
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,7 +53,6 @@ import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.activity_journey.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_journey.*
 
 
@@ -205,7 +200,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
         journeyViewModel.checkPermission(this, activity = this)
 
-        mapboxMap = mapView.getMapboxMap()
+        mapboxMap = journey_mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
         mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
 //        sharedPref = SharedPrefHelper(application,"DOCKS_LOCATIONS")
@@ -265,7 +260,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
 //                routesObserver.onRoutesChanged(JourneyRepository.result)
                 //journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0,mapView)
-                journeyViewModel.addAnnotationToMap(this, mapView)
+                journeyViewModel.addAnnotationToMap(this, journey_mapView)
                 updateUI()
             },
             object : OnMapLoadErrorListener {
@@ -282,7 +277,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
 
     private fun initialiseLocationPuck() {
         // initialize the location puck
-        locationComponent = journeyViewModel.initialiseLocationComponent(mapView)
+        locationComponent = journeyViewModel.initialiseLocationComponent(journey_mapView)
 
         onPositionChangedListener = journeyViewModel.initialiseOnPositionChangedListener(
             mapboxMap,
@@ -382,13 +377,13 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
         navigationCamera = NavigationCamera(
             mapboxMap,
-            mapView.camera,
+            journey_mapView.camera,
             viewportDataSource
         )
 
         // set the animations lifecycle listener to ensure the NavigationCamera stops
         // automatically following the user location when the map is interacted with
-        mapView.camera.addCameraAnimationsLifecycleListener(
+        journey_mapView.camera.addCameraAnimationsLifecycleListener(
             NavigationBasicGesturesHandler(navigationCamera)
         )
         navigationCamera.registerNavigationCameraStateChangeObserver { navigationCameraState ->
@@ -416,7 +411,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     }
 
     private fun initBottomSheet() {
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
+        sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
         finish_journey.isEnabled = false
         nAdapter = PlanJourneyAdapter(this, MapRepository.location, this)
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
@@ -443,7 +438,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
         return when (item.itemId) {
-            R.id.reload_button -> {
+            R.id.refresh_button -> {
                 clear()
                 MapRepository.distances.clear()
                 MapRepository.durations.clear()
@@ -474,7 +469,7 @@ class JourneyActivity : AppCompatActivity(), PlannerInterface {
         navigationCamera.requestNavigationCameraToOverview()
         //journeyViewModel.updateCamera(MapRepository.centerPoint, null, 12.0, mapView)
         journeyViewModel.removeAnnotations()
-        journeyViewModel.addAnnotationToMap(context = this, mapView)
+        journeyViewModel.addAnnotationToMap(context = this, journey_mapView)
         nAdapter.updateList(MapRepository.location)
 
         //Refresh the map

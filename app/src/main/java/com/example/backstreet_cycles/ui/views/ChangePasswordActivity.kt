@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import kotlinx.android.synthetic.main.activity_change_email_or_password.*
+import kotlinx.android.synthetic.main.activity_change_password.*
 
-class ChangeEmailOrPasswordActivity : AppCompatActivity() {
+class ChangePasswordActivity : AppCompatActivity() {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_change_email_or_password)
+        setContentView(R.layout.activity_change_password)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 //        val callback = this.onBackPressedDispatcher.addCallback(this) {
@@ -32,19 +32,19 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                et_email.text = firebaseUser.email
+                change_password_email.text = firebaseUser.email
             }
         }
 
-        buttonSave.setOnClickListener {
+        change_password_SaveButton.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_current_password.text.toString().trim { it <= ' ' }) -> {
-                    et_current_password.error = "In order for use to change your email or password you need to" +
+                TextUtils.isEmpty(change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
+                    change_password_currentPassword.error = "In order for use to change your email or password you need to" +
                             " enter your old password"
                 }
                 else -> {
-                    val currentPassword = et_current_password.text.toString().trim { it <= ' ' }
-                    val newPassword = et_new_password.text.toString()
+                    val currentPassword = change_password_currentPassword.text.toString().trim { it <= ' ' }
+                    val newPassword = change_password_NewPassword.text.toString()
                     loggedInViewModel.getUserDetails()
                     loggedInViewModel.updateEmailAndPassword(currentPassword,newPassword)
                 }
@@ -53,7 +53,7 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this@ChangeEmailOrPasswordActivity, HomePageActivity::class.java)
+        val intent = Intent(this@ChangePasswordActivity, HomePageActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

@@ -18,6 +18,7 @@ import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.android.synthetic.main.activity_homepage.*
+import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 
 class JourneyHistoryActivity : AppCompatActivity() {
@@ -88,7 +89,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        journey_mapView?.onStart()
         mapboxNavigation = homePageViewModel.initialiseMapboxNavigation()
     }
 

@@ -47,7 +47,6 @@ import com.mapbox.navigation.ui.voice.api.MapboxSpeechApi
 import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
 import com.mapbox.navigation.ui.voice.model.SpeechVolume
 import kotlinx.android.synthetic.main.activity_navigation.*
-import kotlinx.android.synthetic.main.activity_navigation.mapView
 import java.util.*
 
 class NavigationActivity : AppCompatActivity() {
@@ -186,7 +185,7 @@ class NavigationActivity : AppCompatActivity() {
         navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
         navigationViewModel.checkPermission(context = this, activity = this)
 
-        mapboxMap = mapView.getMapboxMap()
+        mapboxMap = navigation_mapView.getMapboxMap()
         mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()
         routeLineResources = navigationViewModel.initialiseRouteLineResources()
 
@@ -252,7 +251,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun initialiseLocationPuck()
     {
         // initialize the location puck
-        locationComponent = navigationViewModel.initialiseLocationComponent(mapView)
+        locationComponent = navigationViewModel.initialiseLocationComponent(navigation_mapView)
         onPositionChangedListener = navigationViewModel.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
         locationComponent.addOnIndicatorPositionChangedListener(onPositionChangedListener)
     }
@@ -263,12 +262,12 @@ class NavigationActivity : AppCompatActivity() {
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
         navigationCamera = NavigationCamera(
             mapboxMap,
-            mapView.camera,
+            navigation_mapView.camera,
             viewportDataSource
         )
         // set the animations lifecycle listener to ensure the NavigationCamera stops
         // automatically following the user location when the map is interacted with
-        mapView.camera.addCameraAnimationsLifecycleListener(
+        navigation_mapView.camera.addCameraAnimationsLifecycleListener(
             NavigationBasicGesturesHandler(navigationCamera)
         )
         navigationCamera.registerNavigationCameraStateChangeObserver { navigationCameraState ->

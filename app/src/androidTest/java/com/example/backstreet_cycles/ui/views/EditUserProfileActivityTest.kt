@@ -20,26 +20,26 @@ class EditUserProfileActivityTest{
     @Test
     fun test_title_is_visible() {
         val activityScenario=ActivityScenario.launch(EditUserProfileActivity::class.java)
-        onView(withId(R.id.et_edit_profile_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_profile_details_title)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonUpdateProfile_is_visible() {
         val activityScenario=ActivityScenario.launch(EditUserProfileActivity::class.java)
-        onView(withId(R.id.buttonUpdateProfile)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
 
     }
 
     @Test
     fun test_et_first_name_is_visible() {
         val activityScenario = ActivityScenario.launch(EditUserProfileActivity::class.java)
-        onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
         val activityScenario = ActivityScenario.launch(EditUserProfileActivity::class.java)
-        onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
     }
 
 }

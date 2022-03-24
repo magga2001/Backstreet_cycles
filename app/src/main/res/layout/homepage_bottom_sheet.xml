@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet"
+    android:id="@+id/homepage_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
@@ -18,12 +18,14 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
+        android:id="@+id/homepage_bottom_sheet_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homepage_bottom_sheet_constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -51,7 +53,7 @@
                 android:paddingRight="3dp"
                 android:paddingBottom="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/bottom_sheet"
+                app:layout_constraintStart_toStartOf="@id/homepage_bottom_sheet"
                 app:srcCompat="@android:drawable/ic_menu_mylocation"
                 tools:ignore="NotSibling" />
 
@@ -77,6 +79,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cyclists_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded"
@@ -151,7 +154,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/homepage_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addingBtn"

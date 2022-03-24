@@ -119,7 +119,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello: " + firebaseUser.firstName
-                tv_email.text = firebaseUser.email
+                nav_header_textView_email.text = firebaseUser.email
             }
         }
 
@@ -144,8 +144,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 //            }
 //        }
 
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        homepage_mapView?.onCreate(savedInstanceState)
+        homepage_mapView?.getMapAsync(this)
 
         initialiseNavigationDrawer()
     }
@@ -231,11 +231,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        nav_view.setNavigationItemSelectedListener {
+        homepage_nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
-                    startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
+                    startActivity(Intent(this@HomePageActivity, ChangePasswordActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
 
 //                    if(this.javaClass == HomePageActivity::class.java) {
@@ -284,7 +284,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
     private fun initBottomSheet() {
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+        sheetBehavior = BottomSheetBehavior.from(homepage_bottom_sheet_view)
         addStopButton = findViewById(R.id.addingBtn)
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
@@ -340,8 +340,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private fun createListOfItems(){
         homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
         stopsAdapter = StopsAdapter(stops)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = stopsAdapter
+        homepage_recyclerView.layoutManager = LinearLayoutManager(this)
+        homepage_recyclerView.adapter = stopsAdapter
     }
 
     private fun itemTouchMethods(){
@@ -350,7 +350,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 if (viewHolder.absoluteAdapterPosition != 0) {
                     val position = viewHolder.absoluteAdapterPosition
                     homePageViewModel.removeStopAt(position)
-                    recyclerView.adapter?.notifyItemRemoved(position)
+                    homepage_recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
                     enableNextPageButton()
                 }
@@ -375,7 +375,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         val itemTouchHelper = ItemTouchHelper(touchScreenCallBack)
 
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(homepage_recyclerView)
     }
 
 
@@ -387,7 +387,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
+            homePageViewModel.displayingAttractions(homepage_mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
             setUpSource(style)
             setUpLayer(style)
 
@@ -522,23 +522,23 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        homepage_mapView?.onStart()
         mapboxNavigation = homePageViewModel.initialiseMapboxNavigation()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView?.onStop()
+        homepage_mapView?.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView?.onLowMemory()
+        homepage_mapView?.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView?.onDestroy()
+        homepage_mapView?.onDestroy()
     }
 
 //    How to make an util class for the functions below

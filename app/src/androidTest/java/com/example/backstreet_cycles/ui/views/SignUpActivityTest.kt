@@ -31,19 +31,19 @@ class SignUpActivityTest {
     @Test
     fun test_et_first_name_is_visible() {
         val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_firstName)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_is_visible() {
         val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_lastName)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_email_is_visible() {
         val activityScenario = ActivityScenario.launch(SignUpActivity::class.java)
-        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_email)).check(matches(isDisplayed()))
     }
 
     @Test

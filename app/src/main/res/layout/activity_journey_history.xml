@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.views.JourneyHistoryActivity"
+    android:id="@+id/recentJourney_layout"
     >
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,11 +16,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/journey_history_title"
         app:layout_constraintVertical_bias="0.753" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/journey_history_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

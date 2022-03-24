@@ -28,13 +28,13 @@ class NavMenuTest {
 
     @Test
     fun test_drawer_is_open(){
-        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_navView)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_drawer_is_closed(){
         onView(withContentDescription(R.string.close)).perform(click())
-        onView(withId(R.id.nav_view)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        onView(withId(R.id.homepage_navView)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
@@ -77,7 +77,7 @@ class NavMenuTest {
     @Test
     fun test_nav_showUserEmail(){
 
-        onView(withId(R.id.tv_email)).check(matches(isDisplayed()))
+        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
     }
 
     @Test

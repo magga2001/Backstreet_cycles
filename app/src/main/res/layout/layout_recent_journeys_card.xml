@@ -2,12 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout4"
+    android:id="@+id/recentJourneyCard_linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/journeySummaryConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/underLine"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/recentJourneyCard_locationDataCardView"
             style="@style/CardView.Light"
             android:layout_width="395dp"
             android:layout_height="112dp"
@@ -30,14 +30,14 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/linearLayout7"
+                android:id="@+id/JourneySummaryLayout1"
                 android:layout_width="351dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/rounded">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/linearLayout6"
+                    android:id="@+id/JourneySummaryLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -48,7 +48,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/journeySummarytextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
@@ -63,7 +63,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/tv_recent_journey"
+                    android:id="@+id/recentJourneyCardTextView"
                     android:layout_width="341dp"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
@@ -77,7 +77,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/journeySummarytextView"
                     app:layout_constraintVertical_bias="0.0" />
 
 

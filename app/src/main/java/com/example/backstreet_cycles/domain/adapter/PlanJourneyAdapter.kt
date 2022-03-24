@@ -30,15 +30,15 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
-        internal var expandButton: Button = view.findViewById(R.id.button_expand)
+        internal var expandButton: Button = view.findViewById(R.id.planJourney_button_expand)
         internal var checkBoxButton: CheckBox = view.findViewById(R.id.checkBoxFinishJourney)
-        internal var expandableLayout: View = view.findViewById(R.id.expandableLayout)
-        internal var cardView: ViewGroup = view.findViewById(R.id.cardView)
+        internal var expandableLayout: View = view.findViewById(R.id.planJourney_expandableLayout)
+        internal var cardView: ViewGroup = view.findViewById(R.id.locationDataCardView)
         internal var setNav1: Button = view.findViewById(R.id.setNav1)
         internal var setNav2: Button = view.findViewById(R.id.setNav2)
         internal var setNav3: Button = view.findViewById(R.id.setNav3)
-        internal var tvFrom: TextView= view.findViewById(R.id.tv_from)
-        internal var tvTo:TextView = view.findViewById(R.id.tv_to)
+        internal var tvFrom: TextView= view.findViewById(R.id.planJourney_from)
+        internal var tvTo:TextView = view.findViewById(R.id.planJourney_to)
 
         init {
             initListener()
