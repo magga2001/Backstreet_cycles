@@ -3,17 +3,19 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 
+@AndroidEntryPoint
 class EditUserProfileActivity : AppCompatActivity() {
 
-
-    private lateinit var loggedInViewModel: LoggedInViewModel
+    private val loggedInViewModel: LoggedInViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,6 @@ class EditUserProfileActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
                 SnackbarHelper.displaySnackbar(editUserProfile,"Profile Updated Successfully")
