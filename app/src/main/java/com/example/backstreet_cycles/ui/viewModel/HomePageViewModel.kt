@@ -54,9 +54,30 @@ class HomePageViewModel @Inject constructor(
     var stops: MutableLiveData<MutableList<Locations>> = MutableLiveData(locationRepository.getStops())
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private val firestore = Firebase.firestore
+    private var numUsers = 1
 
     private val mapRepository: JourneyRepository = JourneyRepository(mApplication,firestore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
+    fun setShowAlert(bool: Boolean){
+        showAlert.postValue(bool)
+    }
+
+    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
+        return showAlert
+    }
+
+    fun incrementNumUsers(){
+        ++numUsers
+    }
+
+    fun decrementNumUsers(){
+        --numUsers
+    }
+
+    fun getNumUsers(): Int{
+        return numUsers
+    }
 
     fun initialiseLocationComponent(mapboxMap: MapboxMap): LocationComponent
     {
@@ -258,12 +279,6 @@ class HomePageViewModel @Inject constructor(
         builder.show()
     }
 
-    fun setShowAlert(bool: Boolean){
-        showAlert.postValue(bool)
-    }
 
-    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
-        return showAlert
-    }
 
 }
