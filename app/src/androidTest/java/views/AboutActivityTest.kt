@@ -1,6 +1,6 @@
-package views
+/*package views
 
-/*
+
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -64,6 +64,11 @@ class AboutActivityTest {
     @Test
     fun test_description_is_displayed() {
         onView(withId(R.id.aboutDescription)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_logo_is_displayed() {
+        onView(withId(R.id.about_image)).check(matches(isDisplayed()))
     }
 
     @Test

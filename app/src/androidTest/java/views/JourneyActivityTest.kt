@@ -86,11 +86,6 @@ class JourneyActivityTest{
     }
 
     @Test
-    fun test_stops_text_field_displayed(){
-        onView(withId(R.id.stopsText)).check(matches(withText("stops:")))
-    }
-
-    @Test
     fun test_stops_recycling_view_displayed(){
         onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
     }
@@ -105,6 +100,11 @@ class JourneyActivityTest{
         onView(withId(R.id.start_navigation)).perform(click())
         onView(withId(R.id.navigation_activity)).check(matches(isDisplayed()))
     }
+
+    /*@Test
+    fun test_expand_button(){
+        onView(withId(R.id.planJourney_button_expand)).check(matches(isDisplayed()))
+    }*/
 
     @Test
     fun test_button_expand() {
@@ -165,6 +165,21 @@ class JourneyActivityTest{
         onView(withId(R.id.santander_link)).check(matches(isDisplayed()))
     }
 
+    /*@Test
+    fun test_hire_image_visible(){
+        onView(withId(R.id.SantanderCycleImage)).check(matches(isDisplayed()))
+    }*/
+
+    /*@Test
+    fun test_from_text(){
+        onView(withId(R.id.planJourney_from)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_to_text(){
+        onView(withId(R.id.planJourney_to)).check(matches(isDisplayed()))
+    }*/
+
     @Test
     fun test_finish_journey_button_visible(){
         onView(withId(R.id.finish_journey)).check(matches(isDisplayed()))
@@ -177,18 +192,33 @@ class JourneyActivityTest{
 
     @Test
     fun test_duration_text_field_displayed(){
-        onView(withId(R.id.durations)).check(matches(withText("stops:")))
+        onView(withId(R.id.durations)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_distance_text_field_displayed(){
-        onView(withId(R.id.distances)).check(matches(withText("stops:")))
+        onView(withId(R.id.distances)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_price_text_field_displayed(){
-        onView(withId(R.id.prices)).check(matches(withText("stops:")))
+        onView(withId(R.id.prices)).check(matches(isDisplayed()))
     }
+
+    /*@Test
+    fun test_duration_image_field_displayed(){
+        onView(withId(R.id.duration_image)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_distance_image_field_displayed(){
+        onView(withId(R.id.Distance_image)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_price_image_field_displayed(){
+        onView(withId(R.id.price_image)).check(matches(isDisplayed()))
+    }*/
 
     @Test
     fun test_check_not_checked(){

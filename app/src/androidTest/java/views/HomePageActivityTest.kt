@@ -289,6 +289,12 @@ class HomePageActivityTest {
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
+    /*@Test
+    fun test_refresh_button_is_visible() {
+        onView(withId(R.id.refresh_button)).check(matches(isDisplayed()))
+
+    }*/
+
 //    @Test
 //    fun testingshit(){
 //        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnHolderItem<StopsAdapter.StopViewHolder>()

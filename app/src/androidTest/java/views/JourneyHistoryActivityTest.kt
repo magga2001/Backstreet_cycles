@@ -63,6 +63,16 @@ class JourneyHistoryActivityTest {
         onView(withId(R.id.journey_history_recycler_view)).check(matches(isDisplayed()))
     }
 
+//    @Test
+//    fun test_journey_summary_is_visible() {
+//        onView(withId(R.id.journeySummaryTextView)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun test_card_is_visible() {
+//        onView(withId(R.id.recentJourneyCardViewText)).check(matches(isDisplayed()))
+//    }
+
     @After
     fun tearDown(){
         Intents.release()
