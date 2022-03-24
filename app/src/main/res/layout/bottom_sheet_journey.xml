@@ -83,14 +83,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <Button
-                    android:id="@+id/finish_journey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/finish_journey"
-                    android:textAllCaps="false"
-                    android:textSize="14sp" />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -207,9 +199,18 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/plan_journey_recycling_view"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp">
+                    android:layout_height="204dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
+
+                <Button
+                    android:id="@+id/finish_journey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/finish_journey"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"/>
 
 
             </LinearLayout>
