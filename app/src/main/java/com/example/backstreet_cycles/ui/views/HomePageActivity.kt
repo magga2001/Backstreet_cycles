@@ -88,7 +88,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     {
         var stops: MutableList<Locations> = mutableListOf()
         lateinit var mapboxNavigation: MapboxNavigation
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -96,17 +95,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
-        incrementAndDecrementUsersFunc()
-        initialiseObservers()
-
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
-        initialiseNavigationDrawer()
+        init()
     }
 
-    private fun initialiseObservers(){
+
+    private fun init(){
+        initIncrementAndDecrementUsersFunc()
+        initObservers()
+        initNavigationDrawer()
+    }
+
+    private fun initObservers(){
         homePageViewModel.getDock()
         homePageViewModel.stops.observe(this) { stops = it }
         homePageViewModel.getShowAlertMutableLiveData().observe(this) { it ->
@@ -127,7 +130,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                user_name.text = "Hello: " + firebaseUser.firstName
+                user_name.text = "Hello: ${firebaseUser.firstName}"
                 tv_email.text = firebaseUser.email
             }
         }
@@ -148,14 +151,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
 
-    private fun incrementAndDecrementUsersFunc(){
+    private fun initIncrementAndDecrementUsersFunc(){
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
-
-
         textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
-
 
         plusBtn.setOnClickListener{
           if(homePageViewModel.getNumUsers()>3){
@@ -165,20 +165,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
               textOfNumberOfUsers.text = "${homePageViewModel.incrementNumUsers()}"
           }
 
-
         }
-
         minusBtn.setOnClickListener{
-
             if(homePageViewModel.getNumUsers()>=2){
                 textOfNumberOfUsers.text = "${homePageViewModel.decrementNumUsers()}"
             }
             else{
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
-
             }
         }
-
     }
 
     private fun addInfo(name:String, lat: Double, long: Double) {
@@ -188,7 +183,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         SnackbarHelper.displaySnackbar(HomePageActivity, "Adding Stop")
         enableNextPageButton()
         enableMyLocationButton()
-
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
@@ -202,12 +196,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableMyLocationButton(){
-        val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        var isEnabled: Boolean = false
+        var isEnabled = false
         myLocationButton.isEnabled = false
-//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
           for(location in stops){
-              if(location.name.equals("Current Location")){
+              if(location.name == "Current Location"){
                   isEnabled = false
                   break
               }
@@ -224,7 +216,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         nextPageButton.isEnabled = stops.size >= 2
     }
 
-    private fun initialiseNavigationDrawer() {
+    private fun initNavigationDrawer() {
         toggle = ActionBarDrawerToggle(this, HomePageActivity, R.string.open, R.string.close)
         HomePageActivity.addDrawerListener(toggle)
         toggle.syncState()
