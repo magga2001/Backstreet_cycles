@@ -76,10 +76,10 @@ class JourneyActivityTest{
     }
 
     @Test
-    fun test_start_navigation_button_visible(){
+    fun test_start_navigation_button_visible() {
         //onView(withId(R.id.start_navigation)).check(matches(isDisplayed()))
         onView(withId(R.id.start_navigation)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
+    }
 
 //    @Test
 //    fun test_next_button_from_home_to_journey(){
