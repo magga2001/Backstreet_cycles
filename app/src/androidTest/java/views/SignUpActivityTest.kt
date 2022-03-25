@@ -3,6 +3,7 @@ package views
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -13,6 +14,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.views.LogInActivity
 import com.example.backstreet_cycles.views.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -126,6 +128,62 @@ class SignUpActivityTest {
     @Test
     fun test_buttonSignUp_is_visible() {
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun name_is_empty() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.et_firstName)).check(matches(hasErrorText("Please enter your first name")))
+    }
+
+    @Test
+    fun last_name_is_empty() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_lastName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.et_lastName)).check(matches(hasErrorText("Please enter your last name")))
+    }
+
+    @Test
+    fun email_is_empty() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_lastName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_email)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.et_email)).check(matches(hasErrorText("Please enter your email")))
+    }
+
+    @Test
+    fun password_is_empty() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_lastName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_email)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_password)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.et_password)).check(matches(hasErrorText("Please enter a password")))
+    }
+
+    @Test
+    fun password_confirmation_is_empty() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_lastName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_email)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_password)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_confirmPassword)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.et_password)).check(matches(hasErrorText("Please confirm your password")))
+    }
+
+    @Test
+    fun details_entered_correctly() {
+        onView(withId(R.id.et_firstName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_lastName)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_email)).perform(ViewActions.replaceText("test@gmail.com"))
+        onView(withId(R.id.et_password)).perform(ViewActions.replaceText("test12"))
+        onView(withId(R.id.et_confirmPassword)).perform(ViewActions.replaceText("test12"))
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
     @After

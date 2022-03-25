@@ -118,7 +118,21 @@ class LogInActivityTest{
         onView(withId(R.id.et_email_log_in)).perform(typeText(email)).check(matches(withText(email)))
         onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
         intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
 
+    @Test
+    fun login_email_is_empty() {
+        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonLogin)).perform(ViewActions.click())
+        onView(withId(R.id.et_email_log_in)).check(matches(hasErrorText("Please enter your email")))
+    }
+
+    @Test
+    fun login_password_is_empty() {
+        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.et_password_log_in)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.buttonLogin)).perform(ViewActions.click())
+        onView(withId(R.id.et_password_log_in)).check(matches(hasErrorText("Please enter a password")))
     }
 
     @After
