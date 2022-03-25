@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.ui.viewModel
+package com.example.backstreet_cycles.ui.viewModel;
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
@@ -14,25 +14,19 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LogInRegisterViewModel @Inject constructor(
-    @ApplicationContext applicationContext: Context
-): ViewModel() {
+class LogInViewModel @Inject constructor(
+        @ApplicationContext applicationContext: Context
+): ViewModel(){
 
     private val mApplication = Contexts.getApplication(applicationContext)
-    private val userRepository: UserRepository
-    private val mutableLiveData: MutableLiveData<FirebaseUser>
-
-    init {
-        userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
-        mutableLiveData = userRepository.getMutableLiveData()
-    }
+    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
+    private val mutableLiveData = userRepository.getMutableLiveData()
 
     fun  login(email: String, password: String){
-        userRepository.login(email,password)
+         userRepository.login(email,password)
     }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
+         return mutableLiveData
     }
-
 }
