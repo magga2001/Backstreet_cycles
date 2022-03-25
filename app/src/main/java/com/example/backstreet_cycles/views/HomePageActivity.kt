@@ -116,15 +116,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
 
         loggedInViewModel.getUserDetails()
-//        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
-//            if (firebaseUser != null) {
-//                user_name.text = "Hello: " + firebaseUser.firstName
-//                tv_email.text = firebaseUser.email
-//            } else {
-//                user_name.text = "Hello: "
-//                tv_email.text = "eee"
-//            }
-//        }
+        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
+            if (firebaseUser != null) {
+                user_name.text = "Hello: " + firebaseUser.firstName
+                tv_email.text = firebaseUser.email
+            } else {
+                user_name.text = "Hello: "
+                tv_email.text = "eee"
+            }
+        }
 
         journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->

@@ -1,6 +1,7 @@
 package views
 
 import android.app.Application
+import android.os.SystemClock.sleep
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -49,15 +50,7 @@ class JourneyActivityTest{
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(withId(R.id.nextPageButton)).perform(click())
         ActivityScenario.launch(JourneyActivity::class.java)
-
-        /*if (viewExists(android.R.id.button1)){
-            onView(withId(android.R.id.button1)).perform(click())
-        }*/
-//        journeyViewModel = JourneyViewModel(Application())
-//        if (journeyViewModel.getListLocations().isNotEmpty()) {
-//            onView(withId(android.R.id.button1)).perform(click())
-//        }
-        Intents.init()
+        init()
     }
 
     @Test
@@ -77,7 +70,6 @@ class JourneyActivityTest{
 
     @Test
     fun test_start_navigation_button_visible() {
-        //onView(withId(R.id.start_navigation)).check(matches(isDisplayed()))
         onView(withId(R.id.start_navigation)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
@@ -162,12 +154,12 @@ class JourneyActivityTest{
         }
     }
 
-    @Test
+    /*@Test
     fun test_hire_button_visible(){
         //onView(withId(R.id.santander_link)).check(matches(isDisplayed()))
         onView(withId(R.id.santander_link)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
-    }
+    }*/
 
     /*@Test
     fun test_hire_image_visible(){

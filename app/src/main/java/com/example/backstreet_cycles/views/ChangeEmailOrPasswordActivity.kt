@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.activity_change_email_or_password.*
 class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
     private lateinit var loggedInViewModel: LoggedInViewModel
-
-    @SuppressLint("RestrictedApi")
+//
+//    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_email_or_password)
