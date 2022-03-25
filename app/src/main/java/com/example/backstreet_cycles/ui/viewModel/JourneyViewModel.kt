@@ -10,6 +10,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.data.repository.UserRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
@@ -19,6 +20,7 @@ import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -66,6 +68,7 @@ class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
 
     private var status: String = "UPDATE"
     private var numUser: Int = 1
+    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
@@ -73,8 +76,7 @@ class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
     private var sharedPref: SharedPreferences =
         applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
     private val fireStore = Firebase.firestore
-//    private val mApplication = getApplication(applicationContext)
-//    private val mContext = applicationContext
+    private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
     fun getDock()
     {
@@ -294,45 +296,15 @@ class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
         return priceMutableLiveData
     }
 
+    fun getUserDetails() {
+        return userRepository.getUserDetails()
+    }
+
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
+        return userDetailsMutableLiveData
+    }
 //--------------------------------
     //Tish stuff
-
-    fun addLocationSharedPreferences(locations: MutableList<Locations>):Boolean {
-        if (getListLocations().isEmpty()){
-            overrideListLocation(locations)
-            return false
-        }
-        return true
-    }
-
-    fun overrideListLocation(locations: MutableList<Locations>) {
-        val gson = Gson();
-        val json = gson.toJson(locations);
-        with (sharedPref.edit()) {
-            putString("LOCATIONS", json)
-            apply()
-        }
-    }
-
-    fun clearListLocations() {
-        with (sharedPref.edit()) {
-            clear()
-            apply()
-        }
-    }
-
-    fun getListLocations(): List<Locations> {
-        val locations: List<Locations>
-        val serializedObject: String? = sharedPref.getString("LOCATIONS", null)
-        if (serializedObject != null) {
-            val gson = Gson()
-            val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
-            locations = gson.fromJson<List<Locations>>(serializedObject, type)
-        }else {
-            locations = emptyList()
-        }
-        return locations
-    }
 
     fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
         CoroutineScope(Dispatchers.IO).launch {

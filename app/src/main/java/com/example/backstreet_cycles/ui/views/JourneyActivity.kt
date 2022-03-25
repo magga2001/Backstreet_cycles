@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
@@ -19,7 +18,6 @@ import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
@@ -145,8 +143,6 @@ class JourneyActivity : AppCompatActivity() {
      */
     private lateinit var navigationCamera: NavigationCamera
     private lateinit var mapboxMap: MapboxMap
-//    private lateinit var mapboxNavigation: MapboxNavigation
-    private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var planJourneyAdapter: PlanJourneyAdapter
     private lateinit var annotationApi: AnnotationPlugin
@@ -156,9 +152,6 @@ class JourneyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-//        journeyViewModel = ViewModelProvider(this)[JourneyViewModel::class.java]
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
 
         PermissionUseCase.checkPermission(context = this, activity = this)
 
@@ -302,8 +295,8 @@ class JourneyActivity : AppCompatActivity() {
 
         finish_journey.setOnClickListener {
 
-            loggedInViewModel.getUserDetails()
-            loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+            journeyViewModel.getUserDetails()
+            journeyViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
 
                 if (userDetails != null)
                 {
