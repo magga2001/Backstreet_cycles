@@ -22,7 +22,6 @@ class ChangePasswordViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
 
-    private val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
 
     fun updatePassword(password: String, newPassword: String) {
@@ -32,9 +31,4 @@ class ChangePasswordViewModel @Inject constructor(
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData
     }
-
-    fun getUserDetails() {
-        return userRepository.getUserDetails()
-    }
-
 }

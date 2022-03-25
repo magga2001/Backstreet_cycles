@@ -21,18 +21,12 @@ class LoggedInViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
 
-    private val userRepository = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = userRepository.getLoggedOutMutableLiveData()
     private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
     fun logOut() {
         userRepository.logout()
     }
-
-    fun getUserDetails() {
-        return userRepository.getUserDetails()
-    }
-
     fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
         return loggedOutMutableLiveData
     }

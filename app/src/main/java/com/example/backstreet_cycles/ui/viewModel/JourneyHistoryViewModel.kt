@@ -46,7 +46,6 @@ class JourneyHistoryViewModel @Inject constructor(
 
     private val fireStore = Firebase.firestore
     private val mapRepository: JourneyRepository = JourneyRepository(mApplication,fireStore)
-    private val userRepository = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
@@ -92,10 +91,6 @@ class JourneyHistoryViewModel @Inject constructor(
         fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
     }
 
-    fun getUserDetails() {
-        return userRepository.getUserDetails()
-    }
-
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
@@ -111,39 +106,6 @@ class JourneyHistoryViewModel @Inject constructor(
 
     fun addAllStops(checkpoints: MutableList<Locations>){
         stops.addAll(checkpoints)
-    }
-
-    private fun clearView()
-    {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
-    }
-
-    private fun clearInfo()
-    {
-        MapRepository.distances.clear()
-        MapRepository.durations.clear()
-    }
-
-    private fun clearDuplication(points: MutableList<Point>)
-    {
-        MapRepository.location.distinct()
-        points.distinct()
-    }
-
-    private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
-    {
-        return RouteOptions.builder()
-            // applies the default parameters to route options
-            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
-            .applyLanguageAndVoiceUnitOptions(context)
-            .profile(criteria)
-            // lists the coordinate pair i.e. origin and destination
-            // If you want to specify waypoints you can pass list of points instead of null
-            .coordinatesList(points)
-            // set it to true if you want to receive alternate routes to your destination
-            .alternatives(true)
-            .build()
     }
 
     private fun fetchRoute(context: Context,

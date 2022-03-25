@@ -19,8 +19,6 @@ class ForgotPasswordViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
 
-    private val userRepository = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
-
     fun resetPassword(email: String) {
         userRepository.resetPassword(email)
     }

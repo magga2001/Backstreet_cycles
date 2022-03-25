@@ -21,7 +21,6 @@ class EditUserProfileViewModel @Inject constructor(
         @ApplicationContext applicationContext: Context
 ) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext){
 
-        private val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
         private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
         private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
@@ -31,10 +30,6 @@ class EditUserProfileViewModel @Inject constructor(
 
         fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
                 return updatedProfileMutableLiveData
-        }
-
-        fun getUserDetails() {
-                return userRepository.getUserDetails()
         }
 
         fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {

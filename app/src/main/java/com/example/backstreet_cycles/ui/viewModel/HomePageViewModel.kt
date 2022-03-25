@@ -80,12 +80,10 @@ class HomePageViewModel @Inject constructor(
         }
     }
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val fireStore = Firebase.firestore
     private var numUsers = 1
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo:Boolean = false
 
-    private val mapRepository: JourneyRepository = JourneyRepository(mApplication,fireStore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val hasCurrentLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -148,11 +146,6 @@ class HomePageViewModel @Inject constructor(
     private fun getUpdateInfo(): Boolean
     {
         return updateInfo
-    }
-
-    fun initialiseMapboxNavigation(): MapboxNavigation
-    {
-        return mapRepository.initialiseMapboxNavigation()
     }
 
     //New code
@@ -218,21 +211,6 @@ class HomePageViewModel @Inject constructor(
 
             }.launchIn(viewModelScope)
         }
-    }
-
-    private fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
-    {
-        return RouteOptions.builder()
-            // applies the default parameters to route options
-            .applyDefaultNavigationOptions(DirectionsCriteria.PROFILE_CYCLING)
-            .applyLanguageAndVoiceUnitOptions(context)
-            .profile(criteria)
-            // lists the coordinate pair i.e. origin and destination
-            // If you want to specify waypoints you can pass list of points instead of null
-            .coordinatesList(points)
-            // set it to true if you want to receive alternate routes to your destination
-            .alternatives(true)
-            .build()
     }
 
     fun getRoute()
@@ -419,24 +397,6 @@ class HomePageViewModel @Inject constructor(
                     .build()
             ), 4000
         )
-    }
-
-    private fun clearInfo()
-    {
-        MapRepository.distances.clear()
-        MapRepository.durations.clear()
-    }
-
-    private fun clearView()
-    {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
-    }
-
-    private fun clearDuplication(points: MutableList<Point>)
-    {
-        MapRepository.location.distinct()
-        points.distinct()
     }
 
     fun getMapBoxNavigation(): MapboxNavigation
