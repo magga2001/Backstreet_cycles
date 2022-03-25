@@ -6,6 +6,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -120,15 +121,15 @@ class LogInActivityTest{
     @Test
     fun test_if_password_empty_display_error() {
 
-        onView(withId(R.id.et_password_log_in)).perform(typeText(empty)).check(matches(withText(empty)))
-        onView(withId(R.string.enter_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_password_log_in)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.et_password_log_in)).check(matches(hasErrorText("Please enter a password")))
     }
 
     @Test
     fun test_if_email_empty_display_error() {
 
-        onView(withId(R.id.et_email_log_in)).perform(typeText(empty)).check(matches(withText(empty)))
-        onView(withId(R.string.enter_email)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.et_email_log_in)).check(matches(hasErrorText("Please enter your email")))
     }
 
     @After
