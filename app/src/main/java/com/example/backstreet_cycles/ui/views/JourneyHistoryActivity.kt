@@ -81,7 +81,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
                             override fun getResult(objects: MutableList<Dock>) {
                                 homePageViewModel.clearAllStops()
                                 homePageViewModel.addAllStops(journeys[position].toMutableList())
-                                homePageViewModel.fetchPoints()
+                                homePageViewModel.getRoute()
 //                                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
 //                                if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
 //                                    stops.addAll(journeys[position])

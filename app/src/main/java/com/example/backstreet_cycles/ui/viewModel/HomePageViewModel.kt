@@ -13,22 +13,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.LocationRepository
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
+import com.mapbox.api.geocoding.v5.models.CarmenFeature
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
@@ -38,19 +44,23 @@ import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.maps.MapConstants
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
+import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -59,18 +69,37 @@ import javax.inject.Inject
 class HomePageViewModel @Inject constructor(
     private val getDockUseCase: GetDockUseCase,
     private val getMapboxUseCase: GetMapboxUseCase,
+    private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
 ): ViewModel() {
 
+    private val mapboxNavigation by lazy {
+
+        if (MapboxNavigationProvider.isCreated()) {
+            MapboxNavigationProvider.retrieve()
+        } else {
+            MapboxNavigationProvider.create(
+                NavigationOptions.Builder(mApplication)
+                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
+                    .build()
+            )
+        }
+    }
+
     private val mApplication = getApplication(applicationContext)
     private val mContext = applicationContext
-    private val locationRepository: LocationRepository = LocationRepository(mApplication)
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val firestore = Firebase.firestore
+    private val fireStore = Firebase.firestore
     private var numUsers = 1
+    private var stops: MutableList<Locations> = mutableListOf()
+    private var updateInfo:Boolean = false
 
-    private val mapRepository: JourneyRepository = JourneyRepository(mApplication,firestore)
+    private val mapRepository: JourneyRepository = JourneyRepository(mApplication,fireStore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val hasCurrentLocation: MutableLiveData<Boolean> = MutableLiveData()
+    private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
+    private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun setShowAlert(bool: Boolean){
         showAlert.postValue(bool)
@@ -92,32 +121,50 @@ class HomePageViewModel @Inject constructor(
         return numUsers
     }
 
-    fun addAllStops(checkpoints: MutableList<Locations>){
-        locationRepository.addAllStops(checkpoints)
-    }
-
-    fun getStops(): MutableList<Locations>{
-        return locationRepository.getStops()
-    }
-
     fun addStop(stop: Locations){
-        locationRepository.addStop(stop)
+        stops.add(stop)
     }
 
     fun addStop(index: Int, stop: Locations){
-        locationRepository.addStop(index, stop)
+        stops.add(index, stop)
+    }
+
+    fun addAllStops(checkpoints: MutableList<Locations>){
+        stops.addAll(checkpoints)
     }
 
     fun removeStop(stop: Locations){
-        locationRepository.removeStop(stop)
+        stops.remove(stop)
     }
 
     fun removeStopAt(index: Int){
-        locationRepository.removeStopAt(index)
+        stops.removeAt(index)
+    }
+
+    fun getStops(): MutableList<Locations> {
+        return stops
+    }
+
+    fun clearAllStops() {
+        stops.clear()
+    }
+
+    private fun checkIfAlreadyInStops(location : Locations): Boolean{
+        return stops.contains(location)
     }
 
     fun getTouristAttractions(): List<Locations> {
         return locationRepository.getTouristLocations()
+    }
+
+    fun setUpdateInfo(info: Boolean)
+    {
+        updateInfo = info
+    }
+
+    private fun getUpdateInfo(): Boolean
+    {
+        return updateInfo
     }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
@@ -125,24 +172,15 @@ class HomePageViewModel @Inject constructor(
         return mapRepository.initialiseMapboxNavigation()
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
-        return isReadyMutableLiveData
-    }
-
     //New code
 
     fun getDock()
     {
-
         getDockUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
-                    val points = PlannerHelper.setPoints(MapRepository.location)
-                    //fetchRoute(mapboxNavigation, points, "cycling", false)
-
-                    //isReadyMutableLiveData.postValue(true)
+                    getRoute()
                 }
 
                 is Resource.Error -> {
@@ -156,22 +194,19 @@ class HomePageViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun fetchRoute(context: Context,
-                   mapboxNavigation: MapboxNavigation,
-                   points: MutableList<Point>,
-                   profile: String,
-                   info: Boolean)
+    private fun fetchRoute(context: Context,
+                           points: MutableList<Point>,
+                           profile: String,
+                           info: Boolean)
     {
 
         val routeOptions: RouteOptions
 
-        MapRepository.location.distinct()
-        points.distinct()
+        clearDuplication(points)
 
         if(!info)
         {
-            MapRepository.distances.clear()
-            MapRepository.durations.clear()
+            clearInfo()
             MapRepository.wayPoints.addAll(points)
 
             routeOptions = when(profile)
@@ -179,18 +214,6 @@ class HomePageViewModel @Inject constructor(
                 "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
                 else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
             }
-
-//            TflHelper.getDock(context = mContext,
-//                object : CallbackResource<MutableList<Dock>> {
-//                    override fun getResult(objects: MutableList<Dock>) {
-//
-////                        val bundle = Bundle()
-////                        bundle.putSerializable("current_route", MapRepository.currentRoute)
-////                        intent.putExtra("current_bundle",bundle)
-//                        fetchPoints()
-//                    }
-//                }
-//            )
 
             getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
 
@@ -229,20 +252,37 @@ class HomePageViewModel @Inject constructor(
             .build()
     }
 
-    fun fetchPoints()
+    fun getRoute()
     {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
+        clearView()
+        MapRepository.location.addAll(stops)
+        checkCurrentJourney()
 
-        MapRepository.location.addAll(locationRepository.getStops())
+    }
 
+    fun getCurrentJourney()
+    {
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if (!checkForARunningJourney){
+        if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            MapRepository.location = listOfLocations
+            val listPoints = PlannerHelper.setPoints(listOfLocations)
+            fetchRoute(mContext, listPoints ,MapboxConstants.CYCLING, false)
+        }else
+        {
+            hasCurrentJourneyMutableLiveData.postValue(false)
+        }
+    }
+
+    private fun checkCurrentJourney()
+    {
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+        if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
             val locationPoints = PlannerHelper.setPoints(MapRepository.location)
-            fetchRoute(mContext, HomePageActivity.mapboxNavigation, locationPoints, "cycling", false)
+            fetchRoute(mContext, locationPoints, MapboxConstants.CYCLING, false)
         }
     }
 
@@ -262,14 +302,14 @@ class HomePageViewModel @Inject constructor(
         val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
         MapRepository.location = listOfLocations
         val listPoints = PlannerHelper.setPoints(listOfLocations)
-        fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
+        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
     }
 
     fun continueWithNewJourney(newStops: MutableList<Locations>){
         val listPoints = PlannerHelper.setPoints(newStops)
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
-        fetchRoute(mContext, HomePageActivity.mapboxNavigation, listPoints, "cycling", false)
+        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
     }
 
     fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent
@@ -277,9 +317,7 @@ class HomePageViewModel @Inject constructor(
         return mapboxMap.locationComponent
     }
 
-//    Why are we suppressing it?
     @SuppressLint("MissingPermission")
-    @JvmName("initCurrentLocation1")
     fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
         val customLocationComponentOptions = LocationComponentOptions.builder(mApplication)
             .pulseEnabled(true)
@@ -296,12 +334,10 @@ class HomePageViewModel @Inject constructor(
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
-    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>) {
+    fun displayingAttractions(symbolManager: SymbolManager, loadedMapStyle: Style, data: List<Locations>) {
         val textSize = 15.0F
         val textColor = "black"
 
-
-        val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
         symbolManager.iconAllowOverlap = true
         val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication, R.drawable.tourist_attraction_icon) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 100, 120, false))
@@ -319,12 +355,31 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentLocation(locationComponent: LocationComponent): Location? {
-        return locationComponent.lastKnownLocation
-
+    fun checkCurrentLocation()
+    {
+        val stop = stops.map { it.name }.contains("Current Location")
+        hasCurrentLocation.postValue(stop)
     }
 
-    fun initialisePlaceAutoComplete(activity: Activity): Intent {
+    fun updateCurrentLocation(locationComponent: LocationComponent)
+    {
+        for(stop in stops){
+            if(stop.name == "Current Location"){
+
+                val longitude = getCurrentLocation(locationComponent)!!.longitude
+                val latitude = getCurrentLocation(locationComponent)!!.latitude
+
+                stop.lat = latitude
+                stop.lon = longitude
+            }
+        }
+    }
+
+    fun getCurrentLocation(locationComponent: LocationComponent): Location? {
+        return locationComponent.lastKnownLocation
+    }
+
+    fun initPlaceAutoComplete(activity: Activity): Intent {
         return PlaceAutocomplete.IntentBuilder()
             .accessToken(mApplication.getString(R.string.mapbox_access_token)).
             placeOptions(
@@ -338,7 +393,41 @@ class HomePageViewModel @Inject constructor(
             .build(activity)
     }
 
-    fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double) {
+    fun searchLocation(mapboxMap: MapboxMap,selectedCarmenFeature: CarmenFeature, style: Style)
+    {
+        val location = Locations(
+            selectedCarmenFeature.placeName().toString(),
+            selectedCarmenFeature.center()!!.latitude(),
+            selectedCarmenFeature.center()!!.longitude())
+        if(!checkIfAlreadyInStops(location)){
+
+            val latitude = selectedCarmenFeature.center()!!.latitude()
+            val longitude = selectedCarmenFeature.center()!!.longitude()
+
+            style.getSourceAs<GeoJsonSource>(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID)?.setGeoJson(
+                FeatureCollection.fromFeatures(
+                    arrayOf(
+                        Feature.fromJson(
+                            selectedCarmenFeature.toJson()
+                        )
+                    )
+                )
+            )
+            updateCamera(mapboxMap, latitude, longitude)
+
+            if (getUpdateInfo()) {
+                setUpdateInfo(false)
+                updateMutableLiveData.postValue(updateInfo)
+            } else {
+                updateMutableLiveData.postValue(updateInfo)
+            }
+        }
+        else{
+            hasDuplicationLocation.postValue(true)
+        }
+    }
+
+    private fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double) {
         mapboxMap.animateCamera(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder()
@@ -349,8 +438,57 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
-    fun clearAllStops() {
-        locationRepository.clearAllStops()
+    private fun clearInfo()
+    {
+        MapRepository.distances.clear()
+        MapRepository.durations.clear()
+    }
+
+    private fun clearView()
+    {
+        MapRepository.wayPoints.clear()
+        MapRepository.currentRoute.clear()
+    }
+
+    private fun clearDuplication(points: MutableList<Point>)
+    {
+        MapRepository.location.distinct()
+        points.distinct()
+    }
+
+    fun getMapBoxNavigation(): MapboxNavigation
+    {
+        return mapboxNavigation
+    }
+
+    fun destroyMapboxNavigation()
+    {
+        mapboxNavigation.onDestroy()
+    }
+
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyMutableLiveData
+    }
+
+    fun hasCurrentLocation(): MutableLiveData<Boolean>
+    {
+        return hasCurrentLocation
+    }
+
+    fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return hasCurrentJourneyMutableLiveData
+    }
+
+    fun getHasDuplicationLocation(): MutableLiveData<Boolean>
+    {
+        return hasDuplicationLocation
+    }
+
+    fun getUpdateMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return updateMutableLiveData
     }
 
 }
