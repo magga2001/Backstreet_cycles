@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.ui.viewModel
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -33,7 +34,7 @@ open class BaseViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
 ): ViewModel(){
 
-    protected val mApplication = getApplication(applicationContext)
+    protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
     protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
