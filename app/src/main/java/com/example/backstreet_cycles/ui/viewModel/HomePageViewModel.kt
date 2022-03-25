@@ -64,7 +64,6 @@ class HomePageViewModel @Inject constructor(
 
     private val mApplication = getApplication(applicationContext)
     private val mContext = applicationContext
-//    private val homePageRepository: HomePageRepository = HomePageRepository(mApplication)
     private val locationRepository: LocationRepository = LocationRepository(mApplication)
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private val firestore = Firebase.firestore
@@ -93,29 +92,13 @@ class HomePageViewModel @Inject constructor(
         return numUsers
     }
 
+    fun addAllStops(checkpoints: MutableList<Locations>){
+        locationRepository.addAllStops(checkpoints)
+    }
+
     fun getStops(): MutableList<Locations>{
         return locationRepository.getStops()
     }
-
-//    fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent
-//    {
-//        return homePageRepository.initLocationComponent(mapboxMap)
-//    }
-
-//    fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent)
-//    {
-//        homePageRepository.initCurrentLocation(loadedMapStyle, locationComponent)
-//    }
-
-//    fun displayingAttractions(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style, data: List<Locations>)
-//    {
-//        homePageRepository.displayingAttractions(mapView, mapboxMap, loadedMapStyle,data)
-//    }
-
-//    fun getCurrentLocation(locationComponent: LocationComponent): Location?
-//    {
-//        return homePageRepository.getCurrentLocation(locationComponent)
-//    }
 
     fun addStop(stop: Locations){
         locationRepository.addStop(stop)
@@ -136,16 +119,6 @@ class HomePageViewModel @Inject constructor(
     fun getTouristAttractions(): List<Locations> {
         return locationRepository.getTouristLocations()
     }
-
-//    fun initialisePlaceAutoComplete(activity: HomePageActivity): Intent
-//    {
-//        return homePageRepository.initialisePlaceAutoComplete(activity)
-//    }
-
-//    fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double)
-//    {
-//        homePageRepository.updateCamera(mapboxMap, latitude, longitude)
-//    }
 
     fun initialiseMapboxNavigation(): MapboxNavigation
     {
@@ -265,8 +238,6 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
         val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!checkForARunningJourney){
-//            AlertHelper.alertDialog(MapRepository.location,mApplication)
-//            alertDialog(MapRepository.location)
             showAlert.postValue(true)
         } else{
             val locationPoints = PlannerHelper.setPoints(MapRepository.location)
@@ -375,6 +346,10 @@ class HomePageViewModel @Inject constructor(
                     .build()
             ), 4000
         )
+    }
+
+    fun clearAllStops() {
+        locationRepository.clearAllStops()
     }
 
 }
