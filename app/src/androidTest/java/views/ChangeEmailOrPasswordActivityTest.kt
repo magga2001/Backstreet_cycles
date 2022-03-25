@@ -41,6 +41,7 @@ class ChangeEmailOrPasswordActivityTest{
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
+
     @get:Rule
     val fineLocPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(
@@ -62,6 +63,21 @@ class ChangeEmailOrPasswordActivityTest{
     fun test_activity_launched_user_email_displayed() {
         val email = FirebaseAuth.getInstance().currentUser?.email
         onView(withId(R.id.et_email_change_password)).check(matches(ViewMatchers.withText(email)))
+    }
+
+    @Test
+    fun test_current_password_field_is_displayed(){
+        onView(withId(R.id.et_current_password)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_new_password_field_is_displayed(){
+        onView(withId(R.id.et_new_password)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_save_button_is_displayed(){
+        onView(withId(R.id.buttonSave)).check(matches(isDisplayed()))
     }
 
     @Test
