@@ -24,7 +24,7 @@ class ForgotPasswordActivity  : AppCompatActivity() {
     private fun initListener()
     {
         button_send_password_reset.setOnClickListener{
-            val email:String=et_email_forgot_password.text.toString().trim{it<=' ' }
+            val email = et_email_forgot_password.text.toString().trim{it<=' ' }
             if (email.isEmpty()){
                 et_email_forgot_password.error = "Please enter your email"
             }
