@@ -44,6 +44,7 @@ class AboutActivityTest {
             logInRegisterViewModel= LogInRegisterViewModel(Application())
             logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         }
+        Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.nav_view)).perform(click())

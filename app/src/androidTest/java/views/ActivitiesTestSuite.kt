@@ -12,11 +12,11 @@ import org.junit.runners.Suite
     LogInActivityTest::class,
     HomePageActivityTest::class,
     EditUserProfileActivityTest::class,
-    //JourneyActivityTest::class,
+    JourneyActivityTest::class,
     AboutActivityTest::class,
     JourneyHistoryActivityTest::class,
     NavMenuTest::class,
-//    CurrentJourneyTest::class,
+    CurrentJourneyTest::class,
 
 
 )
