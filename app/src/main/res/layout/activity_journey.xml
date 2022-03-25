@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/journeyActivity"
+    >
 
     <com.mapbox.maps.MapView
-        android:id="@+id/mapView"
+        android:id="@+id/journey_mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,13 +17,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/journey_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.views.JourneyActivity"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include
-            android:id="@+id/bottom_sheet_view_journey"
+            android:id="@+id/journey_bottom_sheet_view"
             layout="@layout/bottom_sheet_journey"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

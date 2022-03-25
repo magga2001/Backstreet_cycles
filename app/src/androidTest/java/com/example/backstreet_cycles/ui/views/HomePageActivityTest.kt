@@ -23,14 +23,14 @@ class HomePageActivityTest {
     fun test_map_on_homepage_is_displayed() {
         ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether the map is displayed
-        onView(withId(R.id.mapView)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_mapView)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_bottom_sheet_is_displayed() {
         ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -43,7 +43,7 @@ class HomePageActivityTest {
     fun test_three_buttons_shown() {
         ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Checking whether the three buttons at the top of the bottom sheet are displayed
         onView(withId(R.id.myLocationButton)).check(matches(isDisplayed()))
         onView(withId(R.id.addingBtn)).check(matches(isDisplayed()))
@@ -54,10 +54,10 @@ class HomePageActivityTest {
     fun test_current_location_card_shown() {
         ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         // Checking whether a card is shown in the bottom sheet
-        onView(withId(R.id.cardView)).check(matches(isDisplayed()))
-        onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
+        onView(withId(R.id.locationDataCardView)).check(matches(isDisplayed()))
+        onView(withId(R.id.LocationDataCardName)).check(matches(withText("Current Location")))
     }
 
     @Test

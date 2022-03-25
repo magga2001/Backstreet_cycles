@@ -115,8 +115,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                user_name.text = "Hello: ${firebaseUser.firstName}"
-                tv_email.text = firebaseUser.email
+                user_name.text = "Hello, ${firebaseUser.firstName}"
+                nav_header_textView_email.text = firebaseUser.email
             }
         }
 
@@ -144,6 +144,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
+        homepage_mapView?.onCreate(savedInstanceState)
+        homepage_mapView?.getMapAsync(this)
         homePageViewModel.getHasDuplicationLocation().observe(this){ duplicate ->
             if(duplicate)
             {
@@ -232,7 +234,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        nav_view.setNavigationItemSelectedListener {
+        homepage_nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.changePassword -> {
                     loggedInViewModel.getUserDetails()
@@ -274,7 +276,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
     }
     private fun initBottomSheet() {
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view)
+        sheetBehavior = BottomSheetBehavior.from(homepage_bottom_sheet_view)
         addStopButton = findViewById(R.id.addingBtn)
         myLocationButton = findViewById(R.id.myLocationButton)
         myLocationButton.isEnabled = false
@@ -326,9 +328,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 0.0)
         )
         stopsAdapter = StopsAdapter(homePageViewModel.getStops())
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = stopsAdapter
-    }
+        homepage_recyclerView.layoutManager = LinearLayoutManager(this)
+        homepage_recyclerView.adapter = stopsAdapter    }
 
     private fun itemTouchMethods(){
         val touchScreenCallBack = object : TouchScreenCallBack(){
@@ -336,7 +337,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 if (viewHolder.absoluteAdapterPosition != 0) {
                     val position = viewHolder.absoluteAdapterPosition
                     homePageViewModel.removeStopAt(position)
-                    recyclerView.adapter?.notifyItemRemoved(position)
+                    homepage_recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
                     enableNextPageButton()
                 }
@@ -360,7 +361,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         val itemTouchHelper = ItemTouchHelper(touchScreenCallBack)
 
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(homepage_recyclerView)
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -471,17 +472,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onStop() {
         super.onStop()
-        mapView?.onStop()
+        homepage_mapView?.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView?.onLowMemory()
+        homepage_mapView?.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView?.onDestroy()
+        homepage_mapView?.onDestroy()
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {

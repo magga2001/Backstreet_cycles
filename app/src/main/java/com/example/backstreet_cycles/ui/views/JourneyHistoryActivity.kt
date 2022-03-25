@@ -16,6 +16,7 @@ import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
+import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 
 @AndroidEntryPoint
@@ -78,7 +79,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        journey_mapView?.onStart()
         journeyHistoryViewModel.destroyMapboxNavigation()
         journeyHistoryViewModel.getMapBoxNavigation()
     }

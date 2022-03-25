@@ -334,7 +334,7 @@ class NavigationActivity : AppCompatActivity() {
 //        navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
         PermissionUseCase.checkPermission(context = this, activity = this)
 
-        mapboxMap = mapView.getMapboxMap()
+        mapboxMap = navigation_mapView.getMapboxMap()
 //        mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()
         mapboxNavigation = navigationViewModel.getMapBoxNavigation()
 
@@ -374,12 +374,12 @@ class NavigationActivity : AppCompatActivity() {
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
         navigationCamera = NavigationCamera(
             mapboxMap,
-            mapView.camera,
+            navigation_mapView.camera,
             viewportDataSource
         )
         // set the animations lifecycle listener to ensure the NavigationCamera stops
         // automatically following the user location when the map is interacted with
-        mapView.camera.addCameraAnimationsLifecycleListener(
+        navigation_mapView.camera.addCameraAnimationsLifecycleListener(
             NavigationBasicGesturesHandler(navigationCamera)
         )
         navigationCamera.registerNavigationCameraStateChangeObserver { navigationCameraState ->

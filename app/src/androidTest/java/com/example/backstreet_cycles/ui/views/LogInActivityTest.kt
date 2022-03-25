@@ -35,13 +35,13 @@ class LogInActivityTest{
     @Test
     fun test_buttonLogin_is_visible() {
         val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.log_in_button)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_email_is_visible() {
         val activityScenario=ActivityScenario.launch(LogInActivity::class.java)
-        onView(withId(R.id.et_email)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_email)).check(matches(isDisplayed()))
     }
 
     @Test

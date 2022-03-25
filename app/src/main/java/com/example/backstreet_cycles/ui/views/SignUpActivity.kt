@@ -10,6 +10,7 @@ import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.et_email
 import kotlinx.android.synthetic.main.activity_log_in.et_password
+import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 @AndroidEntryPoint
@@ -30,34 +31,34 @@ class SignUpActivity : AppCompatActivity() {
         {
             buttonSignUp.setOnClickListener {
                 when {
-                    TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
-                        et_firstName.error = getString(R.string.enter_first_name)
+                    TextUtils.isEmpty(sign_up_edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_firstName.error = getString(R.string.enter_first_name)
                     }
-                    TextUtils.isEmpty(et_lastName.text.toString().trim { it <= ' ' }) -> {
-                        et_lastName.error = getString(R.string.enter_last_name)
-                    }
-
-                    TextUtils.isEmpty(et_email.text.toString().trim { it <= ' ' }) -> {
-                        et_email.error = getString(R.string.enter_email)
+                    TextUtils.isEmpty(sign_up_edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_lastName.error = getString(R.string.enter_last_name)
                     }
 
-                    TextUtils.isEmpty(et_password.text.toString().trim { it <= ' ' }) -> {
-                        et_password.error = getString(R.string.enter_password)
+                    TextUtils.isEmpty(sign_up_change_email.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_change_email.error = getString(R.string.enter_email)
                     }
 
-                    TextUtils.isEmpty(et_confirmPassword.text.toString().trim { it <= ' ' }) -> {
-                        et_password.error = getString(R.string.enter_confirmed_password)
+                    TextUtils.isEmpty(sign_up_password.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_password.error = getString(R.string.enter_password)
                     }
 
-                    (et_confirmPassword.text.toString().trim()) != (et_password.text.toString().trim { it <= ' ' }) -> {
-                        et_confirmPassword.error = getString(R.string.password_not_match)
+                    TextUtils.isEmpty(sign_up_confirmPassword.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_confirmPassword.error = getString(R.string.enter_confirmed_password)
+                    }
+
+                    (sign_up_confirmPassword.text.toString().trim()) != (sign_up_password.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_confirmPassword.error = getString(R.string.password_not_match)
                     }
 
                     else -> {
-                        val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
-                        val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
-                        val email: String = et_email.text.toString().trim { it <= ' ' }
-                        val password: String = et_password.text.toString().trim { it <= ' '}
+                        val firstName: String = sign_up_edit_user_details_firstName.text.toString().trim { it <= ' ' }
+                        val lastName: String = sign_up_edit_user_details_lastName.text.toString().trim { it <= ' ' }
+                        val email: String = sign_up_change_email.text.toString().trim { it <= ' ' }
+                        val password: String = sign_up_password.text.toString().trim { it <= ' '}
 
                         signUpViewModel.register(firstName, lastName, email, password)
                         val intent = Intent(this, LogInActivity::class.java)

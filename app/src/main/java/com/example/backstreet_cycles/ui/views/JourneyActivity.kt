@@ -158,11 +158,12 @@ class JourneyActivity : AppCompatActivity() {
         val users = intent.getIntExtra("NUM_USERS",1)
         journeyViewModel.setNumUser(users)
 
-        annotationApi = mapView.annotations
-        mapboxMap = mapView.getMapboxMap()
+        annotationApi = journey_mapView.annotations
+        mapboxMap = journey_mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
 //        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
+
     }
 
     override fun onStart() {
@@ -337,13 +338,13 @@ class JourneyActivity : AppCompatActivity() {
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
         navigationCamera = NavigationCamera(
             mapboxMap,
-            mapView.camera,
+            journey_mapView.camera,
             viewportDataSource
         )
 
         // set the animations lifecycle listener to ensure the NavigationCamera stops
         // automatically following the user location when the map is interacted with
-        mapView.camera.addCameraAnimationsLifecycleListener(
+        journey_mapView.camera.addCameraAnimationsLifecycleListener(
             NavigationBasicGesturesHandler(navigationCamera)
         )
         navigationCamera.registerNavigationCameraStateChangeObserver { navigationCameraState ->
@@ -375,7 +376,7 @@ class JourneyActivity : AppCompatActivity() {
 
     private fun initBottomSheet() {
 
-        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_view_journey)
+        sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
         planJourneyAdapter = PlanJourneyAdapter(this, BackstreetApplication.location, planner = journeyViewModel.getPlannerInterface())
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
@@ -389,10 +390,12 @@ class JourneyActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
         return when (item.itemId) {
-            R.id.reload_button -> {
+            R.id.refresh_button -> {
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
                 journeyViewModel.getDock()

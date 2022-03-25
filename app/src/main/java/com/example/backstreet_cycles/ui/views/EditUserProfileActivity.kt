@@ -24,7 +24,7 @@ class EditUserProfileActivity : AppCompatActivity() {
 
         editUserProfileViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
-                SnackbarHelper.displaySnackbar(editUserProfile,"Profile Updated Successfully")
+                SnackbarHelper.displaySnackbar(editUserProfileActivity,"Profile Updated Successfully")
                 val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -35,8 +35,8 @@ class EditUserProfileActivity : AppCompatActivity() {
         editUserProfileViewModel.getUserDetails()
         editUserProfileViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
             if (details != null) {
-                et_firstName.setText(details.firstName)
-                et_lastName.setText(details.lastName)
+                edit_user_details_firstName.setText(details.firstName)
+                edit_user_details_lastName.setText(details.lastName)
             }
         }
 
@@ -46,17 +46,18 @@ class EditUserProfileActivity : AppCompatActivity() {
     private fun initListener()
     {
         buttonUpdateProfile.setOnClickListener {
+        edit_user_details_SaveButton.setOnClickListener {
             when {
-                TextUtils.isEmpty(et_firstName.text.toString().trim { it <= ' ' }) -> {
-                    et_firstName.error = getString(R.string.enter_first_name)
+                TextUtils.isEmpty(edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
+                    edit_user_details_firstName.error = getString(R.string.enter_first_name)
                 }
-                TextUtils.isEmpty(et_lastName.text.toString().trim { it <= ' ' }) -> {
-                    et_lastName.error = getString(R.string.enter_last_name)
+                TextUtils.isEmpty(edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
+                    edit_user_details_lastName.error = getString(R.string.enter_last_name)
                 }
                 else -> {
-                    val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
-                    val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
-                    editUserProfileViewModel.updateUserDetails(firstName, lastName)
+                    val firstName: String = edit_user_details_firstName.text.toString().trim { it <= ' ' }
+                    val lastName: String = edit_user_details_lastName.text.toString().trim { it <= ' ' }
+                    loggedInViewModel.updateUserDetails(firstName, lastName)
                 }
             }
         }

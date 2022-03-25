@@ -24,7 +24,7 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
         clickListener = listener
     }
     inner class StopViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
-        val name: TextView = itemView.findViewById(R.id.card_name)
+        val name: TextView = itemView.findViewById(R.id.homepage_LocationDataCardName)
 
         init {
             itemView.setOnClickListener {

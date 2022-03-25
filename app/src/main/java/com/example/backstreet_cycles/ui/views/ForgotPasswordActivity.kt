@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_forgot_password.*
 class ForgotPasswordActivity  : AppCompatActivity() {
 
     private val forgotPasswordViewModel: ForgotPasswordViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
@@ -25,8 +25,10 @@ class ForgotPasswordActivity  : AppCompatActivity() {
     {
         button_send_password_reset.setOnClickListener{
             val email = et_email_forgot_password.text.toString().trim{it<=' ' }
+        forgot_password_SendPasswordReset_button.setOnClickListener{
+            val email:String=forgot_password_email.text.toString().trim{it<=' ' }
             if (email.isEmpty()){
-                et_email_forgot_password.error = "Please enter your email"
+                forgot_password_email.error = "Please enter your email"
             }
             else{
                 forgotPasswordViewModel.resetPassword(email)
