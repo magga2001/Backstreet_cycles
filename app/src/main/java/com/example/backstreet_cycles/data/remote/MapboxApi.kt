@@ -1,16 +1,11 @@
 package com.example.backstreet_cycles.data.remote
 
-import android.content.Context
 import android.util.Log
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.CallbackResource
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
-import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
-import com.mapbox.geojson.Point
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.route.RouterCallback
 import com.mapbox.navigation.base.route.RouterFailure
 import com.mapbox.navigation.base.route.RouterOrigin
@@ -47,7 +42,7 @@ object MapboxApi {
                     }
                     else
                     {
-                        MapRepository.currentRoute.add(fastestRoute)
+                        BackstreetApplication.currentRoute.add(fastestRoute)
                     }
 
                     listener.getResult(fastestRoute)

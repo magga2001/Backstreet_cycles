@@ -8,15 +8,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.CallbackResource
-import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
-import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
@@ -28,7 +25,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private val journeyHistoryViewModel: JourneyHistoryViewModel by viewModels()
 
     private lateinit var nAdapter: JourneyHistoryAdapter
-    private lateinit var mapboxNavigation: MapboxNavigation
     private var journeys: MutableList<List<Locations>> = emptyList<List<Locations>>().toMutableList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +44,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         journeyHistoryViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(MapRepository.location)
+                alertDialog(BackstreetApplication.location)
             }
         }
 
@@ -62,7 +58,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
         }
     }
 
-    fun init() {
+    private fun init() {
         initCardView()
     }
 
@@ -71,16 +67,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
         nAdapter = JourneyHistoryAdapter(journeys)
         nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                    TflHelper.getDock(context = applicationContext,
-                        object : CallbackResource<MutableList<Dock>> {
-                            override fun getResult(objects: MutableList<Dock>) {
-                                journeyHistoryViewModel.clearAllStops()
-                                journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
-                                journeyHistoryViewModel.getRoute()
-                            }
-                        })
-
-
+                journeyHistoryViewModel.clearAllStops()
+                journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
+                journeyHistoryViewModel.getDock()
             }
         })
         journey_history_recycler_view.layoutManager = LinearLayoutManager(this)
@@ -90,7 +79,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
-        mapboxNavigation = journeyHistoryViewModel.initialiseMapboxNavigation()
+        journeyHistoryViewModel.destroyMapboxNavigation()
+        journeyHistoryViewModel.getMapBoxNavigation()
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {

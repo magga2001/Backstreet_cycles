@@ -9,14 +9,11 @@ import android.graphics.Color
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
@@ -25,8 +22,6 @@ import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
@@ -48,12 +43,9 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
@@ -89,6 +81,28 @@ class HomePageViewModel @Inject constructor(
     private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
+    fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent
+    {
+        return mapboxMap.locationComponent
+    }
+
+    @SuppressLint("MissingPermission")
+    fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
+        val customLocationComponentOptions = LocationComponentOptions.builder(mApplication)
+            .pulseEnabled(true)
+            .build()
+
+        locationComponent.activateLocationComponent(
+            LocationComponentActivationOptions.builder(mApplication, loadedMapStyle)
+                .locationComponentOptions(customLocationComponentOptions)
+                .build()
+        )
+
+        locationComponent.isLocationComponentEnabled = true
+        locationComponent.cameraMode = CameraMode.TRACKING
+        locationComponent.renderMode = RenderMode.COMPASS
+    }
 
     fun setShowAlert(bool: Boolean){
         showAlert.postValue(bool)
@@ -148,25 +162,21 @@ class HomePageViewModel @Inject constructor(
         return updateInfo
     }
 
-    //New code
-
-    fun getDock()
+    override fun getRoute()
     {
-        getDockUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    Log.i("New dock", result.data?.size.toString())
-                    getRoute()
-                }
+        super.getRoute()
+        BackstreetApplication.location.addAll(stops)
+        checkCurrentJourney()
+    }
 
-                is Resource.Error -> {
-                    Log.i("New dock", "Error")
+    private fun getMapBox(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, info :Boolean)
+    {
+        getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
 
-                }
-                is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
-                }
-            }
+            Log.i("current Route succeed:", it.toString())
+
+            isReadyMutableLiveData.postValue(true)
+
         }.launchIn(viewModelScope)
     }
 
@@ -183,42 +193,24 @@ class HomePageViewModel @Inject constructor(
         if(!info)
         {
             clearInfo()
-            MapRepository.wayPoints.addAll(points)
+            BackstreetApplication.wayPoints.addAll(points)
 
             routeOptions = when(profile)
             {
-                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+                MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
                 else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
             }
 
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+            getMapBox(mapboxNavigation, routeOptions, info)
 
-                Log.i("current Route succeed:", it.toString())
-
-                isReadyMutableLiveData.postValue(true)
-
-            }.launchIn(viewModelScope)
 
         }else
         {
             routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
 
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+            getMapBox(mapboxNavigation, routeOptions, info)
 
-                Log.i("current Route succeed:", it.toString())
-
-                isReadyMutableLiveData.postValue(true)
-
-            }.launchIn(viewModelScope)
         }
-    }
-
-    fun getRoute()
-    {
-        clearView()
-        MapRepository.location.addAll(stops)
-        checkCurrentJourney()
-
     }
 
     fun getCurrentJourney()
@@ -226,7 +218,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            MapRepository.location = listOfLocations
+            BackstreetApplication.location = listOfLocations
             val listPoints = PlannerHelper.setPoints(listOfLocations)
             fetchRoute(mContext, listPoints ,MapboxConstants.CYCLING, false)
         }else
@@ -242,7 +234,7 @@ class HomePageViewModel @Inject constructor(
         if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
-            val locationPoints = PlannerHelper.setPoints(MapRepository.location)
+            val locationPoints = PlannerHelper.setPoints(BackstreetApplication.location)
             fetchRoute(mContext, locationPoints, MapboxConstants.CYCLING, false)
         }
     }
@@ -251,17 +243,13 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
         SharedPrefHelper.overrideSharedPref(mutableListOf(getNumUsers().toString()),String::class.java)
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(MapRepository.location,Locations::class.java)
-    }
-
-    fun cancelWork() {
-        WorkHelper.cancelWork(mContext)
+        SharedPrefHelper.overrideSharedPref(BackstreetApplication.location,Locations::class.java)
     }
 
     fun continueWithCurrentJourney(){
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        MapRepository.location = listOfLocations
+        BackstreetApplication.location = listOfLocations
         val listPoints = PlannerHelper.setPoints(listOfLocations)
         fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
     }
@@ -271,28 +259,6 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
         fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
-    }
-
-    fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent
-    {
-        return mapboxMap.locationComponent
-    }
-
-    @SuppressLint("MissingPermission")
-    fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
-        val customLocationComponentOptions = LocationComponentOptions.builder(mApplication)
-            .pulseEnabled(true)
-            .build()
-
-        locationComponent.activateLocationComponent(
-            LocationComponentActivationOptions.builder(mApplication, loadedMapStyle)
-                .locationComponentOptions(customLocationComponentOptions)
-                .build()
-        )
-
-        locationComponent.isLocationComponentEnabled = true
-        locationComponent.cameraMode = CameraMode.TRACKING
-        locationComponent.renderMode = RenderMode.COMPASS
     }
 
     fun displayingAttractions(symbolManager: SymbolManager, loadedMapStyle: Style, data: List<Locations>) {
@@ -397,6 +363,10 @@ class HomePageViewModel @Inject constructor(
                     .build()
             ), 4000
         )
+    }
+
+    fun cancelWork() {
+        WorkHelper.cancelWork(mContext)
     }
 
     fun getMapBoxNavigation(): MapboxNavigation

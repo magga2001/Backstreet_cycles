@@ -17,16 +17,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.CallbackResource
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.data.remote.TflHelper
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -36,9 +31,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapView
@@ -51,11 +43,8 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
-import kotlinx.android.synthetic.main.activity_homepage.mapView
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
@@ -63,7 +52,6 @@ import java.util.*
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
-    private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
@@ -111,7 +99,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         homePageViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(MapRepository.location)
+                alertDialog(BackstreetApplication.location)
             }
         }
 
@@ -316,7 +304,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         myLocationButton.setOnClickListener {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-            addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
+            addInfo(getString(R.string.current_location), currentLocation!!.latitude, currentLocation.longitude )
         }
 
         nextPageButton.setOnClickListener{
@@ -333,7 +321,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun createListOfItems(){
         homePageViewModel.addStop(
-            Locations("Current Location",
+            Locations(getString(R.string.current_location),
                 0.0,
                 0.0)
         )
@@ -478,7 +466,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onStart()
         mapView?.onStart()
         homePageViewModel.destroyMapboxNavigation()
-        mapboxNavigation = homePageViewModel.getMapBoxNavigation()
+        homePageViewModel.getMapBoxNavigation()
     }
 
     override fun onStop() {

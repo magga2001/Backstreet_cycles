@@ -1,16 +1,14 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
@@ -20,7 +18,6 @@ import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -28,8 +25,6 @@ import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
@@ -76,14 +71,14 @@ class JourneyViewModel @Inject constructor(
     private val fireStore = Firebase.firestore
     private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
-    fun getDock()
+    override fun getDock()
     {
         getDockUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
 
-                    val points = PlannerHelper.setPoints(MapRepository.location)
+                    val points = PlannerHelper.setPoints(BackstreetApplication.location)
 
                     status = "REFRESH"
                     fetchRoute(context = mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
@@ -102,7 +97,7 @@ class JourneyViewModel @Inject constructor(
 
     fun clearCurrentSession()
     {
-        MapRepository.location.clear()
+        BackstreetApplication.location.clear()
     }
 
     fun registerObservers(
@@ -130,7 +125,7 @@ class JourneyViewModel @Inject constructor(
 
     fun getJourneyOverview()
     {
-        val points = PlannerHelper.setPoints(MapRepository.location)
+        val points = PlannerHelper.setPoints(BackstreetApplication.location)
         getRoute(mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
     }
 
@@ -157,17 +152,17 @@ class JourneyViewModel @Inject constructor(
                    info: Boolean)
     {
 
-        MapRepository.location.distinct()
+        BackstreetApplication.location.distinct()
         points.distinct()
 
         val routeOptions: RouteOptions
 
         if(!info) {
             clearInfo()
-            MapRepository.wayPoints.addAll(points)
+            BackstreetApplication.wayPoints.addAll(points)
 
             routeOptions = when(profile) {
-                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+                MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
                 else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
             }
 
@@ -185,8 +180,8 @@ class JourneyViewModel @Inject constructor(
 
                 isReadyMutableLiveData.postValue(status)
 
-                distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
-                durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
+                distanceMutableLiveData.postValue((BackstreetApplication.distances.sum()/1000).roundToInt().toString())
+                durationMutableLiveData.postValue((BackstreetApplication.durations.sum()/60).roundToInt().toString())
 
                 displayPrice()
 
@@ -214,7 +209,7 @@ class JourneyViewModel @Inject constructor(
 
     fun setRoute()
     {
-        mapboxNavigation.setRoutes(MapRepository.currentRoute)
+        mapboxNavigation.setRoutes(BackstreetApplication.currentRoute)
     }
 
     fun clearRoute()

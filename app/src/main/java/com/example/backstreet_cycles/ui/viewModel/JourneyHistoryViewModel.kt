@@ -5,28 +5,20 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.data.repository.JourneyRepository
-import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.google.common.reflect.TypeToken
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
-import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
@@ -34,7 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,8 +35,6 @@ class JourneyHistoryViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext)  {
 
-    private val fireStore = Firebase.firestore
-    private val mapRepository: JourneyRepository = JourneyRepository(mApplication,fireStore)
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
@@ -63,49 +52,22 @@ class JourneyHistoryViewModel @Inject constructor(
         }
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    override fun getRoute()
     {
-        return isReadyMutableLiveData
+        super.getRoute()
+        BackstreetApplication.location.addAll(stops)
+        checkCurrentJourney()
     }
 
-    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
-        return showAlert
-    }
-
-    fun setShowAlert(bool: Boolean){
-        showAlert.postValue(bool)
-    }
-
-    fun continueWithCurrentJourney(){
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        MapRepository.location = listOfLocations
-        val listPoints = PlannerHelper.setPoints(listOfLocations)
-        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
-    }
-
-    fun continueWithNewJourney(newStops: MutableList<Locations>){
-        val listPoints = PlannerHelper.setPoints(newStops)
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
-        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
-    }
-
-    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
-        return userDetailsMutableLiveData
-    }
-
-    fun initialiseMapboxNavigation(): MapboxNavigation
+    private fun getMapBox(mapboxNavigation: MapboxNavigation,routeOptions: RouteOptions,info :Boolean)
     {
-        return mapRepository.initialiseMapboxNavigation()
-    }
+        getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
 
-    fun clearAllStops() {
-        stops.clear()
-    }
+            Log.i("current Route succeed:", it.toString())
 
-    fun addAllStops(checkpoints: MutableList<Locations>){
-        stops.addAll(checkpoints)
+            isReadyMutableLiveData.postValue(true)
+
+        }.launchIn(viewModelScope)
     }
 
     private fun fetchRoute(context: Context,
@@ -121,33 +83,22 @@ class JourneyHistoryViewModel @Inject constructor(
         if(!info)
         {
             clearInfo()
-            MapRepository.wayPoints.addAll(points)
+            BackstreetApplication.wayPoints.addAll(points)
 
             routeOptions = when(profile)
             {
-                "walking" -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+                MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
                 else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
             }
 
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
-
-                Log.i("current Route succeed:", it.toString())
-
-                isReadyMutableLiveData.postValue(true)
-
-            }.launchIn(viewModelScope)
+            getMapBox(mapboxNavigation, routeOptions, info)
 
         }else
         {
             routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
 
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+            getMapBox(mapboxNavigation, routeOptions, info)
 
-                Log.i("current Route succeed:", it.toString())
-
-                isReadyMutableLiveData.postValue(true)
-
-            }.launchIn(viewModelScope)
         }
     }
 
@@ -158,31 +109,68 @@ class JourneyHistoryViewModel @Inject constructor(
         if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
-            val locationPoints = PlannerHelper.setPoints(MapRepository.location)
+            val locationPoints = PlannerHelper.setPoints(BackstreetApplication.location)
             fetchRoute(mContext, locationPoints, MapboxConstants.CYCLING, false)
         }
     }
 
-    fun getRoute()
-    {
-        clearView()
-        MapRepository.location.addAll(stops)
-        checkCurrentJourney()
+    fun continueWithCurrentJourney(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+        BackstreetApplication.location = listOfLocations
+        val listPoints = PlannerHelper.setPoints(listOfLocations)
+        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
+    }
 
+    fun continueWithNewJourney(newStops: MutableList<Locations>){
+        val listPoints = PlannerHelper.setPoints(newStops)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
     }
 
     fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
         val listLocations = emptyList<List<Locations>>().toMutableList()
         for (journey in userDetails.journeyHistory){
             val serializedObject: String = journey
-            listLocations.add(convertJSON(serializedObject))
+            listLocations.add(JsonHelper.convertJSON(serializedObject))
         }
         return listLocations
     }
 
-    private fun convertJSON(serializedObject: String): List<Locations> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.type
-        return gson.fromJson(serializedObject, type)
+    fun addAllStops(checkpoints: MutableList<Locations>){
+        stops.addAll(checkpoints)
     }
+
+    fun clearAllStops() {
+        stops.clear()
+    }
+
+    fun getMapBoxNavigation(): MapboxNavigation
+    {
+        return mapboxNavigation
+    }
+
+    fun destroyMapboxNavigation()
+    {
+        MapboxNavigationProvider.destroy()
+    }
+
+    fun setShowAlert(bool: Boolean){
+        showAlert.postValue(bool)
+    }
+
+    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
+        return showAlert
+    }
+
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
+        return userDetailsMutableLiveData
+    }
+
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
+    {
+        return isReadyMutableLiveData
+    }
+
 }

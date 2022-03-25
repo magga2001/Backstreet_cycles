@@ -9,9 +9,12 @@ import androidx.work.Configuration
 //import androidx.hilt.work.HiltWorkerFactory
 //import androidx.work.Configuration
 import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.FirebaseAuth
+import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.geojson.Point
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -21,6 +24,11 @@ class BackstreetApplication : Application(), Configuration.Provider {
     companion object
     {
         var docks = mutableListOf<Dock>()
+        var currentRoute = mutableListOf<DirectionsRoute>()
+        val distances = mutableListOf<Double>()
+        val durations = mutableListOf<Double>()
+        val wayPoints = mutableListOf<Point>()
+        var location = mutableListOf<Locations>()
     }
 
     @Inject
@@ -35,7 +43,6 @@ class BackstreetApplication : Application(), Configuration.Provider {
             if(FirebaseAuth.getInstance().currentUser != null)
             {
                 //Move this to appropriate place
-                Log.i("Running BACK", "Success")
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)
 
             }else

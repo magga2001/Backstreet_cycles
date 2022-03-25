@@ -1,8 +1,7 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
@@ -18,9 +17,6 @@ import com.mapbox.navigation.core.replay.route.ReplayRouteMapper
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import com.mapbox.navigation.core.trip.session.VoiceInstructionsObserver
-import com.mapbox.navigation.ui.maps.camera.NavigationCamera
-import dagger.hilt.android.internal.Contexts
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -63,7 +59,7 @@ class NavigationViewModel @Inject constructor(
 
     fun setRouteAndStartNavigation() {
 
-        val routes = MapRepository.currentRoute
+        val routes = BackstreetApplication.currentRoute
 
         // set routes, where the first route in the list is the primary route that
         // will be used for active guidance

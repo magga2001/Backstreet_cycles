@@ -2,8 +2,8 @@ package com.example.backstreet_cycles.domain.useCase
 
 import android.app.Application
 import android.util.Log
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Planner
@@ -13,9 +13,9 @@ object PlannerUseCase {
 
     fun calcBicycleRental(application: Application, numUser: Int, plannerInterface: Planner)
     {
-        val locations = MapRepository.location
+        val locations = BackstreetApplication.location
 
-        Log.i("location", MapRepository.location.toString())
+        Log.i("location", BackstreetApplication.location.toString())
         val points = mutableListOf<Point>()
 
         for(i in 1 until locations.size)

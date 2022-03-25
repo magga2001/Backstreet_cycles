@@ -1,8 +1,11 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.backstreet_cycles.data.repository.MapRepository
+import androidx.lifecycle.viewModelScope
+import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
@@ -18,6 +21,8 @@ import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,19 +48,19 @@ open class BaseViewModel @Inject constructor(
 
     open fun clearView()
     {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
+        BackstreetApplication.wayPoints.clear()
+        BackstreetApplication.currentRoute.clear()
     }
 
     open fun clearInfo()
     {
-        MapRepository.distances.clear()
-        MapRepository.durations.clear()
+        BackstreetApplication.distances.clear()
+        BackstreetApplication.durations.clear()
     }
 
     open fun clearDuplication(points: MutableList<Point>)
     {
-        MapRepository.location.distinct()
+        BackstreetApplication.location.distinct()
         points.distinct()
     }
 
@@ -74,4 +79,28 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
+    open fun getRoute()
+    {
+        clearView()
+    }
+
+    open fun getDock(){
+
+        getDockUseCase().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    Log.i("New dock", result.data?.size.toString())
+                    getRoute()
+                }
+
+                is Resource.Error -> {
+                    Log.i("New dock", "Error")
+
+                }
+                is Resource.Loading -> {
+                    Log.i("New dock", "Loading...")
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
 }
