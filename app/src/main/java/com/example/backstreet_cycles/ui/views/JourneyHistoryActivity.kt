@@ -82,17 +82,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
                                 homePageViewModel.clearAllStops()
                                 homePageViewModel.addAllStops(journeys[position].toMutableList())
                                 homePageViewModel.fetchPoints()
-//                                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-//                                if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
-//                                    stops.addAll(journeys[position])
-//                                    homePageViewModel.fetchPoints()
-////                                    alertDialog(stops)
-//                                } else{
-//                                    journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java), userCredentials)
-//                                    stops.addAll(journeys[position])
-//                                    homePageViewModel.fetchPoints()
-//                                }
-
                             }
                         })
 

@@ -7,18 +7,16 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_email_or_password.*
 
 
 @AndroidEntryPoint
-class ChangeEmailOrPasswordActivity : AppCompatActivity() {
+class ChangePasswordActivity : AppCompatActivity() {
 
-    private val loggedInViewModel: LoggedInViewModel by viewModels()
+    private val changePasswordViewModel: ChangePasswordViewModel by viewModels()
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +25,7 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
+        changePasswordViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 et_email.text = firebaseUser.email
             }
@@ -42,15 +40,15 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
                 else -> {
                     val currentPassword = et_current_password.text.toString().trim { it <= ' ' }
                     val newPassword = et_new_password.text.toString()
-                    loggedInViewModel.getUserDetails()
-                    loggedInViewModel.updateEmailAndPassword(currentPassword,newPassword)
+                    changePasswordViewModel.getUserDetails()
+                    changePasswordViewModel.updatePassword(currentPassword,newPassword)
                 }
             }
         }
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this@ChangeEmailOrPasswordActivity, HomePageActivity::class.java)
+        val intent = Intent(this@ChangePasswordActivity, HomePageActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

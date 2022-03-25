@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.backstreet_cycles.data.repository.UserRepository
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.internal.Contexts
@@ -20,9 +19,7 @@ class LoggedInViewModel @Inject constructor(
 ): ViewModel() {
 
     private val mApplication = Contexts.getApplication(applicationContext)
-    private val mContext = applicationContext
     private val userRepository: UserRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
-    private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = userRepository.getLoggedOutMutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
     private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
@@ -35,16 +32,8 @@ class LoggedInViewModel @Inject constructor(
         userRepository.updateUserDetails(firstName, lastName)
     }
 
-    fun updateEmailAndPassword(password: String, newPassword: String) {
-        userRepository.updatePassword(password, newPassword)
-    }
-
     fun getUserDetails() {
         return userRepository.getUserDetails()
-    }
-
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
     }
 
     fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
