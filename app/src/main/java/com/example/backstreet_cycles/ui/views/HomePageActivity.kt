@@ -312,7 +312,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
 
-            for(location in stops){
+            for(location in homePageViewModel.getStops()){
                 if(location.name == "Current Location"){
 
                     longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
@@ -345,7 +345,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 0.0)
         )
         stopsAdapter = StopsAdapter(homePageViewModel.getStops())
-        stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
     }
