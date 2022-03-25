@@ -3,7 +3,9 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -25,9 +27,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    private val getDockUseCase: GetDockUseCase,
+    getDockUseCase: GetDockUseCase,
+    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-): ViewModel(){
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext){
 
     private val mapboxNavigation: MapboxNavigation by lazy{
         if (MapboxNavigationProvider.isCreated()) {
@@ -57,8 +60,6 @@ class NavigationViewModel @Inject constructor(
      * Debug observer that makes sure the replayer has always an up-to-date information to generate mock updates.
      */
     private val replayProgressObserver = ReplayProgressObserver(mapboxReplayer)
-
-    private val mApplication = getApplication(applicationContext)
 
     fun setRouteAndStartNavigation() {
 

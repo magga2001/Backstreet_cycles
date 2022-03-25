@@ -11,6 +11,7 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,13 +22,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
-    private val getDockUseCase: GetDockUseCase,
-    private val locationRepository: LocationRepository,
+    getDockUseCase: GetDockUseCase,
+    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-): ViewModel(){
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext){
 
     private val isReadyMutableLiveData = MutableLiveData<Boolean>()
-    private val mApplication = getApplication(applicationContext)
 
     fun loadData()
     {

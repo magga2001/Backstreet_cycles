@@ -5,24 +5,23 @@ import android.content.ContentValues.TAG
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
-class
-UserRepository(private val application: Application,
-                     fireStore: FirebaseFirestore,
-                     fireBaseAuth: FirebaseAuth) {
+class UserRepositoryImpl(private val application: Application,
+                   fireStore: FirebaseFirestore,
+                   fireBaseAuth: FirebaseAuth) : UserRepository
+
+{
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -38,7 +37,7 @@ UserRepository(private val application: Application,
         }
     }
 
-    fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
+    override fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -85,7 +84,7 @@ UserRepository(private val application: Application,
             }
     }
 
-    fun updateUserDetails(firstName: String, lastName: String) =
+    override fun updateUserDetails(firstName: String, lastName: String): Job =
         CoroutineScope(Dispatchers.IO).launch {
 
             val user =  dataBase
@@ -116,7 +115,7 @@ UserRepository(private val application: Application,
             }
         }
 
-    fun updatePassword(password: String, newPassword: String) {
+    override fun updatePassword(password: String, newPassword: String) {
 
         val credential =
             EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
@@ -142,7 +141,7 @@ UserRepository(private val application: Application,
         }
     }
 
-    fun getUserDetails() {
+    override fun getUserDetails() {
         dataBase
             .collection("users")
             .whereEqualTo("email", firebaseAuth.currentUser!!.email)
@@ -158,7 +157,7 @@ UserRepository(private val application: Application,
             }
     }
 
-    fun login(email: String, password: String) : FirebaseUser? {
+    override fun login(email: String, password: String) : FirebaseUser? {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -178,7 +177,7 @@ UserRepository(private val application: Application,
         return firebaseAuth.currentUser
     }
 
-    fun resetPassword(email: String) {
+    override fun resetPassword(email: String) {
             FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
                     task -> if (task.isSuccessful){
                 ToastMessageHelper.createToastMessage(application,"Email reset email sent")
@@ -189,7 +188,7 @@ UserRepository(private val application: Application,
         }
     }
 
-    fun logout() {
+    override fun logout() {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
     }

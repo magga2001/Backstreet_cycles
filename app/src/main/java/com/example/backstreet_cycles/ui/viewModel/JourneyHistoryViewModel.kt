@@ -3,16 +3,17 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.JourneyRepository
 import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.repository.UserRepository
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -29,7 +30,6 @@ import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
-import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
@@ -39,15 +39,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
-    private val getMapboxUseCase: GetMapboxUseCase,
+    getDockUseCase: GetDockUseCase,
+    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-): ViewModel()  {
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext)  {
 
     private val fireStore = Firebase.firestore
-    private val mApplication = Contexts.getApplication(applicationContext)
-    private val mContext = applicationContext
     private val mapRepository: JourneyRepository = JourneyRepository(mApplication,fireStore)
-    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
+    private val userRepository = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()

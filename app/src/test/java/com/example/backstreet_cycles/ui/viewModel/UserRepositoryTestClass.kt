@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.data.repository.UserRepository
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -27,7 +27,7 @@ class UserRepositoryTestClass {
     @Mock
     lateinit var mutableFirebaseUser: MutableLiveData<FirebaseAuth>
 
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: UserRepositoryImpl
     @Mock
     lateinit var mockFirestore: FirebaseFirestore
     @Mock
@@ -58,7 +58,7 @@ class UserRepositoryTestClass {
 //        mockApplication = mock(Application::class.java)
 //        mockFirestore = mock(FirebaseFirestore::class.java)
 //        mockFirebaseAuth = mock(FirebaseAuth::class.java)
-        userRepository = UserRepository(mockApplication,mockFirestore,mockFirebaseAuth)
+        userRepository = UserRepositoryImpl(mockApplication,mockFirestore,mockFirebaseAuth)
         println(mockFirestore)
 
         taskAuth = object : Task<AuthResult>() {

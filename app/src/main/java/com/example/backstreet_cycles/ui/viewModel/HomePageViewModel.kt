@@ -62,11 +62,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
-    private val getDockUseCase: GetDockUseCase,
-    private val getMapboxUseCase: GetMapboxUseCase,
-    private val locationRepository: LocationRepository,
+    getDockUseCase: GetDockUseCase,
+    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-): ViewModel() {
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
 
     private val mapboxNavigation by lazy {
 
@@ -80,9 +79,6 @@ class HomePageViewModel @Inject constructor(
             )
         }
     }
-
-    private val mApplication = getApplication(applicationContext)
-    private val mContext = applicationContext
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private val fireStore = Firebase.firestore
     private var numUsers = 1
