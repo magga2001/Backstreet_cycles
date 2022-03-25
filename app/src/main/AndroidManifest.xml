@@ -47,7 +47,7 @@
         <activity android:name="com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity android:name="com.example.backstreet_cycles.ui.views.LogInActivity" />
         <activity
-            android:name="com.example.backstreet_cycles.ui.views.ChangeEmailOrPasswordActivity"
+            android:name="com.example.backstreet_cycles.ui.views.ChangePasswordActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.EditUserProfileActivity"

@@ -5,17 +5,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import com.example.backstreet_cycles.ui.viewModel.EditUserProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 
 @AndroidEntryPoint
 class EditUserProfileActivity : AppCompatActivity() {
 
-    private val loggedInViewModel: LoggedInViewModel by viewModels()
+    private val editUserProfileViewModel: EditUserProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +22,7 @@ class EditUserProfileActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        loggedInViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
+        editUserProfileViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
                 SnackbarHelper.displaySnackbar(editUserProfile,"Profile Updated Successfully")
                 val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
@@ -33,8 +32,8 @@ class EditUserProfileActivity : AppCompatActivity() {
             }
         }
 
-        loggedInViewModel.getUserDetails()
-        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
+        editUserProfileViewModel.getUserDetails()
+        editUserProfileViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
             if (details != null) {
                 et_firstName.setText(details.firstName)
                 et_lastName.setText(details.lastName)
@@ -57,7 +56,7 @@ class EditUserProfileActivity : AppCompatActivity() {
                 else -> {
                     val firstName: String = et_firstName.text.toString().trim { it <= ' ' }
                     val lastName: String = et_lastName.text.toString().trim { it <= ' ' }
-                    loggedInViewModel.updateUserDetails(firstName, lastName)
+                    editUserProfileViewModel.updateUserDetails(firstName, lastName)
                 }
             }
         }
