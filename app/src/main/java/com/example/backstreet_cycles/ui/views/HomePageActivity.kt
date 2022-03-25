@@ -99,7 +99,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         init()
     }
 
-
     private fun init(){
         initIncrementAndDecrementUsersFunc()
         initObservers()
@@ -204,8 +203,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
               }
           }
         myLocationButton.isEnabled = isEnabled
-
-
     }
 
     private fun enableNextPageButton(){
@@ -265,8 +262,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     homePageViewModel.cancelWork()
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
-
-
             }
             true
         }
@@ -281,8 +276,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         createListOfItems()
         itemTouchMethods()
-
-
     }
 
     private fun bottomSheetFunctionality(){
@@ -372,14 +365,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
                 return true
             }
-
         }
 
         val itemTouchHelper = ItemTouchHelper(touchScreenCallBack)
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
-
 
     override fun onMapReady(mapboxMap: MapboxMap) {
 
