@@ -9,23 +9,40 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+//import androidx.hilt.work.HiltWorker
+import androidx.lifecycle.viewModelScope
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.TflHelper
+import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.internal.Contexts.getApplication
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlin.coroutines.coroutineContext
 
-class WorkerService(context: Context, userParameters: WorkerParameters) :
-    Worker(context, userParameters) {
+//@HiltWorker
+class WorkerService constructor(
+    context: Context,
+    userParameters: WorkerParameters,
+    private val getDockUseCase: GetDockUseCase,
+) : Worker(context, userParameters) {
 
     override fun doWork(): Result {
 
@@ -39,34 +56,59 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         Log.i("Starting attempt", "Success")
 
-        TflHelper.getDock(context = applicationContext,
+        kotlin.run {
 
-            object : CallbackResource<MutableList<Dock>> {
-                override fun getResult(objects: MutableList<Dock>) {
-
-                    //Do whatever with shared preference...
-
-                    Log.i("Docks", objects.size.toString())
-
-                    if(checkUpdate(objects))
-                    {
-                        createNotificationChannel(context = applicationContext)
-                        notificationTapAction(context = applicationContext)
+            getDockUseCase().onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        Log.i("Notification dock", result.data?.size.toString())
+                        if(checkUpdate(result.data))
+                        {
+                            createNotificationChannel(context = applicationContext)
+                            notificationTapAction(context = applicationContext)
+                        }
                     }
 
+                    is Resource.Error -> {
+                        Log.i("New dock", "Error")
+
+                    }
+                    is Resource.Loading -> {
+                        Log.i("New dock", "Loading...")
+                    }
                 }
             }
-        )
+
+        }
+
+//        TflHelper.getDock(context = applicationContext,
+//
+//            object : CallbackResource<MutableList<Dock>> {
+//                override fun getResult(objects: MutableList<Dock>) {
+//
+//                    //Do whatever with shared preference...
+//
+//                    Log.i("Docks", objects.size.toString())
+//
+////                    if(checkUpdate(objects))
+////                    {
+////                        createNotificationChannel(context = applicationContext)
+////                        notificationTapAction(context = applicationContext)
+////                    }
+//
+//                }
+//            }
+//        )
     }
 
-    private fun checkUpdate(docks: MutableList<Dock>): Boolean
+    private fun checkUpdate(docks: MutableList<Dock>?): Boolean
     {
-        Log.i("Dock Application", docks.size.toString())
+        Log.i("Dock Application", docks!!.size.toString())
 
         SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
         SharedPrefHelper.changeSharedPref(Constants.NUM_USERS)
-        var numUser = SharedPrefHelper.getSharedPref(String::class.java)
+        val numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
 
 //        Log.i("currentDocks", currentDocks?.size.toString())
@@ -79,7 +121,7 @@ class WorkerService(context: Context, userParameters: WorkerParameters) :
 
         val currentPoint = mutableListOf<Point>()
 
-        for(point in currentDocks!!)
+        for(point in currentDocks)
         {
             val lon = point.longitude()
             val lat = point.latitude()

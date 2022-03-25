@@ -1,9 +1,11 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
@@ -14,25 +16,8 @@ class LocationRepositoryImpl @Inject constructor(
         touristAttractionFile.loadLocations(application)
     }
 
-    override fun addStop(stop: Locations) {
-        touristAttractionFile.addStop(stop)
-    }
-
-    override fun addStop(index: Int, stop: Locations) {
-        touristAttractionFile.addStop(index, stop)
-    }
-
-    override fun removeStop(stop: Locations) {
-        touristAttractionFile.removeStop(stop)
-    }
-
-    override fun removeStopAt(index: Int) {
-        touristAttractionFile.removeStopAt(index)
-    }
-
     override fun getTouristLocations(): MutableList<Locations> {
         return touristAttractionFile.getTouristLocations()
     }
-
 
 }

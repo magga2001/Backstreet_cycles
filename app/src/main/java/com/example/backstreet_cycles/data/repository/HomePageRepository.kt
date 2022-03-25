@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.LocationUpdate
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
@@ -46,6 +47,7 @@ class HomePageRepository(private val application: Application) {
         )
 
         locationComponent.isLocationComponentEnabled = true
+        locationComponent.forceLocationUpdate(getCurrentLocation(locationComponent))
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
     }

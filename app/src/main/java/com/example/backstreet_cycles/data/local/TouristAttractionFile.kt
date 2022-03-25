@@ -1,8 +1,11 @@
 package com.example.backstreet_cycles.data.local
 
 import android.app.Application
+import android.util.Log
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -12,13 +15,12 @@ import timber.log.Timber
 object TouristAttractionFile {
 
     private val locationType = Types.newParameterizedType(List::class.java, Locations::class.java)
-    private lateinit var stops: MutableList<Locations>
     private val touristAttractions = mutableListOf<Locations>()
 
     fun loadLocations(application: Application)
     {
+        Log.i("Loading Tourist...", "success")
         val touristAttractionText = getTextFromResources(application, R.raw.touristattraction)
-        stops = mutableListOf()
         addTouristLocations(touristAttractionText)
     }
 
@@ -48,25 +50,5 @@ object TouristAttractionFile {
 
     fun getTouristLocations(): MutableList<Locations> {
         return touristAttractions
-    }
-
-    fun addStop(stop: Locations){
-        stops.add(stop)
-    }
-
-    fun addStop(index: Int, stop: Locations){
-        stops.add(index, stop)
-    }
-
-    fun removeStop(stop: Locations){
-        stops.remove(stop)
-    }
-
-    fun removeStopAt(index: Int){
-        stops.removeAt(index)
-    }
-
-    fun getStops(): MutableList<Locations> {
-        return stops
     }
 }

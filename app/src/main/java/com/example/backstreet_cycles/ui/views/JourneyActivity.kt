@@ -17,9 +17,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -27,6 +25,8 @@ import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.observable.eventdata.MapLoadingErrorEventData
 import com.mapbox.maps.plugin.animation.camera
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin
+import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.delegates.listeners.OnMapLoadErrorListener
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
@@ -149,6 +149,7 @@ class JourneyActivity : AppCompatActivity() {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
     private lateinit var planJourneyAdapter: PlanJourneyAdapter
+    private lateinit var annotationApi: AnnotationPlugin
     private val journeyViewModel : JourneyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,6 +162,10 @@ class JourneyActivity : AppCompatActivity() {
 
         PermissionUseCase.checkPermission(context = this, activity = this)
 
+        val users = intent.getIntExtra("NUM_USERS",1)
+        journeyViewModel.setNumUser(users)
+
+        annotationApi = mapView.annotations
         mapboxMap = mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
 //        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
@@ -169,10 +174,7 @@ class JourneyActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val users = intent.getIntExtra("NUM_USERS",1)
-        journeyViewModel.setUser(users)
-        Log.i("number of the users: ", users.toString())
-        journeyViewModel.calcBicycleRental(users)
+        journeyViewModel.calcBicycleRental(journeyViewModel.getNumUser())
 //        PlannerUseCase.calcBicycleRental(application, users, plannerInterface = this)
 //        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
     }
@@ -412,7 +414,7 @@ class JourneyActivity : AppCompatActivity() {
 //        mapboxNavigation.setRoutes(currentRoute)
         journeyViewModel.setRoute()
         navigationCamera.requestNavigationCameraToOverview()
-        journeyViewModel.updateMapMarkerAnnotation(mapView)
+        journeyViewModel.updateMapMarkerAnnotation(annotationApi)
     }
 
     override fun onDestroy() {

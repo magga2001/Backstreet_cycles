@@ -1,17 +1,18 @@
 package com.example.backstreet_cycles.dependencyInjection
 
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
+import com.example.backstreet_cycles.data.repository.LocationRepositoryImpl
 import com.example.backstreet_cycles.data.repository.MapboxRepositoryImpl
 import com.example.backstreet_cycles.data.repository.TflRepositoryImpl
+import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
-import com.mapbox.mapboxsdk.Mapbox
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -47,5 +48,17 @@ object AppModule {
     @Singleton
     fun provideMapboxRepository(api: MapboxApi): MapboxRepository {
         return MapboxRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTouristAttractionFile(): TouristAttractionFile {
+        return TouristAttractionFile
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(file: TouristAttractionFile): LocationRepository {
+        return LocationRepositoryImpl(file)
     }
 }

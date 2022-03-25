@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.backstreet_cycles">
 
     <uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION" />
@@ -54,6 +55,13 @@
             android:name="com.example.backstreet_cycles.ui.views.ForgotPasswordActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
         <activity android:name="com.example.backstreet_cycles.ui.views.JourneyActivity" />
+
+<!--        <provider-->
+<!--            android:name="androidx.startup.InitializationProvider"-->
+<!--            android:authorities="${applicationId}.androidx-startup"-->
+<!--            tools:node="remove">-->
+<!--        </provider>-->
+
     </application>
 
 </manifest>

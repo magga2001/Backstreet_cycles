@@ -1,127 +1,134 @@
 package com.example.backstreet_cycles.ui.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import com.example.backstreet_cycles.data.repository.NavigationRepository
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import com.example.backstreet_cycles.data.repository.MapRepository
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.maps.MapView
-import com.mapbox.maps.MapboxMap
-import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
+import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
+import com.mapbox.navigation.core.replay.MapboxReplayer
+import com.mapbox.navigation.core.replay.ReplayLocationEngine
 import com.mapbox.navigation.core.replay.route.ReplayProgressObserver
+import com.mapbox.navigation.core.replay.route.ReplayRouteMapper
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import com.mapbox.navigation.core.trip.session.VoiceInstructionsObserver
-import com.mapbox.navigation.ui.maneuver.api.MapboxManeuverApi
-import com.mapbox.navigation.ui.maneuver.view.MapboxManeuverView
 import com.mapbox.navigation.ui.maps.camera.NavigationCamera
-import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
-import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView
-import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
-import com.mapbox.navigation.ui.tripprogress.api.MapboxTripProgressApi
-import com.mapbox.navigation.ui.tripprogress.view.MapboxTripProgressView
-import com.mapbox.navigation.ui.voice.api.MapboxSpeechApi
-import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
+import dagger.hilt.android.internal.Contexts
+import dagger.hilt.android.internal.Contexts.getApplication
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class NavigationViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class NavigationViewModel @Inject constructor(
+    private val getDockUseCase: GetDockUseCase,
+    @ApplicationContext applicationContext: Context
+): ViewModel(){
 
-    private val navigationRepository: NavigationRepository
-
-    init {
-        navigationRepository = NavigationRepository(application)
+    private val mapboxNavigation: MapboxNavigation by lazy{
+        if (MapboxNavigationProvider.isCreated()) {
+            MapboxNavigationProvider.retrieve()
+        } else {
+            MapboxNavigationProvider.create(
+                NavigationOptions.Builder(mApplication)
+                    .accessToken(mApplication.getString(com.example.backstreet_cycles.R.string.mapbox_access_token))
+                    // comment out the location engine setting block to disable simulation
+                    .locationEngine(replayLocationEngine)
+                    .build()
+            )
+        }
     }
 
-    fun initialiseMapboxNavigation(): MapboxNavigation
-    {
-        return navigationRepository.initialiseMapboxNavigation()
+    /**
+     * Debug tool used to play, pause and seek route progress events that can be used to produce mocked location updates along the route.
+     */
+    private val mapboxReplayer = MapboxReplayer()
+
+    /**
+     * Debug tool that mocks location updates with an input from the [mapboxReplayer].
+     */
+    private val replayLocationEngine = ReplayLocationEngine(mapboxReplayer)
+
+    /**
+     * Debug observer that makes sure the replayer has always an up-to-date information to generate mock updates.
+     */
+    private val replayProgressObserver = ReplayProgressObserver(mapboxReplayer)
+
+    private val mApplication = getApplication(applicationContext)
+
+    fun setRouteAndStartNavigation() {
+
+        val routes = MapRepository.currentRoute
+
+        // set routes, where the first route in the list is the primary route that
+        // will be used for active guidance
+        mapboxNavigation.setRoutes(routes)
+
+        // start location simulation along the primary route
+        startSimulation(routes.first())
     }
 
-    fun initialiseLocationComponent(mapView: MapView) : LocationComponentPlugin
-    {
-        return navigationRepository.initialiseLocationComponent(mapView)
+    fun clearRouteAndStopNavigation() {
+        // clear
+        mapboxNavigation.setRoutes(listOf())
+
+        // stop simulation
+        mapboxReplayer.stop()
     }
 
-    fun initialiseLocationObserver(navigationCamera: NavigationCamera, viewportDataSource: MapboxNavigationViewportDataSource): LocationObserver
-    {
-        return navigationRepository.initialiseLocationObserver(navigationCamera,viewportDataSource)
+    private fun startSimulation(route: DirectionsRoute) {
+        mapboxReplayer.run {
+            stop()
+            clearEvents()
+            val replayEvents = ReplayRouteMapper().mapDirectionsRouteGeometry(route)
+            pushEvents(replayEvents)
+            seekTo(replayEvents.first())
+            play()
+        }
     }
 
-    fun initialiseRouteProgressObserver(mapboxMap: MapboxMap,
-                                        routeLineApi: MapboxRouteLineApi,
-                                        routeLineView: MapboxRouteLineView,
-                                        routeArrowApi: MapboxRouteArrowApi,
-                                        routeArrowView: MapboxRouteArrowView,
-                                        maneuverApi: MapboxManeuverApi,
-                                        maneuverView: MapboxManeuverView,
-                                        tripProgressApi: MapboxTripProgressApi,
-                                        tripProgressView: MapboxTripProgressView,
-                                        viewportDataSource: MapboxNavigationViewportDataSource): RouteProgressObserver
-    {
-        return navigationRepository.initialiseRouteProgressObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView, maneuverApi,
-        maneuverView, tripProgressApi, tripProgressView, viewportDataSource)
-    }
-
-    fun initialiseRoutesObserver(mapboxMap: MapboxMap,
-                                 routeLineApi:MapboxRouteLineApi ,
-                                 routeLineView: MapboxRouteLineView,
-                                 routeArrowApi: MapboxRouteArrowApi,
-                                 routeArrowView: MapboxRouteArrowView,
-                                 viewportDataSource: MapboxNavigationViewportDataSource) : RoutesObserver
-    {
-        return navigationRepository.initialiseRoutesObserver(mapboxMap, routeLineApi, routeLineView, routeArrowApi, routeArrowView, viewportDataSource)
-    }
-
-    fun initialiseOnPositionChangedListener(mapboxMap: MapboxMap, routeLineApi: MapboxRouteLineApi, routeLineView: MapboxRouteLineView): OnIndicatorPositionChangedListener
-    {
-        return navigationRepository.initialiseOnPositionChangedListener(mapboxMap, routeLineApi, routeLineView)
-    }
-
-    fun initialiseVoiceInstructionsObserver(speechApi: MapboxSpeechApi, voiceInstructionsPlayer: MapboxVoiceInstructionsPlayer): VoiceInstructionsObserver
-    {
-        return navigationRepository.initialiseVoiceInstructionsObserver(speechApi,voiceInstructionsPlayer)
-    }
-
-    fun setRouteAndStartNavigation(routes: List<DirectionsRoute>, mapboxNavigation: MapboxNavigation, navigationCamera: NavigationCamera) {
-        navigationRepository.setRouteAndStartNavigation(routes,mapboxNavigation, navigationCamera)
-    }
-
-    fun clearRouteAndStopNavigation(mapboxNavigation: MapboxNavigation) {
-        navigationRepository.clearRouteAndStopNavigation(mapboxNavigation)
-    }
-
-    fun registerObservers(mapboxNavigation: MapboxNavigation,
-                          routesObserver: RoutesObserver,
+    fun registerObservers(routesObserver: RoutesObserver,
                           routeProgressObserver: RouteProgressObserver,
                           locationObserver: LocationObserver,
-                          voiceInstructionsObserver: VoiceInstructionsObserver)
+                          voiceInstructionsObserver: VoiceInstructionsObserver
+    )
     {
-        navigationRepository.registerObservers(mapboxNavigation, routesObserver, routeProgressObserver,
-        locationObserver, voiceInstructionsObserver)
+        mapboxNavigation.registerRoutesObserver(routesObserver)
+        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
+        mapboxNavigation.registerLocationObserver(locationObserver)
+        mapboxNavigation.registerVoiceInstructionsObserver(voiceInstructionsObserver)
+        mapboxNavigation.registerRouteProgressObserver(replayProgressObserver)
     }
 
-    fun unregisterObservers(mapboxNavigation: MapboxNavigation,
-                          routesObserver: RoutesObserver,
-                          routeProgressObserver: RouteProgressObserver,
-                          locationObserver: LocationObserver,
-                          voiceInstructionsObserver: VoiceInstructionsObserver)
+    fun unregisterObservers(routesObserver: RoutesObserver,
+                            routeProgressObserver: RouteProgressObserver,
+                            locationObserver: LocationObserver,
+                            voiceInstructionsObserver: VoiceInstructionsObserver
+    )
     {
-        navigationRepository.unregisterObservers(mapboxNavigation, routesObserver, routeProgressObserver,
-            locationObserver, voiceInstructionsObserver)
+        mapboxNavigation.unregisterRoutesObserver(routesObserver)
+        mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
+        mapboxNavigation.unregisterLocationObserver(locationObserver)
+        mapboxNavigation.unregisterVoiceInstructionsObserver(voiceInstructionsObserver)
+        mapboxNavigation.unregisterRouteProgressObserver(replayProgressObserver)
     }
 
     fun finishMapboxReplayer()
     {
-        navigationRepository.finishMapboxReplayer()
+        mapboxReplayer.finish()
     }
 
-    fun getReplayProgressObserver(): ReplayProgressObserver
+    fun getMapBoxNavigation(): MapboxNavigation
     {
-        return navigationRepository.getReplayProgressObserver()
+        return mapboxNavigation
     }
 
+    fun destroyMapboxNavigation()
+    {
+        mapboxNavigation.onDestroy()
+    }
 }

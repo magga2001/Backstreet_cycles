@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -14,10 +13,7 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
-import com.example.backstreet_cycles.domain.useCase.MapAnnotationUseCase
-import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.domain.useCase.*
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Planner
@@ -28,7 +24,7 @@ import com.google.gson.Gson
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
-import com.mapbox.maps.MapView
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -48,6 +44,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
@@ -69,39 +66,16 @@ class JourneyViewModel @Inject constructor(
     }
 
     private var status: String = "UPDATE"
-    private var users: Int = 1
-    private val isReadyMutableLiveData: MutableLiveData<String>
-    private val distanceMutableLiveData: MutableLiveData<String>
-    private val durationMutableLiveData: MutableLiveData<String>
-    private val priceMutableLiveData: MutableLiveData<String>
-    private var sharedPref: SharedPreferences
-    private val firestore = Firebase.firestore
+    private var numUser: Int = 1
+    private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private var sharedPref: SharedPreferences =
+        applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
+    private val fireStore = Firebase.firestore
     private val mApplication = getApplication(applicationContext)
     private val mContext = applicationContext
-
-    init {
-        isReadyMutableLiveData = MutableLiveData()
-//        isReadyMutableLiveData.value = false
-        distanceMutableLiveData = MutableLiveData()
-        durationMutableLiveData = MutableLiveData()
-        priceMutableLiveData = MutableLiveData()
-        sharedPref = applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
-    }
-
-//    fun initialiseMapboxNavigation(): MapboxNavigation
-//    {
-//        return (if (MapboxNavigationProvider.isCreated()) {
-//            MapboxNavigationProvider.retrieve()
-//        } else {
-//            MapboxNavigationProvider.create(
-//                NavigationOptions.Builder(mApplication)
-//                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
-//                    .build()
-//            )
-//        })
-//    }
-
-    //NEW CODE
 
     fun getDock()
     {
@@ -112,13 +86,8 @@ class JourneyViewModel @Inject constructor(
 
                     val points = PlannerHelper.setPoints(MapRepository.location)
 
-                    //DONT NEED THIS TECHNICALLY BECAUSE onstart does it already
-//                    status = "IDLE"
-                    calcBicycleRental(users)
-
-                    //Fix logic
                     status = "REFRESH"
-                    fetchRoute(context = mContext, mapboxNavigation, points, "cycling", false)
+                    fetchRoute(context = mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
                 }
 
                 is Resource.Error -> {
@@ -130,11 +99,6 @@ class JourneyViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    fun linkingToCycleHire(intent: Intent)
-    {
-
     }
 
     fun clearView()
@@ -183,10 +147,10 @@ class JourneyViewModel @Inject constructor(
         getRoute(mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
     }
 
-    fun updateMapMarkerAnnotation(mapView: MapView)
+    fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin)
     {
         MapAnnotationUseCase.removeAnnotations()
-        MapAnnotationUseCase.addAnnotationToMap(context = mContext, mapView)
+        MapAnnotationUseCase.addAnnotationToMap(context = mContext, annotationApi)
     }
 
     private fun getRoute(context: Context,
@@ -224,10 +188,6 @@ class JourneyViewModel @Inject constructor(
 
                 isReadyMutableLiveData.postValue(status)
 
-//            distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
-//            durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
-//            priceMutableLiveData.postValue((prices*numUser).toString())
-
             }.launchIn(viewModelScope)
 
         }else {
@@ -236,11 +196,12 @@ class JourneyViewModel @Inject constructor(
 
             getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
 
-//                isReadyMutableLiveData.postValue(status)
+                isReadyMutableLiveData.postValue(status)
 
-//            distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
-//            durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
-//            priceMutableLiveData.postValue((prices*numUser).toString())
+                distanceMutableLiveData.postValue((MapRepository.distances.sum()/1000).roundToInt().toString())
+                durationMutableLiveData.postValue((MapRepository.durations.sum()/60).roundToInt().toString())
+
+                displayPrice()
 
             }.launchIn(viewModelScope)
         }
@@ -289,9 +250,14 @@ class JourneyViewModel @Inject constructor(
         mapboxNavigation.setRoutes(listOf())
     }
 
-    fun setUser(user: Int)
+    fun setNumUser(numUser: Int)
     {
-        this.users = user
+        this.numUser = numUser
+    }
+
+    fun getNumUser(): Int
+    {
+        return this.numUser
     }
 
     fun finishJourney(userDetails: Users)
@@ -299,6 +265,14 @@ class JourneyViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java), userDetails)
         SharedPrefHelper.clearListLocations()
+    }
+
+    private fun displayPrice()
+    {
+        val price = MapInfoUseCase.getRental()
+
+        priceMutableLiveData.postValue((price * numUser).toString())
+
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<String>
@@ -364,7 +338,7 @@ class JourneyViewModel @Inject constructor(
     fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
         CoroutineScope(Dispatchers.IO).launch {
 
-            val user =  firestore
+            val user =  fireStore
                 .collection("users")
                 .whereEqualTo("email", userDetails.email)
                 .get()
@@ -377,7 +351,7 @@ class JourneyViewModel @Inject constructor(
                     for (document in user) {
 
                         try {
-                            firestore.collection("users")
+                            fireStore.collection("users")
                                 .document(document.id)
                                 .update("journeyHistory",userDetails.journeyHistory)
                         }

@@ -7,6 +7,7 @@ import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.mapbox.maps.MapView
 import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
@@ -17,14 +18,13 @@ object MapAnnotationUseCase {
     private var pointAnnotationManager: PointAnnotationManager ?= null
 
     //Add list and drawable argument later...
-    fun addAnnotationToMap(context: Context, mapView: MapView) {
+    fun addAnnotationToMap(context: Context, annotationApi: AnnotationPlugin) {
 
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         val raw_bitmap = BitmapHelper.bitmapFromDrawableRes(context, R.drawable.dock_station) as Bitmap
         val bitmap = Bitmap.createScaledBitmap(raw_bitmap, 150, 150, false)
         bitmap.let {
             // Set options for the resulting symbol layer.
-            val annotationApi = mapView.annotations
             pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
             for(i in MapRepository.wayPoints.indices)

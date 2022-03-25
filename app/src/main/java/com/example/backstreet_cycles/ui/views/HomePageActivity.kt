@@ -55,6 +55,8 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.navigation.core.MapboxNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
+import kotlinx.android.synthetic.main.activity_homepage.mapView
+import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
@@ -303,6 +305,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         createListOfItems()
         itemTouchMethods()
 
+//        homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+//        stopsAdapter.notifyItemChanged(0)
 
     }
 
@@ -329,6 +333,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
+
+            for(location in stops){
+                if(location.name == "Current Location"){
+
+                    longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
+                    latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
+
+                    location.lat = latitude
+                    location.lon = longitude
+                }
+            }
+
             TflHelper.getDock(context = applicationContext,
                 object : CallbackResource<MutableList<Dock>> {
                     override fun getResult(objects: MutableList<Dock>) {
@@ -347,7 +363,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun createListOfItems(){
-        homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
+        homePageViewModel.addStop(
+            Locations("Current Location",
+            0.0,
+            0.0)
+        )
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
@@ -386,7 +406,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
-
 
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -482,13 +501,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             locationComponent = homePageViewModel.initialiseLocationComponent(mapboxMap)
             homePageViewModel.initialiseCurrentLocation(loadedMapStyle, locationComponent)
 
-            try{
-                longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
-                latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
-            }catch (e: Exception)
-            {
-                Log.i("exception...", e.toString())
-            }
+//            Log.i("Loaded style", loadedMapStyle.toString())
+//            Log.i("Loaded mapbox", mapboxMap.toString())
+//            Log.i("Loaded location", locationComponent.toString())
+//            Log.i("current location",homePageViewModel.getCurrentLocation(locationComponent)!!.longitude.toString() )
+
+//            longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
+//            latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
 
             bottomSheetFunctionality()
 
