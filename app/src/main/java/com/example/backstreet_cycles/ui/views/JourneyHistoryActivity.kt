@@ -112,8 +112,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to change the journey to the current one or keep the same one?")
+        builder.setMessage("You currently have a planned journey. " +
+                "Would you like to return to the current journey or create a new one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             homePageViewModel.continueWithCurrentJourney()
