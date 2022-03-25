@@ -90,6 +90,7 @@ open class BaseViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
+                    BackstreetApplication.docks = result.data!!
                     getRoute()
                 }
 

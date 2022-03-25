@@ -78,6 +78,8 @@ class JourneyViewModel @Inject constructor(
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
 
+                    BackstreetApplication.docks = result.data!!
+
                     val points = PlannerHelper.setPoints(BackstreetApplication.location)
 
                     status = "REFRESH"
