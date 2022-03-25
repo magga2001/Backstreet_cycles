@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
@@ -17,6 +16,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.*
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
@@ -33,7 +33,6 @@ import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -357,7 +356,7 @@ class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
                         }
                         catch (e: Exception) {
                             withContext(Dispatchers.Main) {
-                                //Toast.makeText(application,e.message, Toast.LENGTH_SHORT).show()
+                                ToastMessageHelper.createToastMessage(mApplication,e.message)
                             }
                         }
                     }
@@ -365,9 +364,9 @@ class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
             }
         }
 
-    fun convertJSON(serializedObject: String): List<Locations> {
+    private fun convertJSON(serializedObject: String): List<Locations> {
         val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.getType()
+        val type: Type = object : TypeToken<List<Locations?>?>() {}.type
         return gson.fromJson(serializedObject, type)
     }
 

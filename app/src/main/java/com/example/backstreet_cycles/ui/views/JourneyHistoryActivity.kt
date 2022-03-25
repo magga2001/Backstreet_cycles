@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.CallbackResource
@@ -17,7 +16,7 @@ import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.mapbox.navigation.core.MapboxNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,9 +27,11 @@ import kotlinx.android.synthetic.main.activity_journey_history.*
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var userCredentials: Users
-    private val journeyViewModel : JourneyViewModel by viewModels()
     private val homePageViewModel : HomePageViewModel by viewModels()
-    private lateinit var loggedInViewModel: LoggedInViewModel
+    private val loggedInViewModel : LoggedInViewModel by viewModels()
+
+    private val journeyHistoryViewModel: JourneyHistoryViewModel by viewModels()
+
     private lateinit var nAdapter: JourneyHistoryAdapter
     private lateinit var mapboxNavigation: MapboxNavigation
     private var journeys: MutableList<List<Locations>> = emptyList<List<Locations>>().toMutableList()
@@ -40,18 +41,17 @@ class JourneyHistoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_journey_history)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
 
-        homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
+        journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if(ready)
             {
                 startActivity(Intent(this, JourneyActivity::class.java))
-                homePageViewModel.getIsReadyMutableLiveData().value = false
+                journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
 
-        homePageViewModel.getShowAlertMutableLiveData().observe(this) {
+        journeyHistoryViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
                 alertDialog(MapRepository.location)
             }
@@ -60,7 +60,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
             if (userDetails != null) {
-                journeys = journeyViewModel.getJourneyHistory(userDetails)
+                journeys = journeyHistoryViewModel.getJourneyHistory(userDetails)
                 userCredentials = userDetails
             }
             init()
