@@ -2,10 +2,10 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.ContentValues.TAG
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -46,25 +46,23 @@ UserRepository(private val application: Application,
                     emailVerification(fName,lName,email)
 
                 } else {
-                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
+                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
                 }
             }
         return firebaseAuth.currentUser
     }
 
     private fun emailVerification(fName: String, lName: String, email: String) {
-        createToastMessage("EMAIL VERIFICATION BEING SENT TO:  $email")
+        ToastMessageHelper.createToastMessage(application,"EMAIL VERIFICATION BEING SENT TO:  $email")
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
                 logout()
-
-                createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
+                ToastMessageHelper.createToastMessage(application,"PLEASE VERIFY YOUR EMAIL:  $email")
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
             }
             else{
-                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
-
+                ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
             }
 
         }
@@ -106,14 +104,14 @@ UserRepository(private val application: Application,
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            createToastMessage(e.message)
+                            ToastMessageHelper.createToastMessage(application,e.message)
                         }
                     }
 
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
+                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.NO_PERSON_MATCH))
                 }
             }
         }
@@ -132,14 +130,14 @@ UserRepository(private val application: Application,
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { t ->
                         if (t.isSuccessful) {
-                            createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
+                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
                         } else {
-                            createToastMessage(application.getString(R.string.UPDATE_FAILED))
+                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
                         }
                     }
                 }
             } else {
-                createToastMessage(application.getString(R.string.UPDATE_FAILED))
+                ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
             }
         }
     }
@@ -170,24 +168,30 @@ UserRepository(private val application: Application,
                         WorkHelper.setPeriodicallySendingLogs(application)
                     }
                     else{
-                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
+                        ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
                     }
                 }
                 else {
-                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
+                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
                 }
             }
         return firebaseAuth.currentUser
     }
 
+    fun resetPassword(email: String) {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
+                    task -> if (task.isSuccessful){
+                ToastMessageHelper.createToastMessage(application,"Email reset email sent")
+            }
+            else{
+                ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
+            }
+        }
+    }
+
     fun logout() {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
-    }
-
-    private fun createToastMessage(stringMessage: String?) {
-        Toast.makeText(application, stringMessage, Toast.LENGTH_LONG)
-            .show()
     }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
@@ -205,6 +209,8 @@ UserRepository(private val application: Application,
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
+
+
 }
 
 

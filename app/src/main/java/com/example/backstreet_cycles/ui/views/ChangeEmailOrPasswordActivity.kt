@@ -5,15 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_email_or_password.*
 
+
+@AndroidEntryPoint
 class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
-    private lateinit var loggedInViewModel: LoggedInViewModel
+    private val loggedInViewModel: LoggedInViewModel by viewModels()
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +27,6 @@ class ChangeEmailOrPasswordActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
         loggedInViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 et_email.text = firebaseUser.email

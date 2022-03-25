@@ -58,6 +58,10 @@ class LocationRepository(private val application: Application) {
         stops.add(index, stop)
     }
 
+    fun addAllStops(checkpoints: MutableList<Locations>){
+        stops.addAll(checkpoints)
+    }
+
     fun removeStop(stop: Locations){
         stops.remove(stop)
     }
@@ -68,5 +72,9 @@ class LocationRepository(private val application: Application) {
 
     fun getStops(): MutableList<Locations> {
         return stops
+    }
+
+    fun clearAllStops() {
+        stops.clear()
     }
 }

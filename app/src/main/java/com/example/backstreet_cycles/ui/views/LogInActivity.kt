@@ -3,23 +3,26 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.*
 
-
+@AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
 
-    private lateinit var loginRegisterViewModel: LogInRegisterViewModel
+    private val loginRegisterViewModel: LogInRegisterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        loginRegisterViewModel = ViewModelProvider(this)[LogInRegisterViewModel::class.java]
+
         loginRegisterViewModel.getMutableLiveData()
             .observe(this) { firebaseUser ->
                 if (firebaseUser != null) {

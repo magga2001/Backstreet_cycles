@@ -74,6 +74,11 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <Button
+                    android:id="@+id/finish_journey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/finish_journey" />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -193,10 +198,10 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/finish_journey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/finish_journey" />
+<!--    <Button-->
+<!--        android:id="@+id/finish_journey"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/finish_journey" />-->
 
 </LinearLayout>

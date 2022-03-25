@@ -98,7 +98,7 @@
     <string name="previous">Previous</string>
     <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
-    <string name="UPDATE_FAILED" />
+    <string name="UPDATE_FAILED">Password reset failed</string>
 
 
 

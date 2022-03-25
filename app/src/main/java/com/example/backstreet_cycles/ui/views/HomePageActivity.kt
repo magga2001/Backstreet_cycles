@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.views
 
 //---------------------------------
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +12,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,9 +30,7 @@ import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
-import com.example.backstreet_cycles.service.WorkHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,8 +61,6 @@ import java.util.*
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
-    private lateinit var loggedInViewModel: LoggedInViewModel
-    //private lateinit var snackbarHelper: SnackbarHelper
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
@@ -83,20 +78,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private var updateInfo:Boolean=false
 
-    private var numberOfUsers = 1
     private lateinit var textOfNumberOfUsers : TextView
     private lateinit var plusBtn : Button
     private lateinit var minusBtn : Button
 
-//    private lateinit var journeyViewModel: JourneyViewModel
-    private val journeyViewModel : JourneyViewModel by viewModels()
     private val homePageViewModel: HomePageViewModel by viewModels()
+    private val loggedInViewModel: LoggedInViewModel by viewModels()
 
     companion object
     {
-        var stops: MutableList<Locations> = mutableListOf()
         lateinit var mapboxNavigation: MapboxNavigation
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -104,15 +95,28 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
-        IncrementAndDecrementUsersFunc()
 
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
+
+        init()
+    }
+
+
+    private fun init(){
+        initIncrementAndDecrementUsersFunc()
+        initObservers()
+        initNavigationDrawer()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initObservers(){
         homePageViewModel.getDock()
-
-//        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
-        homePageViewModel.stops.observe(this) { stops = it }
-
-
-        loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
+        homePageViewModel.getShowAlertMutableLiveData().observe(this) {
+            if (it) {
+                alertDialog(MapRepository.location)
+            }
+        }
 
         loggedInViewModel.getLoggedOutMutableLiveData()
             .observe(this) { loggedOut ->
@@ -126,64 +130,49 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         loggedInViewModel.getUserDetails()
         loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                user_name.text = "Hello: " + firebaseUser.firstName
+                user_name.text = "Hello: ${firebaseUser.firstName}"
                 tv_email.text = firebaseUser.email
             }
         }
 
-//        journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
                 val intent = Intent(this, JourneyActivity::class.java)
-                intent.putExtra(Constants.NUM_USERS,numberOfUsers)
-                SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
-                SharedPrefHelper.overrideSharedPref(mutableListOf(numberOfUsers.toString()),String::class.java)
-                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-                SharedPrefHelper.overrideSharedPref(MapRepository.location,Locations::class.java)
+                intent.putExtra(Constants.NUM_USERS,homePageViewModel.getNumUsers())
+                homePageViewModel.saveJourney()
                 startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
-
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
-
-        initialiseNavigationDrawer()
     }
 
-    private fun IncrementAndDecrementUsersFunc(){
+    private fun initIncrementAndDecrementUsersFunc(){
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
+        textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
 
-
-        textOfNumberOfUsers.text = ""+numberOfUsers
-
-
-        plusBtn.setOnClickListener(){
-          if(numberOfUsers>3){
+        plusBtn.setOnClickListener{
+          if(homePageViewModel.getNumUsers()>3){
               SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
           }
           else{
-              textOfNumberOfUsers.text = ""+ ++numberOfUsers
+              homePageViewModel.incrementNumUsers()
+              textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
           }
 
-
         }
-
-        minusBtn.setOnClickListener(){
-
-            if(numberOfUsers>=2){
-                textOfNumberOfUsers.text = ""+ --numberOfUsers
+        minusBtn.setOnClickListener{
+            if(homePageViewModel.getNumUsers()>=2){
+                homePageViewModel.decrementNumUsers()
+                textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
             }
             else{
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
-
             }
         }
-
     }
 
     private fun addInfo(name:String, lat: Double, long: Double) {
@@ -193,11 +182,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         SnackbarHelper.displaySnackbar(HomePageActivity, "Adding Stop")
         enableNextPageButton()
         enableMyLocationButton()
-
     }
 
     private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
-        homePageViewModel.removeStop(stops[positionOfStop])
+        homePageViewModel.removeStop(homePageViewModel.getStops()[positionOfStop])
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop, Locations(name,lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
@@ -207,12 +195,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableMyLocationButton(){
-        val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-        var isEnabled: Boolean = false
+        var isEnabled = false
         myLocationButton.isEnabled = false
-//        myLocationButton.isEnabled = !stops.contains(Locations("Current Location",currentLocation!!.latitude, currentLocation!!.longitude))
-          for(location in stops){
-              if(location.name.equals("Current Location")){
+          for(location in homePageViewModel.getStops()){
+              if(location.name == "Current Location"){
                   isEnabled = false
                   break
               }
@@ -226,10 +212,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableNextPageButton(){
-        nextPageButton.isEnabled = stops.size >= 2
+        nextPageButton.isEnabled = homePageViewModel.getStops().size >= 2
     }
 
-    private fun initialiseNavigationDrawer() {
+    private fun initNavigationDrawer() {
         toggle = ActionBarDrawerToggle(this, HomePageActivity, R.string.open, R.string.close)
         HomePageActivity.addDrawerListener(toggle)
         toggle.syncState()
@@ -242,12 +228,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     startActivity(Intent(this@HomePageActivity, ChangeEmailOrPasswordActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
 
-//                    if(this.javaClass == HomePageActivity::class.java) {
-//                        drawerLayout.close()
-//                    }
-//                    else {
-//                        startActivity(Intent(this, HomePageActivity::class.java))
-//                    }
                 }
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
@@ -285,7 +265,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
-                    WorkHelper.cancelWork(applicationContext)
+                    homePageViewModel.cancelWork()
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
 
@@ -305,8 +285,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         createListOfItems()
         itemTouchMethods()
 
-//        homePageViewModel.addStop(Locations("Current Location",homePageViewModel.getCurrentLocation(locationComponent)!!.latitude,homePageViewModel.getCurrentLocation(locationComponent)!!.longitude))
-//        stopsAdapter.notifyItemChanged(0)
 
     }
 
@@ -322,12 +300,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 updateInfo = true
                 val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
                 startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
-                this@HomePageActivity.positionOfStop =position
+                this@HomePageActivity.positionOfStop = position
             }
         })
 
         myLocationButton.setOnClickListener {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
         }
@@ -352,22 +330,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     }
                 }
             )
-
-
         }
 
         stopsAdapter.getCollapseBottomSheet()
             .observe(this) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
     }
 
     private fun createListOfItems(){
         homePageViewModel.addStop(
             Locations("Current Location",
-            0.0,
-            0.0)
+                0.0,
+                0.0)
         )
+        stopsAdapter = StopsAdapter(homePageViewModel.getStops())
         stopsAdapter = StopsAdapter(stops)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = stopsAdapter
@@ -395,7 +372,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             ): Boolean {
                 val fromPosition = viewHolder.absoluteAdapterPosition
                 val toPosition = target.absoluteAdapterPosition
-                Collections.swap(stops, fromPosition, toPosition)
+                Collections.swap(homePageViewModel.getStops(), fromPosition, toPosition)
                 recyclerView.adapter!!.notifyItemMoved(fromPosition,toPosition)
                 return true
             }
@@ -418,15 +395,19 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
             setUpSource(style)
             setUpLayer(style)
-
-            val drawable = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_baseline_location_on_red_24dp,
-                null
-            )
-            val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
-            style.addImage(MapboxConstants.SYMBOL_ICON_ID, bitmapUtils!!)
+            setUpMarker(style)
         }
+    }
+
+    private fun setUpMarker(loadedStyle: Style)
+    {
+        val drawable = ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_baseline_location_on_red_24dp,
+            null
+        )
+        val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
+        loadedStyle.addImage(MapboxConstants.SYMBOL_ICON_ID, bitmapUtils!!)
     }
 
     private fun setUpLayer(loadedMapStyle: Style) {
@@ -491,15 +472,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun checkIfAlreadyInStops(location : Locations): Boolean{
-        return stops.contains(location)
+        return homePageViewModel.getStops().contains(location)
     }
 
 
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-            locationComponent = homePageViewModel.initialiseLocationComponent(mapboxMap)
-            homePageViewModel.initialiseCurrentLocation(loadedMapStyle, locationComponent)
+            locationComponent = homePageViewModel.initLocationComponent(mapboxMap)
+            homePageViewModel.initCurrentLocation(loadedMapStyle, locationComponent)
 
 //            Log.i("Loaded style", loadedMapStyle.toString())
 //            Log.i("Loaded mapbox", mapboxMap.toString())
@@ -568,25 +549,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         mapView?.onDestroy()
     }
 
-//    How to make an util class for the functions below
-
-//    private fun fetchPoints()
-//    {
-//        MapRepository.wayPoints.clear()
-//        MapRepository.currentRoute.clear()
-//
-//        MapRepository.location.addAll(stops)
-//
-//        SharedPrefHelper.initialiseSharedPref(application,"LOCATIONS")
-//        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty("LOCATIONS")
-//        if (!checkForARunningJourney){
-//            alertDialog(MapRepository.location)
-//        } else{
-//            val locationPoints = PlannerHelper.setPoints(MapRepository.location)
-//            fetchRoute(locationPoints)
-//        }
-//    }
-
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
         homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
@@ -599,20 +561,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 "Do you want to continue with the current journey or with the newly created one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-//            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            MapRepository.location = listOfLocations
-            val listPoints = PlannerHelper.setPoints(listOfLocations)
-            fetchRoute(listPoints)
+            homePageViewModel.continueWithCurrentJourney()
+            homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            val listPoints = PlannerHelper.setPoints(newStops)
-//            journeyViewModel.overrideListLocation(newStops)
-            SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-            SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-            fetchRoute(listPoints)
+            homePageViewModel.continueWithNewJourney(newStops)
+            homePageViewModel.setShowAlert(false)
         }
         builder.show()
     }
