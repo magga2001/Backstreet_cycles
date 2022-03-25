@@ -40,10 +40,11 @@ class HomePageActivityTest {
 
     private val userRepository: UserRepository =
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
+
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -57,11 +58,10 @@ class HomePageActivityTest {
 
 //        logInRegisterViewModel= LogInRegisterViewModel(Application())
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        Application().onCreate()
         if (firebaseAuth.currentUser == null) {
-            logInRegisterViewModel = LogInRegisterViewModel(Application())
             logInRegisterViewModel.login(email, password)
         }
-        Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         Intents.init()
 
@@ -222,19 +222,19 @@ class HomePageActivityTest {
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
 
-//    @Test
-//    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
+    @Test
+    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withContentDescription(R.string.open)).perform(click())
-//        onView(withId(R.id.changePassword)).perform(click())
-//        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
-//        pressBack()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//    }
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.changePassword)).perform(click())
+        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
+        pressBack()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
 
     @Test
     fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
-        ActivityScenario.launch(HomePageActivity::class.java)
+//        ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.profile)).perform(click())
         intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
@@ -291,6 +291,12 @@ class HomePageActivityTest {
 //        onView(withId(R.id.addingBtn)).perform(click())
 //        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
 //    }
+
+    /*@Test
+    fun test_refresh_button_is_visible() {
+        onView(withId(R.id.refresh_button)).check(matches(isDisplayed()))
+
+    }*/
 
 //    @Test
 //    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){

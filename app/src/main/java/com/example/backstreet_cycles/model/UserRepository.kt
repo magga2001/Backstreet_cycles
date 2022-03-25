@@ -47,25 +47,25 @@ UserRepository(private val application: Application,
                     emailVerification(fName,lName,email)
 
                 } else {
-                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
+//                    createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
                 }
             }
         return firebaseAuth.currentUser
     }
 
     private fun emailVerification(fName: String, lName: String, email: String) {
-        createToastMessage("EMAIL VERIFICATION BEING SENT TO:  $email")
+//        createToastMessage("EMAIL VERIFICATION BEING SENT TO:  $email")
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
                 logout()
 
-                createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
+//                createToastMessage("PLEASE VERIFY YOUR EMAIL:  $email")
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
                 mutableLiveData.postValue(firebaseAuth.currentUser)
             }
             else{
-                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
+//                createToastMessage(application.getString(R.string.REGISTRATION_FAILED) + task.exception)
 
             }
 
@@ -117,14 +117,14 @@ UserRepository(private val application: Application,
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            createToastMessage(e.message)
+//                            createToastMessage(e.message)
                         }
                     }
 
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
+//                    createToastMessage(application.getString(R.string.NO_PERSON_MATCH))
                 }
             }
         }
@@ -143,32 +143,36 @@ UserRepository(private val application: Application,
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { t ->
                         if (t.isSuccessful) {
-                            createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
+//                            createToastMessage(application.getString(R.string.PASSWORD_CHANGED))
                         } else {
-                            createToastMessage(application.getString(R.string.UPDATE_FAILED))
+//                            createToastMessage(application.getString(R.string.UPDATE_FAILED))
                         }
                     }
                 }
             } else {
-                createToastMessage(application.getString(R.string.UPDATE_FAILED))
+//                createToastMessage(application.getString(R.string.UPDATE_FAILED))
             }
         }
     }
 
     fun getUserDetails() {
-        dataBase
-            .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        val userDetails = document.toObject(Users::class.java)
-                        userDetailsMutableLiveData.postValue(userDetails)
+        try {
+            dataBase
+                .collection("users")
+                .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            val userDetails = document.toObject(Users::class.java)
+                            userDetailsMutableLiveData.postValue(userDetails)
+                        }
                     }
-                }
 
-            }
+                }
+        } catch (e: NullPointerException){
+//           createToastMessage("the database cannot be accessed right now")
+        }
     }
 
     fun login(email: String, password: String) : FirebaseUser? {
@@ -181,11 +185,11 @@ UserRepository(private val application: Application,
                         WorkHelper.setPeriodicallySendingLogs(application)
                     }
                     else{
-                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
+//                        createToastMessage(application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
                     }
                 }
                 else {
-                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
+//                    createToastMessage(application.getString(R.string.LOG_IN_FAILED) + task.exception)
                 }
             }
         return firebaseAuth.currentUser
@@ -196,10 +200,10 @@ UserRepository(private val application: Application,
         loggedOutMutableLiveData.postValue(true)
     }
 
-    private fun createToastMessage(stringMessage: String?) {
-        Toast.makeText(application, stringMessage, Toast.LENGTH_LONG)
-            .show()
-    }
+//    private fun createToastMessage(stringMessage: String?) {
+//        Toast.makeText(application, stringMessage, Toast.LENGTH_LONG)
+//            .show()
+//    }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData

@@ -11,7 +11,9 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
 import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -74,10 +76,9 @@ class JourneyActivityTest{
     }
 
     @Test
-    fun test_start_navigation_button_visible(){
+    fun test_start_navigation_button_visible() {
         //onView(withId(R.id.start_navigation)).check(matches(isDisplayed()))
         onView(withId(R.id.start_navigation)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
     }
 
 //    @Test
@@ -85,11 +86,6 @@ class JourneyActivityTest{
 //        pressBack()
 //        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //    }
-
-    @Test
-    fun test_stops_text_field_displayed(){
-        onView(withId(R.id.stopsText)).check(matches(withText("stops:")))
-    }
 
     @Test
     fun test_stops_recycling_view_displayed(){
@@ -107,6 +103,10 @@ class JourneyActivityTest{
 //        onView(withId(R.id.start_navigation)).perform(click())
 //        onView(withId(R.id.navigation_activity)).check(matches(isDisplayed()))
 //    }
+        /*@Test
+    fun test_expand_button(){
+        onView(withId(R.id.planJourney_button_expand)).check(matches(isDisplayed()))
+    }*/
 
 //    @Test
 //    fun test_button_expand() {
@@ -169,6 +169,21 @@ class JourneyActivityTest{
 
     }
 
+    /*@Test
+    fun test_hire_image_visible(){
+        onView(withId(R.id.SantanderCycleImage)).check(matches(isDisplayed()))
+    }*/
+
+    /*@Test
+    fun test_from_text(){
+        onView(withId(R.id.planJourney_from)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_to_text(){
+        onView(withId(R.id.planJourney_to)).check(matches(isDisplayed()))
+    }*/
+
     @Test
     fun test_finish_journey_button_visible(){
 //        onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
@@ -202,8 +217,23 @@ class JourneyActivityTest{
     fun test_price_text_field_displayed(){
 //        onView(withId(R.id.prices)).check(matches(withText("Price:")))
         onView(withId(R.id.prices)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
+//        onView(withId(R.id.prices)).check(matches(isDisplayed()))
     }
+
+    /*@Test
+    fun test_duration_image_field_displayed(){
+        onView(withId(R.id.duration_image)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_distance_image_field_displayed(){
+        onView(withId(R.id.Distance_image)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_price_image_field_displayed(){
+        onView(withId(R.id.price_image)).check(matches(isDisplayed()))
+    }*/
 
 //    @Test
 //    fun test_check_not_checked(){
@@ -245,5 +275,4 @@ class JourneyActivityTest{
     fun tearDown(){
         Intents.release()
     }
-
 }

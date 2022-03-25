@@ -1,26 +1,7 @@
 package views
-import android.app.Application
-import androidx.test.rule.GrantPermissionRule
-import com.example.backstreet_cycles.views.JourneyHistoryActivity
-import org.junit.Before
-import org.junit.Rule
+
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
-import java.lang.Thread.sleep
-
-//Ensure user is logged out before running these tests
-
-@get:Rule
-val locationRule: GrantPermissionRule =
-    GrantPermissionRule.grant(
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.ACCESS_NETWORK_STATE,
-        android.Manifest.permission.INTERNET)
-
-//@Before
-//fun setUp() {
-//    Application().onCreate()
-//}
 
 
 @RunWith(Suite::class)
@@ -34,8 +15,9 @@ val locationRule: GrantPermissionRule =
     //JourneyActivityTest::class,
     AboutActivityTest::class,
     JourneyHistoryActivityTest::class,
-//    CurrentJourneyTest::class,
     NavMenuTest::class,
+//    CurrentJourneyTest::class,
+
 
 )
 class ActivitiesTestSuite
