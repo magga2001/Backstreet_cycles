@@ -35,22 +35,27 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
+import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
+import kotlinx.android.synthetic.main.activity_homepage.mapView
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
@@ -58,6 +63,7 @@ import java.util.*
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
 
+    private lateinit var mapboxNavigation: MapboxNavigation
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var mapboxMap: MapboxMap
@@ -69,11 +75,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
 
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+    private lateinit var selectedCarmenFeature: CarmenFeature
     private var positionOfStop:Int = 0
-
-    private var updateInfo:Boolean=false
 
     private lateinit var textOfNumberOfUsers : TextView
     private lateinit var plusBtn : Button
@@ -81,11 +84,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private val homePageViewModel: HomePageViewModel by viewModels()
     private val loggedInViewModel: LoggedInViewModel by viewModels()
-
-    companion object
-    {
-        lateinit var mapboxNavigation: MapboxNavigation
-    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +93,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
+
+        //Maybe check the functionality
+        homePageViewModel.setUpdateInfo(false)
 
         init()
     }
@@ -107,7 +108,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     @SuppressLint("SetTextI18n")
     private fun initObservers(){
-        homePageViewModel.getDock()
+
         homePageViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
                 alertDialog(MapRepository.location)
@@ -141,6 +142,44 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
+        }
+
+        homePageViewModel.hasCurrentLocation().observe(this){ currentLocation ->
+
+            myLocationButton.isEnabled = !currentLocation
+        }
+
+        homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this){ hasCurrentJourney ->
+            if(!hasCurrentJourney)
+            {
+                SnackbarHelper.displaySnackbar(HomePageActivity,"There is no current journey")
+            }
+        }
+
+        homePageViewModel.getHasDuplicationLocation().observe(this){ duplicate ->
+            if(duplicate)
+            {
+                SnackbarHelper.displaySnackbar(HomePageActivity, "Location already in list")
+            }
+        }
+
+        homePageViewModel.getUpdateMutableLiveData().observe(this){ updateInfo ->
+            if(updateInfo)
+            {
+                addAndRemoveInfo(
+                    selectedCarmenFeature.placeName().toString(),
+                    selectedCarmenFeature.center()!!.latitude(),
+                    selectedCarmenFeature.center()!!.longitude()
+                )
+            }else
+            {
+                addInfo(
+                    selectedCarmenFeature.placeName().toString(),
+                    selectedCarmenFeature.center()!!.latitude(),
+                    selectedCarmenFeature.center()!!.longitude()
+                )
+            }
+
         }
     }
 
@@ -191,18 +230,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     private fun enableMyLocationButton(){
-        var isEnabled = false
         myLocationButton.isEnabled = false
-          for(location in homePageViewModel.getStops()){
-              if(location.name == "Current Location"){
-                  isEnabled = false
-                  break
-              }
-              else{
-                  isEnabled = true
-              }
-          }
-        myLocationButton.isEnabled = isEnabled
+        homePageViewModel.checkCurrentLocation()
     }
 
     private fun enableNextPageButton(){
@@ -245,17 +274,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
 
                 R.id.currentJourney -> {
-                    SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-                    if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
-                        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-                        MapRepository.location = listOfLocations
-                        val listPoints = PlannerHelper.setPoints(listOfLocations)
-                        fetchRoute(listPoints)
-                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
-                    } else {
-                        SnackbarHelper.displaySnackbar(HomePageActivity,"There is no current journey")
-                    }
-
+                    homePageViewModel.getCurrentJourney()
                 }
                 R.id.logout -> {
                     loggedInViewModel.logOut()
@@ -282,13 +301,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         initBottomSheet()
 
         addStopButton.setOnClickListener {
-            val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this)
+            val intent = homePageViewModel.initPlaceAutoComplete(activity = this)
             startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
         }
         stopsAdapter.setOnItemClickListener(object : StopsAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                updateInfo = true
-                val intent = homePageViewModel.initialisePlaceAutoComplete(activity = this@HomePageActivity)
+                homePageViewModel.setUpdateInfo(true)
+                val intent = homePageViewModel.initPlaceAutoComplete(activity = this@HomePageActivity)
                 startActivityForResult(intent, Constants.REQUEST_AUTO_COMPLETE)
                 this@HomePageActivity.positionOfStop = position
             }
@@ -302,24 +321,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
 
-            for(location in homePageViewModel.getStops()){
-                if(location.name == "Current Location"){
-
-                    longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
-                    latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
-
-                    location.lat = latitude
-                    location.lon = longitude
-                }
-            }
-
-            TflHelper.getDock(context = applicationContext,
-                object : CallbackResource<MutableList<Dock>> {
-                    override fun getResult(objects: MutableList<Dock>) {
-                        homePageViewModel.fetchPoints()
-                    }
-                }
-            )
+            homePageViewModel.updateCurrentLocation(locationComponent)
+            homePageViewModel.getDock()
         }
 
         stopsAdapter.getCollapseBottomSheet()
@@ -379,11 +382,44 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            homePageViewModel.displayingAttractions(mapView, mapboxMap, style, homePageViewModel.getTouristAttractions())
+            setUpSymbol(mapView, mapboxMap, style)
             setUpSource(style)
             setUpLayer(style)
             setUpMarker(style)
         }
+    }
+
+    private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+
+            locationComponent = homePageViewModel.initLocationComponent(mapboxMap)
+            homePageViewModel.initCurrentLocation(loadedMapStyle, locationComponent)
+
+            bottomSheetFunctionality()
+
+        } else {
+            permissionsManager = PermissionsManager(this)
+            permissionsManager.requestLocationPermissions(this)
+        }
+    }
+
+    private fun setUpSymbol(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style)
+    {
+        val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
+        homePageViewModel.displayingAttractions(symbolManager, loadedMapStyle, homePageViewModel.getTouristAttractions())
+    }
+
+    private fun setUpSource(loadedMapStyle: Style) {
+        loadedMapStyle.addSource(GeoJsonSource(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID))
+    }
+
+    private fun setUpLayer(loadedMapStyle: Style) {
+        loadedMapStyle.addLayer(
+            SymbolLayer(MapboxConstants.SYMBOL_LAYER_ID, MapboxConstants.GEO_JSON_SOURCE_LAYER_ID).withProperties(
+                PropertyFactory.iconImage(MapboxConstants.SYMBOL_ICON_ID),
+                PropertyFactory.iconOffset(arrayOf(0f, -8f))
+            )
+        )
     }
 
     private fun setUpMarker(loadedStyle: Style)
@@ -397,91 +433,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         loadedStyle.addImage(MapboxConstants.SYMBOL_ICON_ID, bitmapUtils!!)
     }
 
-    private fun setUpLayer(loadedMapStyle: Style) {
-        loadedMapStyle.addLayer(
-            SymbolLayer("SYMBOL_LAYER_ID", MapboxConstants.GEO_JSON_SOURCE_LAYER_ID).withProperties(
-                PropertyFactory.iconImage(MapboxConstants.SYMBOL_ICON_ID),
-                PropertyFactory.iconOffset(arrayOf(0f, -8f))
-            )
-        )
-    }
-
-    private fun setUpSource(loadedMapStyle: Style) {
-        loadedMapStyle.addSource(GeoJsonSource(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID))
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_AUTO_COMPLETE) {
-            val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
+            selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
             val style = mapboxMap.style
-            val location = Locations(
-                selectedCarmenFeature.placeName().toString(),
-                selectedCarmenFeature.center()!!.latitude(),
-                selectedCarmenFeature.center()!!.longitude())
-            if(!checkIfAlreadyInStops(location)){
-                if (style != null) {
-
-                    latitude = selectedCarmenFeature.center()!!.latitude()
-                    longitude = selectedCarmenFeature.center()!!.longitude()
-
-                    style.getSourceAs<GeoJsonSource>(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID)?.setGeoJson(
-                        FeatureCollection.fromFeatures(
-                            arrayOf(
-                                Feature.fromJson(
-                                    selectedCarmenFeature.toJson()
-                                )
-                            )
-                        )
-                    )
-                    homePageViewModel.updateCamera(mapboxMap, latitude, longitude)
-                }
-
-                if (updateInfo) {
-                    updateInfo = false
-                    addAndRemoveInfo(
-                        selectedCarmenFeature.placeName().toString(),
-                        selectedCarmenFeature.center()!!.latitude(),
-                        selectedCarmenFeature.center()!!.longitude()
-                    )
-                } else {
-                    addInfo(
-                        selectedCarmenFeature.placeName().toString(),
-                        selectedCarmenFeature.center()!!.latitude(),
-                        selectedCarmenFeature.center()!!.longitude()
-                    )
-                }
+            if (style != null) {
+                homePageViewModel.searchLocation(mapboxMap,selectedCarmenFeature,style)
             }
-            else{
-                SnackbarHelper.displaySnackbar(HomePageActivity, "Location already in list")
-            }
-        }
-    }
-
-    private fun checkIfAlreadyInStops(location : Locations): Boolean{
-        return homePageViewModel.getStops().contains(location)
-    }
-
-
-    private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
-            locationComponent = homePageViewModel.initLocationComponent(mapboxMap)
-            homePageViewModel.initCurrentLocation(loadedMapStyle, locationComponent)
-
-//            Log.i("Loaded style", loadedMapStyle.toString())
-//            Log.i("Loaded mapbox", mapboxMap.toString())
-//            Log.i("Loaded location", locationComponent.toString())
-//            Log.i("current location",homePageViewModel.getCurrentLocation(locationComponent)!!.longitude.toString() )
-
-//            longitude = homePageViewModel.getCurrentLocation(locationComponent)!!.longitude
-//            latitude = homePageViewModel.getCurrentLocation(locationComponent)!!.latitude
-
-            bottomSheetFunctionality()
-
-        } else {
-            permissionsManager = PermissionsManager(this)
-            permissionsManager.requestLocationPermissions(this)
         }
     }
 
@@ -518,7 +477,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
-        mapboxNavigation = homePageViewModel.initialiseMapboxNavigation()
+        homePageViewModel.destroyMapboxNavigation()
+        mapboxNavigation = homePageViewModel.getMapBoxNavigation()
     }
 
     override fun onStop() {
@@ -534,11 +494,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onDestroy() {
         super.onDestroy()
         mapView?.onDestroy()
-    }
-
-    private fun fetchRoute(wayPoints: MutableList<Point>) {
-
-        homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
     }
 
     private fun alertDialog(newStops: MutableList<Locations>) {
