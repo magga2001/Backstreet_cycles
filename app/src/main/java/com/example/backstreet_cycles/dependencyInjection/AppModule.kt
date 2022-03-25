@@ -10,6 +10,8 @@ import com.example.backstreet_cycles.data.repository.TflRepositoryImpl
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.service.WorkerService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +63,12 @@ object AppModule {
     fun provideLocationRepository(file: TouristAttractionFile): LocationRepository {
         return LocationRepositoryImpl(file)
     }
+
+    @Provides
+    @Singleton
+    fun provideWorkerService(tflRepository: TflRepository): GetDockUseCase {
+        return GetDockUseCase(tflRepository)
+    }
+
+
 }

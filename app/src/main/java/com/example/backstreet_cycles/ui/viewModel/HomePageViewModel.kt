@@ -141,6 +141,7 @@ class HomePageViewModel @Inject constructor(
 
     fun getDock()
     {
+
         getDockUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
