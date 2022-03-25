@@ -13,8 +13,10 @@ import androidx.test.espresso.intent.Intents.init
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.DTO.Users
 import com.example.backstreet_cycles.model.UserRepository
@@ -28,6 +30,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -35,15 +38,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NavMenuTest {
 
-    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
-
-    private val email: String = "backstreet.cycles.test.user@gmail.com"
-    private val password: String =" 123456"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private val userRepository: UserRepository =
-        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-
+    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    @get:Rule
+    val fineLocPermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
     @Before
     fun setUp() {
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
@@ -55,17 +57,20 @@ class NavMenuTest {
 //            userRepository.login(email, password)
 //        }
         if (firebaseAuth.currentUser == null) {
-            logInRegisterViewModel = LogInRegisterViewModel(Application())
-            logInRegisterViewModel.login(email, password)
+            logInRegisterViewModel= LogInRegisterViewModel(Application())
+            logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         }
+
+        Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withContentDescription(R.string.open)).perform(click())
+        onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
         Intents.init()
     }
 
     @Test
     fun test_drawer_is_open(){
-        onView(withId(R.id.nav_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        //onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        //onView(withId(R.id.nav_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test

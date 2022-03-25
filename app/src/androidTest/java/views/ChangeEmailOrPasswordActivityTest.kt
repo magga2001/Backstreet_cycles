@@ -27,9 +27,11 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.views.HomePageActivity
 import com.example.backstreet_cycles.views.LogInActivity
 import org.junit.After
+import org.junit.Rule
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class ChangeEmailOrPasswordActivityTest{
@@ -39,12 +41,19 @@ class ChangeEmailOrPasswordActivityTest{
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
+    @get:Rule
+    val fineLocPermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
     @Before
     fun setUp() {
         if (firebaseAuth.currentUser == null) {
             logInRegisterViewModel = LogInRegisterViewModel(Application())
             logInRegisterViewModel.login(email, password)
         }
+        Application().onCreate()
         ActivityScenario.launch(ChangeEmailOrPasswordActivity::class.java)
         init()
 
@@ -52,7 +61,7 @@ class ChangeEmailOrPasswordActivityTest{
     @Test
     fun test_activity_launched_user_email_displayed() {
         val email = FirebaseAuth.getInstance().currentUser?.email
-        onView(withId(R.id.et_email)).check(matches(ViewMatchers.withText(email)))
+        onView(withId(R.id.et_email_change_password)).check(matches(ViewMatchers.withText(email)))
     }
 
     @Test

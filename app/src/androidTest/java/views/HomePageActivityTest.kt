@@ -45,7 +45,6 @@ class HomePageActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-
     @get:Rule
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
@@ -223,15 +222,15 @@ class HomePageActivityTest {
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
 
-    @Test
-    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.changePassword)).perform(click())
-        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
-        pressBack()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-    }
+//    @Test
+//    fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
+//        ActivityScenario.launch(HomePageActivity::class.java)
+//        onView(withContentDescription(R.string.open)).perform(click())
+//        onView(withId(R.id.changePassword)).perform(click())
+//        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
+//        pressBack()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//    }
 
     @Test
     fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
