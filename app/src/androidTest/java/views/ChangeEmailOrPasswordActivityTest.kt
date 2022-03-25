@@ -52,7 +52,7 @@ class ChangeEmailOrPasswordActivityTest{
     @Test
     fun test_activity_launched_user_email_displayed() {
         val email = FirebaseAuth.getInstance().currentUser?.email
-        onView(withId(R.id.et_email)).check(matches(ViewMatchers.withText(email)))
+        onView(withId(R.id.et_email_change_password)).check(matches(ViewMatchers.withText(email)))
     }
 
     @Test

@@ -47,8 +47,6 @@ class AboutActivityTest {
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.nav_view)).perform(click())
-        init()
-
     }
 
     @Test
@@ -73,14 +71,10 @@ class AboutActivityTest {
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
-
+        Intents.init()
         pressBack()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
-
-    }
-
-    @After
-    fun tearDown(){
         Intents.release()
+
     }
 }

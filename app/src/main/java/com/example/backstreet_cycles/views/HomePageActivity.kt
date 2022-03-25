@@ -116,12 +116,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
 
         loggedInViewModel.getUserDetails()
-        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
-            if (firebaseUser != null) {
-                user_name.text = "Hello: " + firebaseUser.firstName
-                tv_email.text = firebaseUser.email
-            }
-        }
+//        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
+//            if (firebaseUser != null) {
+//                user_name.text = "Hello: " + firebaseUser.firstName
+//                tv_email.text = firebaseUser.email
+//            } else {
+//                user_name.text = "Hello: "
+//                tv_email.text = "eee"
+//            }
+//        }
 
         journeyViewModel = ViewModelProvider(this).get(JourneyViewModel::class.java)
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
@@ -155,7 +158,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         plusBtn.setOnClickListener(){
           if(numberOfUsers>3){
-              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
+//              Toast.makeText(this,"Cannot have more than 4 users",Toast.LENGTH_SHORT).show()
           }
           else{
               textOfNumberOfUsers.text = ""+ ++numberOfUsers
@@ -170,7 +173,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 textOfNumberOfUsers.text = ""+ --numberOfUsers
             }
             else{
-                Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this,"Cannot have less than one user",Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -180,7 +183,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(Locations(name,lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,"Adding Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
 
@@ -191,7 +194,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop,Locations(name,lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,"Changing Location Of Stop",Toast.LENGTH_SHORT).show()
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -295,7 +298,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         myLocationButton.setOnClickListener {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-            Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@HomePageActivity, "Location button has been clicked", Toast.LENGTH_SHORT).show()
             val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
             addInfo("Current Location", currentLocation!!.latitude, currentLocation.longitude )
         }
@@ -311,7 +314,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     }
                 }
             )
-            Toast.makeText(this@HomePageActivity, "Next page button has been clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -334,7 +336,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     enableNextPageButton()
                 }
                 else{
-                    Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@HomePageActivity, "Cannot remove location", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -436,7 +438,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
             }
             else{
-                Toast.makeText(this, "Location already in stops.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Location already in stops.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -480,16 +482,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
-        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG)
-            .show()
+//        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG)
+//            .show()
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if (granted) {
             mapboxMap.getStyle { style -> enableLocationComponent(style) }
         } else {
-            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG)
-                .show()
+//            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG)
+//                .show()
             finish()
         }
     }
@@ -534,7 +536,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
         if (checkForARunningJourney){
-            alertDialog(MapRepository.location)
+//            alertDialog(MapRepository.location)
         } else{
             val locationPoints = setPoints(MapRepository.location)
             fetchRoute(locationPoints)
@@ -546,25 +548,25 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.fetchRoute(this, mapboxNavigation, wayPoints, "cycling", false)
     }
 
-    private fun alertDialog(newStops: MutableList<Locations>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to continue with the current journey or with the newly created one?")
-        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
-            MapRepository.location = listOfLocations
-            val listPoints = setPoints(listOfLocations)
-            fetchRoute(listPoints)
-        }
-
-        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            val listPoints = setPoints(newStops)
-            journeyViewModel.overrideListLocation(newStops)
-            fetchRoute(listPoints)
-        }
-        builder.show()
-    }
+//    private fun alertDialog(newStops: MutableList<Locations>) {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Planner Alert")
+//        builder.setMessage("There is already a planned journey that you are currently using." +
+//                "Do you want to continue with the current journey or with the newly created one?")
+//        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+//            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
+//            MapRepository.location = listOfLocations
+//            val listPoints = setPoints(listOfLocations)
+//            fetchRoute(listPoints)
+//        }
+//
+//        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+//            val listPoints = setPoints(newStops)
+//            journeyViewModel.overrideListLocation(newStops)
+//            fetchRoute(listPoints)
+//        }
+//        builder.show()
+//    }
 
     private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
         val listPoints = emptyList<Point>().toMutableList()

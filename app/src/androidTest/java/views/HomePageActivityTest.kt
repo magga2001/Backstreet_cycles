@@ -40,7 +40,7 @@ class HomePageActivityTest {
 
     private val userRepository: UserRepository =
         UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    private var logInRegisterViewModel: LogInRegisterViewModel = LogInRegisterViewModel(Application())
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
@@ -58,11 +58,10 @@ class HomePageActivityTest {
 
 //        logInRegisterViewModel= LogInRegisterViewModel(Application())
 //        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+        Application().onCreate()
         if (firebaseAuth.currentUser == null) {
-            logInRegisterViewModel = LogInRegisterViewModel(Application())
             logInRegisterViewModel.login(email, password)
         }
-        Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         Intents.init()
 
@@ -225,7 +224,7 @@ class HomePageActivityTest {
 
     @Test
     fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
-        ActivityScenario.launch(HomePageActivity::class.java)
+//        ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.changePassword)).perform(click())
         intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
@@ -235,7 +234,7 @@ class HomePageActivityTest {
 
     @Test
     fun back_button_from_EditUserProfileActivity_to_HomePageActivity() {
-        ActivityScenario.launch(HomePageActivity::class.java)
+//        ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.profile)).perform(click())
         intending(hasComponent(EditUserProfileActivity::class.qualifiedName))

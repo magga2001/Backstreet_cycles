@@ -46,12 +46,12 @@ class CurrentJourneyTest {
 
     }
 
-    @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
-        Espresso.pressBack()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-
-    }
+//    @Test
+//    fun test_on_pressBack_go_to_HomePageActivity() {
+//        Espresso.pressBack()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//
+//    }
 
     @After
     fun tearDown(){
