@@ -26,8 +26,8 @@
     <string name="cyclists_number">Cyclists:</string>
     <string name="decrement">-</string>
     <string name="increment">+</string>
-    <string name="continue_with_current_journey">Current Journey</string>
-    <string name="continue_with_newly_set_journey">Newly Created Journey</string>
+    <string name="continue_with_current_journey">Continue with Current Journey</string>
+    <string name="continue_with_newly_set_journey">Create a New Journey</string>
     <string name="add_stop_button" />
 
     <!-- Journey Strings  -->
@@ -99,9 +99,6 @@
     <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
     <string name="UPDATE_FAILED">Password reset failed</string>
-
-
-
 
     <!--Journey info-->
     <string name="journey_distances">Total Distance: %1$s km</string>
