@@ -12,8 +12,7 @@ import kotlinx.android.synthetic.main.activity_forgot_password.*
 class ForgotPasswordActivity  : AppCompatActivity() {
 
     private val forgotPasswordViewModel: ForgotPasswordViewModel by viewModels()
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
