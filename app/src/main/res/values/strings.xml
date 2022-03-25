@@ -26,8 +26,8 @@
     <string name="cyclists_number">Cyclists:</string>
     <string name="decrement">-</string>
     <string name="increment">+</string>
-    <string name="continue_with_current_journey">Continue with Current Journey</string>
-    <string name="continue_with_newly_set_journey">Create a New Journey</string>
+    <string name="continue_with_current_journey">Continue Current Journey</string>
+    <string name="continue_with_newly_set_journey">Create New Journey</string>
     <string name="add_stop_button" />
 
     <!-- Journey Strings  -->
