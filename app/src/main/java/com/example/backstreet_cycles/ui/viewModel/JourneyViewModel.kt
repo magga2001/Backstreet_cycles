@@ -10,7 +10,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
-import com.example.backstreet_cycles.data.repository.UserRepository
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
@@ -69,7 +69,7 @@ class JourneyViewModel @Inject constructor(
 
     private var status: String = "UPDATE"
     private var numUser: Int = 1
-    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
+    private val userRepository = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
     private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
