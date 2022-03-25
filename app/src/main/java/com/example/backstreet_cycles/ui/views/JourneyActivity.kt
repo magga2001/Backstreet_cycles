@@ -298,9 +298,6 @@ class JourneyActivity : AppCompatActivity() {
                     MapRepository.location.clear()
                     SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
                     journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java),userDetails)
-
-//                    journeyViewModel.addJourneyToJourneyHistory(journeyViewModel.getListLocations().toMutableList(),userDetails)
-//                    journeyViewModel.clearListLocations()
                     SharedPrefHelper.clearListLocations()
                     val intent = Intent(this, HomePageActivity::class.java)
                     startActivity(intent)

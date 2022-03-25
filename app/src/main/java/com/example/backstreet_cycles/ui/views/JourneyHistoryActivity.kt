@@ -16,6 +16,7 @@ import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
@@ -32,7 +33,6 @@ import kotlinx.android.synthetic.main.activity_journey_history.*
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var mapboxMap: MapboxMap
-//    private lateinit var homePageViewModel: HomePageViewModel
     private val journeyViewModel : JourneyViewModel by viewModels()
     private val homePageViewModel : HomePageViewModel by viewModels()
     private lateinit var loggedInViewModel: LoggedInViewModel
@@ -48,7 +48,6 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         loggedInViewModel = ViewModelProvider(this)[LoggedInViewModel::class.java]
-//        homePageViewModel = ViewModelProvider(this)[HomePageViewModel::class.java]
 
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
@@ -77,17 +76,22 @@ class JourneyHistoryActivity : AppCompatActivity() {
         nAdapter = JourneyHistoryAdapter(journeys)
         nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                stops.addAll(journeys[position])
-//                replaceCurrentLocation()
-                //Get Dock
-//                homePageViewModel.getDocks()
-                TflHelper.getDock(context = applicationContext,
-                    object : CallbackResource<MutableList<Dock>> {
-                        override fun getResult(objects: MutableList<Dock>) {
-                            fetchPoints()
-                        }
-                    }
-                )
+                    TflHelper.getDock(context = applicationContext,
+                        object : CallbackResource<MutableList<Dock>> {
+                            override fun getResult(objects: MutableList<Dock>) {
+                                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+                                if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
+                                    alertDialog(stops)
+                                } else{
+//                                    journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java), userDetails)
+                                    stops.addAll(journeys[position])
+                                    homePageViewModel.fetchPoints()
+                                }
+
+                            }
+                        })
+
+
             }
         })
         journey_history_recycler_view.layoutManager = LinearLayoutManager(this)
@@ -110,23 +114,23 @@ class JourneyHistoryActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private fun fetchPoints()
-    {
-        MapRepository.wayPoints.clear()
-        MapRepository.currentRoute.clear()
-
-        MapRepository.location.addAll(stops)
-
-//        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
-        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if (checkForARunningJourney){
-            alertDialog(MapRepository.location)
-        } else{
-            val locationPoints = setPoints(MapRepository.location)
-            fetchRoute(locationPoints)
-        }
-    }
+//    private fun fetchPoints()
+//    {
+//        MapRepository.wayPoints.clear()
+//        MapRepository.currentRoute.clear()
+//
+//        MapRepository.location.addAll(stops)
+//
+////        val checkForARunningJourney = journeyViewModel.addLocationSharedPreferences(MapRepository.location)
+//        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+//        val checkForARunningJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+//        if (checkForARunningJourney){
+//            alertDialog(MapRepository.location)
+//        } else{
+//            val locationPoints = PlannerHelper.setPoints(MapRepository.location)
+//            fetchRoute(locationPoints)
+//        }
+//    }
 
     private fun fetchRoute(wayPoints: MutableList<Point>) {
 
@@ -142,27 +146,18 @@ class JourneyHistoryActivity : AppCompatActivity() {
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-//            val listOfLocations = journeyViewModel.getListLocations().toMutableList()
             MapRepository.location = listOfLocations
-            val listPoints = setPoints(listOfLocations)
+            val listPoints = PlannerHelper.setPoints(listOfLocations)
             fetchRoute(listPoints)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            val listPoints = setPoints(newStops)
+            val listPoints = PlannerHelper.setPoints(newStops)
             SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
             SharedPrefHelper.overrideSharedPref(newStops,Locations::class.java)
-//            journeyViewModel.overrideListLocation(newStops)
             fetchRoute(listPoints)
         }
         builder.show()
     }
 
-    private fun setPoints(newStops: MutableList<Locations>): MutableList<Point> {
-        val listPoints = emptyList<Point>().toMutableList()
-        for (i in 0 until newStops.size){
-            listPoints.add(Point.fromLngLat(newStops[i].lon, newStops[i].lat))
-        }
-        return listPoints
-    }
 }
