@@ -125,20 +125,6 @@ class LogInActivityTest{
         onView(withId(R.id.et_password_log_in)).check(matches(hasErrorText("Please enter a password")))
     }
 
-    @Test
-    fun test_if_password_empty_display_error() {
-
-        onView(withId(R.id.et_password_log_in)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.et_password_log_in)).check(matches(hasErrorText("Please enter a password")))
-    }
-
-    @Test
-    fun test_if_email_empty_display_error() {
-
-        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.et_email_log_in)).check(matches(hasErrorText("Please enter your email")))
-    }
-
     @After
     fun tearDown(){
         Intents.release()
