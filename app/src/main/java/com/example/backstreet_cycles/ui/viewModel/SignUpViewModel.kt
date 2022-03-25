@@ -1,6 +1,8 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import com.example.backstreet_cycles.data.repository.UserRepository
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
@@ -15,30 +17,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LogInRegisterViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
+class SignUpViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
-
-    private val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
-    private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
+): ViewModel(){
+    private val mApplication = Contexts.getApplication(applicationContext)
+    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
     fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
         return userRepository.register(firstName,lastName,email,password)
     }
-
-
-    fun  login(email: String, password: String){
-        userRepository.login(email,password)
-    }
-
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
-    }
-
-    fun resetPassword(email: String) {
-        userRepository.resetPassword(email)
-    }
-
 }
