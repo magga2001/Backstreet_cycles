@@ -180,6 +180,17 @@ UserRepository(private val application: Application,
         return firebaseAuth.currentUser
     }
 
+    fun resetPassword(email: String) {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
+                    task -> if (task.isSuccessful){
+                createToastMessage("Email reset email sent")
+            }
+            else{
+                createToastMessage(task.exception!!.message.toString())
+            }
+        }
+    }
+
     fun logout() {
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
@@ -205,6 +216,8 @@ UserRepository(private val application: Application,
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
+
+
 }
 
 

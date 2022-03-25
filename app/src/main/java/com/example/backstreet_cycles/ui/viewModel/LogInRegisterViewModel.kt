@@ -43,4 +43,8 @@ class LogInRegisterViewModel @Inject constructor(
         return mutableLiveData
     }
 
+    fun resetPassword(email: String) {
+        userRepository.resetPassword(email)
+    }
+
 }
