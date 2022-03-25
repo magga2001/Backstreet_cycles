@@ -13,6 +13,7 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.MapRepository
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.*
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -47,11 +48,10 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @HiltViewModel
-class JourneyViewModel @Inject constructor(
-    private val getDockUseCase: GetDockUseCase,
-    private val getMapboxUseCase: GetMapboxUseCase,
-    @ApplicationContext applicationContext: Context
-): ViewModel(), Planner{
+class JourneyViewModel @Inject constructor(getDockUseCase: GetDockUseCase,
+                                           getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
+                                           @ApplicationContext applicationContext: Context
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext), Planner{
 
     private val mapboxNavigation: MapboxNavigation by lazy {
         if (MapboxNavigationProvider.isCreated()) {
@@ -74,8 +74,8 @@ class JourneyViewModel @Inject constructor(
     private var sharedPref: SharedPreferences =
         applicationContext.getSharedPreferences("LOCATIONS", Context.MODE_PRIVATE)
     private val fireStore = Firebase.firestore
-    private val mApplication = getApplication(applicationContext)
-    private val mContext = applicationContext
+//    private val mApplication = getApplication(applicationContext)
+//    private val mContext = applicationContext
 
     fun getDock()
     {
