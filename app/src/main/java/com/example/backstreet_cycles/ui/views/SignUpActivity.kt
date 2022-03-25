@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.et_email
 import kotlinx.android.synthetic.main.activity_log_in.et_password
@@ -16,22 +15,13 @@ import kotlinx.android.synthetic.main.activity_sign_up.*
 @AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
-    private val loginRegisterViewModel: LogInRegisterViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel  by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        loginRegisterViewModel.getMutableLiveData().observe(this) { firebaseUser ->
-            if (firebaseUser != null) {
-//                val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
-//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//                startActivity(intent)
-//                finish()
-            }
-        }
 
         initListener()
     }
@@ -69,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
                         val email: String = et_email.text.toString().trim { it <= ' ' }
                         val password: String = et_password.text.toString().trim { it <= ' '}
 
-                        loginRegisterViewModel.register(firstName, lastName, email, password)
+                        signUpViewModel.register(firstName, lastName, email, password)
                         val intent = Intent(this, LogInActivity::class.java)
                         startActivity(intent)
                         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)

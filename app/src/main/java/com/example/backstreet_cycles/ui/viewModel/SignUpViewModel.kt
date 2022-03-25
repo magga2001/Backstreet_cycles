@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.backstreet_cycles.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -14,25 +13,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LogInRegisterViewModel @Inject constructor(
+class SignUpViewModel @Inject constructor(
     @ApplicationContext applicationContext: Context
-): ViewModel() {
-
+): ViewModel(){
     private val mApplication = Contexts.getApplication(applicationContext)
-    private val userRepository: UserRepository
-    private val mutableLiveData: MutableLiveData<FirebaseUser>
+    private val userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
-    init {
-        userRepository = UserRepository(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
-        mutableLiveData = userRepository.getMutableLiveData()
+    fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
+        return userRepository.register(firstName,lastName,email,password)
     }
-
-    fun  login(email: String, password: String){
-        userRepository.login(email,password)
-    }
-
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return mutableLiveData
-    }
-
 }
