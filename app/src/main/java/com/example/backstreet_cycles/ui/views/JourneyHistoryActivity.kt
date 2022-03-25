@@ -15,9 +15,7 @@ import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.mapbox.navigation.core.MapboxNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
@@ -27,9 +25,6 @@ import kotlinx.android.synthetic.main.activity_journey_history.*
 class JourneyHistoryActivity : AppCompatActivity() {
 
     private lateinit var userCredentials: Users
-    private val homePageViewModel : HomePageViewModel by viewModels()
-    private val loggedInViewModel : LoggedInViewModel by viewModels()
-
     private val journeyHistoryViewModel: JourneyHistoryViewModel by viewModels()
 
     private lateinit var nAdapter: JourneyHistoryAdapter
@@ -57,8 +52,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
             }
         }
 
-        loggedInViewModel.getUserDetails()
-        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+        journeyHistoryViewModel.getUserDetails()
+        journeyHistoryViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
             if (userDetails != null) {
                 journeys = journeyHistoryViewModel.getJourneyHistory(userDetails)
                 userCredentials = userDetails
@@ -79,20 +74,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
                     TflHelper.getDock(context = applicationContext,
                         object : CallbackResource<MutableList<Dock>> {
                             override fun getResult(objects: MutableList<Dock>) {
-                                homePageViewModel.clearAllStops()
-                                homePageViewModel.addAllStops(journeys[position].toMutableList())
-                                homePageViewModel.getRoute()
-//                                SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-//                                if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
-//                                    stops.addAll(journeys[position])
-//                                    homePageViewModel.fetchPoints()
-////                                    alertDialog(stops)
-//                                } else{
-//                                    journeyViewModel.addJourneyToJourneyHistory(SharedPrefHelper.getSharedPref(Locations::class.java), userCredentials)
-//                                    stops.addAll(journeys[position])
-//                                    homePageViewModel.fetchPoints()
-//                                }
-
+                                journeyHistoryViewModel.clearAllStops()
+                                journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
+                                journeyHistoryViewModel.getRoute()
                             }
                         })
 
@@ -106,19 +90,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         mapView?.onStart()
-        mapboxNavigation = homePageViewModel.initialiseMapboxNavigation()
+        mapboxNavigation = journeyHistoryViewModel.initialiseMapboxNavigation()
     }
-
-//    How to make an util class for those functions below!
-
-//    private fun replaceCurrentLocation(){
-//        val oldCurrentLocation = stops.find { it.name == "Current Location" }
-//        if (oldCurrentLocation != null) {
-//            val currentLocation  = homePageViewModel.getCurrentLocation(locationComponent)
-//            Collections.replaceAll(stops,oldCurrentLocation,Locations("Current Location",currentLocation!!.latitude, currentLocation.longitude))
-//        }
-//    }
-
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
@@ -127,13 +100,13 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 "Would you like to return to the current journey or create a new one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            homePageViewModel.continueWithCurrentJourney()
-            homePageViewModel.setShowAlert(false)
+            journeyHistoryViewModel.continueWithCurrentJourney()
+            journeyHistoryViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            homePageViewModel.continueWithNewJourney(newStops)
-            homePageViewModel.setShowAlert(false)
+            journeyHistoryViewModel.continueWithNewJourney(newStops)
+            journeyHistoryViewModel.setShowAlert(false)
         }
         builder.show()
     }

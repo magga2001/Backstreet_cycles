@@ -21,13 +21,10 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.domain.utils.SnackbarHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mapbox.api.directions.v5.DirectionsCriteria
@@ -51,7 +48,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.maps.MapConstants
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -60,7 +56,6 @@ import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -129,10 +124,6 @@ class HomePageViewModel @Inject constructor(
         stops.add(index, stop)
     }
 
-    fun addAllStops(checkpoints: MutableList<Locations>){
-        stops.addAll(checkpoints)
-    }
-
     fun removeStop(stop: Locations){
         stops.remove(stop)
     }
@@ -143,10 +134,6 @@ class HomePageViewModel @Inject constructor(
 
     fun getStops(): MutableList<Locations> {
         return stops
-    }
-
-    fun clearAllStops() {
-        stops.clear()
     }
 
     private fun checkIfAlreadyInStops(location : Locations): Boolean{
