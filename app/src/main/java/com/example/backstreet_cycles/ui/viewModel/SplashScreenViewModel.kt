@@ -36,7 +36,7 @@ class SplashScreenViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    Log.i("New dock", "Error")
+                    Log.i("New dock", result.toString())
 
                 }
                 is Resource.Loading -> {

@@ -88,7 +88,8 @@ dependencies {
     implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
-    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
+    //Dont delete this yet... potential fix location update
+//    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
         transitive(true)
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-plugin-annotation-v8'
