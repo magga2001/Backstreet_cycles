@@ -8,9 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_log_in.et_email
-import kotlinx.android.synthetic.main.activity_log_in.et_password
-import com.example.backstreet_cycles.ui.viewModel.LogInRegisterViewModel
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 @AndroidEntryPoint

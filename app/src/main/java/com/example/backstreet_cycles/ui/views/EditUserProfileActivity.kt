@@ -45,19 +45,24 @@ class EditUserProfileActivity : AppCompatActivity() {
 
     private fun initListener()
     {
-        buttonUpdateProfile.setOnClickListener {
         edit_user_details_SaveButton.setOnClickListener {
-            when {
-                TextUtils.isEmpty(edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
-                    edit_user_details_firstName.error = getString(R.string.enter_first_name)
-                }
-                TextUtils.isEmpty(edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
-                    edit_user_details_lastName.error = getString(R.string.enter_last_name)
-                }
-                else -> {
-                    val firstName: String = edit_user_details_firstName.text.toString().trim { it <= ' ' }
-                    val lastName: String = edit_user_details_lastName.text.toString().trim { it <= ' ' }
-                    loggedInViewModel.updateUserDetails(firstName, lastName)
+            edit_user_details_SaveButton.setOnClickListener {
+                when {
+                    TextUtils.isEmpty(
+                        edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
+                        edit_user_details_firstName.error = getString(R.string.enter_first_name)
+                    }
+                    TextUtils.isEmpty(
+                        edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
+                        edit_user_details_lastName.error = getString(R.string.enter_last_name)
+                    }
+                    else -> {
+                        val firstName: String =
+                            edit_user_details_firstName.text.toString().trim { it <= ' ' }
+                        val lastName: String =
+                            edit_user_details_lastName.text.toString().trim { it <= ' ' }
+                        editUserProfileViewModel.updateUserDetails(firstName, lastName)
+                    }
                 }
             }
         }
@@ -70,5 +75,5 @@ class EditUserProfileActivity : AppCompatActivity() {
         finish()
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
-
+        
 }

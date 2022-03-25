@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_change_email_or_password.*
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import kotlinx.android.synthetic.main.activity_change_password.*
 
 
@@ -43,7 +41,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                     val currentPassword = change_password_currentPassword.text.toString().trim { it <= ' ' }
                     val newPassword = change_password_NewPassword.text.toString()
                     changePasswordViewModel.getUserDetails()
-                    changePasswordViewModel.updateEmailAndPassword(currentPassword,newPassword)
+                    changePasswordViewModel.updatePassword(currentPassword,newPassword)
                 }
             }
         }

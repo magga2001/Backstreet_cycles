@@ -69,7 +69,7 @@ class NavigationActivity : AppCompatActivity() {
     private val navigationLocationProvider = NavigationLocationProvider()
 
     private val locationComponent: LocationComponentPlugin by lazy {
-        mapView.location.apply {
+        navigation_mapView.location.apply {
             this.locationPuck = LocationPuck2D(
                 bearingImage = ContextCompat.getDrawable(
                     applicationContext,

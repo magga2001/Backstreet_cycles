@@ -79,8 +79,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_homepage)
 
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        homepage_mapView?.onCreate(savedInstanceState)
+        homepage_mapView?.getMapAsync(this)
 
         //Maybe check the functionality
         homePageViewModel.setUpdateInfo(false)
@@ -144,8 +144,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
         }
 
-        homepage_mapView?.onCreate(savedInstanceState)
-        homepage_mapView?.getMapAsync(this)
         homePageViewModel.getHasDuplicationLocation().observe(this){ duplicate ->
             if(duplicate)
             {
@@ -371,7 +369,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             Style.MAPBOX_STREETS
         ) { style ->
             enableLocationComponent(style)
-            setUpSymbol(mapView, mapboxMap, style)
+            setUpSymbol(homepage_mapView, mapboxMap, style)
             setUpSource(style)
             setUpLayer(style)
             setUpMarker(style)
@@ -465,7 +463,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        homepage_mapView?.onStart()
         homePageViewModel.destroyMapboxNavigation()
         homePageViewModel.getMapBoxNavigation()
     }

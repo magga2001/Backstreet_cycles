@@ -21,25 +21,16 @@ class ForgotPasswordActivity  : AppCompatActivity() {
 
     }
 
-    private fun initListener()
-    {
-        button_send_password_reset.setOnClickListener{
-            val email = et_email_forgot_password.text.toString().trim{it<=' ' }
-        forgot_password_SendPasswordReset_button.setOnClickListener{
-            val email:String=forgot_password_email.text.toString().trim{it<=' ' }
-            if (email.isEmpty()){
-                forgot_password_email.error = "Please enter your email"
+    private fun initListener() {
+        forgot_password_SendPasswordReset_button.setOnClickListener {
+            forgot_password_SendPasswordReset_button.setOnClickListener {
+                val email= forgot_password_email.text.toString().trim { it <= ' ' }
+                if (email.isEmpty()) {
+                    forgot_password_email.error = "Please enter your email"
+                } else {
+                    forgotPasswordViewModel.resetPassword(email)
+                }
             }
-            else{
-                forgotPasswordViewModel.resetPassword(email)
-            }
-
         }
     }
-
-
-
-
-
-
 }

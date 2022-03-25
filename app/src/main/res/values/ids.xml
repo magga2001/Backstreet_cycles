@@ -3,4 +3,5 @@
     <item name="tab_layout" type="id" />
     <item name="fragmentLayout" type="id" />
     <item name="pager" type="id" />
+    <item name="journey_history_title" type="id" />
 </resources>
