@@ -236,6 +236,36 @@ class JourneyViewModel @Inject constructor(
         SharedPrefHelper.clearListLocations()
     }
 
+    private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val user =  fireStore
+                .collection("users")
+                .whereEqualTo("email", userDetails.email)
+                .get()
+                .await()
+            val gson = Gson()
+            val jsonObject = gson.toJson(locations)
+            if (jsonObject.isNotEmpty()){
+                userDetails.journeyHistory.add(jsonObject)
+                if (user.documents.isNotEmpty()) {
+                    for (document in user) {
+
+                        try {
+                            fireStore.collection("users")
+                                .document(document.id)
+                                .update("journeyHistory",userDetails.journeyHistory)
+                        }
+                        catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                ToastMessageHelper.createToastMessage(mApplication,e.message)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     private fun displayPrice()
     {
         val price = MapInfoUseCase.getRental()
@@ -266,52 +296,5 @@ class JourneyViewModel @Inject constructor(
 
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
-    }
-//--------------------------------
-    //Tish stuff
-
-    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val user =  fireStore
-                .collection("users")
-                .whereEqualTo("email", userDetails.email)
-                .get()
-                .await()
-            val gson = Gson()
-            val jsonObject = gson.toJson(locations)
-            if (jsonObject.isNotEmpty()){
-                userDetails.journeyHistory.add(jsonObject)
-                if (user.documents.isNotEmpty()) {
-                    for (document in user) {
-
-                        try {
-                            fireStore.collection("users")
-                                .document(document.id)
-                                .update("journeyHistory",userDetails.journeyHistory)
-                        }
-                        catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                ToastMessageHelper.createToastMessage(mApplication,e.message)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    private fun convertJSON(serializedObject: String): List<Locations> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.type
-        return gson.fromJson(serializedObject, type)
-    }
-
-    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
-        val listLocations = emptyList<List<Locations>>().toMutableList()
-        for (journey in userDetails.journeyHistory){
-            val serializedObject: String = journey
-            listLocations.add(convertJSON(serializedObject))
-        }
-        return listLocations
     }
 }

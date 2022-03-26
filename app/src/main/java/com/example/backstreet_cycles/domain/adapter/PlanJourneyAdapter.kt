@@ -109,9 +109,6 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["dropOffPoint"]!!
             ))
             collapseBottomSheet.postValue(true)
-
-//            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-
         }
 
         holder.setNav3.setOnClickListener {
