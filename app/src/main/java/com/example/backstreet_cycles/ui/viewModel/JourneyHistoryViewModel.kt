@@ -10,7 +10,6 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
@@ -108,7 +107,8 @@ class JourneyHistoryViewModel @Inject constructor(
         val listLocations = emptyList<List<Locations>>().toMutableList()
         for (journey in userDetails.journeyHistory){
             val serializedObject: String = journey
-            listLocations.add(JsonHelper.convertJSON(serializedObject))
+            JsonHelper.stringToObject(serializedObject,Locations::class.java)
+                ?.let { listLocations.add(it) }
         }
         return listLocations
     }
@@ -152,8 +152,8 @@ class JourneyHistoryViewModel @Inject constructor(
         for(stop in stops){
             if(stop.name == "Current Location"){
 
-                val longitude = currentLocation!!.longitude
-                val latitude = currentLocation!!.latitude
+                val longitude = currentLocation.longitude
+                val latitude = currentLocation.latitude
 
                 stop.lat = latitude
                 stop.lon = longitude

@@ -1,15 +1,24 @@
 package com.example.backstreet_cycles.domain.utils
 
-import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.google.common.reflect.TypeToken
-import com.google.gson.Gson
-import java.lang.reflect.Type
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 object JsonHelper {
 
-    fun convertJSON(serializedObject: String): List<Locations> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Locations?>?>() {}.type
-        return gson.fromJson(serializedObject, type)
+
+    fun <T> stringToObject(text: String,  type: Class<T>): List<T>? {
+        val parameterizedType = Types.newParameterizedType(List::class.java,type)
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
+        return adapter.fromJson(text)
+    }
+
+    fun <T> objectToString(values: List<T>,  type: Class<T>): String{
+        val parameterizedType = Types.newParameterizedType(List::class.java,type)
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
+        return adapter.toJson(values)
     }
 }

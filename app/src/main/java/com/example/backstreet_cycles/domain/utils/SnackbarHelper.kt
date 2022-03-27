@@ -4,9 +4,6 @@ import android.view.View
 
 import com.google.android.material.snackbar.Snackbar
 
-
-
-
 object SnackbarHelper {
 
     fun displaySnackbar(view: View?, s: String?) {
