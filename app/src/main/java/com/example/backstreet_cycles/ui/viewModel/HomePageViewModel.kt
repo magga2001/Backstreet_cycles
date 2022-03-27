@@ -54,12 +54,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    private val getMapboxUseCase: GetMapboxUseCase,
+    private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext) {
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext) {
 
     private val mapboxNavigation by lazy {
 

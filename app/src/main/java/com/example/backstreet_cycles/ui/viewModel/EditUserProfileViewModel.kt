@@ -19,12 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class EditUserProfileViewModel @Inject constructor(
         getDockUseCase: GetDockUseCase,
-        getMapboxUseCase: GetMapboxUseCase,
-        locationRepository: LocationRepository,
         cyclistRepository: CyclistRepository,
         userRepository: UserRepository,
         @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository, applicationContext){
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository, applicationContext){
 
         private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
         private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()

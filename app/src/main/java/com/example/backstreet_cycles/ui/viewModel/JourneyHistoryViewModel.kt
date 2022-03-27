@@ -30,12 +30,11 @@ import javax.inject.Inject
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    private val getMapboxUseCase: GetMapboxUseCase,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext)  {
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext)  {
 
     private var stops: MutableList<Locations> = mutableListOf()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
