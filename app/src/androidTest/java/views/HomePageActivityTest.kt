@@ -29,6 +29,7 @@ import com.example.backstreet_cycles.views.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -55,9 +56,6 @@ class HomePageActivityTest {
 
     @Before
     fun setUp() {
-
-//        logInRegisterViewModel= LogInRegisterViewModel(Application())
-//        logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         Application().onCreate()
         if (firebaseAuth.currentUser == null) {
             logInRegisterViewModel.login(email, password)
@@ -75,7 +73,6 @@ class HomePageActivityTest {
 
     @Test
     fun test_bottom_sheet_is_displayed() {
-//        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
         onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
     }
@@ -88,8 +85,15 @@ class HomePageActivityTest {
 
 //    @Test
 //    fun test_current_location_card_shown() {
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
+//        //ActivityScenario.launch(HomePageActivity::class.java)
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.card_name),
+//                withParent(withId(R.id.cardView))
+//            )
+//        ).check(matches(withText("Current Location")))
+//
+//        //onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
 //    }
 
 //    @Test
@@ -137,6 +141,11 @@ class HomePageActivityTest {
 //    fun test_cardView_is_visible(){
 ////        ActivityScenario.launch(HomePageActivity::class.java)
 //        onView(withId(R.id.cardView)).check(matches(isDisplayed()))
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.cardView),
+//                withParent(withId(R.id.recyclerView))
+//            )).check(matches(isDisplayed()))
 //    }
 
 //    @Test
@@ -163,7 +172,14 @@ class HomePageActivityTest {
 //    @Test
 //    fun test_next_page_button_disabled_when_one_item_in_recyclerView(){
 ////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))
+//
+//        if(onView(withId(R.id.recyclerView)).(hasChildCount(1))){
+//            onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+//        }
+//        else{
+//            onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+//
+//        }
 //        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
 //    }
 
@@ -253,12 +269,16 @@ class HomePageActivityTest {
 //         intending(hasComponent(LogInActivity::class.qualifiedName))
 //     }
 
+    @Test
+    fun test_current_location_button_disabled_when_already_in_recyclerView(){
+        //test_current_location_is_in_list()
+         onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
+    }
+
 //    @Test
-//    fun test_current_location_button_disabled_when_already_in_recyclerView(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
+//    fun test_current_location_is_in_list(){
 //        onView(withId(R.id.recyclerView))
 //            .check(matches(hasDescendant(withText("Current Location"))))
-//        onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
 //    }
 
 //    @Test

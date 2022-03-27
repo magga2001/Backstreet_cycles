@@ -79,6 +79,15 @@ class EditUserProfileActivityTest{
         onView(withId(R.id.et_lastName_edit_user)).check(matches(isDisplayed()))
     }
 
+//    @Test
+//    fun test_check_if_first_name_is_inputted(){
+//
+//    }
+//    @Test
+//    fun test_check_if_last_name_is_inputted(){
+//
+//    }
+
     @Test
     fun test_on_pressBack_go_to_HomePageActivity(){
         pressBack()

@@ -19,7 +19,6 @@ class SplashScreenActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-
         splashViewModel = ViewModelProvider(this)[SplashViewModel::class.java]
         splashViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)

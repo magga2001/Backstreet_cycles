@@ -132,10 +132,10 @@ class NavMenuTest {
         onView(withId(R.id.user_name)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_nav_showUserEmail(){
-        onView(withId(R.id.tv_email)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_nav_showUserEmail(){
+//        onView(withId(R.id.tv_email)).check(matches(isDisplayed()))
+//    }
 
 //    @Test
 //    fun test_nav_equalCurrentUserName(){
@@ -149,11 +149,11 @@ class NavMenuTest {
 //        //val email = FirebaseAuth.getInstance().currentUser?.
 //    }
 
-    @Test
-    fun test_nav_equalCurrentUserEmail(){
-        val email = FirebaseAuth.getInstance().currentUser?.email
-        onView(withId(R.id.tv_email)).check(matches(withText(email)))
-    }
+//    @Test
+//    fun test_nav_equalCurrentUserEmail(){
+//        val email = FirebaseAuth.getInstance().currentUser?.email
+//        onView(withId(R.id.tv_email)).check(matches(withText(email)))
+//    }
 
     @After
     fun tearDown(){

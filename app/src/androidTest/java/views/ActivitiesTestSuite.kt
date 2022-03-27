@@ -16,8 +16,7 @@ import org.junit.runners.Suite
     AboutActivityTest::class,
     JourneyHistoryActivityTest::class,
     NavMenuTest::class,
-    CurrentJourneyTest::class,
-
-
+    CurrentJourneyTest::class
 )
+
 class ActivitiesTestSuite
