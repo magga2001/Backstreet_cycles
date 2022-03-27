@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import androidx.activity.viewModels
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -15,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 
 import com.google.firebase.auth.FirebaseAuth
 import org.hamcrest.Matchers
@@ -28,7 +30,7 @@ import org.junit.runner.RunWith
 class JourneyHistoryActivityTest {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    private lateinit var logInViewModel: LogInViewModel by viewModels()
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
@@ -43,8 +45,7 @@ class JourneyHistoryActivityTest {
     @Before
     fun setUp() {
         if (firebaseAuth.currentUser == null) {
-            logInRegisterViewModel = LogInRegisterViewModel(Application())
-            logInRegisterViewModel.login(email, password)
+            logInViewModel.login(email, password)
         }
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
