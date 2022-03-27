@@ -10,15 +10,10 @@ import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
-import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -53,13 +48,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
-    private val getMapboxUseCase: GetMapboxUseCase,
     private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext) {
+) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext) {
 
     private val mapboxNavigation by lazy {
 
@@ -177,7 +172,7 @@ class HomePageViewModel @Inject constructor(
 
     private fun getMapBoxRoute(routeOptions: RouteOptions)
     {
-        getMapboxUseCase(mapboxNavigation,routeOptions).onEach {
+        mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
             isReadyMutableLiveData.postValue(true)
         }.launchIn(viewModelScope)
     }
@@ -314,7 +309,7 @@ class HomePageViewModel @Inject constructor(
         if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
-            fetchRoute(mContext, BackstreetApplication.locations)
+            fetchRoute(mContext, getJourneyLocations())
         }
     }
 
@@ -322,7 +317,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            BackstreetApplication.locations = listOfLocations
+            mapboxRepository.setJourneyLocations(listOfLocations)
             fetchRoute(mContext, listOfLocations)
         }else
         {
@@ -334,7 +329,7 @@ class HomePageViewModel @Inject constructor(
         super.continueWithCurrentJourney()
         fetchRoute(
             mContext,
-            BackstreetApplication.locations,
+            getJourneyLocations(),
         )
     }
 
@@ -350,7 +345,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
         SharedPrefHelper.overrideSharedPref(mutableListOf(getNumCyclists().toString()),String::class.java)
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(BackstreetApplication.locations,Locations::class.java)
+        SharedPrefHelper.overrideSharedPref(getJourneyLocations(),Locations::class.java)
     }
 
     fun cancelWork() {
