@@ -10,14 +10,10 @@ import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -52,12 +48,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
+    userRepository: UserRepository,
+    private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext) {
+) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext) {
 
     private val mapboxNavigation by lazy {
 
@@ -175,7 +172,7 @@ class HomePageViewModel @Inject constructor(
 
     private fun getMapBoxRoute(routeOptions: RouteOptions)
     {
-        getMapboxUseCase(mapboxNavigation,routeOptions).onEach {
+        mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
             isReadyMutableLiveData.postValue(true)
         }.launchIn(viewModelScope)
     }
@@ -196,8 +193,10 @@ class HomePageViewModel @Inject constructor(
         val textColor = "black"
 
         symbolManager.iconAllowOverlap = true
-        val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication, R.drawable.tourist_attraction_icon) as Bitmap
-        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 100, 120, false))
+        val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication,
+            R.drawable.tourist_attraction_icon
+        ) as Bitmap
+        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 80, 80, false))
         for (attraction in data) {
             symbolManager.create(
                 SymbolOptions()
@@ -235,13 +234,12 @@ class HomePageViewModel @Inject constructor(
         return locationComponent.lastKnownLocation
     }
 
-    //bbox(-0.309133,51.416601,0.075759,51.605545)
     fun initPlaceAutoComplete(activity: Activity): Intent {
         return PlaceAutocomplete.IntentBuilder()
             .accessToken(mApplication.getString(R.string.mapbox_access_token)).
             placeOptions(
                 PlaceOptions.builder()
-                    .bbox(0.0264,51.5439,0.2398,51.4484)
+                    .bbox(-0.240,51.455,-0.0005,51.600)
                     .country("GB") // Restricts searches to just Great Britain
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)
@@ -311,7 +309,7 @@ class HomePageViewModel @Inject constructor(
         if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
-            fetchRoute(mContext, BackstreetApplication.locations)
+            fetchRoute(mContext, getJourneyLocations())
         }
     }
 
@@ -319,7 +317,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            BackstreetApplication.locations = listOfLocations
+            mapboxRepository.setJourneyLocations(listOfLocations)
             fetchRoute(mContext, listOfLocations)
         }else
         {
@@ -331,7 +329,7 @@ class HomePageViewModel @Inject constructor(
         super.continueWithCurrentJourney()
         fetchRoute(
             mContext,
-            BackstreetApplication.locations,
+            getJourneyLocations(),
         )
     }
 
@@ -347,7 +345,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
         SharedPrefHelper.overrideSharedPref(mutableListOf(getNumCyclists().toString()),String::class.java)
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(BackstreetApplication.locations,Locations::class.java)
+        SharedPrefHelper.overrideSharedPref(getJourneyLocations(),Locations::class.java)
     }
 
     fun cancelWork() {

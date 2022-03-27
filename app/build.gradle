@@ -98,13 +98,14 @@ dependencies {
     //Mapbox dependencies
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+    implementation("com.google.android.gms:play-services-location:19.0.1")
     implementation ('com.mapbox.maps:android:10.2.0'){
         exclude group: 'group_name', module: 'module_name'
     }
     implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
-    //Don't delete this yet... potential fix location update
+    //Dont delete this yet... potential fix location update
 //    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
         transitive(true)
@@ -120,7 +121,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
 
-    implementation('com.google.android.material:material:1.5.0')
     implementation'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.12.0'
     implementation('androidx.viewpager2:viewpager2:1.0.0')
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
@@ -137,7 +137,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:1.13.0"
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.7.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.2'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.7.2'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.7.2'
     //Volley
     implementation 'com.android.volley:volley:1.2.1'
     androidTestImplementation "androidx.test:runner:1.4.0"
@@ -156,7 +157,6 @@ dependencies {
 
     //BottomSheetBehaviour
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
-    implementation 'com.google.android.material:material:1.5.0'
 
     //UI testing
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

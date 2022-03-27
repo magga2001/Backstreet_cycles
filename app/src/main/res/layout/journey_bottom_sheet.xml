@@ -47,7 +47,8 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:text="@string/start_navigation_journey"
                     android:textAllCaps="false"
-                    android:textSize="14sp"  />
+                    android:textSize="14sp"
+                    android:enabled="false"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/journey_bottom_sheet_constraintLayout"

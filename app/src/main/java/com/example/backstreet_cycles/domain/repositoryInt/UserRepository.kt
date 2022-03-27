@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.domain.repositoryInt
 
 import android.content.ContentValues
+import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
@@ -27,4 +28,12 @@ interface UserRepository {
     fun resetPassword(email: String)
 
     fun logout()
+
+    fun getMutableLiveData(): MutableLiveData<FirebaseUser>
+
+    fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean>
+
+    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean>
+
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users>
 }

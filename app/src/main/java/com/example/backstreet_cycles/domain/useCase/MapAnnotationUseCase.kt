@@ -2,9 +2,9 @@ package com.example.backstreet_cycles.domain.useCase
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
@@ -19,10 +19,28 @@ object MapAnnotationUseCase {
 
     private var pointAnnotationManager: PointAnnotationManager ?= null
 
-    private fun buildAnnotationToMap(annotationApi: AnnotationPlugin, bitmaps: List<Bitmap>) {
+    fun addAnnotationToMap(
+        context: Context,
+        locations: MutableList<Locations>,
+        annotationApi: AnnotationPlugin,
+        state: JourneyState
+    )
+    {
+        val bitmaps = constructMarker(context, locations, state)
+
+        buildAnnotationToMap(locations, annotationApi, bitmaps)
+    }
+
+    fun removeAnnotations() {
+        if(pointAnnotationManager != null)
+        {
+            pointAnnotationManager!!.deleteAll()
+        }
+    }
+
+    private fun buildAnnotationToMap(locations: MutableList<Locations>,annotationApi: AnnotationPlugin, bitmaps: List<Bitmap>) {
 
         // Create an instance of the Annotation API and get the PointAnnotationManager.
-        val locations = BackstreetApplication.wayPoints
         pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
         for(i in locations.indices)
@@ -33,36 +51,25 @@ object MapAnnotationUseCase {
                 // Specify the bitmap you assigned to the point annotation
                 // The bitmap will be added to map style automatically.
                 .withIconImage(bitmaps[i])
-                .withIconAnchor(iconAnchor = IconAnchor.TOP)
-                .withTextAnchor(textAnchor = TextAnchor.BOTTOM)
+                .withIconAnchor(iconAnchor = IconAnchor.BOTTOM)
                 .withTextField(PlannerHelper.shortenName(locations[i].name).first())
-                .withTextSize(15.00)
+                .withTextAnchor(textAnchor = TextAnchor.TOP)
+                .withTextSize(13.00)
+                .withTextLetterSpacing(0.2)
+                .withTextColor("black")
+
             // Add the resulting pointAnnotation to the map.
             pointAnnotationManager!!.create(pointAnnotationOptions)
         }
     }
 
-    fun removeAnnotations() {
-        if(pointAnnotationManager != null)
-        {
-            pointAnnotationManager!!.deleteAll()
-        }
-    }
-
-    fun addAnnotationToMap(context: Context, annotationApi: AnnotationPlugin, state: JourneyState)
-    {
-        val bitmaps = constructMarker(context, state)
-
-        buildAnnotationToMap(annotationApi, bitmaps)
-    }
-
-    private fun constructMarker(context: Context, state: JourneyState): List<Bitmap> {
+    private fun constructMarker(context: Context, locations: MutableList<Locations>, state: JourneyState): List<Bitmap> {
         val image = when(state)
         {
-            JourneyState.START_WALKING -> constructImage(context, listOf(R.drawable.ic_baseline_location_on_red_24dp, R.drawable.santander_cycle_icon))
-            JourneyState.BIKING -> constructImage(context, listOf(R.drawable.santander_cycle_icon, R.drawable.santander_cycle_icon))
-            JourneyState.END_WALKING -> constructImage(context, listOf(R.drawable.santander_cycle_icon, R.drawable.ic_baseline_location_on_red_24dp))
-            else -> constructImage(context, BackstreetApplication.wayPoints.map { (R.drawable.ic_baseline_location_on_red_24dp) })
+            JourneyState.START_WALKING -> constructImage(context, listOf(R.drawable.redmapmarker, R.drawable.redcycledock))
+            JourneyState.BIKING -> constructImage(context, listOf(R.drawable.redcycledock, R.drawable.redcycledock))
+            JourneyState.END_WALKING -> constructImage(context, listOf(R.drawable.redcycledock, R.drawable.redmapmarker))
+            else -> constructImage(context, locations.map { (R.drawable.ic_baseline_location_on_red_24dp) })
         }
 
         return image

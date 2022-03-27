@@ -46,23 +46,21 @@ class EditUserProfileActivity : AppCompatActivity() {
     private fun initListener()
     {
         edit_user_details_SaveButton.setOnClickListener {
-            edit_user_details_SaveButton.setOnClickListener {
-                when {
-                    TextUtils.isEmpty(
-                        edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
-                        edit_user_details_firstName.error = getString(R.string.enter_first_name)
-                    }
-                    TextUtils.isEmpty(
-                        edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
-                        edit_user_details_lastName.error = getString(R.string.enter_last_name)
-                    }
-                    else -> {
-                        val firstName: String =
-                            edit_user_details_firstName.text.toString().trim { it <= ' ' }
-                        val lastName: String =
-                            edit_user_details_lastName.text.toString().trim { it <= ' ' }
-                        editUserProfileViewModel.updateUserDetails(firstName, lastName)
-                    }
+            when {
+                TextUtils.isEmpty(
+                    edit_user_details_firstName.text.toString().trim { it <= ' ' }) -> {
+                    edit_user_details_firstName.error = getString(R.string.enter_first_name)
+                }
+                TextUtils.isEmpty(
+                    edit_user_details_lastName.text.toString().trim { it <= ' ' }) -> {
+                    edit_user_details_lastName.error = getString(R.string.enter_last_name)
+                }
+                else -> {
+                    val firstName: String =
+                        edit_user_details_firstName.text.toString().trim { it <= ' ' }
+                    val lastName: String =
+                        edit_user_details_lastName.text.toString().trim { it <= ' ' }
+                    editUserProfileViewModel.updateUserDetails(firstName, lastName)
                 }
             }
         }

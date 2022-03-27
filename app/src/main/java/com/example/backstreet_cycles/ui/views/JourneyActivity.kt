@@ -10,9 +10,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
@@ -45,7 +45,9 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.bottom_sheet_journey.*
+import kotlinx.android.synthetic.main.journey_bottom_sheet.*
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
@@ -267,7 +269,8 @@ class JourneyActivity : AppCompatActivity() {
         }
 
         overview_journey.setOnClickListener {
-
+            planJourneyAdapter.getCollapseBottomSheet()
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
         }
@@ -369,7 +372,7 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
-        planJourneyAdapter = PlanJourneyAdapter(this, BackstreetApplication.locations, planner = journeyViewModel.getPlannerInterface())
+        planJourneyAdapter = PlanJourneyAdapter(this, journeyViewModel.getCurrentDocks(), journeyViewModel.getJourneyLocations(), planner = journeyViewModel.getPlannerInterface())
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
         finish_journey.isEnabled = false
@@ -377,14 +380,14 @@ class JourneyActivity : AppCompatActivity() {
 
     private fun initInfo()
     {
-        val numUsers = journeyViewModel.getNumCyclists()
+        val numCyclists = journeyViewModel.getNumCyclists()
 
-        if(numUsers < 2)
+        if(numCyclists < 2)
         {
             santander_link.text = "Hire a bike"
         }else
         {
-            santander_link.text = "Hire ${numUsers} bikes"
+            santander_link.text = "Hire ${numCyclists} bikes"
         }
     }
 
@@ -410,7 +413,7 @@ class JourneyActivity : AppCompatActivity() {
             R.id.refresh_button -> {
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
-                journeyViewModel.getDock()
+                lifecycleScope.launch { journeyViewModel.getDock() }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -431,14 +434,15 @@ class JourneyActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        val intent = Intent(this, HomePageActivity::class.java)
         journeyViewModel.clearView()
         journeyViewModel.clearCurrentSession()
+        startActivity(intent)
         finish()
     }
 
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
-
     }
 }

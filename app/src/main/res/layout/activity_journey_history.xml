@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.views.JourneyHistoryActivity"
     android:id="@+id/recentJourney_layout"
+    android:background="@color/underLine"
     >
 
     <androidx.recyclerview.widget.RecyclerView
@@ -14,23 +15,26 @@
         android:layout_height="617dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/journey_history_title"
-        app:layout_constraintVertical_bias="0.753" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
+        android:paddingLeft="7dp"
         android:id="@+id/journey_history_title"
-        android:layout_width="wrap_content"
+        android:layout_width="410dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/recent_journeys"
+        android:paddingBottom="7dp"
         android:fontFamily="@font/playfair_display"
+        android:text="@string/recent_journeys"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/indigo"
         android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintHorizontal_bias="0.064"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
