@@ -3,7 +3,7 @@ package com.example.backstreet_cycles.model
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.model.UserRepository
+import com.example.backstreet_cycles.data.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener

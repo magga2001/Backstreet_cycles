@@ -15,11 +15,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.model.UserRepository
-import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.views.HomePageActivity
-import com.example.backstreet_cycles.views.LogInActivity
-import com.example.backstreet_cycles.views.SignUpActivity
+import com.example.backstreet_cycles.data.repository.UserRepository
+import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
+import com.example.backstreet_cycles.ui.ui.views.LogInActivity
+import com.example.backstreet_cycles.ui.ui.views.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

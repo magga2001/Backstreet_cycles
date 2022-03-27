@@ -4,37 +4,26 @@ import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.swipeLeft
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.adapter.StopsAdapter
-import com.example.backstreet_cycles.model.UserRepository
-import com.example.backstreet_cycles.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.views.*
+import com.example.backstreet_cycles.data.repository.UserRepository
+import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.ui.ui.views.ChangeEmailOrPasswordActivity
+import com.example.backstreet_cycles.ui.ui.views.EditUserProfileActivity
+import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.Thread.sleep
 
 class HomePageActivityTest {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()

@@ -1,14 +1,9 @@
 package views
 
-import android.app.Application
-import android.content.ComponentName
-import android.os.SystemClock.sleep
-import android.support.test.InstrumentationRegistry.getTargetContext
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -16,14 +11,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.model.UserRepository
-import com.example.backstreet_cycles.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.views.HomePageActivity
-import com.example.backstreet_cycles.views.LogInActivity
-import com.example.backstreet_cycles.views.SplashScreenActivity
+import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
+import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
+import com.example.backstreet_cycles.ui.ui.views.LogInActivity
+import com.example.backstreet_cycles.ui.ui.views.SplashScreenActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

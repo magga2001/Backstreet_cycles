@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.views.NavigationActivity
+import com.example.backstreet_cycles.ui.ui.views.NavigationActivity
 import org.junit.After
 
 import org.junit.Before

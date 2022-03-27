@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_sheet"
+    android:id="@+id/homepage_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
@@ -10,45 +10,32 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    android:background="#80989898"
+    android:background="#80F6F2F2"
     android:orientation="vertical"
     android:padding="0dp"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="250dp"
+    app:behavior_peekHeight="220dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
+        android:id="@+id/homepage_bottom_sheet_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homepage_bottom_sheet_constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/addingBtn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:contentDescription="@string/add_button"-->
-<!--                android:paddingLeft="3dp"-->
-<!--                android:paddingTop="3dp"-->
-<!--                android:paddingRight="3dp"-->
-<!--                android:paddingBottom="3dp"-->
-<!--                android:src="@drawable/ic_baseline_add_24"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.500"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/myLocationButton" />-->
 
             <Button
                 android:id="@+id/addingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Stop"
+                android:textAllCaps="false"
                 app:layout_constraintEnd_toStartOf="@+id/nextPageButton"
                 app:layout_constraintStart_toEndOf="@+id/myLocationButton"
                 tools:ignore="MissingConstraints" />
@@ -60,12 +47,13 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:contentDescription="@string/location_button"
+                android:enabled="false"
                 android:paddingLeft="3dp"
                 android:paddingTop="3dp"
                 android:paddingRight="3dp"
                 android:paddingBottom="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/bottom_sheet"
+                app:layout_constraintStart_toStartOf="@id/homepage_bottom_sheet"
                 app:srcCompat="@android:drawable/ic_menu_mylocation"
                 tools:ignore="NotSibling" />
 
@@ -91,6 +79,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cyclists_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded"
@@ -104,8 +93,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
-            android:text="@string/users_number"
-            android:textSize="30sp"
+            android:text="@string/cyclists_number"
+            android:textColor="@color/indigo"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +109,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="24dp"
             android:text="1"
+            android:textColor="@color/indigo"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -163,7 +154,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/homepage_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addingBtn"

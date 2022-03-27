@@ -10,5 +10,6 @@
     <color name="underLine">#BDB8B8</color>
     <color name="grey">#818181</color>
     <color name="ivory">#FFFFF0</color>
-    <color name="baby_blue">#89CFF0</color>
+    <color name="indigo">#3F51B5</color>
+    <color name="light_blue">#9CF4FF</color>
 </resources>

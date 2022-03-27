@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".ui.views.FAQActivity"
     >
 
 
@@ -13,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
+        android:textColor="@color/indigo"
         android:textStyle="bold"
         android:fontFamily="@font/playfair_display"
         android:text="@string/FAQ"
@@ -53,6 +55,7 @@
         <TextView
             android:id="@+id/FAQ_a1"
             android:layout_width="wrap_content"
+            android:textColor="@color/indigo"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:text="@string/Q1"
@@ -97,6 +100,7 @@
             android:layout_width="180dp"
             android:layout_height="21dp"
             android:text="@string/Q3"
+            android:textColor="@color/indigo"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/FAQ_a3"
@@ -136,6 +140,7 @@
             android:id="@+id/FAQ_q2"
             android:layout_width="301dp"
             android:layout_height="49dp"
+            android:textColor="@color/indigo"
             android:text="@string/Q2"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="14sp"

@@ -2,18 +2,14 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'dagger.hilt.android.plugin'
     id 'jacoco'
 }
 
-//apply plugin: 'com.android.application'
-//apply plugin: 'com.google.gms.google-services'
-////apply plugin: 'com.getkeepsafe.dexcount'
-////apply plugin: 'realm-android'
-//apply plugin: 'jacoco'
-
 jacoco {
-    toolVersion = '0.8.7' //Use latest version
+    toolVersion = '0.8.7'
 }
 
 android {
@@ -89,7 +85,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.2.1'
     //UI testing
-    //androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //Mapbox dependencies
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
@@ -99,6 +95,8 @@ dependencies {
     implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
+    //Don't delete this yet... potential fix location update
+//    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
         transitive(true)
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-plugin-annotation-v8'
@@ -161,7 +159,7 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:8.1.1@aar'
 
     //Notification
-    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.core:core-ktx:1.7.0")
     implementation 'com.google.android.gms:play-services-base:18.0.1'
 
     //WorkManager
@@ -170,6 +168,13 @@ dependencies {
 
     //GIF Dependency
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
+
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     androidTestImplementation'com.android.support.test:rules:1.0.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2'){

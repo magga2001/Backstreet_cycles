@@ -1,78 +1,119 @@
 package com.example.backstreet_cycles.service
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.backstreet_cycles.DTO.Dock
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.interfaces.CallbackListener
-import com.example.backstreet_cycles.utils.SharedPrefHelper
-import com.example.backstreet_cycles.views.HomePageActivity
-import com.example.backstreet_cycles.views.LogInActivity
+import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.ui.views.HomePageActivity
+import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.mapbox.geojson.Point
 import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.internal.Contexts.getApplication
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 
-class WorkerService(context: Context, userParameters: WorkerParameters) :
-    Worker(context, userParameters) {
+@HiltWorker
+class WorkerService @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted userParameters: WorkerParameters,
+    private val getDockUseCase: GetDockUseCase,
+) : Worker(context, userParameters) {
 
     override fun doWork(): Result {
 
-//        attemptNotification()
+        attemptNotification()
 
         return Result.success()
     }
 
-//    private fun attemptNotification()
-//    {
-//        NetworkManager.getDock(context = applicationContext,
-//
-//            object : CallbackListener<MutableList<Dock>> {
-//                override fun getResult(objects: MutableList<Dock>) {
-//
-//                    //Do whatever with shared preference...
-//
-//                    if(checkUpdate(objects))
-//                    {
-//                        createNotificationChannel(context = applicationContext)
-//                        notificationTapAction(context = applicationContext)
-//                    }
-//
-//                }
-//            }
-//        )
-//    }
+    private fun attemptNotification()
+    {
 
-//    private fun checkUpdate(docks: MutableList<Dock>): Boolean
-//    {
-//        Log.i("Dock Application", docks.size.toString())
-//
-////        val currentDocks = SharedPrefHelper.getSharedPref()
-//
-//        Log.i("currentDocks", currentDocks.size.toString())
-//
-//        docks.filter { currentDocks.contains(it) }
-//
-//        //1 is for numUser
-//        for(dock in docks)
-//        {
-//            if(!currentDocks.contains(dock) || dock.nbSpaces < 1)
-//            {
-//                return false
-//            }
-//        }
-//
-//        return true
-//    }
+        Log.i("Starting attempt", "Success")
+
+        runBlocking {
+            getDockUseCase().onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        Log.i("Notification dock", result.data?.size.toString())
+
+                            if(checkUpdate(result.data))
+                            {
+                                createNotificationChannel(context = applicationContext)
+                                notificationTapAction(context = applicationContext)
+                            }
+                    }
+
+                    is Resource.Error -> {
+                        Log.i("New dock", "Error")
+
+                    }
+                    is Resource.Loading -> {
+                        Log.i("New dock", "Loading...")
+                    }
+                }
+            }.collect()
+        }
+    }
+
+    private fun checkUpdate(docks: MutableList<Dock>?): Boolean
+    {
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.DOCKS_LOCATIONS)
+        val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
+        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
+        val numUser = SharedPrefHelper.getSharedPref(String::class.java)
+        numUser.map { it.toInt() }
+
+       return checkForNewDock(currentDocks, docks, numUser)
+    }
+
+    private fun checkForNewDock(
+        currentDocks: MutableList<Point>,
+        docks: MutableList<Dock>?,
+        numUser: MutableList<String>
+    ): Boolean{
+        val currentPoint = mutableListOf<Point>()
+
+        for(point in currentDocks)
+        {
+            val lon = point.longitude()
+            val lat = point.latitude()
+
+            currentPoint.add(Point.fromLngLat(lon,lat))
+        }
+
+        val filteredDock = docks?.filter {
+            val point = Point.fromLngLat(it.lon, it.lat)
+            currentPoint.contains(point)
+        }
+
+
+        for(dock in filteredDock!!)
+            if(dock.nbSpaces >= numUser.first().toInt() && filteredDock.size == currentPoint.size)
+            {
+                return false
+            }
+
+        return true
+    }
 
     private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because

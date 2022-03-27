@@ -1,0 +1,86 @@
+package com.example.backstreet_cycles.domain.useCase
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.util.Log
+import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.domain.utils.BitmapHelper
+import com.example.backstreet_cycles.domain.utils.JourneyState
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
+import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+
+object MapAnnotationUseCase {
+
+    private var pointAnnotationManager: PointAnnotationManager ?= null
+
+    private fun buildAnnotationToMap(annotationApi: AnnotationPlugin, bitmaps: List<Bitmap>) {
+
+        // Create an instance of the Annotation API and get the PointAnnotationManager.
+        val locations = BackstreetApplication.wayPoints
+        pointAnnotationManager = annotationApi.createPointAnnotationManager()
+
+        for(i in locations.indices)
+        {
+            val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
+                // Define a geographic coordinate.
+                .withPoint(PlannerHelper.convertLocationToPoint(locations[i]))
+                // Specify the bitmap you assigned to the point annotation
+                // The bitmap will be added to map style automatically.
+                .withIconImage(bitmaps[i])
+                .withIconAnchor(iconAnchor = IconAnchor.TOP)
+                .withTextAnchor(textAnchor = TextAnchor.BOTTOM)
+                .withTextField(PlannerHelper.shortenName(locations[i].name).first())
+                .withTextSize(15.00)
+            // Add the resulting pointAnnotation to the map.
+            pointAnnotationManager!!.create(pointAnnotationOptions)
+        }
+    }
+
+    fun removeAnnotations() {
+        if(pointAnnotationManager != null)
+        {
+            pointAnnotationManager!!.deleteAll()
+        }
+    }
+
+    fun addAnnotationToMap(context: Context, annotationApi: AnnotationPlugin, state: JourneyState)
+    {
+        val bitmaps = constructMarker(context, state)
+
+        buildAnnotationToMap(annotationApi, bitmaps)
+    }
+
+    private fun constructMarker(context: Context, state: JourneyState): List<Bitmap> {
+        val image = when(state)
+        {
+            JourneyState.START_WALKING -> constructImage(context, listOf(R.drawable.ic_baseline_location_on_red_24dp, R.drawable.santander_cycle_icon))
+            JourneyState.BIKING -> constructImage(context, listOf(R.drawable.santander_cycle_icon, R.drawable.santander_cycle_icon))
+            JourneyState.END_WALKING -> constructImage(context, listOf(R.drawable.santander_cycle_icon, R.drawable.ic_baseline_location_on_red_24dp))
+            else -> constructImage(context, BackstreetApplication.wayPoints.map { (R.drawable.ic_baseline_location_on_red_24dp) })
+        }
+
+        return image
+    }
+
+    private fun constructImage(context: Context,drawables : List<Int>): List<Bitmap> {
+        val bitmaps = mutableListOf<Bitmap>()
+
+        for(drawable in drawables)
+        {
+            bitmaps.add(constructBitmap(context, drawable))
+        }
+
+        return bitmaps
+    }
+
+    private fun constructBitmap(context: Context, drawable: Int): Bitmap {
+        val rawBitmap = BitmapHelper.bitmapFromDrawableRes(context, drawable) as Bitmap
+        return Bitmap.createScaledBitmap(rawBitmap, 80, 80, false)
+    }
+}
