@@ -240,7 +240,7 @@ class HomePageViewModel @Inject constructor(
             .accessToken(mApplication.getString(R.string.mapbox_access_token)).
             placeOptions(
                 PlaceOptions.builder()
-                    .bbox(-0.309133,51.416601,0.075759,51.605545)
+                    .bbox(-0.240,51.455,-0.0005,51.600)
                     .country("GB") // Restricts searches to just Great Britain
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)

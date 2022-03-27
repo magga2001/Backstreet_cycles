@@ -267,7 +267,8 @@ class JourneyActivity : AppCompatActivity() {
         }
 
         overview_journey.setOnClickListener {
-
+            planJourneyAdapter.getCollapseBottomSheet()
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
         }
