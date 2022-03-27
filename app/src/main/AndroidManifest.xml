@@ -22,7 +22,7 @@
         >
         <activity
             android:name="com.example.backstreet_cycles.ui.views.JourneyHistoryActivity"
-            android:exported="false" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.FAQActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
@@ -58,7 +58,8 @@
         <activity
             android:name="com.example.backstreet_cycles.ui.views.ForgotPasswordActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
-        <activity android:name="com.example.backstreet_cycles.ui.views.JourneyActivity" />
+        <activity android:name="com.example.backstreet_cycles.ui.views.JourneyActivity"
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"/>
 
         <provider
             android:name="androidx.startup.InitializationProvider"
