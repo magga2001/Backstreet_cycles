@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.data.local
 
 import android.app.Application
-import android.util.Log
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.JsonHelper
@@ -11,19 +10,10 @@ object TouristAttractionFile {
 
     private val touristAttractions = mutableListOf<Locations>()
 
-    fun loadLocations(application: Application)
-    {
-        Log.i("Loading Tourist...", "success")
-        val touristAttractionText = getTextFromResources(application, R.raw.touristattraction)
+    fun loadLocations(application: Application) {
+        Timber.tag("Loading Tourist...").i( "success")
+        val touristAttractionText = JsonHelper.getJsonFromResources(application, R.raw.touristattraction)
         addTouristLocations(touristAttractionText)
-    }
-
-    private fun getTextFromResources(application: Application, resourceId: Int): String{
-        return application.resources.openRawResource(resourceId).use { it ->
-            it.bufferedReader().use {
-                it.readText()
-            }
-        }
     }
 
     private fun addTouristLocations (text: String) {
