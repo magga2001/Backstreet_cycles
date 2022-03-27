@@ -20,7 +20,6 @@ import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
@@ -66,7 +65,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.layout_plan_journey, parent, false)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.journey_expandable_card, parent, false)
         val viewHolder = ViewHolder(view)
         addViewHolder(viewHolder)
         return viewHolder

@@ -45,7 +45,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
-import kotlinx.android.synthetic.main.bottom_sheet_journey.*
+import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
