@@ -309,7 +309,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
 
-            homePageViewModel.updateCurrentLocation(locationComponent)
+            homePageViewModel.getCurrentLocation(locationComponent)
+                ?.let { it1 -> homePageViewModel.updateCurrentLocation(it1) }
             homePageViewModel.getDock()
         }
 

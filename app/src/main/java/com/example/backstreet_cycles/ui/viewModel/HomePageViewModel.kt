@@ -221,13 +221,13 @@ class HomePageViewModel @Inject constructor(
         hasCurrentLocation.postValue(stop)
     }
 
-    fun updateCurrentLocation(locationComponent: LocationComponent)
+    fun updateCurrentLocation(currentLocation: Location?)
     {
         for(stop in stops){
             if(stop.name == "Current Location"){
 
-                val longitude = getCurrentLocation(locationComponent)!!.longitude
-                val latitude = getCurrentLocation(locationComponent)!!.latitude
+                val longitude = currentLocation!!.longitude
+                val latitude = currentLocation!!.latitude
 
                 stop.lat = latitude
                 stop.lon = longitude
