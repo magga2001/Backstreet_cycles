@@ -8,8 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -436,9 +434,10 @@ class JourneyActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        val intent = Intent(this, HomePageActivity::class.java)
         journeyViewModel.clearView()
         journeyViewModel.clearCurrentSession()
-
+        startActivity(intent)
         finish()
     }
 
