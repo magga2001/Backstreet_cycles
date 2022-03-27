@@ -196,8 +196,10 @@ class HomePageViewModel @Inject constructor(
         val textColor = "black"
 
         symbolManager.iconAllowOverlap = true
-        val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication, R.drawable.tourist_attraction_icon) as Bitmap
-        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 100, 120, false))
+        val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication,
+            R.drawable.tourist_attraction_icon
+        ) as Bitmap
+        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 80, 80, false))
         for (attraction in data) {
             symbolManager.create(
                 SymbolOptions()
