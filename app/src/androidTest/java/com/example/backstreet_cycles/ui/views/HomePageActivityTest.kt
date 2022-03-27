@@ -57,13 +57,13 @@ class HomePageActivityTest {
 
     @Test
     fun test_map_on_homepage_is_displayed() {
-        onView(withId(R.id.mapView)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_mapView)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_bottom_sheet_is_displayed() {
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -176,7 +176,7 @@ class HomePageActivityTest {
     fun bottom_sheet_invoked_show_users_field() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Checking whether the users field is displayed
         onView(withId(R.id.Users)).check(matches(withText("Users:")))
     }
@@ -185,7 +185,7 @@ class HomePageActivityTest {
     fun bottom_sheet_invoked_show_number_of_users_is_one() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Checking whether the number of users is one
         onView(withId(R.id.UserNumber)).check(matches(withText("1")))
     }
@@ -194,7 +194,7 @@ class HomePageActivityTest {
     fun bottom_sheet_invoked_show_increment_and_decrement_buttons() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Checking whether the increment and decrement buttons are displayed
         onView(withId(R.id.decrementButton)).check(matches(isDisplayed()))
         onView(withId(R.id.incrementButton)).check(matches(isDisplayed()))
@@ -204,7 +204,7 @@ class HomePageActivityTest {
     fun increment_button_clicked_number_of_users_incremented_by_one() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Click increment button
         onView(withId(R.id.incrementButton)).perform(click())
         //Checking if number of users changed to two
@@ -216,7 +216,7 @@ class HomePageActivityTest {
     fun decrement_button_clicked_number_of_users_decremented_by_one() {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         // Checking whether bottom sheet is displayed
-        onView(withId(R.id.bottom_sheet_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.homepage_bottom_sheet_view)).check(matches(isDisplayed()))
         //Click increment button
         onView(withId(R.id.incrementButton)).perform(click())
         //Checking if number of users changed to two
@@ -232,7 +232,7 @@ class HomePageActivityTest {
 //        ActivityScenario.launch(HomePageActivity::class.java)
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.changePassword)).perform(click())
-        intending(hasComponent(ChangeEmailOrPasswordActivity::class.qualifiedName))
+        intending(hasComponent(ChangePasswordActivity::class.qualifiedName))
         pressBack()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }

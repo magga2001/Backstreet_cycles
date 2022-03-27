@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.ui.ui.views.NavigationActivity
+import com.example.backstreet_cycles.ui.views.NavigationActivity
 import org.junit.After
 
 import org.junit.Before
@@ -30,7 +30,7 @@ class NavigationActivityTest {
 
     @Test
     fun navigation_mapView_is_displayed(){
-        onView(withId(R.id.mapView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        onView(withId(R.id.navigation_mapView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test

@@ -84,7 +84,7 @@
             tools:ignore="TextContrastCheck" />
 
         <EditText
-            android:id="@+id/sign_up_change_email"
+            android:id="@+id/sign_up_edit_user_details_email"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -99,7 +99,7 @@
             android:textStyle="italic" />
 
         <EditText
-            android:id="@+id/sign_up_password"
+            android:id="@+id/sign_up_edit_user_details_password"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -115,7 +115,7 @@
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/sign_up_confirmPassword"
+            android:id="@+id/sign_up_edit_user_details_confirm_password"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"

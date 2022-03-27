@@ -35,27 +35,27 @@ class SignUpActivity : AppCompatActivity() {
                         sign_up_edit_user_details_lastName.error = getString(R.string.enter_last_name)
                     }
 
-                    TextUtils.isEmpty(sign_up_change_email.text.toString().trim { it <= ' ' }) -> {
-                        sign_up_change_email.error = getString(R.string.enter_email)
+                    TextUtils.isEmpty(sign_up_edit_user_details_email.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_email.error = getString(R.string.enter_email)
                     }
 
-                    TextUtils.isEmpty(sign_up_password.text.toString().trim { it <= ' ' }) -> {
-                        sign_up_password.error = getString(R.string.enter_password)
+                    TextUtils.isEmpty(sign_up_edit_user_details_password.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_password.error = getString(R.string.enter_password)
                     }
 
-                    TextUtils.isEmpty(sign_up_confirmPassword.text.toString().trim { it <= ' ' }) -> {
-                        sign_up_confirmPassword.error = getString(R.string.enter_confirmed_password)
+                    TextUtils.isEmpty(sign_up_edit_user_details_confirm_password.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_confirm_password.error = getString(R.string.enter_confirmed_password)
                     }
 
-                    (sign_up_confirmPassword.text.toString().trim()) != (sign_up_password.text.toString().trim { it <= ' ' }) -> {
-                        sign_up_confirmPassword.error = getString(R.string.password_not_match)
+                    (sign_up_edit_user_details_confirm_password.text.toString().trim()) != (sign_up_edit_user_details_password.text.toString().trim { it <= ' ' }) -> {
+                        sign_up_edit_user_details_confirm_password.error = getString(R.string.password_not_match)
                     }
 
                     else -> {
                         val firstName: String = sign_up_edit_user_details_firstName.text.toString().trim { it <= ' ' }
                         val lastName: String = sign_up_edit_user_details_lastName.text.toString().trim { it <= ' ' }
-                        val email: String = sign_up_change_email.text.toString().trim { it <= ' ' }
-                        val password: String = sign_up_password.text.toString().trim { it <= ' '}
+                        val email: String = sign_up_edit_user_details_email.text.toString().trim { it <= ' ' }
+                        val password: String = sign_up_edit_user_details_password.text.toString().trim { it <= ' '}
 
                         signUpViewModel.register(firstName, lastName, email, password)
                         val intent = Intent(this, LogInActivity::class.java)

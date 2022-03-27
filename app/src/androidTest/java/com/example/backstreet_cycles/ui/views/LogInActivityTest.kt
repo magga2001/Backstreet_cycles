@@ -64,40 +64,40 @@ class LogInActivityTest{
     }
 
     @Test
-    fun test_title_is_visible() {
-        onView(withId(R.id.et_log_in_title)).check(matches(isDisplayed()))
+    fun test_logo_is_visible() {
+        onView(withId(R.id.log_in_image_view)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonCreateAccount_is_visible() {
-        onView(withId(R.id.buttonCreateAccount)).check(matches(isDisplayed()))
+        onView(withId(R.id.log_in_buttonCreateAccount)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonLogin_is_visible() {
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.log_in_button)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_email_text_box_validate_input() {
-        onView(withId(R.id.et_email_log_in)).perform(typeText(email)).check(matches(withText(email)))
+        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
     }
 
     @Test
     fun test_password_text_box_validate_input() {
-        onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
+        onView(withId(R.id.log_in_password)).perform(typeText(password)).check(matches(withText(password)))
     }
 
     @Test
     fun test_launch_sign_up_with_create_button() {
-        onView(allOf(withId(R.id.buttonCreateAccount), withParent(withId(R.id.log_in_linear_layout)))).perform(click())
+        onView(allOf(withId(R.id.log_in_buttonCreateAccount), withParent(withId(R.id.log_in_LinearLayout)))).perform(click())
         intending(hasComponent(SignUpActivity::class.qualifiedName))
 
     }
 
     @Test
     fun test_backPress_toLogInActivity() {
-        onView(withId(R.id.buttonCreateAccount)).perform(click())
+        onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
         intending(hasComponent(SignUpActivity::class.qualifiedName))
         pressBack()
         intending(hasComponent(LogInActivity::class.qualifiedName))
@@ -105,24 +105,24 @@ class LogInActivityTest{
 
     @Test
     fun test_homePageActivityLaunched_when_login_clicked(){
-        onView(withId(R.id.et_email_log_in)).perform(typeText(email)).check(matches(withText(email)))
-        onView(withId(R.id.et_password_log_in)).perform(typeText(password)).check(matches(withText(password)))
+        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
+        onView(withId(R.id.log_in_password)).perform(typeText(password)).check(matches(withText(password)))
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
     @Test
     fun login_email_is_empty() {
-        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.buttonLogin)).perform(ViewActions.click())
-        onView(withId(R.id.et_email_log_in)).check(matches(hasErrorText("Please enter your email")))
+        onView(withId(R.id.log_in_email)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.log_in_buttonCreateAccount)).perform(ViewActions.click())
+        onView(withId(R.id.log_in_email)).check(matches(hasErrorText("Please enter your email")))
     }
 
     @Test
     fun login_password_is_empty() {
-        onView(withId(R.id.et_email_log_in)).perform(ViewActions.replaceText("test"))
-        onView(withId(R.id.et_password_log_in)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.buttonLogin)).perform(ViewActions.click())
-        onView(withId(R.id.et_password_log_in)).check(matches(hasErrorText("Please enter a password")))
+        onView(withId(R.id.log_in_email)).perform(ViewActions.replaceText("test"))
+        onView(withId(R.id.log_in_password)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.log_in_buttonCreateAccount)).perform(ViewActions.click())
+        onView(withId(R.id.log_in_password)).check(matches(hasErrorText("Please enter a password")))
     }
 
     @After

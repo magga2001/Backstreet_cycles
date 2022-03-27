@@ -27,7 +27,7 @@ import org.junit.After
 import org.junit.Rule
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class ChangeEmailOrPasswordActivityTest{
+class ChangePasswordActivityTest{
 
     lateinit var logInRegisterViewModel: LogInRegisterViewModel
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -48,45 +48,45 @@ class ChangeEmailOrPasswordActivityTest{
             logInRegisterViewModel.login(email, password)
         }
         Application().onCreate()
-        ActivityScenario.launch(ChangeEmailOrPasswordActivity::class.java)
+        ActivityScenario.launch(ChangePasswordActivity::class.java)
         init()
-
     }
+
     @Test
     fun test_activity_launched_user_email_displayed() {
         val email = FirebaseAuth.getInstance().currentUser?.email
-        onView(withId(R.id.et_email_change_password)).check(matches(ViewMatchers.withText(email)))
+        onView(withId(R.id.change_password_email)).check(matches(ViewMatchers.withText(email)))
     }
 
     @Test
     fun test_current_password_field_is_displayed(){
-        onView(withId(R.id.et_current_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_currentPassword)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_new_password_field_is_displayed(){
-        onView(withId(R.id.et_new_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_NewPassword)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_save_button_is_displayed(){
-        onView(withId(R.id.buttonSave)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_SaveButton)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_activity_launched_text_field_current_password() {
-        onView(withId(R.id.et_current_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_currentPassword)).check(matches(isDisplayed()))
         val testInput = "password"
-        onView(withId(R.id.et_current_password)).perform(typeText(testInput))
-        onView(withId(R.id.et_current_password)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.change_password_currentPassword)).perform(typeText(testInput))
+        onView(withId(R.id.change_password_currentPassword)).check(matches(ViewMatchers.withText(testInput)))
     }
 
     @Test
     fun test_activity_launched_text_field_new_password() {
-        onView(withId(R.id.et_new_password)).check(matches(isDisplayed()))
+        onView(withId(R.id.change_password_NewPassword)).check(matches(isDisplayed()))
         val testInput = "password"
-        onView(withId(R.id.et_new_password)).perform(typeText(testInput))
-        onView(withId(R.id.et_new_password)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput))
+        onView(withId(R.id.change_password_NewPassword)).check(matches(ViewMatchers.withText(testInput)))
     }
 
     @Test
