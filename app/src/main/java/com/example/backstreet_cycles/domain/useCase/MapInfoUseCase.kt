@@ -11,33 +11,42 @@ import kotlin.math.ceil
 
 object MapInfoUseCase {
 
-    fun getClosestDocks(point: Point, numUser: Int): Dock {
+    fun getClosestDocksToOrigin(docks: MutableList<Dock>, point: Point, numUser: Int): Dock {
 
-        BackstreetApplication.docks.filter { it.nbSpaces >= numUser }
-        BackstreetApplication.docks.sortBy {
+        docks.filter { it.nbBikes >= numUser }
+        docks.sortBy {
             abs(it.lat - point.latitude()) + abs(it.lon - point.longitude())
         }
 
-        return BackstreetApplication.docks.first()
+        return docks.first()
     }
 
-    fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute
-    {
+    fun getClosestDocksToDestination(docks: MutableList<Dock>, point: Point, numUser: Int): Dock {
+
+        docks.filter { it.nbSpaces >= numUser }
+        docks.sortBy {
+            abs(it.lat - point.latitude()) + abs(it.lon - point.longitude())
+        }
+
+        return docks.first()
+    }
+
+    fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute {
         val route = routes.sortedBy { it.duration() }
 
         return route.first()
     }
 
-    fun getJourneyInfo(route: DirectionsRoute)
-    {
-        BackstreetApplication.distances.add(route.distance())
-        BackstreetApplication.durations.add(route.duration())
-
+    fun retrieveJourneyDistances(route: DirectionsRoute): Double {
+        return route.distance()
     }
 
-    fun getRental(): Double
-    {
-        var prices = ceil(((((BackstreetApplication.durations.sum()/60) - Constants.MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / Constants.MINUTE_RATE))) * 2
+    fun retrieveJourneyDurations(route: DirectionsRoute) : Double {
+        return route.duration()
+    }
+
+    fun getRental(durations: MutableList<Double>): Double {
+        var prices = ceil(((((durations.sum()/60) - Constants.MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / Constants.MINUTE_RATE))) * 2
 
         if(prices <= 0)
         {

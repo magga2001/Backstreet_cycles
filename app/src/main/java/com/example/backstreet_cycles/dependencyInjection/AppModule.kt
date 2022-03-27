@@ -7,17 +7,17 @@ import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.repositoryInt.*
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.service.WorkerService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -27,9 +27,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTflApi(): TflApi {
+        val adapterFactory = KotlinJsonAdapterFactory()
+        val moshi = Moshi.Builder().add(adapterFactory).build()
+        val moshiFactory = MoshiConverterFactory.create(moshi)
+
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(moshiFactory)
             .build()
             .create(TflApi::class.java)
     }
@@ -68,12 +72,6 @@ object AppModule {
     @Singleton
     fun provideCyclistRepository(): CyclistRepository {
         return CyclistRepositoryImpl()
-    }
-
-    @Provides
-    @Singleton
-    fun provideWorkerService(tflRepository: TflRepository): GetDockUseCase {
-        return GetDockUseCase(tflRepository)
     }
 
     @Provides

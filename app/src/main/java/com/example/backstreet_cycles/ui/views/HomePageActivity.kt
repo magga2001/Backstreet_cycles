@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +48,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
@@ -99,7 +101,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         homePageViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(BackstreetApplication.locations)
+                alertDialog(homePageViewModel.getJourneyLocations())
             }
         }
 
@@ -309,9 +311,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener{
 
-            homePageViewModel.getCurrentLocation(locationComponent)
-                ?.let { it1 -> homePageViewModel.updateCurrentLocation(it1) }
-            homePageViewModel.getDock()
+            homePageViewModel.updateCurrentLocation(locationComponent)
+            lifecycleScope.launch { homePageViewModel.getDock() }
         }
 
         stopsAdapter.getCollapseBottomSheet()

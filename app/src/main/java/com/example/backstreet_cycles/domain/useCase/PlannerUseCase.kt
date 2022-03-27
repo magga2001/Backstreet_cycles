@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -12,18 +13,21 @@ import com.mapbox.geojson.Point
 
 object PlannerUseCase {
 
-    fun calcBicycleRental(application: Application, numUser: Int, plannerInterface: Planner)
+    fun calcBicycleRental(
+        application: Application,
+        docks: MutableList<Dock>,
+        locations: MutableList<Locations>,
+        numCyclists: Int,
+        plannerInterface: Planner
+    )
     {
-        val locations = BackstreetApplication.locations
-
-        Log.i("location", BackstreetApplication.locations.toString())
         val points = mutableListOf<Point>()
 
         for(i in 1 until locations.size)
         {
             Log.i("Looping: ", i.toString())
 
-            val journey = calcRoutePlanner(locations[i-1], locations[i], numUser)
+            val journey = calcRoutePlanner(docks, locations[i-1], locations[i], numCyclists)
             val pickUpPoint = journey["pickUpPoint"]!!
             val dropOffPoint = journey["dropOffPoint"]!!
 
@@ -32,8 +36,6 @@ object PlannerUseCase {
 
             points.add(PlannerHelper.convertLocationToPoint(pickUpPoint))
             points.add(PlannerHelper.convertLocationToPoint(dropOffPoint))
-
-
 
             plannerInterface.onFetchJourney(mutableListOf(pickUpPoint,dropOffPoint))
         }
@@ -44,6 +46,7 @@ object PlannerUseCase {
     }
 
     fun calcRoutePlanner(
+        docks: MutableList<Dock>,
         fromLocation: Locations,
         ToLocation: Locations,
         numUser: Int
@@ -55,7 +58,8 @@ object PlannerUseCase {
         //Find closest pick up dock station
 
         val findClosestPickUp =
-            MapInfoUseCase.getClosestDocks(
+            MapInfoUseCase.getClosestDocksToOrigin(
+                docks,
                 Point.fromLngLat(
                     startingPoint.longitude(),
                     startingPoint.latitude()
@@ -66,7 +70,8 @@ object PlannerUseCase {
 
         //Find closest drop off dock station
         val findClosestDropOff =
-            MapInfoUseCase.getClosestDocks(
+            MapInfoUseCase.getClosestDocksToDestination(
+                docks,
                 Point.fromLngLat(
                     ToLocation.lon,
                     ToLocation.lat)

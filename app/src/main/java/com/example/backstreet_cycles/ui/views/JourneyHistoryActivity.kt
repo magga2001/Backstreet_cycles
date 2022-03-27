@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.BackstreetApplication
@@ -17,6 +18,7 @@ import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class JourneyHistoryActivity : AppCompatActivity() {
@@ -44,7 +46,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         journeyHistoryViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(BackstreetApplication.locations)
+                alertDialog(journeyHistoryViewModel.getJourneyLocations())
             }
         }
 
@@ -71,7 +73,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
                 val currentLocation: Location = intent.getParcelableExtra("User Location")!!
                 journeyHistoryViewModel.updateCurrentLocation(currentLocation)
-                journeyHistoryViewModel.getDock()
+                lifecycleScope.launch { journeyHistoryViewModel.getDock() }
             }
         })
         journey_history_recycler_view.layoutManager = LinearLayoutManager(this)
