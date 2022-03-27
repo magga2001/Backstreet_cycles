@@ -19,12 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext) {
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext) {
 
     private val mutableLiveData: MutableLiveData<FirebaseUser> = userRepository.getMutableLiveData()
 

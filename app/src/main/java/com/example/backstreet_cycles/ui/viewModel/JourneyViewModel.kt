@@ -42,12 +42,11 @@ import kotlin.math.roundToInt
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    private val getMapboxUseCase: GetMapboxUseCase,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext), Planner{
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext), Planner{
 
     private val mapboxNavigation: MapboxNavigation by lazy {
         if (MapboxNavigationProvider.isCreated()) {

@@ -14,12 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository, applicationContext){
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository, applicationContext){
 
     fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
         return userRepository.register(firstName,lastName,email,password)

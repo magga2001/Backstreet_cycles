@@ -26,12 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext){
 
     private val mapboxNavigation: MapboxNavigation by lazy{
         if (MapboxNavigationProvider.isCreated()) {

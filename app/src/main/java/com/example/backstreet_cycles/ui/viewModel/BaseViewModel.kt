@@ -36,8 +36,6 @@ import javax.inject.Inject
 @HiltViewModel
 open class BaseViewModel @Inject constructor(
     protected val getDockUseCase: GetDockUseCase,
-    protected val getMapboxUseCase: GetMapboxUseCase,
-    protected val locationRepository: LocationRepository,
     protected val cyclistRepository: CyclistRepository,
     protected val userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
@@ -45,7 +43,6 @@ open class BaseViewModel @Inject constructor(
 
     protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
-//    protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
     //GENERIC
 
