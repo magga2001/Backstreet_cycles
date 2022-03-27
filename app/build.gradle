@@ -22,7 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.ex2.hiltespresso.CustomTestRunner"
+        testInstrumentationRunner "com.example.backstreet_cycles.data.repository.BackstreetTestRunner.kt"
     }
 
     buildTypes {
@@ -51,6 +51,15 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    sourceSets {
+        test {
+            java.srcDirs += "$projectDir/src/testShared"
+        }
+        androidTest {
+            java.srcDirs += "$projectDir/src/testShared"
+        }
     }
 
 }

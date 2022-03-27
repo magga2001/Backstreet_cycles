@@ -78,5 +78,4 @@ object AppModule {
         return GetDockUseCase(tflRepository)
     }
 
-
 }

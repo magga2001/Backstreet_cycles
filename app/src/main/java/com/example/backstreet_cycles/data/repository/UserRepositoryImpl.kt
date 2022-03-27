@@ -17,9 +17,9 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
-class UserRepositoryImpl(private val application: Application,
-                   fireStore: FirebaseFirestore,
-                   fireBaseAuth: FirebaseAuth) : UserRepository
+open class UserRepositoryImpl(private val application: Application,
+                              fireStore: FirebaseFirestore,
+                              fireBaseAuth: FirebaseAuth) : UserRepository
 
 {
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
