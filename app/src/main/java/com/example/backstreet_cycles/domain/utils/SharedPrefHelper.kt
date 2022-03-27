@@ -4,10 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 class SharedPrefHelper {
 
@@ -16,11 +12,9 @@ class SharedPrefHelper {
         private lateinit var sharedPref: SharedPreferences
         private lateinit var key:String
         private lateinit var application: Application
-//        private lateinit var parameterizedType: ParameterizedType
 
         fun initialiseSharedPref(application: Application, key: String)
         {
-//            setKey(application, key)
             this.application = application
             this.key = key
 
@@ -31,7 +25,6 @@ class SharedPrefHelper {
         fun checkIfSharedPrefEmpty(key: String):Boolean {
             val serializedObject: String? = sharedPref.getString(key, null)
             sharedPref.contains(key)
-            Log.i("Serialized123:", serializedObject.toString())
             if (serializedObject == null){
                 return true
             }
@@ -39,7 +32,7 @@ class SharedPrefHelper {
         }
 
         fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
-            val json = objectToString(values, type)
+            val json = JsonHelper.objectToString(values, type)
             with (sharedPref.edit()) {
                 putString(key, json)
                 apply()
@@ -58,24 +51,10 @@ class SharedPrefHelper {
                 sharedPref.getString(key, null)
             Log.i("serializedObject", serializedObject.toString())
             return if (serializedObject != null) {
-                stringToObject(serializedObject, type)!!.toMutableList()
+                JsonHelper.stringToObject(serializedObject, type)!!.toMutableList()
             } else {
                 emptyList<T>().toMutableList()
             }
-        }
-
-        fun <T> stringToObject(text: String,  type: Class<T>): List<T>? {
-            val parameterizedType = Types.newParameterizedType(List::class.java,type)
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
-            return adapter.fromJson(text)
-        }
-
-        fun <T> objectToString(values: List<T>,  type: Class<T>): String{
-            val parameterizedType = Types.newParameterizedType(List::class.java,type)
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
-            return adapter.toJson(values)
         }
 
         fun changeSharedPref(key:String)

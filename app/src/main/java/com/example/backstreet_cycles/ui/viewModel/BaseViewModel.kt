@@ -5,23 +5,18 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.repository.CyclistRepositoryImpl
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.mapbox.api.directions.v5.DirectionsCriteria
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
@@ -35,17 +30,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class BaseViewModel @Inject constructor(
-    protected val getDockUseCase: GetDockUseCase,
-    protected val getMapboxUseCase: GetMapboxUseCase,
-    protected val locationRepository: LocationRepository,
+    protected val tflRepository: TflRepository,
+    protected val mapboxRepository: MapboxRepository,
     protected val cyclistRepository: CyclistRepository,
-    protected open val userRepository: UserRepository,
+    protected val userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
 ): ViewModel(){
 
     protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
-//    protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
     //GENERIC
 
@@ -72,34 +65,61 @@ open class BaseViewModel @Inject constructor(
         return userRepository.getUserDetails()
     }
 
+    //TFL
+
+    open fun getCurrentDocks(): MutableList<Dock>
+    {
+        return tflRepository.getCurrentDocks()
+    }
+
 
     //MAPBOX
 
+    open fun getJourneyCurrentRoute(): MutableList<DirectionsRoute> {
+        return mapboxRepository.getJourneyCurrentRoute()
+    }
+
+    open fun getJourneyDistances(): MutableList<Double> {
+        return mapboxRepository.getJourneyDistances()
+    }
+
+    open fun getJourneyDurations(): MutableList<Double> {
+        return mapboxRepository.getJourneyDurations()
+    }
+
+    open fun getJourneyLocations(): MutableList<Locations> {
+        return mapboxRepository.getJourneyLocations()
+    }
+
+    open fun getJourneyWayPointsLocations(): MutableList<Locations> {
+        return mapboxRepository.getJourneyWayPointsLocations()
+    }
+
     open fun setCurrentJourney(stops: MutableList<Locations>)
     {
-        BackstreetApplication.locations.addAll(stops)
+        mapboxRepository.setJourneyLocations(stops)
     }
 
     open fun setCurrentWayPoint(locations: MutableList<Locations>)
     {
-        BackstreetApplication.wayPoints.addAll(locations)
+        mapboxRepository.setJourneyWayPointsLocations(locations)
     }
 
     open fun clearView()
     {
-        BackstreetApplication.wayPoints.clear()
-        BackstreetApplication.currentRoute.clear()
+        mapboxRepository.clearJourneyWayPointsLocations()
+        mapboxRepository.clearJourneyCurrentRoute()
     }
 
     open fun clearInfo()
     {
-        BackstreetApplication.distances.clear()
-        BackstreetApplication.durations.clear()
+        mapboxRepository.clearJourneyDistances()
+        mapboxRepository.clearJourneyDurations()
     }
 
     open fun clearDuplication(locations: MutableList<Locations>)
     {
-        BackstreetApplication.locations.distinct()
+        mapboxRepository.distinctJourneyLocations()
         locations.distinct()
     }
 
@@ -137,13 +157,16 @@ open class BaseViewModel @Inject constructor(
         clearView()
     }
 
-    open fun getDock(){
+    open suspend fun getDock(){
 
-        getDockUseCase().onEach { result ->
+        tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
-                    BackstreetApplication.docks = result.data!!
+
+                    if(result.data != null && result.data.isNotEmpty()){
+                        tflRepository.setCurrentDocks(result.data!!)
+                    }
                     getRoute()
                 }
 
@@ -163,7 +186,8 @@ open class BaseViewModel @Inject constructor(
     open fun continueWithCurrentJourney(){
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        BackstreetApplication.locations = listOfLocations
+        mapboxRepository.setJourneyLocations(listOfLocations)
+//        BackstreetApplication.locations = listOfLocations
     }
 
     open fun continueWithNewJourney(newStops: MutableList<Locations>){

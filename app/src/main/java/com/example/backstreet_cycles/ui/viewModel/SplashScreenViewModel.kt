@@ -4,13 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
-import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.repositoryInt.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
@@ -19,24 +14,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext){
 
     private val isReadyMutableLiveData = MutableLiveData<Boolean>()
 
-    fun loadData()
+    suspend fun loadData()
     {
-        getDockUseCase().onEach { result ->
+        tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("Splash screen dock", result.data?.size.toString())
 
-                    BackstreetApplication.docks = result.data!!
+                    if(result.data != null && result.data.isNotEmpty()){
+                        tflRepository.setCurrentDocks(result.data!!)
+                    }
                     loadTouristAttractions()
                 }
 

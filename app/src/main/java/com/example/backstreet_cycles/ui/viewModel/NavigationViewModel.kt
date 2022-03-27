@@ -1,12 +1,10 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -25,13 +23,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase,
-    locationRepository: LocationRepository,
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext){
 
     private val mapboxNavigation: MapboxNavigation by lazy{
         if (MapboxNavigationProvider.isCreated()) {
@@ -64,7 +61,7 @@ class NavigationViewModel @Inject constructor(
 
     fun setRouteAndStartNavigation() {
 
-        val routes = BackstreetApplication.currentRoute
+        val routes = getJourneyCurrentRoute()
 
         // set routes, where the first route in the list is the primary route that
         // will be used for active guidance

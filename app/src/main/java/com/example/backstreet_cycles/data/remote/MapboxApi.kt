@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.data.remote
 import android.util.Log
 import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.CallbackResource
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
@@ -16,7 +17,8 @@ object MapboxApi {
     fun requestRoute(mapboxNavigation: MapboxNavigation,
                              routeOptions: RouteOptions,
                              info: Boolean,
-                             listener: CallbackResource<DirectionsRoute>)
+                             listener: CallbackResource<DirectionsRoute>,
+                             mapboxRepository: MapboxRepository)
     {
 
         Log.i("retrieving the route", "success")
@@ -38,11 +40,15 @@ object MapboxApi {
 
                     if(info)
                     {
-                        MapInfoUseCase.getJourneyInfo(fastestRoute)
+                        val distance = MapInfoUseCase.retrieveJourneyDistances(fastestRoute)
+                        val duration = MapInfoUseCase.retrieveJourneyDurations(fastestRoute)
+
+                        mapboxRepository.addJourneyDistances(duration)
+                        mapboxRepository.addJourneyDuration(duration)
                     }
                     else
                     {
-                        BackstreetApplication.currentRoute.add(fastestRoute)
+                        mapboxRepository.setJourneyCurrentRoute(fastestRoute)
                     }
 
                     listener.getResult(fastestRoute)

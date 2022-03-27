@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.domain.utils.JourneyState
@@ -25,7 +26,12 @@ import com.example.backstreet_cycles.ui.views.JourneyActivity
 import java.security.AccessController.getContext
 
 
-class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
+class PlanJourneyAdapter(
+    private val context: Context,
+    private val docks: MutableList<Dock>,
+    private var locations: List<Locations>,
+    private val planner: Planner
+): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -94,7 +100,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav1.setOnClickListener{
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(docks,locations[position], locations[position+1],1)
 
             planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["startingPoint"]!!,
@@ -106,7 +112,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav2.setOnClickListener {
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(docks,locations[position], locations[position+1],1)
 
             planner.onSelectedJourney(location,MapboxConstants.CYCLING, mutableListOf(
                 journeyPoints["pickUpPoint"]!!,
@@ -118,7 +124,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
 
         holder.setNav3.setOnClickListener {
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(locations[position], locations[position+1],1)
+            val journeyPoints = PlannerUseCase.calcRoutePlanner(docks,locations[position], locations[position+1],1)
 
             planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["dropOffPoint"]!!,

@@ -16,7 +16,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
@@ -26,6 +26,7 @@ import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.internal.Contexts.getApplication
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
@@ -34,23 +35,23 @@ import kotlinx.coroutines.runBlocking
 class WorkerService @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted userParameters: WorkerParameters,
-    private val getDockUseCase: GetDockUseCase,
+    private val tflRepository: TflRepository,
 ) : Worker(context, userParameters) {
 
     override fun doWork(): Result {
 
-        attemptNotification()
+        runBlocking { attemptNotification() }
 
         return Result.success()
     }
 
-    private fun attemptNotification()
+    private suspend fun attemptNotification()
     {
 
         Log.i("Starting attempt", "Success")
 
         runBlocking {
-            getDockUseCase().onEach { result ->
+            tflRepository.getDocks().onEach { result ->
                 when (result) {
                     is Resource.Success -> {
                         Log.i("Notification dock", result.data?.size.toString())
