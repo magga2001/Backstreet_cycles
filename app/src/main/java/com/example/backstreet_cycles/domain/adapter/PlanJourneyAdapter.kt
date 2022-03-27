@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +21,15 @@ import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
+import com.example.backstreet_cycles.ui.views.JourneyActivity
+import java.security.AccessController.getContext
+
 
 class PlanJourneyAdapter(private val context: Context, private var locations: List<Locations>, private val planner: Planner): RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
         internal var expandButton: Button = view.findViewById(R.id.planJourney_button_expand)
@@ -75,6 +78,11 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val location = locations[position]
+        var  buttonList: MutableList<Button> = mutableListOf()
+
+        buttonList.add(holder.setNav1)
+        buttonList.add(holder.setNav2)
+        buttonList.add(holder.setNav3)
 
         holder.checkBoxButton.setOnClickListener {
             enableExpandButton(holder)
@@ -93,7 +101,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["pickUpPoint"]!!
             ), JourneyState.START_WALKING)
             collapseBottomSheet.postValue(true)
-
+            disableOrEnableNavigationButtons(holder, holder.setNav1)
         }
 
         holder.setNav2.setOnClickListener {
@@ -105,6 +113,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["dropOffPoint"]!!
             ), JourneyState.BIKING)
             collapseBottomSheet.postValue(true)
+            disableOrEnableNavigationButtons(holder, holder.setNav2)
         }
 
         holder.setNav3.setOnClickListener {
@@ -116,8 +125,27 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
                 journeyPoints["destination"]!!
             ), JourneyState.END_WALKING)
             collapseBottomSheet.postValue(true)
+            disableOrEnableNavigationButtons(holder, holder.setNav3)
         }
     }
+
+    private fun disableOrEnableNavigationButtons(holder: ViewHolder, buttonToDisable: Button){
+        holder.setNav1.isEnabled=true
+        holder.setNav2.isEnabled=true
+        holder.setNav3.isEnabled=true
+        if(buttonToDisable.id == holder.setNav1.id){
+            holder.setNav1.isEnabled=false
+        }
+        else if(buttonToDisable.id == holder.setNav2.id){
+            holder.setNav2.isEnabled=false
+        }
+        else{
+            holder.setNav3.isEnabled=false
+        }
+        (context as JourneyActivity).findViewById<Button>(R.id.start_navigation).isEnabled=true
+
+    }
+
 
     override fun getItemCount(): Int {
         return locations.size - 1
