@@ -4,4 +4,5 @@
     <item name="fragmentLayout" type="id" />
     <item name="pager" type="id" />
     <item name="journey_history_title" type="id" />
+    <item name="journeySummaryTextView" type="id" />
 </resources>
