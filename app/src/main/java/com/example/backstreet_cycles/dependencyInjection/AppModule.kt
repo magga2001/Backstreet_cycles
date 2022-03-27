@@ -7,7 +7,6 @@ import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.repositoryInt.*
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
@@ -73,12 +72,6 @@ object AppModule {
     @Singleton
     fun provideCyclistRepository(): CyclistRepository {
         return CyclistRepositoryImpl()
-    }
-
-    @Provides
-    @Singleton
-    fun provideWorkerService(tflRepository: TflRepository): GetDockUseCase {
-        return GetDockUseCase(tflRepository)
     }
 
     @Provides

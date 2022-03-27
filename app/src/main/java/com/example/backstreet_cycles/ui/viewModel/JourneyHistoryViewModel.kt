@@ -5,14 +5,13 @@ import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -28,12 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
-    getDockUseCase: GetDockUseCase,
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
-    private val getMapboxUseCase: GetMapboxUseCase,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, cyclistRepository, userRepository,applicationContext)  {
+) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext)  {
 
     private var stops: MutableList<Locations> = mutableListOf()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -59,7 +58,7 @@ class JourneyHistoryViewModel @Inject constructor(
     }
 
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        getMapboxUseCase(mapboxNavigation,routeOptions).onEach {
+        mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
             isReadyMutableLiveData.postValue(true)
         }.launchIn(viewModelScope)
     }
@@ -83,7 +82,7 @@ class JourneyHistoryViewModel @Inject constructor(
         if (!noCurrentJourney){
             showAlert.postValue(true)
         } else{
-            fetchRoute(mContext, BackstreetApplication.locations)
+            fetchRoute(mContext, getJourneyLocations())
         }
     }
 
@@ -91,7 +90,7 @@ class JourneyHistoryViewModel @Inject constructor(
         super.continueWithCurrentJourney()
         fetchRoute(
             mContext,
-            BackstreetApplication.locations
+            getJourneyLocations()
         )
     }
 

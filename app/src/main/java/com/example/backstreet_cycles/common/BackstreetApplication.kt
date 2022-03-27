@@ -21,16 +21,6 @@ import javax.inject.Inject
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider {
 
-    companion object
-    {
-        var docks = mutableListOf<Dock>()
-        var currentRoute = mutableListOf<DirectionsRoute>()
-        val distances = mutableListOf<Double>()
-        val durations = mutableListOf<Double>()
-        val wayPoints = mutableListOf<Locations>()
-        var locations = mutableListOf<Locations>()
-    }
-
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
