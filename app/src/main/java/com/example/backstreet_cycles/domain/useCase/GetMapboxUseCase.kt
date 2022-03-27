@@ -14,7 +14,7 @@ class GetMapboxUseCase @Inject constructor(
     private val mapboxRepository: MapboxRepository
 ){
 
-    operator fun invoke(mapboxNavigation: MapboxNavigation, routeOptions : RouteOptions, info: Boolean): Flow<DirectionsRoute> = callbackFlow {
+    operator fun invoke(mapboxNavigation: MapboxNavigation, routeOptions : RouteOptions, info: Boolean = false): Flow<DirectionsRoute> = callbackFlow {
 
         val callBack = object : CallbackResource<DirectionsRoute> {
             override fun getResult(objects: DirectionsRoute) {

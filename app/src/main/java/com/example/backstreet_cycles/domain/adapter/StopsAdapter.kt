@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 
 class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
 
@@ -41,18 +42,13 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: StopViewHolder, position: Int) {
         val newList = stops[position]
-        val addressName = shortenName(newList.name)
+        val addressName = PlannerHelper.shortenName(newList.name)
         holder.name.text = addressName.first()
         collapseBottomSheet.postValue(true)
     }
 
     override fun getItemCount(): Int {
         return stops.size
-    }
-
-    private fun shortenName(name: String): List<String> {
-        val delimiter = ","
-        return name.split(delimiter)
     }
 
     fun getCollapseBottomSheet(): LiveData<Boolean> {

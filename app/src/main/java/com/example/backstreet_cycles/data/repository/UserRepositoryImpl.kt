@@ -67,8 +67,6 @@ class UserRepositoryImpl(private val application: Application,
         }
     }
 
-
-
     private fun createUserAccount(firstName: String, lastName: String, email: String) {
         val user = Users(firstName, lastName, email)
         dataBase.collection("users")

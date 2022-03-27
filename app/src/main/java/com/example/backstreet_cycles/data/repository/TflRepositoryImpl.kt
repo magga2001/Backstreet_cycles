@@ -10,11 +10,7 @@ class TflRepositoryImpl @Inject constructor(
     private val tflApi: TflApi
 ): TflRepository {
 
-    //    override fun getDock(context: Context, listener: Assests<MutableList<Dock>>) {
-//        tflApi.getDock(context,listener)
-//    }
     override suspend fun getDocks(): MutableList<DockDto> {
-        Log.i("Calling dock", "Success")
         return tflApi.getDocks()
     }
 }

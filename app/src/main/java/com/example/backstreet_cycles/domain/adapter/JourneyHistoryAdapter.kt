@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 
 class JourneyHistoryAdapter(
     private var locations: MutableList<List<Locations>>
@@ -34,6 +35,7 @@ class JourneyHistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JourneyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.layout_recent_journeys_card,parent, false)
+        locations.reverse()
         return JourneyViewHolder(view,clickListener)
     }
 
@@ -45,15 +47,10 @@ class JourneyHistoryAdapter(
 
     private fun constructString(newList: List<String>): String {
         var str = ""
-        for (i in 0 until newList.size) {
-            str += "\n ${i+1}: ${shortenName(newList[i]).first()}"
+        for (i in newList.indices) {
+            str += "\n ${i+1}: ${PlannerHelper.shortenName(newList[i]).first()}"
         }
         return str
-    }
-
-    private fun shortenName(name: String): List<String> {
-        val delimiter = ","
-        return name.split(delimiter)
     }
 
     override fun getItemCount(): Int {

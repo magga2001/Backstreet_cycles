@@ -99,7 +99,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         homePageViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(BackstreetApplication.location)
+                alertDialog(BackstreetApplication.locations)
             }
         }
 
@@ -123,11 +123,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getIsReadyMutableLiveData().observe(this) {ready ->
             if(ready)
             {
-                val intent = Intent(this, JourneyActivity::class.java)
-                intent.putExtra(Constants.NUM_USERS,homePageViewModel.getNumUsers())
                 homePageViewModel.saveJourney()
-                startActivity(intent)
                 homePageViewModel.getIsReadyMutableLiveData().value = false
+                val intent = Intent(this, JourneyActivity::class.java)
+                startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             }
         }
@@ -175,22 +174,22 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
-        textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
+        textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
 
         plusBtn.setOnClickListener{
-          if(homePageViewModel.getNumUsers()>3){
+          if(homePageViewModel.getNumCyclists() > 3){
               SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
           }
           else{
-              homePageViewModel.incrementNumUsers()
-              textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
+              homePageViewModel.incrementNumCyclists()
+              textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
           }
 
         }
         minusBtn.setOnClickListener{
-            if(homePageViewModel.getNumUsers()>=2){
-                homePageViewModel.decrementNumUsers()
-                textOfNumberOfUsers.text = "${homePageViewModel.getNumUsers()}"
+            if(homePageViewModel.getNumCyclists()>=2){
+                homePageViewModel.decrementNumCyclists()
+                textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
             }
             else{
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
@@ -358,7 +357,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         val itemTouchHelper = ItemTouchHelper(touchScreenCallBack)
-
         itemTouchHelper.attachToRecyclerView(homepage_recyclerView)
     }
 
@@ -418,6 +416,24 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         )
         val bitmapUtils = BitmapUtils.getBitmapFromDrawable(drawable)
         loadedStyle.addImage(MapboxConstants.SYMBOL_ICON_ID, bitmapUtils!!)
+    }
+
+    private fun alertDialog(newStops: MutableList<Locations>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Planner Alert")
+        builder.setMessage("There is already a planned journey that you are currently using." +
+                "Do you want to continue with the current journey or with the newly created one?")
+
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            homePageViewModel.continueWithCurrentJourney()
+            homePageViewModel.setShowAlert(false)
+        }
+
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+            homePageViewModel.continueWithNewJourney(newStops)
+            homePageViewModel.setShowAlert(false)
+        }
+        builder.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -481,23 +497,5 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onDestroy() {
         super.onDestroy()
         homepage_mapView?.onDestroy()
-    }
-
-    private fun alertDialog(newStops: MutableList<Locations>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Planner Alert")
-        builder.setMessage("There is already a planned journey that you are currently using." +
-                "Do you want to continue with the current journey or with the newly created one?")
-
-        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            homePageViewModel.continueWithCurrentJourney()
-            homePageViewModel.setShowAlert(false)
-        }
-
-        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            homePageViewModel.continueWithNewJourney(newStops)
-            homePageViewModel.setShowAlert(false)
-        }
-        builder.show()
     }
 }

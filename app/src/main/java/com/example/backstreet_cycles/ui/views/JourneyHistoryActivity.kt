@@ -13,9 +13,7 @@ import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 
@@ -45,7 +43,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         journeyHistoryViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
-                alertDialog(BackstreetApplication.location)
+                alertDialog(BackstreetApplication.locations)
             }
         }
 

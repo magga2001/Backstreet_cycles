@@ -6,11 +6,17 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.data.repository.CyclistRepositoryImpl
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -31,12 +37,32 @@ open class BaseViewModel @Inject constructor(
     protected val getDockUseCase: GetDockUseCase,
     protected val getMapboxUseCase: GetMapboxUseCase,
     protected val locationRepository: LocationRepository,
+    protected val cyclistRepository: CyclistRepository,
     @ApplicationContext applicationContext: Context
 ): ViewModel(){
 
     protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
     protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
+
+    //GENERIC
+
+    open fun incrementNumCyclists(){
+        cyclistRepository.incrementNumCyclists()
+    }
+
+    open fun decrementNumCyclists(){
+        cyclistRepository.decrementNumCyclists()
+    }
+
+    open fun resetNumCyclists()
+    {
+        cyclistRepository.resetNumCyclist()
+    }
+
+    open fun getNumCyclists(): Int{
+        return cyclistRepository.getNumCyclists()
+    }
 
     //FIREBASE
 
@@ -46,6 +72,16 @@ open class BaseViewModel @Inject constructor(
 
 
     //MAPBOX
+
+    open fun setCurrentJourney(stops: MutableList<Locations>)
+    {
+        BackstreetApplication.locations.addAll(stops)
+    }
+
+    open fun setCurrentWayPoint(locations: MutableList<Locations>)
+    {
+        BackstreetApplication.wayPoints.addAll(locations)
+    }
 
     open fun clearView()
     {
@@ -59,10 +95,24 @@ open class BaseViewModel @Inject constructor(
         BackstreetApplication.durations.clear()
     }
 
-    open fun clearDuplication(points: MutableList<Point>)
+    open fun clearDuplication(locations: MutableList<Locations>)
     {
-        BackstreetApplication.location.distinct()
-        points.distinct()
+        BackstreetApplication.locations.distinct()
+        locations.distinct()
+    }
+
+    open fun setCustomiseRoute(context: Context, points: List<Point>, profile: String = MapboxConstants.CYCLING): RouteOptions
+    {
+        return when(profile)
+        {
+            MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
+            else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+        }
+    }
+
+    open fun setOverviewRoute(context: Context, points: List<Point>): RouteOptions
+    {
+        return customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
     }
 
     open fun customiseRouteOptions(context: Context, points: List<Point>, criteria: String): RouteOptions
@@ -104,5 +154,18 @@ open class BaseViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    //SHARED PREF
+
+    open fun continueWithCurrentJourney(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+        BackstreetApplication.locations = listOfLocations
+    }
+
+    open fun continueWithNewJourney(newStops: MutableList<Locations>){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
     }
 }

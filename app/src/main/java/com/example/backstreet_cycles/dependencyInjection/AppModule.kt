@@ -4,9 +4,11 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
+import com.example.backstreet_cycles.data.repository.CyclistRepositoryImpl
 import com.example.backstreet_cycles.data.repository.LocationRepositoryImpl
 import com.example.backstreet_cycles.data.repository.MapboxRepositoryImpl
 import com.example.backstreet_cycles.data.repository.TflRepositoryImpl
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
@@ -62,6 +64,12 @@ object AppModule {
     @Singleton
     fun provideLocationRepository(file: TouristAttractionFile): LocationRepository {
         return LocationRepositoryImpl(file)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCyclistRepository(): CyclistRepository {
+        return CyclistRepositoryImpl()
     }
 
     @Provides

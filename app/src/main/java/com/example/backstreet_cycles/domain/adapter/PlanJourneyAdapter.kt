@@ -17,6 +17,8 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.domain.utils.JourneyState
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -25,9 +27,6 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
-
-    //private var sheetBehavior: BottomSheetBehavior<Application>
-    private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener
     {
@@ -66,8 +65,6 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         }
     }
 
-    private fun expandableButtonVisibility() {}
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_plan_journey, parent, false)
         val viewHolder = ViewHolder(view)
@@ -84,9 +81,9 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             enableExpandButton(holder)
         }
 
-        holder.tvFrom.text = "From: ${shortenName(location.name).first()} "
+        holder.tvFrom.text = "From: ${PlannerHelper.shortenName(location.name).first()} "
 
-        holder.tvTo.text =   "To: ${shortenName(locations[position+1].name).first()}"
+        holder.tvTo.text =   "To: ${PlannerHelper.shortenName(locations[position+1].name).first()}"
 
         holder.setNav1.setOnClickListener{
 
@@ -95,7 +92,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["startingPoint"]!!,
                 journeyPoints["pickUpPoint"]!!
-            ))
+            ), JourneyState.START_WALKING)
             collapseBottomSheet.postValue(true)
 
         }
@@ -107,7 +104,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             planner.onSelectedJourney(location,MapboxConstants.CYCLING, mutableListOf(
                 journeyPoints["pickUpPoint"]!!,
                 journeyPoints["dropOffPoint"]!!
-            ))
+            ), JourneyState.BIKING)
             collapseBottomSheet.postValue(true)
         }
 
@@ -118,7 +115,7 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
             planner.onSelectedJourney(location,MapboxConstants.WALKING, mutableListOf(
                 journeyPoints["dropOffPoint"]!!,
                 journeyPoints["destination"]!!
-            ))
+            ), JourneyState.END_WALKING)
             collapseBottomSheet.postValue(true)
         }
     }
@@ -159,10 +156,5 @@ class PlanJourneyAdapter(private val context: Context, private var locations: Li
         } else {
             allBoxesCheckedMutableLiveData.postValue(false)
         }
-    }
-
-    private fun shortenName(name: String): List<String> {
-        val delimiter = ","
-        return name.split(delimiter)
     }
 }

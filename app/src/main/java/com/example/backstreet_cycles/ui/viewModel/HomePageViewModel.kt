@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -15,6 +14,7 @@ import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
@@ -22,12 +22,10 @@ import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -55,9 +53,11 @@ import javax.inject.Inject
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
+    getMapboxUseCase: GetMapboxUseCase,
+    locationRepository: LocationRepository,
+    cyclistRepository: CyclistRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext) {
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext) {
 
     private val mapboxNavigation by lazy {
 
@@ -72,7 +72,6 @@ class HomePageViewModel @Inject constructor(
         }
     }
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-    private var numUsers = 1
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo:Boolean = false
 
@@ -82,23 +81,40 @@ class HomePageViewModel @Inject constructor(
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent
-    {
+    fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent {
         return mapboxMap.locationComponent
     }
 
     @SuppressLint("MissingPermission")
     fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
-        val customLocationComponentOptions = LocationComponentOptions.builder(mApplication)
+        val customLocationComponentOptions = customiseLocationPuck()
+        activateLocationComponent(locationComponent, loadedMapStyle, customLocationComponentOptions)
+        showLocationComponent(locationComponent)
+    }
+
+    private fun customiseLocationPuck(): LocationComponentOptions
+    {
+        return LocationComponentOptions.builder(mApplication)
             .pulseEnabled(true)
             .build()
+    }
 
+    private fun activateLocationComponent(
+        locationComponent: LocationComponent,
+        loadedMapStyle: Style,
+        customLocationComponentOptions: LocationComponentOptions
+    )
+    {
         locationComponent.activateLocationComponent(
             LocationComponentActivationOptions.builder(mApplication, loadedMapStyle)
                 .locationComponentOptions(customLocationComponentOptions)
                 .build()
         )
+    }
 
+    @SuppressLint("MissingPermission")
+    private fun showLocationComponent(locationComponent: LocationComponent)
+    {
         locationComponent.isLocationComponentEnabled = true
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
@@ -110,18 +126,6 @@ class HomePageViewModel @Inject constructor(
 
     fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
         return showAlert
-    }
-
-    fun incrementNumUsers(){
-        ++numUsers
-    }
-
-    fun decrementNumUsers(){
-        --numUsers
-    }
-
-    fun getNumUsers(): Int{
-        return numUsers
     }
 
     fun addStop(stop: Locations){
@@ -165,100 +169,26 @@ class HomePageViewModel @Inject constructor(
     override fun getRoute()
     {
         super.getRoute()
-        BackstreetApplication.location.addAll(stops)
+        setCurrentJourney(stops)
         checkCurrentJourney()
     }
 
-    private fun getMapBox(mapboxNavigation: MapboxNavigation, routeOptions: RouteOptions, info :Boolean)
+    private fun getMapBoxRoute(routeOptions: RouteOptions)
     {
-        getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
-
-            Log.i("current Route succeed:", it.toString())
-
+        getMapboxUseCase(mapboxNavigation,routeOptions).onEach {
             isReadyMutableLiveData.postValue(true)
-
         }.launchIn(viewModelScope)
     }
 
     private fun fetchRoute(context: Context,
-                           points: MutableList<Point>,
-                           profile: String,
-                           info: Boolean)
-    {
+                           locations: MutableList<Locations>) {
+        clearDuplication(locations)
+        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
 
-        val routeOptions: RouteOptions
-
-        clearDuplication(points)
-
-        if(!info)
-        {
-            clearInfo()
-            BackstreetApplication.wayPoints.addAll(points)
-
-            routeOptions = when(profile)
-            {
-                MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
-                else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-            }
-
-            getMapBox(mapboxNavigation, routeOptions, info)
-
-
-        }else
-        {
-            routeOptions = customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-
-            getMapBox(mapboxNavigation, routeOptions, info)
-
-        }
-    }
-
-    fun getCurrentJourney()
-    {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
-            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-            BackstreetApplication.location = listOfLocations
-            val listPoints = PlannerHelper.setPoints(listOfLocations)
-            fetchRoute(mContext, listPoints ,MapboxConstants.CYCLING, false)
-        }else
-        {
-            hasCurrentJourneyMutableLiveData.postValue(false)
-        }
-    }
-
-    private fun checkCurrentJourney()
-    {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if (!noCurrentJourney){
-            showAlert.postValue(true)
-        } else{
-            val locationPoints = PlannerHelper.setPoints(BackstreetApplication.location)
-            fetchRoute(mContext, locationPoints, MapboxConstants.CYCLING, false)
-        }
-    }
-
-    fun saveJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
-        SharedPrefHelper.overrideSharedPref(mutableListOf(getNumUsers().toString()),String::class.java)
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(BackstreetApplication.location,Locations::class.java)
-    }
-
-    fun continueWithCurrentJourney(){
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        BackstreetApplication.location = listOfLocations
-        val listPoints = PlannerHelper.setPoints(listOfLocations)
-        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
-    }
-
-    fun continueWithNewJourney(newStops: MutableList<Locations>){
-        val listPoints = PlannerHelper.setPoints(newStops)
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
-        fetchRoute(mContext, listPoints, MapboxConstants.CYCLING, false)
+        clearInfo()
+        setCurrentWayPoint(locations)
+        val routeOptions = setCustomiseRoute(context, points)
+        getMapBoxRoute(routeOptions)
     }
 
     fun displayingAttractions(symbolManager: SymbolManager, loadedMapStyle: Style, data: List<Locations>) {
@@ -282,8 +212,7 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
-    fun checkCurrentLocation()
-    {
+    fun checkCurrentLocation() {
         val stop = stops.map { it.name }.contains("Current Location")
         hasCurrentLocation.postValue(stop)
     }
@@ -327,30 +256,40 @@ class HomePageViewModel @Inject constructor(
             selectedCarmenFeature.center()!!.latitude(),
             selectedCarmenFeature.center()!!.longitude())
         if(!checkIfAlreadyInStops(location)){
-
-            val latitude = selectedCarmenFeature.center()!!.latitude()
-            val longitude = selectedCarmenFeature.center()!!.longitude()
-
-            style.getSourceAs<GeoJsonSource>(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID)?.setGeoJson(
-                FeatureCollection.fromFeatures(
-                    arrayOf(
-                        Feature.fromJson(
-                            selectedCarmenFeature.toJson()
-                        )
-                    )
-                )
-            )
-            updateCamera(mapboxMap, latitude, longitude)
-
-            if (getUpdateInfo()) {
-                setUpdateInfo(false)
-                updateMutableLiveData.postValue(updateInfo)
-            } else {
-                updateMutableLiveData.postValue(updateInfo)
-            }
+            updateStops(mapboxMap, selectedCarmenFeature, style)
         }
         else{
             hasDuplicationLocation.postValue(true)
+        }
+    }
+
+    private fun updateStops(mapboxMap: MapboxMap,
+                            selectedCarmenFeature: CarmenFeature,
+                            style: Style){
+
+        val latitude = selectedCarmenFeature.center()!!.latitude()
+        val longitude = selectedCarmenFeature.center()!!.longitude()
+
+        style.getSourceAs<GeoJsonSource>(MapboxConstants.GEO_JSON_SOURCE_LAYER_ID)?.setGeoJson(
+            FeatureCollection.fromFeatures(
+                arrayOf(
+                    Feature.fromJson(
+                        selectedCarmenFeature.toJson()
+                    )
+                )
+            )
+        )
+        updateCamera(mapboxMap, latitude, longitude)
+        postUpdateInfo()
+
+    }
+
+    private fun postUpdateInfo() {
+        if (getUpdateInfo()) {
+            updateMutableLiveData.postValue(updateInfo)
+            setUpdateInfo(false)
+        } else {
+            updateMutableLiveData.postValue(updateInfo)
         }
     }
 
@@ -365,43 +304,80 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
+    private fun checkCurrentJourney() {
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+        if (!noCurrentJourney){
+            showAlert.postValue(true)
+        } else{
+            fetchRoute(mContext, BackstreetApplication.locations)
+        }
+    }
+
+    fun getCurrentJourney() {
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            BackstreetApplication.locations = listOfLocations
+            fetchRoute(mContext, listOfLocations)
+        }else
+        {
+            hasCurrentJourneyMutableLiveData.postValue(false)
+        }
+    }
+
+    override fun continueWithCurrentJourney(){
+        super.continueWithCurrentJourney()
+        fetchRoute(
+            mContext,
+            BackstreetApplication.locations,
+        )
+    }
+
+    override fun continueWithNewJourney(newStops: MutableList<Locations>){
+        super.continueWithNewJourney(newStops)
+        fetchRoute(
+            mContext,
+            newStops,
+        )
+    }
+
+    fun saveJourney() {
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
+        SharedPrefHelper.overrideSharedPref(mutableListOf(getNumCyclists().toString()),String::class.java)
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        SharedPrefHelper.overrideSharedPref(BackstreetApplication.locations,Locations::class.java)
+    }
+
     fun cancelWork() {
         WorkHelper.cancelWork(mContext)
     }
 
-    fun getMapBoxNavigation(): MapboxNavigation
-    {
+    fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
-    fun destroyMapboxNavigation()
-    {
+    fun destroyMapboxNavigation() {
         mapboxNavigation.onDestroy()
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 
-    fun hasCurrentLocation(): MutableLiveData<Boolean>
-    {
+    fun hasCurrentLocation(): MutableLiveData<Boolean> {
         return hasCurrentLocation
     }
 
-    fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean> {
         return hasCurrentJourneyMutableLiveData
     }
 
-    fun getHasDuplicationLocation(): MutableLiveData<Boolean>
-    {
+    fun getHasDuplicationLocation(): MutableLiveData<Boolean> {
         return hasDuplicationLocation
     }
 
-    fun getUpdateMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getUpdateMutableLiveData(): MutableLiveData<Boolean> {
         return updateMutableLiveData
     }
-
 }

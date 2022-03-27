@@ -11,19 +11,15 @@ import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.useCase.*
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
+import com.example.backstreet_cycles.domain.utils.*
 import com.example.backstreet_cycles.interfaces.Planner
-import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.RouteOptions
-import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -39,16 +35,17 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
     getDockUseCase: GetDockUseCase,
-    getMapboxUseCase: GetMapboxUseCase, locationRepository: LocationRepository,
+    getMapboxUseCase: GetMapboxUseCase,
+    locationRepository: LocationRepository,
+    cyclistRepository: CyclistRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, applicationContext), Planner{
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext), Planner{
 
     private val mapboxNavigation: MapboxNavigation by lazy {
         if (MapboxNavigationProvider.isCreated()) {
@@ -61,9 +58,8 @@ class JourneyViewModel @Inject constructor(
             )
         }
     }
-
+    private var journeyState = JourneyState.START_WALKING
     private var status: String = "UPDATE"
-    private var numUser: Int = 1
     private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
@@ -71,8 +67,7 @@ class JourneyViewModel @Inject constructor(
     private val fireStore = Firebase.firestore
     private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
-    override fun getDock()
-    {
+    override fun getDock() {
         getDockUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -80,10 +75,8 @@ class JourneyViewModel @Inject constructor(
 
                     BackstreetApplication.docks = result.data!!
 
-                    val points = PlannerHelper.setPoints(BackstreetApplication.location)
-
                     status = "REFRESH"
-                    fetchRoute(context = mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
+                    fetchRoute(context = mContext, BackstreetApplication.locations, MapboxConstants.CYCLING, false)
                 }
 
                 is Resource.Error -> {
@@ -97,16 +90,14 @@ class JourneyViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun clearCurrentSession()
-    {
-        BackstreetApplication.location.clear()
+    fun clearCurrentSession() {
+        BackstreetApplication.locations.clear()
     }
 
     fun registerObservers(
                           routesObserver: RoutesObserver,
                           routeProgressObserver: RouteProgressObserver
-    )
-    {
+    ) {
         mapboxNavigation.registerRoutesObserver(routesObserver)
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
     }
@@ -114,94 +105,89 @@ class JourneyViewModel @Inject constructor(
     fun unregisterObservers(
                             routesObserver: RoutesObserver,
                             routeProgressObserver: RouteProgressObserver
-    )
-    {
+    ) {
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
     }
 
-    fun calcBicycleRental(users: Int)
-    {
-        PlannerUseCase.calcBicycleRental(mApplication, users, plannerInterface = this)
+    fun calcBicycleRental() {
+        PlannerUseCase.calcBicycleRental(mApplication, getNumCyclists(), plannerInterface = this)
     }
 
-    fun getJourneyOverview()
-    {
-        val points = PlannerHelper.setPoints(BackstreetApplication.location)
-        getRoute(mContext, mapboxNavigation, points, MapboxConstants.CYCLING, false)
+    fun getJourneyOverview() {
+        journeyState = JourneyState.OVERVIEW
+        getRoute(mContext, BackstreetApplication.locations, MapboxConstants.CYCLING, false)
     }
 
-    fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin)
-    {
+    fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin) {
         MapAnnotationUseCase.removeAnnotations()
-        MapAnnotationUseCase.addAnnotationToMap(context = mContext, annotationApi)
+        MapAnnotationUseCase.addAnnotationToMap(context = mContext, annotationApi, journeyState)
     }
 
     private fun getRoute(context: Context,
-                         mapboxNavigation: MapboxNavigation,
-                         points: MutableList<Point>,
+                         locations: MutableList<Locations>,
                          profile: String,
-                         info: Boolean)
-    {
+                         info: Boolean) {
         status = "UPDATE"
-        fetchRoute(context = context, mapboxNavigation, points, profile, info)
+        fetchRoute(context = context, locations, profile, info)
     }
 
     private fun fetchRoute(context: Context,
-                   mapboxNavigation: MapboxNavigation,
-                   points: MutableList<Point>,
+                   locations: MutableList<Locations>,
                    profile: String,
-                   info: Boolean)
-    {
+                   info: Boolean) {
 
-        BackstreetApplication.location.distinct()
-        points.distinct()
-
+        clearDuplication(locations)
         val routeOptions: RouteOptions
+        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
 
         if(!info) {
             clearInfo()
-            BackstreetApplication.wayPoints.addAll(points)
-
-            routeOptions = when(profile) {
-                MapboxConstants.WALKING -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_WALKING)
-                else -> customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
-            }
-
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
-
-                isReadyMutableLiveData.postValue(status)
-
-            }.launchIn(viewModelScope)
+            setCurrentWayPoint(locations)
+            routeOptions = setCustomiseRoute(context, points, profile)
+            updateMapRouteLine(routeOptions, info)
 
         }else {
 
-            routeOptions =customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
+            routeOptions = setOverviewRoute(context, points)
+            updateMapInfo(routeOptions,info)
 
-            getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
-
-                isReadyMutableLiveData.postValue(status)
-
-                distanceMutableLiveData.postValue((BackstreetApplication.distances.sum()/1000).roundToInt().toString())
-                durationMutableLiveData.postValue((BackstreetApplication.durations.sum()/60).roundToInt().toString())
-
-                displayPrice()
-
-            }.launchIn(viewModelScope)
         }
+    }
+
+    private fun updateMapRouteLine(routeOptions: RouteOptions, info: Boolean) {
+        getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+            isReadyMutableLiveData.postValue(status)
+        }.launchIn(viewModelScope)
+    }
+
+    private fun updateMapInfo(routeOptions: RouteOptions, info: Boolean){
+        getMapboxUseCase(mapboxNavigation,routeOptions,info).onEach {
+            isReadyMutableLiveData.postValue(status)
+            calcJourneyInfo()
+        }.launchIn(viewModelScope)
+    }
+
+    private fun calcJourneyInfo() {
+        distanceMutableLiveData.postValue(PlannerHelper.convertMToKm(BackstreetApplication.distances).toString())
+        durationMutableLiveData.postValue(PlannerHelper.convertMsToS(BackstreetApplication.durations).toString())
+        displayPrice()
     }
 
     override fun onSelectedJourney(
         location: Locations,
         profile: String,
-        points: MutableList<Point>
+        locations: MutableList<Locations>,
+        state: JourneyState
     ) {
         clearView()
-        getRoute(context = mContext, mapboxNavigation, points, profile, false)
+        journeyState = state
+        getRoute(context = mContext, locations, profile, false)
     }
 
-    override fun onFetchJourney(points: MutableList<Point>) {
-        getRoute(context = mContext, mapboxNavigation, points, MapboxConstants.CYCLING, true)
+    override fun onFetchJourney(locations: MutableList<Locations>) {
+        journeyState = JourneyState.OVERVIEW
+        getRoute(context = mContext, locations, MapboxConstants.CYCLING, true)
     }
 
     fun getPlannerInterface(): Planner
@@ -217,16 +203,6 @@ class JourneyViewModel @Inject constructor(
     fun clearRoute()
     {
         mapboxNavigation.setRoutes(listOf())
-    }
-
-    fun setNumUser(numUser: Int)
-    {
-        this.numUser = numUser
-    }
-
-    fun getNumUser(): Int
-    {
-        return this.numUser
     }
 
     fun finishJourney(userDetails: Users)
@@ -266,31 +242,24 @@ class JourneyViewModel @Inject constructor(
             }
         }
 
-    private fun displayPrice()
-    {
+    private fun displayPrice() {
         val price = MapInfoUseCase.getRental()
-
-        priceMutableLiveData.postValue((price * numUser).toString())
-
+        priceMutableLiveData.postValue((price * getNumCyclists()).toString())
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<String>
-    {
+    fun getIsReadyMutableLiveData(): MutableLiveData<String> {
         return isReadyMutableLiveData
     }
 
-    fun getDistanceMutableLiveData(): MutableLiveData<String>
-    {
+    fun getDistanceMutableLiveData(): MutableLiveData<String> {
         return distanceMutableLiveData
     }
 
-    fun getDurationMutableLiveData(): MutableLiveData<String>
-    {
+    fun getDurationMutableLiveData(): MutableLiveData<String> {
         return durationMutableLiveData
     }
 
-    fun getPriceMutableLiveData(): MutableLiveData<String>
-    {
+    fun getPriceMutableLiveData(): MutableLiveData<String> {
         return priceMutableLiveData
     }
 

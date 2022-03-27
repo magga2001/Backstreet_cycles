@@ -155,22 +155,16 @@ class JourneyActivity : AppCompatActivity() {
 
         PermissionUseCase.checkPermission(context = this, activity = this)
 
-        val users = intent.getIntExtra("NUM_USERS",1)
-        journeyViewModel.setNumUser(users)
-
         annotationApi = journey_mapView.annotations
         mapboxMap = journey_mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
-//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
         init()
 
     }
 
     override fun onStart() {
         super.onStart()
-        journeyViewModel.calcBicycleRental(journeyViewModel.getNumUser())
-//        PlannerUseCase.calcBicycleRental(application, users, plannerInterface = this)
-//        mapboxNavigation = journeyViewModel.initialiseMapboxNavigation()
+        journeyViewModel.calcBicycleRental()
     }
 
     override fun onStop() {
@@ -188,6 +182,7 @@ class JourneyActivity : AppCompatActivity() {
         initListeners()
         initBottomSheet()
         initObservers()
+        initInfo()
     }
 
     private fun initObservers() {
@@ -195,7 +190,6 @@ class JourneyActivity : AppCompatActivity() {
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready == "UPDATE") {
                 updateUI()
-//                journeyViewModel.getIsReadyMutableLiveData().value = false
             }else{
                 finish()
                 startActivity(intent)
@@ -332,8 +326,7 @@ class JourneyActivity : AppCompatActivity() {
         routeArrowView = MapboxRouteArrowView(routeArrowOptions)
     }
 
-    private fun initCamera()
-    {
+    private fun initCamera() {
         // initialize Navigation Camera
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
         navigationCamera = NavigationCamera(
@@ -359,8 +352,7 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
-    private fun initPadding()
-    {
+    private fun initPadding() {
         //set the padding values depending on screen orientation and visible view layout
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewportDataSource.overviewPadding = MapboxConstants.landscapeOverviewPadding
@@ -377,11 +369,31 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
-        planJourneyAdapter = PlanJourneyAdapter(this, BackstreetApplication.location, planner = journeyViewModel.getPlannerInterface())
+        planJourneyAdapter = PlanJourneyAdapter(this, BackstreetApplication.locations, planner = journeyViewModel.getPlannerInterface())
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
         finish_journey.isEnabled = false
     }
+
+    private fun initInfo()
+    {
+        val numUsers = journeyViewModel.getNumCyclists()
+
+        if(numUsers < 2)
+        {
+            santander_link.text = "Hire a bike"
+        }else
+        {
+            santander_link.text = "Hire ${numUsers} bikes"
+        }
+    }
+
+    private fun updateUI() {
+        journeyViewModel.setRoute()
+        navigationCamera.requestNavigationCameraToOverview()
+        journeyViewModel.updateMapMarkerAnnotation(annotationApi)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu items for use in the action bar
@@ -405,14 +417,6 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUI() {
-
-//        mapboxNavigation.setRoutes(currentRoute)
-        journeyViewModel.setRoute()
-        navigationCamera.requestNavigationCameraToOverview()
-        journeyViewModel.updateMapMarkerAnnotation(annotationApi)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -420,7 +424,6 @@ class JourneyActivity : AppCompatActivity() {
             routesObserver,
             routeProgressObserver
         )
-//        mapboxNavigation.setRoutes(listOf())
         journeyViewModel.clearRoute()
         routeLineView.cancel()
         routeLineApi.cancel()

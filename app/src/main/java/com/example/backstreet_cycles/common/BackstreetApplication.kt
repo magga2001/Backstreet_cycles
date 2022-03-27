@@ -27,8 +27,8 @@ class BackstreetApplication : Application(), Configuration.Provider {
         var currentRoute = mutableListOf<DirectionsRoute>()
         val distances = mutableListOf<Double>()
         val durations = mutableListOf<Double>()
-        val wayPoints = mutableListOf<Point>()
-        var location = mutableListOf<Locations>()
+        val wayPoints = mutableListOf<Locations>()
+        var locations = mutableListOf<Locations>()
     }
 
     @Inject

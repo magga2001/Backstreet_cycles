@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.mapbox.geojson.Point
@@ -13,9 +14,9 @@ object PlannerUseCase {
 
     fun calcBicycleRental(application: Application, numUser: Int, plannerInterface: Planner)
     {
-        val locations = BackstreetApplication.location
+        val locations = BackstreetApplication.locations
 
-        Log.i("location", BackstreetApplication.location.toString())
+        Log.i("location", BackstreetApplication.locations.toString())
         val points = mutableListOf<Point>()
 
         for(i in 1 until locations.size)
@@ -29,11 +30,12 @@ object PlannerUseCase {
             Log.i("pickUpPoint", pickUpPoint.toString())
             Log.i("dropOffPoint", dropOffPoint.toString())
 
-            points.add(pickUpPoint)
-            points.add(dropOffPoint)
+            points.add(PlannerHelper.convertLocationToPoint(pickUpPoint))
+            points.add(PlannerHelper.convertLocationToPoint(dropOffPoint))
+
+
 
             plannerInterface.onFetchJourney(mutableListOf(pickUpPoint,dropOffPoint))
-
         }
 
         SharedPrefHelper.initialiseSharedPref(application, Constants.DOCKS_LOCATIONS)
@@ -45,7 +47,7 @@ object PlannerUseCase {
         fromLocation: Locations,
         ToLocation: Locations,
         numUser: Int
-    ): HashMap<String, Point?> {
+    ): HashMap<String, Locations?> {
 
         //Starting point of the individual journey
         val startingPoint = Point.fromLngLat(fromLocation.lon, fromLocation.lat)
@@ -59,7 +61,8 @@ object PlannerUseCase {
                     startingPoint.latitude()
                 ), numUser
             )
-        val pickUpPoint = Point.fromLngLat(findClosestPickUp.lon, findClosestPickUp.lat)
+        val pickUpDock = PlannerHelper.convertDockToLocations(findClosestPickUp)
+        //val pickUpPoint = Point.fromLngLat(findClosestPickUp.lon, findClosestPickUp.lat)
 
         //Find closest drop off dock station
         val findClosestDropOff =
@@ -69,16 +72,17 @@ object PlannerUseCase {
                     ToLocation.lat)
                 , numUser
             )
-        val dropOffPoint = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
+        val dropOffDock = PlannerHelper.convertDockToLocations(findClosestDropOff)
+        //val dropOffPoint = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)
 
         //Destination
-        val destination = Point.fromLngLat(ToLocation.lon, ToLocation.lat)
+        //val destination = Point.fromLngLat(ToLocation.lon, ToLocation.lat)
 
         return hashMapOf(
-            "startingPoint" to startingPoint,
-            "pickUpPoint" to pickUpPoint,
-            "dropOffPoint" to dropOffPoint,
-            "destination" to destination,
+            "startingPoint" to fromLocation,
+            "pickUpPoint" to pickUpDock,
+            "dropOffPoint" to dropOffDock,
+            "destination" to ToLocation,
         )
     }
 }
