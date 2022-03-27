@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class FakeUserRepoImpl @Inject constructor(
     application: Application,
     var fireStore: FirebaseFirestore,
-    var fireBaseAuth: FirebaseAuth,
+    var fireBaseAuth: FirebaseAuth
 ) : UserRepositoryImpl(application, fireStore, fireBaseAuth) {
 
     init {
@@ -25,12 +26,11 @@ class FakeUserRepoImpl @Inject constructor(
         val secondary = Firebase.app("secondary")
         fireStore = FirebaseFirestore.getInstance(secondary)
         fireBaseAuth = FirebaseAuth.getInstance(secondary)
-        Firebase.initialize(application, options, "secondary")
     }
 
-
-
-
+    override fun login(email: String, password: String): FirebaseUser? {
+        return super.login(email, password)
+    }
 
 //    val mutableLiveData = MutableLiveData<FirebaseUser>()
 //    val appRepository = AppRepository(application, FirebaseFirestore.getInstance(secondary), FirebaseAuth.getInstance(secondary), mutableLiveData)
@@ -38,6 +38,10 @@ class FakeUserRepoImpl @Inject constructor(
 
     override fun getUserDetails() {
         super.getUserDetails()
+    }
+
+    fun getCurrentUser(): FirebaseUser? {
+        return fireBaseAuth.currentUser
     }
 
 }

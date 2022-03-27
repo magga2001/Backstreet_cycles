@@ -1,30 +1,21 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
-import com.example.backstreet_cycles.data.remote.dto.DockDto
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
-import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
-import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.junit.Assert.*
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import java.com.example.backstreet_cycles.FakeUserRepoImpl
 
+class LoggedInViewModelTest(app: Application) {
 
-@RunWith(JUnit4::class)
-class LogInViewModelTest(app: Application){
-
-    private var logInViewModel: LogInViewModel
+    private var loggedInViewModel: LoggedInViewModel
 
     private lateinit var tflRepository: TflRepository
 
@@ -43,20 +34,19 @@ class LogInViewModelTest(app: Application){
     private val fireBaseAuth = FirebaseAuth.getInstance(secondary)
     private val fakeUserRepoImpl = FakeUserRepoImpl(app, fireStore, fireBaseAuth)
 
-    init{
-        logInViewModel = LogInViewModel(tflRepository,
+    init {
+        loggedInViewModel = LoggedInViewModel(
+            tflRepository,
             mapboxRepository,
             cyclistRepository,
             fakeUserRepoImpl,
             app
-            )
+        )
         Firebase.initialize(app, options, "secondary")
     }
 
-//    @Test
-//    fun `Profile fetched from repository`() {
-//        ass("Name consumed from data source", SUT.getProfile().name, `is`("Fake Name"))
-//    }
-
+    fun logOut() {
+        fakeUserRepoImpl.logout()
+    }
 
 }

@@ -12,49 +12,51 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.repository.UserRepository
-import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
-import com.example.backstreet_cycles.ui.ui.views.LogInActivity
-import com.example.backstreet_cycles.ui.ui.views.SignUpActivity
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.testing.HiltAndroidRule
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.com.example.backstreet_cycles.FakeUserRepoImpl
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class LogInActivityTest{
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    private val userRepository: UserRepository =
-        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
     private val empty = ""
 
-    @get:Rule
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    var activityRule: ActivityScenarioRule<LogInActivity> =
+        ActivityScenarioRule(LogInActivity::class.java)
+
+    @get:Rule(order = 2)
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
+
     @Before
     fun setUp() {
-        if (firebaseAuth.currentUser != null) {
-            userRepository.logout()
-        }
-        ActivityScenario.launch(LogInActivity::class.java)
+        hiltRule.inject()
+
         Intents.init()
     }
 
