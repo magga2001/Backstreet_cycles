@@ -4,6 +4,7 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -103,6 +104,22 @@ class JourneyHistoryActivity : AppCompatActivity() {
             journeyHistoryViewModel.setShowAlert(false)
         }
         builder.show()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 
 }

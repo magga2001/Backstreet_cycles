@@ -129,6 +129,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 val intent = Intent(this, JourneyActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            }else
+            {
+                nextPageButton.isEnabled = true
+                SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot find route")
             }
         }
 
@@ -309,9 +313,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         nextPageButton.setOnClickListener{
-
             homePageViewModel.updateCurrentLocation(locationComponent)
             lifecycleScope.launch { homePageViewModel.getDock() }
+
         }
 
         stopsAdapter.getCollapseBottomSheet()
@@ -427,11 +431,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 "Do you want to continue with the current journey or with the newly created one?")
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+            nextPageButton.isEnabled = false
+            SnackbarHelper.displaySnackbar(HomePageActivity, "Loading...")
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+            nextPageButton.isEnabled = false
+            SnackbarHelper.displaySnackbar(HomePageActivity, "Loading...")
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }

@@ -301,7 +301,7 @@ class JourneyActivity : AppCompatActivity() {
                     journeyViewModel.clearView()
                     journeyViewModel.clearCurrentSession()
                     journeyViewModel.finishJourney(userDetails)
-
+                    journeyViewModel.resetNumCyclists()
                     val intent = Intent(this, HomePageActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -416,6 +416,10 @@ class JourneyActivity : AppCompatActivity() {
                 lifecycleScope.launch { journeyViewModel.getDock() }
                 true
             }
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -434,10 +438,8 @@ class JourneyActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, HomePageActivity::class.java)
         journeyViewModel.clearView()
         journeyViewModel.clearCurrentSession()
-        startActivity(intent)
         finish()
     }
 

@@ -43,7 +43,7 @@ object MapboxApi {
                         val distance = MapInfoUseCase.retrieveJourneyDistances(fastestRoute)
                         val duration = MapInfoUseCase.retrieveJourneyDurations(fastestRoute)
 
-                        mapboxRepository.addJourneyDistances(duration)
+                        mapboxRepository.addJourneyDistances(distance)
                         mapboxRepository.addJourneyDuration(duration)
                     }
                     else
@@ -69,6 +69,7 @@ object MapboxApi {
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
                     //Route request fail
                     Log.i("retrieving route", "fail")
+                    listener.getResult(DirectionsRoute.fromJson(""))
                 }
             }
         )

@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
@@ -66,10 +67,18 @@ class EditUserProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onBackPressed() {
-        val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        super.onBackPressed()
         finish()
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }

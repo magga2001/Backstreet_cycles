@@ -186,6 +186,7 @@ open class BaseViewModel @Inject constructor(
     open fun continueWithCurrentJourney(){
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+        mapboxRepository.clearJourneyLocations()
         mapboxRepository.setJourneyLocations(listOfLocations)
     }
 
