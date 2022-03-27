@@ -256,6 +256,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
                 R.id.journeyHistory -> {
                         val intent = Intent(this@HomePageActivity, JourneyHistoryActivity::class.java)
+                        intent.putExtra("User Location",homePageViewModel.getCurrentLocation(locationComponent))
                         startActivity(intent)
                         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }

@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.views
 
 
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -68,6 +69,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 journeyHistoryViewModel.clearAllStops()
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
+                val currentLocation: Location = intent.getParcelableExtra("User Location")!!
+                journeyHistoryViewModel.updateCurrentLocation(currentLocation)
                 journeyHistoryViewModel.getDock()
             }
         })

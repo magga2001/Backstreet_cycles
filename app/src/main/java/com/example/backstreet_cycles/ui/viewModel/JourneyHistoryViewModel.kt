@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.viewModel
 
 import android.content.Context
+import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -146,6 +147,19 @@ class JourneyHistoryViewModel @Inject constructor(
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
     {
         return isReadyMutableLiveData
+    }
+
+    fun updateCurrentLocation(currentLocation: Location) {
+        for(stop in stops){
+            if(stop.name == "Current Location"){
+
+                val longitude = currentLocation!!.longitude
+                val latitude = currentLocation!!.latitude
+
+                stop.lat = latitude
+                stop.lon = longitude
+            }
+        }
     }
 
 }
