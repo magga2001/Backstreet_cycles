@@ -1,6 +1,4 @@
 package com.example.backstreet_cycles.ui.views
-
-
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -15,35 +13,34 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.repository.UserRepository
-import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4ClassRunner::class)
+@AndroidEntryPoint
 class AboutActivityTest {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    lateinit var logInRegisterViewModel: LogInRegisterViewModel
+    private val logInViewModel: LogInViewModel by viewModels()
 
-    private val userRepository: UserRepository =
-        UserRepository(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+    private val userRepository: UserRepositoryImpl =
+        UserRepositoryImpl(Application(), Firebase.firestore, FirebaseAuth.getInstance())
 
     @Before
     fun setUp() {
         if (firebaseAuth.currentUser == null) {
-            logInRegisterViewModel= LogInRegisterViewModel(Application())
-            logInRegisterViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+            logInViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
         }
         Application().onCreate()
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.nav_view)).perform(click())
+        onView(withId(R.id.homepage_nav_view)).perform(click())
     }
 
     @Test

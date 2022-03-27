@@ -72,8 +72,8 @@ class JourneyHistoryActivityTest {
 
         onView(
             Matchers.allOf(
-                withId(R.id.textView3),
-                ViewMatchers.withParent(withId(R.id.journeyHistoryActivity))
+                withId(R.id.journey_history_title),
+                ViewMatchers.withParent(withId(R.id.recentJourney_layout))
             )
         ).check(matches(isDisplayed()))
 
@@ -84,7 +84,7 @@ class JourneyHistoryActivityTest {
         onView(
             Matchers.allOf(
                 withId(R.id.journey_history_recycler_view),
-                ViewMatchers.withParent(withId(R.id.journeyHistoryActivity))
+                ViewMatchers.withParent(withId(R.id.recentJourney_layout))
             )
         ).check(matches(isDisplayed()))
     }

@@ -48,7 +48,7 @@ class JourneyActivityTest{
 
     @Test
     fun test_bottom_sheet_visible(){
-        onView(withId(R.id.bottom_sheet_view_journey)).check(matches(isDisplayed()))
+        onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test

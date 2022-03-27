@@ -58,22 +58,22 @@ class EditUserProfileActivityTest{
 
     @Test
     fun test_title_is_visible() {
-        onView(withId(R.id.et_edit_profile_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_title)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_buttonUpdateProfile_is_visible() {
-        onView(withId(R.id.buttonUpdateProfile)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_first_name_field_is_visible() {
-        onView(withId(R.id.et_firstName_edit_user)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_et_last_name_field_is_visible() {
-        onView(withId(R.id.et_lastName_edit_user)).check(matches(isDisplayed()))
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
     }
 
 //    @Test
@@ -94,24 +94,24 @@ class EditUserProfileActivityTest{
 
     @Test
     fun test_on_clickUpdateProfile_Empty_firstName(){
-        onView(withId(R.id.et_firstName_edit_user)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.buttonUpdateProfile)).perform(ViewActions.click())
-        onView(withId(R.id.et_firstName_edit_user)).check(matches(hasErrorText("Please enter your first name")))
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
     }
 
     @Test
     fun test_on_clickUpdateProfile_Empty_lastName(){
-        onView(withId(R.id.et_firstName_edit_user)).perform(ViewActions.replaceText("Test"))
-        onView(withId(R.id.et_lastName_edit_user)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.buttonUpdateProfile)).perform(ViewActions.click())
-        onView(withId(R.id.et_lastName_edit_user)).check(matches(hasErrorText("Please enter your last name")))
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Test"))
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
     }
 
     @Test
     fun test_on_clickUpdateProfile_save(){
-        onView(withId(R.id.et_firstName_edit_user)).perform(ViewActions.replaceText("Name"))
-        onView(withId(R.id.et_lastName_edit_user)).perform(ViewActions.replaceText("Surname"))
-        onView(withId(R.id.buttonUpdateProfile)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
