@@ -1,4 +1,4 @@
-package views
+package com.example.backstreet_cycles.ui.views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView

@@ -1,4 +1,4 @@
-package views
+package com.example.backstreet_cycles.ui.views
 
 import org.junit.runner.RunWith
 import org.junit.runners.Suite

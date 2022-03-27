@@ -1,4 +1,4 @@
-/*
+package com.example.backstreet_cycles.ui.views/*
 package views
 import android.app.Application
 import android.util.Log

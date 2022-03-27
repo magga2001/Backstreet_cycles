@@ -1,4 +1,4 @@
-package views
+package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
@@ -15,9 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.ui.ui.viewModel.LogInRegisterViewModel
-import com.example.backstreet_cycles.ui.ui.views.HomePageActivity
-import com.example.backstreet_cycles.ui.ui.views.JourneyHistoryActivity
+
 import com.google.firebase.auth.FirebaseAuth
 import org.hamcrest.Matchers
 import org.junit.After
