@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.content.Context
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.google.firebase.auth.FirebaseUser
@@ -16,8 +17,9 @@ class SignUpViewModel @Inject constructor(
     getMapboxUseCase: GetMapboxUseCase,
     locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
+    userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext){
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository, applicationContext){
 
     fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
         return userRepository.register(firstName,lastName,email,password)

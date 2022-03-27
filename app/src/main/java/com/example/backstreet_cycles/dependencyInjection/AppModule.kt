@@ -1,22 +1,20 @@
 package com.example.backstreet_cycles.dependencyInjection
 
+import android.content.Context
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
-import com.example.backstreet_cycles.data.repository.CyclistRepositoryImpl
-import com.example.backstreet_cycles.data.repository.LocationRepositoryImpl
-import com.example.backstreet_cycles.data.repository.MapboxRepositoryImpl
-import com.example.backstreet_cycles.data.repository.TflRepositoryImpl
-import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
-import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
-import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.data.repository.*
+import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.service.WorkerService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -78,5 +76,19 @@ object AppModule {
         return GetDockUseCase(tflRepository)
     }
 
+    @Provides
+    @Singleton
+    fun provideFirestore() = FirebaseFirestore.getInstance()
 
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
+
+    @Provides
+    fun provideUserRepository(@ApplicationContext applicationContext: Context,
+                              fireStore: FirebaseFirestore,
+                              firebaseAuth: FirebaseAuth): UserRepository
+    {
+        return UserRepositoryImpl(applicationContext, fireStore, firebaseAuth)
+    }
 }

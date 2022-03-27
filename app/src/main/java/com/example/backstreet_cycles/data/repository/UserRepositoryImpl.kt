@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.ContentValues.TAG
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -12,14 +13,16 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.internal.Contexts
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
-class UserRepositoryImpl(private val application: Application,
-                   fireStore: FirebaseFirestore,
-                   fireBaseAuth: FirebaseAuth) : UserRepository
+class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
+                         fireStore: FirebaseFirestore,
+                         fireBaseAuth: FirebaseAuth) : UserRepository
 
 {
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
@@ -28,6 +31,7 @@ class UserRepositoryImpl(private val application: Application,
     private val userDetailsMutableLiveData: MutableLiveData<Users> = MutableLiveData()
     private val firebaseAuth: FirebaseAuth = fireBaseAuth
     private val dataBase = fireStore
+    private val application = Contexts.getApplication(applicationContext)
 
     init {
         if (firebaseAuth.currentUser != null) {
@@ -151,7 +155,6 @@ class UserRepositoryImpl(private val application: Application,
                         userDetailsMutableLiveData.postValue(userDetails)
                     }
                 }
-
             }
     }
 
@@ -191,19 +194,19 @@ class UserRepositoryImpl(private val application: Application,
         loggedOutMutableLiveData.postValue(true)
     }
 
-    fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
+    override fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
         return mutableLiveData
     }
 
-    fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
+    override fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
         return loggedOutMutableLiveData
     }
 
-    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
+    override fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
         return updatedProfileMutableLiveData
     }
 
-    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
+    override fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
         return userDetailsMutableLiveData
     }
 

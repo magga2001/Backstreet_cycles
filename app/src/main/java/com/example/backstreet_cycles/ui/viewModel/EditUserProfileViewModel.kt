@@ -6,6 +6,7 @@ import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.google.firebase.auth.FirebaseAuth
@@ -21,8 +22,9 @@ class EditUserProfileViewModel @Inject constructor(
         getMapboxUseCase: GetMapboxUseCase,
         locationRepository: LocationRepository,
         cyclistRepository: CyclistRepository,
+        userRepository: UserRepository,
         @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext){
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository, applicationContext){
 
         private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
         private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()

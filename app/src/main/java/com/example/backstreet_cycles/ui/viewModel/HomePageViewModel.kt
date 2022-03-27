@@ -16,6 +16,7 @@ import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
@@ -56,8 +57,9 @@ class HomePageViewModel @Inject constructor(
     getMapboxUseCase: GetMapboxUseCase,
     locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
+    userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext) {
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext) {
 
     private val mapboxNavigation by lazy {
 

@@ -13,6 +13,7 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.*
 import com.example.backstreet_cycles.domain.utils.*
 import com.example.backstreet_cycles.interfaces.Planner
@@ -44,8 +45,9 @@ class JourneyViewModel @Inject constructor(
     getMapboxUseCase: GetMapboxUseCase,
     locationRepository: LocationRepository,
     cyclistRepository: CyclistRepository,
+    userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, applicationContext), Planner{
+) : BaseViewModel(getDockUseCase, getMapboxUseCase, locationRepository, cyclistRepository, userRepository,applicationContext), Planner{
 
     private val mapboxNavigation: MapboxNavigation by lazy {
         if (MapboxNavigationProvider.isCreated()) {

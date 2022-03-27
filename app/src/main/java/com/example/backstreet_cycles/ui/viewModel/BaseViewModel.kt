@@ -14,6 +14,7 @@ import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.useCase.GetDockUseCase
 import com.example.backstreet_cycles.domain.useCase.GetMapboxUseCase
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -38,12 +39,13 @@ open class BaseViewModel @Inject constructor(
     protected val getMapboxUseCase: GetMapboxUseCase,
     protected val locationRepository: LocationRepository,
     protected val cyclistRepository: CyclistRepository,
+    protected open val userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
 ): ViewModel(){
 
     protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
-    protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
+//    protected val userRepository: UserRepositoryImpl = UserRepositoryImpl(mApplication, Firebase.firestore, FirebaseAuth.getInstance())
 
     //GENERIC
 
