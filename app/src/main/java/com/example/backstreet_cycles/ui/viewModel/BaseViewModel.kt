@@ -39,7 +39,7 @@ open class BaseViewModel @Inject constructor(
     protected val getMapboxUseCase: GetMapboxUseCase,
     protected val locationRepository: LocationRepository,
     protected val cyclistRepository: CyclistRepository,
-    protected open val userRepository: UserRepository,
+    protected val userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
 ): ViewModel(){
 
