@@ -46,6 +46,9 @@
     <string name="from_startingpoint">From:</string>
     <string name="to_destination">To:</string>
     <string name="done_journey">Done</string>
+    <string name="journey_distances">Distance: %1$s km</string>
+    <string name="journey_durations">Duration: %1$s mins</string>
+    <string name="journey_prices">Price: £%1$s</string>
 
     <!-- Strings for the menu items -->
     <string name="view_profile">View Profile</string>
@@ -81,6 +84,7 @@
     <string name="enter_password">Please enter a password</string>
     <string name="enter_confirmed_password">Please confirm your password</string>
     <string name="password_not_match">Passwords do not match</string>
+    <string name="change_password_title">Change Password</string>
 
     <!-- View profile -->
     <string name="profile_details">Profile Details</string>
@@ -100,8 +104,4 @@
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
     <string name="UPDATE_FAILED">Password reset failed</string>
 
-    <!--Journey info-->
-    <string name="journey_distances">Total Distance: %1$s km</string>
-    <string name="journey_durations">Total Duration: %1$s minutes</string>
-    <string name="journey_prices">Price: £%1$s</string>
 </resources>
