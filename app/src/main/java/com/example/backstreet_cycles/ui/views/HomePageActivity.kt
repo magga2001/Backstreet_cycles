@@ -74,6 +74,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private val homePageViewModel: HomePageViewModel by viewModels()
     private val loggedInViewModel: LoggedInViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the HomePage
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,21 +87,23 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homepage_mapView?.onCreate(savedInstanceState)
         homepage_mapView?.getMapAsync(this)
 
-        //Maybe check the functionality
         homePageViewModel.setUpdateInfo(false)
 
         init()
     }
 
-    private fun init(){
+    // Initialisation
+    private fun init() {
         initIncrementAndDecrementUsersFunc()
         initObservers()
         initNavigationDrawer()
     }
 
+    /**
+     *
+     */
     @SuppressLint("SetTextI18n")
-    private fun initObservers(){
-
+    private fun initObservers() {
         homePageViewModel.getShowAlertMutableLiveData().observe(this) {
             if (it) {
                 alertDialog(homePageViewModel.getJourneyLocations())
@@ -137,7 +143,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         homePageViewModel.hasCurrentLocation().observe(this){ currentLocation ->
-
             myLocationButton.isEnabled = !currentLocation
         }
 
@@ -149,69 +154,75 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         homePageViewModel.getHasDuplicationLocation().observe(this){ duplicate ->
-            if(duplicate)
-            {
+            if (duplicate) {
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Location already in list")
             }
         }
 
         homePageViewModel.getUpdateMutableLiveData().observe(this){ updateInfo ->
-            if(updateInfo)
-            {
-                addAndRemoveInfo(
+            if (updateInfo) {
+                removeAndAddInfo(
                     selectedCarmenFeature.placeName().toString(),
                     selectedCarmenFeature.center()!!.latitude(),
                     selectedCarmenFeature.center()!!.longitude()
                 )
-            }else
-            {
+            } else {
                 addInfo(
                     selectedCarmenFeature.placeName().toString(),
                     selectedCarmenFeature.center()!!.latitude(),
                     selectedCarmenFeature.center()!!.longitude()
                 )
             }
-
         }
     }
 
-    private fun initIncrementAndDecrementUsersFunc(){
+    private fun initIncrementAndDecrementUsersFunc() {
         textOfNumberOfUsers = findViewById(R.id.UserNumber)
         plusBtn = findViewById(R.id.incrementButton)
         minusBtn = findViewById(R.id.decrementButton)
         textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
 
-        plusBtn.setOnClickListener{
-          if(homePageViewModel.getNumCyclists() > 3){
+        plusBtn.setOnClickListener {
+          if (homePageViewModel.getNumCyclists() > 3) {
               SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
-          }
-          else{
+          } else {
               homePageViewModel.incrementNumCyclists()
               textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
           }
-
         }
-        minusBtn.setOnClickListener{
-            if(homePageViewModel.getNumCyclists()>=2){
+
+        minusBtn.setOnClickListener {
+            if (homePageViewModel.getNumCyclists() >= 2) {
                 homePageViewModel.decrementNumCyclists()
                 textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
-            }
-            else{
+            } else {
                 SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
             }
         }
     }
 
+    /**
+     * Add a new card to the display containing the searched location
+     * @param name of the searched location
+     * @param lat of the searched location
+     * @param long of the searched location
+     */
     private fun addInfo(name:String, lat: Double, long: Double) {
         LayoutInflater.from(this)
-        homePageViewModel.addStop(Locations(name,lat, long))
+        homePageViewModel.addStop(Locations(name,lat,long))
         stopsAdapter.notifyItemChanged(positionOfStop)
         SnackbarHelper.displaySnackbar(HomePageActivity, "Adding Stop")
         enableNextPageButton()
         enableMyLocationButton()
     }
 
-    private fun addAndRemoveInfo(name:String, lat: Double, long: Double) {
+    /**
+     * Update the clicked displayed card with the new data
+     * @param name of the searched location
+     * @param lat of the searched location
+     * @param long of the searched location
+     */
+    private fun removeAndAddInfo(name:String, lat: Double, long: Double) {
         homePageViewModel.removeStop(homePageViewModel.getStops()[positionOfStop])
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop, Locations(name,lat, long))
@@ -226,7 +237,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.checkCurrentLocation()
     }
 
-    private fun enableNextPageButton(){
+    private fun enableNextPageButton() {
         nextPageButton.isEnabled = homePageViewModel.getStops().size >= 2
     }
 
@@ -242,13 +253,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, ChangePasswordActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
-
                 }
+
                 R.id.profile -> {
                     loggedInViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, EditUserProfileActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
                 }
+
                 R.id.about -> {
                     startActivity(Intent(this@HomePageActivity, AboutActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
@@ -269,6 +281,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.currentJourney -> {
                     homePageViewModel.getCurrentJourney()
                 }
+
                 R.id.logout -> {
                     loggedInViewModel.logOut()
                     homePageViewModel.cancelWork()
@@ -290,7 +303,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         itemTouchMethods()
     }
 
-    private fun bottomSheetFunctionality(){
+    private fun bottomSheetFunctionality() {
         initBottomSheet()
 
         addStopButton.setOnClickListener {
@@ -312,10 +325,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             addInfo(getString(R.string.current_location), currentLocation!!.latitude, currentLocation.longitude )
         }
 
-        nextPageButton.setOnClickListener{
+        nextPageButton.setOnClickListener {
             homePageViewModel.updateCurrentLocation(locationComponent)
             lifecycleScope.launch { homePageViewModel.getDock() }
-
         }
 
         stopsAdapter.getCollapseBottomSheet()
@@ -334,7 +346,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homepage_recyclerView.layoutManager = LinearLayoutManager(this)
         homepage_recyclerView.adapter = stopsAdapter    }
 
-    private fun itemTouchMethods(){
+    private fun itemTouchMethods() {
         val touchScreenCallBack = object : TouchScreenCallBack(){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder.absoluteAdapterPosition != 0) {
@@ -343,8 +355,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     homepage_recyclerView.adapter?.notifyItemRemoved(position)
                     enableMyLocationButton()
                     enableNextPageButton()
-                }
-                else{
+                } else {
                     SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot remove location")
                 }
             }
@@ -382,20 +393,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
     private fun enableLocationComponent(loadedMapStyle: Style) { // Check if permissions are enabled and if not requested
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
-
             locationComponent = homePageViewModel.initLocationComponent(mapboxMap)
             homePageViewModel.initCurrentLocation(loadedMapStyle, locationComponent)
 
             bottomSheetFunctionality()
-
         } else {
             permissionsManager = PermissionsManager(this)
             permissionsManager.requestLocationPermissions(this)
         }
     }
 
-    private fun setUpSymbol(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style)
-    {
+    private fun setUpSymbol(mapView: MapView, mapboxMap: MapboxMap, loadedMapStyle: Style) {
         val symbolManager = SymbolManager(mapView, mapboxMap, loadedMapStyle)
         homePageViewModel.displayingAttractions(symbolManager, loadedMapStyle, homePageViewModel.getTouristAttractions())
     }
@@ -413,8 +421,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         )
     }
 
-    private fun setUpMarker(loadedStyle: Style)
-    {
+    private fun setUpMarker(loadedStyle: Style) {
         val drawable = ResourcesCompat.getDrawable(
             resources,
             R.drawable.ic_baseline_location_on_red_24dp,
