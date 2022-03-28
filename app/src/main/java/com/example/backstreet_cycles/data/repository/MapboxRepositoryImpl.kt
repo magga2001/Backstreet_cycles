@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class MapboxRepositoryImpl@Inject constructor(
+open class MapboxRepositoryImpl@Inject constructor(
     private val mapboxApi: MapboxApi
 ): MapboxRepository {
 

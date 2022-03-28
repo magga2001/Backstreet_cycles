@@ -22,53 +22,53 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-@RunWith(AndroidJUnit4ClassRunner::class)
-@AndroidEntryPoint
-class AboutActivityTest {
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val logInViewModel: LogInViewModel by viewModels()
-
-    private val userRepository: UserRepositoryImpl =
-        UserRepositoryImpl(Application(), Firebase.firestore, FirebaseAuth.getInstance())
-
-    @Before
-    fun setUp() {
-        if (firebaseAuth.currentUser == null) {
-            logInViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
-        }
-        Application().onCreate()
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.homepage_nav_view)).perform(click())
-    }
-
-    @Test
-    fun test_about_button_to_AboutActivity() {
-        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_title_is_displayed() {
-        onView(withId(R.id.aboutTitle)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_description_is_displayed() {
-        onView(withId(R.id.aboutDescription)).check(matches(isDisplayed()))
-    }
-
-//    @Test
-//    fun test_logo_is_displayed() {
-//        onView(withId(R.id.about_image)).check(matches(isDisplayed()))
+//
+//@RunWith(AndroidJUnit4ClassRunner::class)
+//@AndroidEntryPoint
+//class AboutActivityTest {
+//    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+//    private val logInViewModel: LogInViewModel by viewModels()
+//
+//    private val userRepository: UserRepositoryImpl =
+//        UserRepositoryImpl(Application(), Firebase.firestore, FirebaseAuth.getInstance())
+//
+//    @Before
+//    fun setUp() {
+//        if (firebaseAuth.currentUser == null) {
+//            logInViewModel.login("backstreet.cycles.test.user@gmail.com","123456")
+//        }
+//        Application().onCreate()
+//        ActivityScenario.launch(HomePageActivity::class.java)
+//        onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
+//        onView(withId(R.id.homepage_nav_view)).perform(click())
 //    }
-
-    @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
-        Intents.init()
-        pressBack()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-        Intents.release()
-
-    }
-}
+//
+//    @Test
+//    fun test_about_button_to_AboutActivity() {
+//        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun test_title_is_displayed() {
+//        onView(withId(R.id.aboutTitle)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun test_description_is_displayed() {
+//        onView(withId(R.id.aboutDescription)).check(matches(isDisplayed()))
+//    }
+//
+////    @Test
+////    fun test_logo_is_displayed() {
+////        onView(withId(R.id.about_image)).check(matches(isDisplayed()))
+////    }
+//
+//    @Test
+//    fun test_on_pressBack_go_to_HomePageActivity() {
+//        Intents.init()
+//        pressBack()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        Intents.release()
+//
+//    }
+//}

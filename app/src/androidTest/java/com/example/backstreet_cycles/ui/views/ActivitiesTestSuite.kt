@@ -7,16 +7,16 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
 
-    SplashScreenActivityTest::class,
-    SignUpActivityTest::class,
+//    SplashScreenActivityTest::class,
+//    SignUpActivityTest::class,
     LogInActivityTest::class,
-    HomePageActivityTest::class,
-    EditUserProfileActivityTest::class,
-    JourneyActivityTest::class,
-    AboutActivityTest::class,
-    JourneyHistoryActivityTest::class,
-    NavMenuTest::class,
-    CurrentJourneyTest::class
+//    HomePageActivityTest::class,
+//    EditUserProfileActivityTest::class,
+//    JourneyActivityTest::class,
+//    AboutActivityTest::class,
+//    JourneyHistoryActivityTest::class,
+////    NavMenuTest::class,
+//    CurrentJourneyTest::class
 )
 
 class ActivitiesTestSuite

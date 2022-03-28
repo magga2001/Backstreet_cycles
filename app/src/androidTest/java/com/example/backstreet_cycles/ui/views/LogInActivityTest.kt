@@ -16,37 +16,47 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.data.repository.*
+import com.example.backstreet_cycles.dependencyInjection.AppModule
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.com.example.backstreet_cycles.FakeUserRepoImpl
+import java.com.example.backstreet_cycles.*
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
+@HiltAndroidTest
 class LogInActivityTest{
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
-    private val empty = ""
 
-    @get:Rule(order = 0)
+    private val fakeUserRepoImpl = FakeUserRepoImpl()
+    private val fakeTflRepoImpl = FakeTflRepoImpl()
+    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
+    private val context = Application()
+
+    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+
+    @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
+    @get:Rule
     var activityRule: ActivityScenarioRule<LogInActivity> =
         ActivityScenarioRule(LogInActivity::class.java)
 
-    @get:Rule(order = 2)
+    @get:Rule
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -56,7 +66,9 @@ class LogInActivityTest{
     @Before
     fun setUp() {
         hiltRule.inject()
-
+        if (logInViewModel.getMutableLiveData().value != null){
+            fakeUserRepoImpl.logout()
+        }
         Intents.init()
     }
 

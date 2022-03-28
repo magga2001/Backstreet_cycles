@@ -20,18 +20,16 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
-open class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
-                              fireStore: FirebaseFirestore,
-                              fireBaseAuth: FirebaseAuth) : UserRepository
+open class UserRepositoryImpl() : UserRepository
 
 {
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val userDetailsMutableLiveData: MutableLiveData<Users> = MutableLiveData()
-    private val firebaseAuth: FirebaseAuth = fireBaseAuth
-    private val dataBase = fireStore
-    private val application = Contexts.getApplication(applicationContext)
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val dataBase = FirebaseFirestore.getInstance()
+    private val application = Application()
 
     init {
         if (firebaseAuth.currentUser != null) {
@@ -210,6 +208,9 @@ open class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
         return userDetailsMutableLiveData
     }
 
+    fun getFirebaseAuth(): FirebaseAuth {
+        return firebaseAuth
+    }
 
 }
 

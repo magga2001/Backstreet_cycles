@@ -8,7 +8,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import javax.inject.Inject
 
-class LocationRepositoryImpl @Inject constructor(
+open class LocationRepositoryImpl @Inject constructor(
     private val touristAttractionFile: TouristAttractionFile
 ): LocationRepository{
 

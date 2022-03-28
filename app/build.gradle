@@ -22,7 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.example.backstreet_cycles.data.repository.BackstreetTestRunner.kt"
+        testInstrumentationRunner "com.example.backstreet_cycles.BackstreetTestRunner"
     }
 
     buildTypes {
@@ -50,6 +50,12 @@ android {
     }
 
     testOptions {
+//        tasks.withType(Test) {
+//            useJUnitPlatform()
+//        }
+//        unitTests.all {
+//            useJUnitPlatform()
+//        }
         unitTests.returnDefaultValues = true
     }
 
@@ -128,7 +134,7 @@ dependencies {
     implementation('androidx.cardview:cardview:1.0.0')
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-alpha04")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-alpha05")
     //Livedata
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
     //Timber
@@ -198,8 +204,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
 
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.38.1'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
 
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.7.0"
+//
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+//    testImplemenstation 'org.junit.platform:junit-platform-commons:1.7.1'
 
 }
 

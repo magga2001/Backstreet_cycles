@@ -87,6 +87,6 @@ object AppModule {
                               fireStore: FirebaseFirestore,
                               firebaseAuth: FirebaseAuth): UserRepository
     {
-        return UserRepositoryImpl(applicationContext, fireStore, firebaseAuth)
+        return UserRepositoryImpl()
     }
 }

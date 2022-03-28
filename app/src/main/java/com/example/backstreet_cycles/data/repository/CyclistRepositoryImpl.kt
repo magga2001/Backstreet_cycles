@@ -2,7 +2,7 @@ package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 
-class CyclistRepositoryImpl: CyclistRepository{
+open class CyclistRepositoryImpl: CyclistRepository {
 
     private var numCyclists = 1
 
