@@ -273,6 +273,7 @@ class JourneyActivity : AppCompatActivity() {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
+            start_navigation.isEnabled=false
         }
 
         santander_link.setOnClickListener {

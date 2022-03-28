@@ -22,7 +22,9 @@
         >
         <activity
             android:name="com.example.backstreet_cycles.ui.views.JourneyHistoryActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.FAQActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
@@ -38,28 +40,43 @@
         <activity
             android:name="com.example.backstreet_cycles.ui.views.SplashScreenActivity"
             android:exported="true">
+            android:screenOrientation="portrait"
             <intent-filter>
                 <action android:name = "android.intent.action.MAIN" />
 
                 <category android:name = "android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.backstreet_cycles.ui.views.HomePageActivity" />
-        <activity android:name="com.example.backstreet_cycles.ui.views.LogInActivity" />
+        <activity android:name="com.example.backstreet_cycles.ui.views.HomePageActivity"
+                  android:screenOrientation="portrait"
+            />
+        <activity android:name="com.example.backstreet_cycles.ui.views.LogInActivity"
+                  android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.ChangePasswordActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.EditUserProfileActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.SignUpActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.example.backstreet_cycles.ui.views.ForgotPasswordActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity" />
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.LogInActivity"
+            android:screenOrientation="portrait"
+            />
         <activity android:name="com.example.backstreet_cycles.ui.views.JourneyActivity"
-            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"/>
+            android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
+            android:screenOrientation="portrait"
+            />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

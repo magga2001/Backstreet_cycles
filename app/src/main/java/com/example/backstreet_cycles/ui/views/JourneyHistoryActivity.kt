@@ -30,6 +30,11 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private lateinit var nAdapter: JourneyHistoryAdapter
     private var journeys: MutableList<List<Locations>> = emptyList<List<Locations>>().toMutableList()
 
+    /**
+     * Initialise the contents within the display of the Journey History
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey_history)
@@ -61,6 +66,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialise the Card View behaviour
+     */
+
     private fun init() {
         initCardView()
     }
@@ -81,12 +90,21 @@ class JourneyHistoryActivity : AppCompatActivity() {
         journey_history_recycler_view.adapter = nAdapter
     }
 
+    /**
+     * Resets the Mapbox Navigation inside the journeyHistoryViewModel
+     * each time the JourneyHistory activity starts
+     */
+
     override fun onStart() {
         super.onStart()
         journey_mapView?.onStart()
         journeyHistoryViewModel.destroyMapboxNavigation()
         journeyHistoryViewModel.getMapBoxNavigation()
     }
+
+    /**
+     * Implement the behaviour of the pop out window with alert dialog
+     */
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
@@ -106,6 +124,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Go to the HomePage when Home button from navigation menu is clicked
+     */
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -115,6 +137,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    /**
+     * Go to the HomePage when back button is clicked
+     */
 
     override fun onBackPressed() {
         super.onBackPressed()
