@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import android.os.SystemClock.sleep
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -111,6 +112,7 @@ class FAQActivityTest{
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
         pressBack()
+        sleep(100)
         Intents.intending(IntentMatchers.hasComponent(HomePageActivity::class.qualifiedName))
     }
     @After
