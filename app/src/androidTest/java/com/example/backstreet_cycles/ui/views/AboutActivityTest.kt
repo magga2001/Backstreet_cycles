@@ -67,7 +67,6 @@ class AboutActivityTest {
         onView(withId(R.id.homepage_nav_view)).perform(click())
     }
 
-
     @Test
     fun test_about_button_to_AboutActivity() {
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
