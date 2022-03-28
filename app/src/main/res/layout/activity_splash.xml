@@ -32,7 +32,7 @@
         android:id="@+id/splash_screen_activity_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Because you want it that way"
+        android:text="@string/backstreet_slogan"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold|italic"

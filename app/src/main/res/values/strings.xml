@@ -103,5 +103,6 @@
     <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
     <string name="UPDATE_FAILED">Password reset failed</string>
+    <string name="backstreet_slogan">Because you want it that way</string>
 
 </resources>
