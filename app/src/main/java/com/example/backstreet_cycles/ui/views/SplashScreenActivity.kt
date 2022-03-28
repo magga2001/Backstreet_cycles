@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,6 +28,7 @@ class SplashScreenActivity(): AppCompatActivity() {
 
         initObservers()
 
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         supportActionBar?.hide()
         Handler(Looper.getMainLooper()).postDelayed({
 

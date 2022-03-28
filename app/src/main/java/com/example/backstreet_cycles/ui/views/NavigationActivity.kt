@@ -329,6 +329,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
 
+        supportActionBar?.hide()
         MapboxNavigationProvider.destroy()
 
 //        navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
@@ -569,10 +570,8 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        clearRouteAndStopNavigation()
-        val intent = Intent(this, JourneyActivity::class.java)
-        startActivity(intent)
         finish()
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 
     override fun finish() {
