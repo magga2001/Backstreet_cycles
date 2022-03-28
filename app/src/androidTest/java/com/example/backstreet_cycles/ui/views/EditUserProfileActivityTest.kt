@@ -1,123 +1,146 @@
 package com.example.backstreet_cycles.ui.views
 
-//import android.app.Application
-//import androidx.test.core.app.ActivityScenario
-//import androidx.test.espresso.Espresso.onView
-//import androidx.test.espresso.Espresso.pressBack
-//import androidx.test.espresso.action.ViewActions
-//import androidx.test.espresso.assertion.ViewAssertions.matches
-//import androidx.test.espresso.intent.Intents
-//import androidx.test.espresso.intent.Intents.init
-//import androidx.test.espresso.intent.Intents.intending
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-//import androidx.test.espresso.matcher.ViewMatchers.*
-//import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-//import androidx.test.rule.GrantPermissionRule
-//import com.example.backstreet_cycles.R
-//import com.google.firebase.auth.FirebaseAuth
-//import org.junit.After
-//import org.junit.Before
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.runner.RunWith
-//import java.lang.Thread.sleep
+import android.app.Application
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.init
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.rule.GrantPermissionRule
+import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.com.example.backstreet_cycles.FakeCyclistRepoImpl
+import java.com.example.backstreet_cycles.FakeMapboxRepoImpl
+import java.com.example.backstreet_cycles.FakeTflRepoImpl
+import java.com.example.backstreet_cycles.FakeUserRepoImpl
+import java.lang.Thread.sleep
+
+@RunWith(AndroidJUnit4ClassRunner::class)
+@HiltAndroidTest
+class EditUserProfileActivityTest{
+
+    private val email = "backstreet.cycles.test.user@gmail.com"
+    private val password = "123456"
+
+    private val fakeUserRepoImpl = FakeUserRepoImpl()
+    private val fakeTflRepoImpl = FakeTflRepoImpl()
+    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
+    private val context = Application()
+
+    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    var activityRule: ActivityScenarioRule<HomePageActivity> =
+        ActivityScenarioRule(HomePageActivity::class.java)
+
+    @get:Rule
+    val locationRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_NETWORK_STATE,
+            android.Manifest.permission.INTERNET)
+
+    @Before
+    fun setUp() {
+        hiltRule.inject()
+        if (logInViewModel.getMutableLiveData().value == null){
+            fakeUserRepoImpl.login(email, password)
+        }
+        Intents.init()
+        onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withId(R.id.profile)).perform(ViewActions.click())
+    }
+
+    @Test
+    fun test_activity_is_in_view() {
+        intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
+    }
+
+    @Test
+    fun test_title_is_visible() {
+        onView(withId(R.id.edit_user_title)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_buttonUpdateProfile_is_visible() {
+        onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_et_first_name_field_is_visible() {
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_et_last_name_field_is_visible() {
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
+    }
+
+//    @Test
+//    fun test_check_if_first_name_is_inputted(){
 //
-//@RunWith(AndroidJUnit4ClassRunner::class)
-//class EditUserProfileActivityTest{
-//
-//    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-//    private lateinit var logInRegisterViewModel: LogInRegisterViewModel
-//
-//    private val email = "backstreet.cycles.test.user@gmail.com"
-//    private val password = "123456"
-//    @get:Rule
-//    val fineLocPermissionRule: GrantPermissionRule =
-//        GrantPermissionRule.grant(
-//            android.Manifest.permission.ACCESS_FINE_LOCATION,
-//            android.Manifest.permission.ACCESS_NETWORK_STATE,
-//            android.Manifest.permission.INTERNET)
-//
-//    @Before
-//    fun setUp() {
-//        if (firebaseAuth.currentUser == null) {
-//            logInRegisterViewModel = LogInRegisterViewModel(Application())
-//            logInRegisterViewModel.login(email, password)
-//        }
-//        Application().onCreate()
-//        ActivityScenario.launch(EditUserProfileActivity::class.java)
-//        sleep(100)
-//        init()
 //    }
 //    @Test
-//    fun test_activity_is_in_view() {
-//        intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
+//    fun test_check_if_last_name_is_inputted(){
+//
 //    }
-//
-//    @Test
-//    fun test_title_is_visible() {
-//        onView(withId(R.id.edit_user_title)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_buttonUpdateProfile_is_visible() {
-//        onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_et_first_name_field_is_visible() {
-//        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_et_last_name_field_is_visible() {
-//        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
-//    }
-//
-////    @Test
-////    fun test_check_if_first_name_is_inputted(){
-////
-////    }
-////    @Test
-////    fun test_check_if_last_name_is_inputted(){
-////
-////    }
-//
-//    @Test
-//    fun test_on_pressBack_go_to_HomePageActivity(){
-//        pressBack()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//    }
-//
-//
-//    @Test
-//    fun test_on_clickUpdateProfile_Empty_firstName(){
-//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(""))
-//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
-//    }
-//
-//    @Test
-//    fun test_on_clickUpdateProfile_Empty_lastName(){
-//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Test"))
-//        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(""))
-//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
-//    }
-//
-//    @Test
-//    fun test_on_clickUpdateProfile_save(){
-//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
-//        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
-//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//    }
-//
-//    @After
-//    fun tearDown(){
-//        Intents.release()
-//    }
-//
-//
-//
-//
-//}
+
+    @Test
+    fun test_on_pressBack_go_to_HomePageActivity(){
+        pressBack()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
+
+
+    @Test
+    fun test_on_clickUpdateProfile_Empty_firstName(){
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
+    }
+
+    @Test
+    fun test_on_clickUpdateProfile_Empty_lastName(){
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Test"))
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(""))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
+    }
+
+    @Test
+    fun test_on_clickUpdateProfile_save(){
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+    }
+
+    @After
+    fun tearDown(){
+        Intents.release()
+    }
+
+
+
+
+}

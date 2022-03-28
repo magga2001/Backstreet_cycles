@@ -13,7 +13,7 @@ import org.junit.runners.Suite
 //    HomePageActivityTest::class,
 //    EditUserProfileActivityTest::class,
 //    JourneyActivityTest::class,
-//    AboutActivityTest::class,
+    AboutActivityTest::class,
 //    JourneyHistoryActivityTest::class,
 ////    NavMenuTest::class,
 //    CurrentJourneyTest::class
