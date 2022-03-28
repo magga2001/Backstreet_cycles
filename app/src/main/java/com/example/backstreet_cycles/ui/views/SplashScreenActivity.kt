@@ -21,6 +21,10 @@ class SplashScreenActivity(): AppCompatActivity() {
 
     private val splashScreenViewModel : SplashScreenViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the SplashScreenActivity
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -35,6 +39,9 @@ class SplashScreenActivity(): AppCompatActivity() {
         }, Constants.SPLASH_TIME)
     }
 
+    /**
+     * Starts Homepage activity if the user is logged in, otherwise, Log In activity is started
+     */
     private fun initObservers()
     {
         splashScreenViewModel.getIsReadyMutableLiveData().observe(this){ ready ->

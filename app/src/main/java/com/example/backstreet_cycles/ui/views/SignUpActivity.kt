@@ -15,6 +15,11 @@ class SignUpActivity : AppCompatActivity() {
 
     private val signUpViewModel: SignUpViewModel  by viewModels()
 
+    /**
+     * Initialise the contents within the display of the Sign Up
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -24,6 +29,9 @@ class SignUpActivity : AppCompatActivity() {
         initListener()
     }
 
+    /**
+     *
+     */
         private fun initListener()
         {
             buttonSignUp.setOnClickListener {
