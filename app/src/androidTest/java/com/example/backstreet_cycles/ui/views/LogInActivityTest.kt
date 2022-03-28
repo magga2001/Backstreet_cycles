@@ -1,12 +1,10 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
@@ -16,13 +14,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.data.repository.*
-import com.example.backstreet_cycles.dependencyInjection.AppModule
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.allOf
@@ -77,10 +69,10 @@ class LogInActivityTest{
         intending(hasComponent(LogInActivity::class.qualifiedName))
     }
 
-    @Test
-    fun test_logo_is_visible() {
-        onView(withId(R.id.log_in_image_view)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_logo_is_visible() {
+//        onView(withId(R.id.log_in_image_view)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_buttonCreateAccount_is_visible() {
@@ -104,7 +96,7 @@ class LogInActivityTest{
 
     @Test
     fun test_launch_sign_up_with_create_button() {
-        onView(allOf(withId(R.id.log_in_buttonCreateAccount), withParent(withId(R.id.log_in_LinearLayout)))).perform(click())
+        onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
         intending(hasComponent(SignUpActivity::class.qualifiedName))
 
     }
@@ -126,16 +118,16 @@ class LogInActivityTest{
 
     @Test
     fun login_email_is_empty() {
-        onView(withId(R.id.log_in_email)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.log_in_buttonCreateAccount)).perform(ViewActions.click())
+        onView(withId(R.id.log_in_email)).perform(ViewActions.typeText(""), closeSoftKeyboard())
+        onView(withId(R.id.log_in_button)).perform(ViewActions.click())
         onView(withId(R.id.log_in_email)).check(matches(hasErrorText("Please enter your email")))
     }
 
     @Test
     fun login_password_is_empty() {
-        onView(withId(R.id.log_in_email)).perform(ViewActions.replaceText("test"))
-        onView(withId(R.id.log_in_password)).perform(ViewActions.replaceText(""))
-        onView(withId(R.id.log_in_buttonCreateAccount)).perform(ViewActions.click())
+        onView(withId(R.id.log_in_email)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.log_in_password)).perform(ViewActions.typeText(""), closeSoftKeyboard())
+        onView(withId(R.id.log_in_button)).perform(click())
         onView(withId(R.id.log_in_password)).check(matches(hasErrorText("Please enter a password")))
     }
 

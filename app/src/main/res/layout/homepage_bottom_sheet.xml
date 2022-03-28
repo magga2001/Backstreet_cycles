@@ -90,7 +90,7 @@
 
 
         <TextView
-            android:id="@+id/Users"
+            android:id="@+id/users"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
@@ -114,7 +114,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/Users"
+            app:layout_constraintStart_toEndOf="@+id/users"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.428"
             tools:ignore="MissingConstraints" />
