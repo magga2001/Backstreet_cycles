@@ -70,11 +70,11 @@
     <!-- FAQ -->
     <string name="FAQ">Frequently Asked Question</string>
     <string name="Q1">Where can I hire bikes from?</string>
-    <string name="A1">You can hire bikes using the following link which redirects you to TFL’s Santander cycle hire app or just hire them at the docking station which our application tells you.</string>
-    <string name="A2">TFL’s Santander cycles only allows you to hire up to four cycles at a time, so the app restricts you to cycle alongside four cyclists as well since it’s easier for you to find empty docks as well.</string>
+    <string name="A1">You can hire TFL Santander bikes after choosing your journey by clicking on the \"Hire a bike\" button which redirects you to TFL’s Santander cycle hire.</string>
+    <string name="A2">TFL’s Santander cycles only allows you to hire up to four cycles at a time. Therefore, the app limits you to four cyclists.</string>
     <string name="Q2">Why can I choose up to only four users to cycle with me?</string>
     <string name="Q3">How do I set the navigation?</string>
-    <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to their in order to start the navigation.</string>
+    <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to there in order to start the journey.</string>
 
     <!-- Change password -->
     <string name="current_password">Current Password</string>

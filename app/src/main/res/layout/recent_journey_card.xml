@@ -13,7 +13,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    android:background="@color/underLine"
+    android:background="@color/lightGrey"
     >
 
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded"
-            android:backgroundTint="@color/underLine"
+            android:backgroundTint="@color/lightGrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,8 @@
                     android:text="@string/list_of_stops"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/indigo"
-                    tools:layout_editor_absoluteX="0dp" />
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:ignore="MissingConstraints" />
 
 
                 <TextView
@@ -63,13 +64,13 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="7dp"
                     android:text="@string/from_to_"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black"
-                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/journeySummaryTextView"
                     app:layout_constraintVertical_bias="0.0"
-                    tools:layout_editor_absoluteX="0dp" />
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:ignore="MissingConstraints" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
