@@ -9,7 +9,7 @@
     android:id="@+id/HomePageActivity">
 
     <RelativeLayout
-        android:id="@+id/homeapge_relativeLayout"
+        android:id="@+id/homepage_relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
