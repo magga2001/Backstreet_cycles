@@ -16,8 +16,13 @@ import kotlinx.android.synthetic.main.activity_change_password.*
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
+    //
     private val changePasswordViewModel: ChangePasswordViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the ChangePasswordPage
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +30,14 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Display email of the logged in user
         changePasswordViewModel.getMutableLiveData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 change_password_email.text = firebaseUser.email
             }
         }
 
+        // Update the password in the database
         change_password_SaveButton.setOnClickListener {
             when {
                 TextUtils.isEmpty(change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
@@ -47,6 +54,11 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Return to the HomePage if the back button is clicked
+     * @param item from the nav_header
+     * @return true if clicked
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -57,12 +69,12 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Terminate the ChangePassword display when back button is clicked
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
-
-
-
 }
