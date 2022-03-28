@@ -30,7 +30,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Checks the whether the user's input for Sign Up is correct, if yes, it passes
+     * input into the SignUpViewModel and starts the Log In activity. Otherwise, the error messages
+     * are displayed
      */
         private fun initListener()
         {
