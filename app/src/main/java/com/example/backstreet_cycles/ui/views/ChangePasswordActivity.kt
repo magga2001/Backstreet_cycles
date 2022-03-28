@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_change_password.*
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
+    //
     private val changePasswordViewModel: ChangePasswordViewModel by viewModels()
 
     /**
