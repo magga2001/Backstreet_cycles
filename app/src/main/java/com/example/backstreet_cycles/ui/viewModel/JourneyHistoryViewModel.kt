@@ -15,6 +15,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -59,7 +60,12 @@ class JourneyHistoryViewModel @Inject constructor(
 
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
         mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
-            isReadyMutableLiveData.postValue(true)
+            if(it != DirectionsRoute.fromJson("")){
+                isReadyMutableLiveData.postValue(true)
+            }else
+            {
+                isReadyMutableLiveData.postValue(false)
+            }
         }.launchIn(viewModelScope)
     }
 

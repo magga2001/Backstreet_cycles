@@ -22,6 +22,7 @@ class JourneyHistoryAdapter(
     fun setOnItemClickListener(listener: OnItemClickListener){
         clickListener = listener
     }
+
     inner class JourneyViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
         val name: TextView = itemView.findViewById(R.id.recentJourneyCardTextView)
 
