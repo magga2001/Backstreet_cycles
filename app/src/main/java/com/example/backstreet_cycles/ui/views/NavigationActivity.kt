@@ -571,6 +571,9 @@ class NavigationActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+        clearRouteAndStopNavigation()
+        val intent = Intent(this, JourneyActivity::class.java)
+        startActivity(intent)
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
 
