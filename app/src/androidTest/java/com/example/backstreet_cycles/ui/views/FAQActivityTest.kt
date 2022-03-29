@@ -72,7 +72,7 @@ class FAQActivityTest{
     }
 
     @Test
-    fun test_FAQtitle_is_displayed() {
+    fun test_FAQ_title_is_displayed() {
         onView(withId(R.id.FAQTitle)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -82,27 +82,27 @@ class FAQActivityTest{
     }
 
     @Test
-    fun test_text1_is_displayed() {
+    fun test_answer1_is_displayed() {
         onView(withId(R.id.FAQ_a1)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
     fun test_question2_is_displayed() {
-        onView(withId(R.id.FAQ_q1)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.FAQ_q2)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
-    fun test_text2_is_displayed() {
+    fun test_answer2_is_displayed() {
         onView(withId(R.id.FAQ_a2)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
     fun test_question3_is_displayed() {
-        onView(withId(R.id.FAQ_q2)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.FAQ_q3)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
-    fun test_text3_is_displayed() {
+    fun test_answer3_is_displayed() {
         onView(withId(R.id.FAQ_a3)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
