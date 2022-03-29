@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -16,6 +17,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -38,20 +41,10 @@ class EditUserProfileActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val fakeUserRepoImpl = FakeUserRepoImpl()
-    private val fakeTflRepoImpl = FakeTflRepoImpl()
-    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-    private val context = Application()
-
-    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+    private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<HomePageActivity> =
-        ActivityScenarioRule(HomePageActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -62,18 +55,21 @@ class EditUserProfileActivityTest{
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        if (logInViewModel.getMutableLiveData().value == null){
-            fakeUserRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() == null){
+            userRepoImpl.login(email, password)
         }
-        Intents.init()
+        hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
         onView(withId(R.id.profile)).perform(ViewActions.click())
     }
 
     @Test
     fun test_activity_is_in_view() {
+        Intents.init()
         intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test
@@ -86,15 +82,15 @@ class EditUserProfileActivityTest{
         onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_et_first_name_field_is_visible() {
-        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_et_last_name_field_is_visible() {
-        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_et_first_name_field_is_visible() {
+//        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun test_et_last_name_field_is_visible() {
+//        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
+//    }
 
 //    @Test
 //    fun test_check_if_first_name_is_inputted(){
@@ -108,7 +104,9 @@ class EditUserProfileActivityTest{
     @Test
     fun test_on_pressBack_go_to_HomePageActivity(){
         pressBack()
+        Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
     }
 
 
@@ -132,12 +130,14 @@ class EditUserProfileActivityTest{
         onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
         onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @After
     fun tearDown(){
-        Intents.release()
+        userRepoImpl.logout()
     }
 
 

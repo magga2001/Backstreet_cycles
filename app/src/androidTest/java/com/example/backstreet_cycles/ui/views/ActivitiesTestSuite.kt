@@ -8,14 +8,18 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
 
 //    SplashScreenActivityTest::class,
-//    SignUpActivityTest::class,
+    SignUpActivityTest::class,
     LogInActivityTest::class,
 //    HomePageActivityTest::class,
-//    EditUserProfileActivityTest::class,
+    EditUserProfileActivityTest::class,
 //    JourneyActivityTest::class,
     AboutActivityTest::class,
-//    JourneyHistoryActivityTest::class,
-////    NavMenuTest::class,
+    JourneyHistoryActivityTest::class,
+    NavMenuTest::class,
+    ChangePasswordActivityTest::class,
+    FAQActivityTest::class,
+    ForgotPasswordActivityTest::class,
+   // NavigationActivityTest::class,
 //    CurrentJourneyTest::class
 )
 

@@ -11,7 +11,9 @@ import java.com.example.backstreet_cycles.FakeMapboxRepoImpl
 import java.com.example.backstreet_cycles.FakeTflRepoImpl
 import java.com.example.backstreet_cycles.FakeUserRepoImpl
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -21,6 +23,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,23 +34,14 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class ForgotPasswordActivityTest{
 
+
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val fakeUserRepoImpl = FakeUserRepoImpl()
-    private val fakeTflRepoImpl = FakeTflRepoImpl()
-    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-    private val context = Application()
-
-    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+    private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<ForgotPasswordActivity> =
-        ActivityScenarioRule(ForgotPasswordActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -57,17 +52,19 @@ class ForgotPasswordActivityTest{
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        if (logInViewModel.getMutableLiveData().value != null){
-            fakeUserRepoImpl.logout()
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
-        Intents.init()
-
+        hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(ForgotPasswordActivity::class.java)
     }
 
     @Test
     fun test_activity_is_in_view() {
+        Intents.init()
         intending(hasComponent(ForgotPasswordActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test
@@ -88,11 +85,13 @@ class ForgotPasswordActivityTest{
     @Test
     fun test_forgotButton_clicked_to_LoginPage() {
         onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
+        Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @After
     fun tearDown(){
-        Intents.release()
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 }
