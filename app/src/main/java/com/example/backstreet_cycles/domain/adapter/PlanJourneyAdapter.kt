@@ -17,9 +17,9 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
-import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.JourneyState
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.views.JourneyActivity
 
@@ -106,13 +106,13 @@ class PlanJourneyAdapter(
             enableExpandButton(holder)
         }
 
-        holder.tvFrom.text = "From: ${PlannerHelper.shortenName(location.name).first()} "
+        holder.tvFrom.text = "From: ${ConvertHelper.shortenName(location.name).first()} "
 
-        holder.tvTo.text = "To: ${PlannerHelper.shortenName(locations[position + 1].name).first()}"
+        holder.tvTo.text = "To: ${ConvertHelper.shortenName(locations[position + 1].name).first()}"
 
         holder.setNav1.setOnClickListener {
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(
+            val journeyPoints = PlannerHelper.calcRoutePlanner(
                 docks,
                 locations[position],
                 locations[position + 1],
@@ -131,7 +131,7 @@ class PlanJourneyAdapter(
 
         holder.setNav2.setOnClickListener {
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(
+            val journeyPoints = PlannerHelper.calcRoutePlanner(
                 docks,
                 locations[position],
                 locations[position + 1],
@@ -150,7 +150,7 @@ class PlanJourneyAdapter(
 
         holder.setNav3.setOnClickListener {
 
-            val journeyPoints = PlannerUseCase.calcRoutePlanner(
+            val journeyPoints = PlannerHelper.calcRoutePlanner(
                 docks,
                 locations[position],
                 locations[position + 1],

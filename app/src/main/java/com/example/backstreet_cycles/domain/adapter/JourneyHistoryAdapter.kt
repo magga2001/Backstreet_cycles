@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
 
 class JourneyHistoryAdapter(
     private var locations: MutableList<List<Locations>>
@@ -78,7 +78,7 @@ class JourneyHistoryAdapter(
     private fun constructString(newList: List<String>): String {
         var str = ""
         for (i in newList.indices) {
-            str += "\n ${i + 1}: ${PlannerHelper.shortenName(newList[i]).first()}"
+            str += "\n ${i + 1}: ${ConvertHelper.shortenName(newList[i]).first()}"
         }
         return str
     }

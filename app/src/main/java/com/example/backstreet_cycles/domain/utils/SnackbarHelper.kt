@@ -4,6 +4,9 @@ import android.view.View
 
 import com.google.android.material.snackbar.Snackbar
 
+/**
+ * A class created to help us with the implementation of the snackbar
+ */
 object SnackbarHelper {
 
     fun displaySnackbar(view: View?, s: String?) {

@@ -6,7 +6,7 @@ import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
+import com.example.backstreet_cycles.domain.utils.PermissionHelper
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.*
@@ -42,7 +42,7 @@ class LogInActivity : AppCompatActivity() {
 
         initListener()
 
-        PermissionUseCase.checkPermission(context = this, activity = this)
+        PermissionHelper.checkPermission(context = this, activity = this)
     }
 
     /**

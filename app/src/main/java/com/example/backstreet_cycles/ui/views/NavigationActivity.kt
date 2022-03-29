@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
+import com.example.backstreet_cycles.domain.utils.PermissionHelper
 import com.example.backstreet_cycles.ui.viewModel.NavigationViewModel
 import com.mapbox.bindgen.Expected
 import com.mapbox.maps.MapView
@@ -338,7 +338,7 @@ class NavigationActivity : AppCompatActivity() {
         MapboxNavigationProvider.destroy()
 
 //        navigationViewModel = ViewModelProvider(this).get(NavigationViewModel::class.java)
-        PermissionUseCase.checkPermission(context = this, activity = this)
+        PermissionHelper.checkPermission(context = this, activity = this)
 
         mapboxMap = navigation_mapView.getMapboxMap()
 //        mapboxNavigation = navigationViewModel.initialiseMapboxNavigation()

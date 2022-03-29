@@ -7,6 +7,9 @@ import android.util.Log
 
 class SharedPrefHelper {
 
+    /**
+     *
+     */
     companion object {
         private lateinit var sharedPref: SharedPreferences
         private lateinit var key: String
@@ -21,6 +24,9 @@ class SharedPrefHelper {
             )
         }
 
+        /**
+         *
+         */
         fun checkIfSharedPrefEmpty(key: String): Boolean {
             val serializedObject: String? = sharedPref.getString(key, null)
             sharedPref.contains(key)
@@ -30,6 +36,9 @@ class SharedPrefHelper {
             return false
         }
 
+        /**
+         *
+         */
         fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
             val json = JsonHelper.objectToString(values, type)
             with(sharedPref.edit()) {
@@ -38,6 +47,9 @@ class SharedPrefHelper {
             }
         }
 
+        /**
+         *
+         */
         fun clearListLocations() {
             with(sharedPref.edit()) {
                 clear()
@@ -45,6 +57,9 @@ class SharedPrefHelper {
             }
         }
 
+        /**
+         *
+         */
         fun <T> getSharedPref(type: Class<T>): MutableList<T> {
             val serializedObject: String? =
                 sharedPref.getString(key, null)
@@ -56,6 +71,9 @@ class SharedPrefHelper {
             }
         }
 
+        /**
+         *
+         */
         fun changeSharedPref(key: String) {
             this.key = key
             sharedPref = application.getSharedPreferences(

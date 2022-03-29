@@ -20,6 +20,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+
+/**
+ * All the dependencies bound into the dependency graph
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

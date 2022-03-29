@@ -3,6 +3,9 @@ package com.example.backstreet_cycles.domain.utils
 import android.app.Application
 import android.widget.Toast
 
+/**
+ * A class created to help us with the implementation of the toast message
+ */
 object ToastMessageHelper {
 
     fun createToastMessage(application: Application, stringMessage: String?) {

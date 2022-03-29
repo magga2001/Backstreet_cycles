@@ -16,11 +16,9 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
+import com.example.backstreet_cycles.domain.utils.PermissionHelper
 import com.example.backstreet_cycles.domain.utils.SnackbarHelper
-import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
-import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
@@ -47,7 +45,6 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
@@ -164,7 +161,7 @@ class JourneyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_journey)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        PermissionUseCase.checkPermission(context = this, activity = this)
+        PermissionHelper.checkPermission(context = this, activity = this)
 
         annotationApi = journey_mapView.annotations
         mapboxMap = journey_mapView.getMapboxMap()

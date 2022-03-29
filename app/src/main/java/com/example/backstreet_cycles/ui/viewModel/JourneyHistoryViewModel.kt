@@ -13,7 +13,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.JsonHelper
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
@@ -82,7 +82,7 @@ class JourneyHistoryViewModel @Inject constructor(
 
         resetNumCyclists()
         clearDuplication(locations)
-        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
+        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
 
         clearInfo()
         setCurrentWayPoint(locations)

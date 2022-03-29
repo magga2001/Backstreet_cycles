@@ -15,7 +15,7 @@ import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
 import com.mapbox.api.directions.v5.models.DirectionsRoute
@@ -186,7 +186,7 @@ class HomePageViewModel @Inject constructor(
         locations: MutableList<Locations>
     ) {
         clearDuplication(locations)
-        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
+        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
 
         clearInfo()
         setCurrentWayPoint(locations)

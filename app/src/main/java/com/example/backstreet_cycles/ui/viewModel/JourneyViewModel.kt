@@ -5,14 +5,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.*
-import com.example.backstreet_cycles.domain.useCase.*
 import com.example.backstreet_cycles.domain.utils.*
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.firebase.firestore.ktx.firestore
@@ -35,7 +33,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
@@ -123,7 +120,7 @@ class JourneyViewModel @Inject constructor(
     }
 
     fun calcBicycleRental() {
-        PlannerUseCase.calcBicycleRental(
+        PlannerHelper.calcBicycleRental(
             mApplication,
             getCurrentDocks(),
             getJourneyLocations(),
@@ -138,8 +135,8 @@ class JourneyViewModel @Inject constructor(
     }
 
     fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin) {
-        MapAnnotationUseCase.removeAnnotations()
-        MapAnnotationUseCase.addAnnotationToMap(
+        MapAnnotationHelper.removeAnnotations()
+        MapAnnotationHelper.addAnnotationToMap(
             context = mContext,
             getJourneyWayPointsLocations(),
             annotationApi,
@@ -166,7 +163,7 @@ class JourneyViewModel @Inject constructor(
 
         clearDuplication(locations)
         val routeOptions: RouteOptions
-        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
+        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
 
         if (!info) {
             clearInfo()
@@ -197,10 +194,10 @@ class JourneyViewModel @Inject constructor(
 
     private fun calcJourneyInfo() {
         distanceMutableLiveData.postValue(
-            PlannerHelper.convertMToKm(mapboxRepository.getJourneyDistances()).toString()
+            ConvertHelper.convertMToKm(mapboxRepository.getJourneyDistances()).toString()
         )
         durationMutableLiveData.postValue(
-            PlannerHelper.convertMsToS(mapboxRepository.getJourneyDurations()).toString()
+            ConvertHelper.convertMsToS(mapboxRepository.getJourneyDurations()).toString()
         )
         displayPrice()
     }
@@ -272,7 +269,7 @@ class JourneyViewModel @Inject constructor(
         }
 
     private fun displayPrice() {
-        val price = MapInfoUseCase.getRental(getJourneyDurations())
+        val price = MapInfoHelper.getRental(getJourneyDurations())
         priceMutableLiveData.postValue((price * getNumCyclists()).toString())
     }
 
