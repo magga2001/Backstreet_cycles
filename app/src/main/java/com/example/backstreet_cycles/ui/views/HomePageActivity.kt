@@ -597,6 +597,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     /**
      * Determines whether an item from the menu is selected
      * @param item
+     * @return true if selected
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {

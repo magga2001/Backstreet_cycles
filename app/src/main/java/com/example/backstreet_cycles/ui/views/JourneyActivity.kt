@@ -50,7 +50,6 @@ import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
 
@@ -438,6 +437,8 @@ class JourneyActivity : AppCompatActivity() {
 
     /**
      * Initialises the menu
+     * @param menu
+     * @return true or false
      */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu items for use in the action bar
@@ -448,6 +449,8 @@ class JourneyActivity : AppCompatActivity() {
 
     /**
      * Sets up the menu
+     * @param item
+     * @return true or false
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items

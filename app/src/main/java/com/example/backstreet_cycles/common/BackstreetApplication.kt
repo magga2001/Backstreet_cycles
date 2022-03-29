@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider {
-
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
@@ -36,18 +35,15 @@ class BackstreetApplication : Application(), Configuration.Provider {
             if (FirebaseAuth.getInstance().currentUser != null) {
                 //Move this to appropriate place
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)
-
             } else {
                 WorkHelper.cancelWork(context = applicationContext)
             }
 //            WorkHelper.cancelWork(context = applicationContext)
         }, 5000)
-
     }
 
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-
 }
