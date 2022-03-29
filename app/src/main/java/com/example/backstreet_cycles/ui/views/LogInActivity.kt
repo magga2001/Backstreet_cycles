@@ -16,11 +16,19 @@ class LogInActivity : AppCompatActivity() {
 
     private val logInViewModel: LogInViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the Log In activity
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
 
+        /**
+         * Checks whether user is not null and starts HomePage activity
+         **/
         logInViewModel.getMutableLiveData()
             .observe(this) { firebaseUser ->
                 if (firebaseUser != null) {
@@ -36,6 +44,11 @@ class LogInActivity : AppCompatActivity() {
 
         PermissionUseCase.checkPermission(context = this, activity = this)
     }
+
+    /**
+     * Checks the whether the user's input for Log In is correct, if yes, it passes
+     * input into the LogInViewModel. Otherwise, the error messages are displayed
+     */
 
     private fun initListener()
     {
@@ -58,10 +71,18 @@ class LogInActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * Implements Create Account Button behaviour
+         **/
+
         log_in_buttonCreateAccount.setOnClickListener {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
+
+        /**
+         * Implements Forgot Password Button behaviour
+         **/
 
         log_in_clickForgotPassword.setOnClickListener{
             startActivity(Intent(this@LogInActivity, ForgotPasswordActivity::class.java))

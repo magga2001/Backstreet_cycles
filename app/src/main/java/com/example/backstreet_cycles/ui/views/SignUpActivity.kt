@@ -15,6 +15,11 @@ class SignUpActivity : AppCompatActivity() {
 
     private val signUpViewModel: SignUpViewModel  by viewModels()
 
+    /**
+     * Initialise the contents within the display of the Sign Up
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -24,6 +29,11 @@ class SignUpActivity : AppCompatActivity() {
         initListener()
     }
 
+    /**
+     * Checks the whether the user's input for Sign Up is correct, if yes, it passes
+     * input into the SignUpViewModel and starts the Log In activity. Otherwise, the error messages
+     * are displayed
+     */
         private fun initListener()
         {
             buttonSignUp.setOnClickListener {

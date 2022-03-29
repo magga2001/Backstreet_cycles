@@ -19,28 +19,13 @@
 
     <ImageView
         android:id="@+id/backStreet_cycles_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="156dp"
+        android:layout_width="223dp"
+        android:layout_height="210dp"
+        android:layout_marginTop="160dp"
         android:src="@mipmap/app_icon_round"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/splash_screen_activity_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/backstreet_slogan"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backStreet_cycles_image"
-        app:layout_constraintVertical_bias="0.173" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -54,6 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backStreet_cycles_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

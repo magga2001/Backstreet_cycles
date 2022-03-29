@@ -17,12 +17,17 @@ class EditUserProfileActivity : AppCompatActivity() {
 
     private val editUserProfileViewModel: EditUserProfileViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the EditProfilePage
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user_profile)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // Indication that the profile has been updated
         editUserProfileViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
                 SnackbarHelper.displaySnackbar(editUserProfileActivity,"Profile Updated Successfully")
@@ -34,6 +39,8 @@ class EditUserProfileActivity : AppCompatActivity() {
         }
 
         editUserProfileViewModel.getUserDetails()
+
+        // Display the first and last name of the user if they exist
         editUserProfileViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
             if (details != null) {
                 edit_user_details_firstName.setText(details.firstName)
@@ -44,6 +51,7 @@ class EditUserProfileActivity : AppCompatActivity() {
         initListener()
     }
 
+    // Display helpful text in the text fields if they aren't already containing information
     private fun initListener()
     {
         edit_user_details_SaveButton.setOnClickListener {
@@ -67,6 +75,11 @@ class EditUserProfileActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Return to the HomePage if the back button is clicked
+     * @param item from the nav_header
+     * @return true if clicked
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -77,10 +90,12 @@ class EditUserProfileActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Terminate the ChangePassword display when back button is clicked
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
     }
-        
 }

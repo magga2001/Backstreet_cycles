@@ -36,7 +36,7 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.location_data,parent, false)
+        val view = inflater.inflate(R.layout.location_card,parent, false)
         return StopViewHolder(view,clickListener)
     }
 
