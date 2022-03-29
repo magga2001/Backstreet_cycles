@@ -10,23 +10,33 @@ object TouristAttractionFile {
 
     private val touristAttractions = mutableListOf<Locations>()
 
+    /**
+     * Loads all the tourist attractions in the application
+     *
+     * @param application - The Application
+     */
     fun loadLocations(application: Application) {
-        Timber.tag("Loading Tourist...").i("success")
         val touristAttractionText =
             JsonHelper.getJsonFromResources(application, R.raw.touristattraction)
         addTouristLocations(touristAttractionText)
     }
 
+    /**
+     * For adding the name and details of the tourist attraction into the list of tourist attractions
+     *
+     * @param text - a String that holds the name of the tourist attraction
+     */
     private fun addTouristLocations(text: String) {
         val attractionTouristData = JsonHelper.stringToObject(text, Locations::class.java)
 
         for (attraction in attractionTouristData ?: emptyList()) {
             touristAttractions.add(attraction)
-            Timber.tag("attractions").i("${attraction.name},${attraction.lat},${attraction.lon}")
         }
-        Timber.tag("attractions").i(touristAttractions.toString())
     }
 
+    /**
+     * @return a mutable list of the tourist attractions
+     */
     fun getTouristLocations(): MutableList<Locations> {
         return touristAttractions
     }

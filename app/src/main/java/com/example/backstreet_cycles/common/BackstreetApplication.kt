@@ -24,6 +24,9 @@ class BackstreetApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    /**
+     * Creates the application
+     */
     override fun onCreate() {
         super.onCreate()
 
@@ -42,6 +45,9 @@ class BackstreetApplication : Application(), Configuration.Provider {
         }, 5000)
     }
 
+    /**
+     *
+     */
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
