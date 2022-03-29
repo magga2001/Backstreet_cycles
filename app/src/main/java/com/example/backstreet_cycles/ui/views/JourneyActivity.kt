@@ -18,6 +18,7 @@ import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
@@ -44,6 +45,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 import kotlinx.coroutines.launch
@@ -151,6 +153,10 @@ class JourneyActivity : AppCompatActivity() {
     private lateinit var annotationApi: AnnotationPlugin
     private val journeyViewModel: JourneyViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the JourneyPage
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
@@ -165,18 +171,26 @@ class JourneyActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Initialise contents and calculate bike fare
+     */
     override fun onStart() {
         super.onStart()
         journeyViewModel.calcBicycleRental()
     }
 
+    /**
+     *
+     */
     override fun onStop() {
         super.onStop()
         journeyViewModel.clearInfo()
     }
 
+    /**
+     * Initialisation
+     */
     private fun init() {
-
         initCamera()
         initPadding()
         initRouteLineUI()
@@ -189,7 +203,6 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-
         journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready == "UPDATE") {
                 updateUI()
@@ -207,11 +220,11 @@ class JourneyActivity : AppCompatActivity() {
 
         journeyViewModel.getDurationMutableLiveData().observe(this) { duration ->
             if (duration != null) {
-                durations.text = getString(R.string.journey_durations, duration)
+                durations.text =  getString(R.string.journey_durations, duration)
             }
         }
 
-        journeyViewModel.getPriceMutableLiveData().observe(this) { price ->
+        journeyViewModel.getPriceMutableLiveData().observe(this){ price ->
             if (price != null) {
                 prices.text = getString(R.string.journey_prices, price)
             }
@@ -228,8 +241,10 @@ class JourneyActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Initialise the style of the map
+     */
     private fun initStyle() {
-
         mapboxMap.loadStyleUri(
             Style.MAPBOX_STREETS,
             {
@@ -247,6 +262,9 @@ class JourneyActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Initialise the navigation
+     */
     private fun initNavigation() {
 //        mapboxNavigation.setRoutes(currentRoute)
         journeyViewModel.setRoute()
@@ -256,9 +274,11 @@ class JourneyActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Initialise listeners
+     */
     @SuppressLint("SetTextI18n")
     private fun initListeners() {
-
         start_navigation.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
             startActivity(intent)
@@ -309,6 +329,9 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialise the line between the stops to complete the journey
+     */
     private fun initRouteLineUI() {
 
         val mapboxRouteLineOptions = MapboxRouteLineOptions.Builder(this)
@@ -327,6 +350,9 @@ class JourneyActivity : AppCompatActivity() {
         routeArrowView = MapboxRouteArrowView(routeArrowOptions)
     }
 
+    /**
+     * Initialise the camera for the navigation camera
+     */
     private fun initCamera() {
         // initialize Navigation Camera
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
@@ -353,6 +379,9 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Restricts area of camera view within map
+     */
     private fun initPadding() {
         //set the padding values depending on screen orientation and visible view layout
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -360,6 +389,7 @@ class JourneyActivity : AppCompatActivity() {
         } else {
             viewportDataSource.overviewPadding = MapboxConstants.overviewPadding
         }
+
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewportDataSource.followingPadding = MapboxConstants.landscapeFollowingPadding
         } else {
@@ -367,6 +397,9 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialise the bottom sheet with its con
+     */
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
@@ -381,6 +414,9 @@ class JourneyActivity : AppCompatActivity() {
         finish_journey.isEnabled = false
     }
 
+    /**
+     * Display the singular and plural word for bike depending on the number of cyclists selected
+     */
     private fun initInfo() {
         val numCyclists = journeyViewModel.getNumCyclists()
 
@@ -391,13 +427,18 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * UI is updated as journey progresses
+     */
     private fun updateUI() {
         journeyViewModel.setRoute()
         navigationCamera.requestNavigationCameraToOverview()
         journeyViewModel.updateMapMarkerAnnotation(annotationApi)
     }
 
-
+    /**
+     * Initialises the menu
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu items for use in the action bar
         val inflater = menuInflater
@@ -405,7 +446,9 @@ class JourneyActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-
+    /**
+     * Sets up the menu
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar items
         return when (item.itemId) {
@@ -423,6 +466,7 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    // Termination of JourneyPage
     override fun onDestroy() {
         super.onDestroy()
 
@@ -435,6 +479,7 @@ class JourneyActivity : AppCompatActivity() {
         routeLineApi.cancel()
     }
 
+    // Terminate JourneyPage when back button is clicked
     override fun onBackPressed() {
         super.onBackPressed()
         journeyViewModel.clearView()
@@ -442,6 +487,9 @@ class JourneyActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * Terminates JourneyPage
+     */
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)

@@ -618,17 +618,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     /**
      *
      */
-    override fun onStop() {
-        super.onStop()
-        homepage_mapView?.onStop()
-    }
-
-    /**
-     *
-     */
     override fun onLowMemory() {
         super.onLowMemory()
         homepage_mapView?.onLowMemory()
+    }
+
+    /**
+     * Called before termination of activity
+     */
+    override fun onStop() {
+        super.onStop()
+        homepage_mapView?.onStop()
     }
 
     /**
