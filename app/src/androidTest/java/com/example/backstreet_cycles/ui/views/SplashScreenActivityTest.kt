@@ -85,16 +85,16 @@ class SplashScreenActivityTest{
         onView(withId(R.id.splash_screen_activity_text)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_if_logged_HomePage_else_LoginPage(){
-
-        if(fakeUserRepoImpl.getCurrentUser() != null){
-            intending(hasComponent(HomePageActivity::class.qualifiedName))
-        } else{
-            intending(hasComponent(LogInActivity::class.qualifiedName))
-        }
-
-    }
+//    @Test
+//    fun test_if_logged_HomePage_else_LoginPage(){
+//
+//        if(fakeUserRepoImpl.getCurrentUser() != null){
+//            intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        } else{
+//            intending(hasComponent(LogInActivity::class.qualifiedName))
+//        }
+//
+//    }
 
     @After
     fun tearDown(){

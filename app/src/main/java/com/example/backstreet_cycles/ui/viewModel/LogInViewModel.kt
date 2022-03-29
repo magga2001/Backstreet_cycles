@@ -6,6 +6,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
+import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,9 +25,14 @@ class LogInViewModel @Inject constructor(
 
     fun  login(email: String, password: String){
          userRepository.login(email,password)
+         WorkHelper.setPeriodicallySendingLogs(mContext)
     }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
          return mutableLiveData
+    }
+
+    fun getFirebaseAuthUser(): FirebaseUser? {
+        return userRepository.getFirebaseAuthUser()
     }
 }

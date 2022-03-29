@@ -36,4 +36,6 @@ interface UserRepository {
     fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean>
 
     fun getUserDetailsMutableLiveData(): MutableLiveData<Users>
+
+    fun getFirebaseAuthUser(): FirebaseUser?
 }

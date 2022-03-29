@@ -3,8 +3,10 @@ package com.example.backstreet_cycles.data.repository
 import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
@@ -110,7 +112,7 @@ open class UserRepositoryImpl() : UserRepository
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.NO_PERSON_MATCH))
+//                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.NO_PERSON_MATCH))
                 }
             }
         }
@@ -136,41 +138,49 @@ open class UserRepositoryImpl() : UserRepository
                     }
                 }
             } else {
-                ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+//                ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+
             }
         }
     }
 
     override fun getUserDetails() {
-        dataBase
-            .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        val userDetails = document.toObject(Users::class.java)
-                        userDetailsMutableLiveData.postValue(userDetails)
+        try {
+            dataBase
+                .collection("users")
+                .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            val userDetails = document.toObject(Users::class.java)
+                            userDetailsMutableLiveData.postValue(userDetails)
+                        }
                     }
                 }
-            }
+        } catch(e: Exception) {
+//            ToastMessageHelper.createToastMessage(application,e.localizedMessage)
+            Log.i("Hello", "getUserDetails")
+        }
     }
 
     override fun login(email: String, password: String) : FirebaseUser? {
-
+        EspressoIdlingResource.increment()
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
                         mutableLiveData.postValue(firebaseAuth.currentUser)
-                        WorkHelper.setPeriodicallySendingLogs(application)
+                        EspressoIdlingResource.decrement()
                     }
                     else{
                         ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
+                        EspressoIdlingResource.decrement()
                     }
                 }
                 else {
                     ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
+                    EspressoIdlingResource.decrement()
                 }
             }
         return firebaseAuth.currentUser
@@ -188,8 +198,10 @@ open class UserRepositoryImpl() : UserRepository
     }
 
     override fun logout() {
+        EspressoIdlingResource.increment()
         firebaseAuth.signOut()
         loggedOutMutableLiveData.postValue(true)
+        EspressoIdlingResource.decrement()
     }
 
     override fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
@@ -208,8 +220,8 @@ open class UserRepositoryImpl() : UserRepository
         return userDetailsMutableLiveData
     }
 
-    fun getFirebaseAuth(): FirebaseAuth {
-        return firebaseAuth
+    override fun getFirebaseAuthUser(): FirebaseUser? {
+        return firebaseAuth.currentUser
     }
 
 }

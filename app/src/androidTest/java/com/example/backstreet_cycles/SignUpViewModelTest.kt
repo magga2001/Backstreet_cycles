@@ -55,11 +55,11 @@ class SignUpViewModelTest (app: Application) {
             app
         )
     }
-
-    @Test
-    fun check_user_is_registered(){
-        fakeUserRepoImpl.register(firstName, lastName, email, password)
-        val currentUser = fakeUserRepoImpl.getCurrentUser()
-        assertNotNull(currentUser)
-    }
+//
+//    @Test
+//    fun check_user_is_registered(){
+//        fakeUserRepoImpl.register(firstName, lastName, email, password)
+//        val currentUser = fakeUserRepoImpl.getCurrentUser()
+//        assertNotNull(currentUser)
+//    }
 }
