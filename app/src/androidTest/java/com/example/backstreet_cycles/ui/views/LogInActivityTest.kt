@@ -85,10 +85,10 @@ class LogInActivityTest{
         onView(withId(R.id.log_in_button)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_email_text_box_validate_input() {
-        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
-    }
+//    @Test
+//    fun test_email_text_box_validate_input() {
+//        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
+//    }
 
     @Test
     fun test_password_text_box_validate_input() {
@@ -109,7 +109,9 @@ class LogInActivityTest{
         onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
         Intents.init()
         intending(hasComponent(SignUpActivity::class.qualifiedName))
+        Intents.release()
         pressBack()
+        Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()
     }
