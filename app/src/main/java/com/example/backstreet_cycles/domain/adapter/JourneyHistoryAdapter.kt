@@ -37,7 +37,7 @@ class JourneyHistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JourneyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.recent_journey_card, parent, false)
-        locations.reverse()
+//        locations.reverse()
         return JourneyViewHolder(view, clickListener)
     }
 
