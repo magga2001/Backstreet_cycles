@@ -17,6 +17,8 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.useCase.PermissionUseCase
+import com.example.backstreet_cycles.domain.utils.SnackbarHelper
+import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -45,6 +47,7 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
@@ -219,11 +222,11 @@ class JourneyActivity : AppCompatActivity() {
 
         journeyViewModel.getDurationMutableLiveData().observe(this) { duration ->
             if (duration != null) {
-                durations.text =  getString(R.string.journey_durations, duration)
+                durations.text = getString(R.string.journey_durations, duration)
             }
         }
 
-        journeyViewModel.getPriceMutableLiveData().observe(this){ price ->
+        journeyViewModel.getPriceMutableLiveData().observe(this) { price ->
             if (price != null) {
                 prices.text = getString(R.string.journey_prices, price)
             }
@@ -291,6 +294,7 @@ class JourneyActivity : AppCompatActivity() {
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
             start_navigation.isEnabled = false
+            SnackbarHelper.displaySnackbar(it, "Make sure to set your journey to start your navigation!")
         }
 
         santander_link.setOnClickListener {

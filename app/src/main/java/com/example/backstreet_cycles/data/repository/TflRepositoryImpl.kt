@@ -1,9 +1,7 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.util.Log
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.TflApi
-import com.example.backstreet_cycles.data.remote.dto.DockDto
 import com.example.backstreet_cycles.data.remote.dto.toDock
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
@@ -19,6 +17,9 @@ class TflRepositoryImpl @Inject constructor(
 
     var docks = mutableListOf<Dock>()
 
+    /**
+     * Recieve the dock from the TFL API and maps them to the dataclass
+     */
     override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = flow {
         try {
             emit(Resource.Loading())
@@ -34,10 +35,18 @@ class TflRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Sets the dock to be live
+     *
+     * @param docks - a list of docks
+     */
     override fun setCurrentDocks(docks: MutableList<Dock>) {
         this.docks = docks
     }
 
+    /**
+     * @return the list of docks
+     */
     override fun getCurrentDocks(): MutableList<Dock> {
         return docks
     }

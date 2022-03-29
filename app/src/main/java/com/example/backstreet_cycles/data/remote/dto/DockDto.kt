@@ -31,10 +31,10 @@ fun DockDto.toDock(): Dock {
     )
 }
 
-private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean {
-    return (nbDocks - (nbBikes + nbSpaces) == 0)
-}
-
+/**
+ * @param value - a string that contains the value fetched from TFL JSon file
+ * @return an Int - the value itself in an integer format or zero if it is not applicable
+ */
 private fun checkValidity(value: String): Int {
     return try {
         value.toInt()
