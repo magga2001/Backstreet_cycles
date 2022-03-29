@@ -14,12 +14,13 @@ import com.mapbox.navigation.core.MapboxNavigation
 
 object MapboxApi {
 
-    fun requestRoute(mapboxNavigation: MapboxNavigation,
-                             routeOptions: RouteOptions,
-                             info: Boolean,
-                             listener: CallbackResource<DirectionsRoute>,
-                             mapboxRepository: MapboxRepository)
-    {
+    fun requestRoute(
+        mapboxNavigation: MapboxNavigation,
+        routeOptions: RouteOptions,
+        info: Boolean,
+        listener: CallbackResource<DirectionsRoute>,
+        mapboxRepository: MapboxRepository
+    ) {
 
         Log.i("retrieving the route", "success")
 
@@ -38,16 +39,13 @@ object MapboxApi {
 
                     val fastestRoute = MapInfoUseCase.getFastestRoute(routes)
 
-                    if(info)
-                    {
+                    if (info) {
                         val distance = MapInfoUseCase.retrieveJourneyDistances(fastestRoute)
                         val duration = MapInfoUseCase.retrieveJourneyDurations(fastestRoute)
 
                         mapboxRepository.addJourneyDistances(distance)
                         mapboxRepository.addJourneyDuration(duration)
-                    }
-                    else
-                    {
+                    } else {
                         mapboxRepository.setJourneyCurrentRoute(fastestRoute)
                     }
 

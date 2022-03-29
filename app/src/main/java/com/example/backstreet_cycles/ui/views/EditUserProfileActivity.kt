@@ -30,7 +30,10 @@ class EditUserProfileActivity : AppCompatActivity() {
         // Indication that the profile has been updated
         editUserProfileViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
             if (updated) {
-                SnackbarHelper.displaySnackbar(editUserProfileActivity,"Profile Updated Successfully")
+                SnackbarHelper.displaySnackbar(
+                    editUserProfileActivity,
+                    "Profile Updated Successfully"
+                )
                 val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -52,8 +55,7 @@ class EditUserProfileActivity : AppCompatActivity() {
     }
 
     // Display helpful text in the text fields if they aren't already containing information
-    private fun initListener()
-    {
+    private fun initListener() {
         edit_user_details_SaveButton.setOnClickListener {
             when {
                 TextUtils.isEmpty(
@@ -96,6 +98,6 @@ class EditUserProfileActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 }

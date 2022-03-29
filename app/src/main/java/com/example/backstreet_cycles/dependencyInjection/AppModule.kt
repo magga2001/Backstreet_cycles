@@ -83,10 +83,11 @@ object AppModule {
     fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 
     @Provides
-    fun provideUserRepository(@ApplicationContext applicationContext: Context,
-                              fireStore: FirebaseFirestore,
-                              firebaseAuth: FirebaseAuth): UserRepository
-    {
+    fun provideUserRepository(
+        @ApplicationContext applicationContext: Context,
+        fireStore: FirebaseFirestore,
+        firebaseAuth: FirebaseAuth
+    ): UserRepository {
         return UserRepositoryImpl(applicationContext, fireStore, firebaseAuth)
     }
 }

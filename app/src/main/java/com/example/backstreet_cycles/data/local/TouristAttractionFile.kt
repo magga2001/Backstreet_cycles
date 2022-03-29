@@ -11,15 +11,16 @@ object TouristAttractionFile {
     private val touristAttractions = mutableListOf<Locations>()
 
     fun loadLocations(application: Application) {
-        Timber.tag("Loading Tourist...").i( "success")
-        val touristAttractionText = JsonHelper.getJsonFromResources(application, R.raw.touristattraction)
+        Timber.tag("Loading Tourist...").i("success")
+        val touristAttractionText =
+            JsonHelper.getJsonFromResources(application, R.raw.touristattraction)
         addTouristLocations(touristAttractionText)
     }
 
-    private fun addTouristLocations (text: String) {
+    private fun addTouristLocations(text: String) {
         val attractionTouristData = JsonHelper.stringToObject(text, Locations::class.java)
 
-        for (attraction in attractionTouristData ?: emptyList()){
+        for (attraction in attractionTouristData ?: emptyList()) {
             touristAttractions.add(attraction)
             Timber.tag("attractions").i("${attraction.name},${attraction.lat},${attraction.lon}")
         }

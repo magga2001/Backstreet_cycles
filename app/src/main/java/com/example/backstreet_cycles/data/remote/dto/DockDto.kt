@@ -22,22 +22,20 @@ fun DockDto.toDock(): Dock {
         name = commonName,
         lat = lat,
         lon = lon,
-        nbBikes = checkValidity(additionalProperties.filter{ it.category == "nbBikes" }
+        nbBikes = checkValidity(additionalProperties.filter { it.category == "nbBikes" }
             .map { it.value }.toString()),
-        nbDocks = checkValidity(additionalProperties.filter{ it.category == "nbDocks" }
+        nbDocks = checkValidity(additionalProperties.filter { it.category == "nbDocks" }
             .map { it.value }.toString()),
-        nbSpaces = checkValidity(additionalProperties.filter{ it.category == "nbSpaces" }
+        nbSpaces = checkValidity(additionalProperties.filter { it.category == "nbSpaces" }
             .map { it.value }.toString())
     )
 }
 
-private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean
-{
+private fun validDock(nbBikes: Int, nbSpaces: Int, nbDocks: Int): Boolean {
     return (nbDocks - (nbBikes + nbSpaces) == 0)
 }
 
-private fun checkValidity(value : String): Int
-{
+private fun checkValidity(value: String): Int {
     return try {
         value.toInt()
     } catch (e: Exception) {

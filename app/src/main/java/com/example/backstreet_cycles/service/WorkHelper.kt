@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object WorkHelper {
 
-     fun setPeriodicallySendingLogs(context: Context) {
+    fun setPeriodicallySendingLogs(context: Context) {
 
         val workManager = WorkManager.getInstance(context)
         val sendingLog = PeriodicWorkRequestBuilder<WorkerService>(15, TimeUnit.MINUTES)
@@ -23,8 +23,7 @@ object WorkHelper {
         )
     }
 
-    fun cancelWork(context: Context)
-    {
+    fun cancelWork(context: Context) {
         val workManager = WorkManager.getInstance(context)
         workManager.cancelAllWorkByTag(Constants.TAG_NOTIFICATION)
     }

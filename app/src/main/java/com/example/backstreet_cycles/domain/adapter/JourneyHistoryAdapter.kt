@@ -11,19 +11,20 @@ import com.example.backstreet_cycles.domain.utils.PlannerHelper
 
 class JourneyHistoryAdapter(
     private var locations: MutableList<List<Locations>>
-): RecyclerView.Adapter<JourneyHistoryAdapter.JourneyViewHolder>() {
+) : RecyclerView.Adapter<JourneyHistoryAdapter.JourneyViewHolder>() {
 
     private lateinit var clickListener: OnItemClickListener
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         clickListener = listener
     }
 
-    inner class JourneyViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
+    inner class JourneyViewHolder(itemView: View, listener: OnItemClickListener) :
+        RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.recentJourneyCardTextView)
 
         init {
@@ -35,9 +36,9 @@ class JourneyHistoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JourneyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.recent_journey_card,parent, false)
+        val view = inflater.inflate(R.layout.recent_journey_card, parent, false)
         locations.reverse()
-        return JourneyViewHolder(view,clickListener)
+        return JourneyViewHolder(view, clickListener)
     }
 
     override fun onBindViewHolder(holder: JourneyViewHolder, position: Int) {
@@ -49,7 +50,7 @@ class JourneyHistoryAdapter(
     private fun constructString(newList: List<String>): String {
         var str = ""
         for (i in newList.indices) {
-            str += "\n ${i+1}: ${PlannerHelper.shortenName(newList[i]).first()}"
+            str += "\n ${i + 1}: ${PlannerHelper.shortenName(newList[i]).first()}"
         }
         return str
     }

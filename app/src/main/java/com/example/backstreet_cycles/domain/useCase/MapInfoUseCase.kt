@@ -41,20 +41,19 @@ object MapInfoUseCase {
         return route.distance()
     }
 
-    fun retrieveJourneyDurations(route: DirectionsRoute) : Double {
+    fun retrieveJourneyDurations(route: DirectionsRoute): Double {
         return route.duration()
     }
 
     fun getRental(durations: MutableList<Double>): Double {
-        var prices = ceil(((((durations.sum()/60) - Constants.MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / Constants.MINUTE_RATE))) * 2
+        var prices =
+            ceil(((((durations.sum() / 60) - Constants.MAX_TIME_TO_USE_THE_BIKE_FOR_FREE) / Constants.MINUTE_RATE))) * 2
 
-        if(prices <= 0)
-        {
+        if (prices <= 0) {
             prices = 0.0
         }
 
-        if(prices.toInt() % 2 != 0)
-        {
+        if (prices.toInt() % 2 != 0) {
             prices++
         }
 

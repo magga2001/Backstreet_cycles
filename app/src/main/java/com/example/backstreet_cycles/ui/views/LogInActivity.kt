@@ -36,7 +36,7 @@ class LogInActivity : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 }
             }
 
@@ -50,8 +50,7 @@ class LogInActivity : AppCompatActivity() {
      * input into the LogInViewModel. Otherwise, the error messages are displayed
      */
 
-    private fun initListener()
-    {
+    private fun initListener() {
 
         log_in_button.setOnClickListener {
             when {
@@ -77,16 +76,16 @@ class LogInActivity : AppCompatActivity() {
 
         log_in_buttonCreateAccount.setOnClickListener {
             startActivity(Intent(this@LogInActivity, SignUpActivity::class.java))
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         /**
          * Implements Forgot Password Button behaviour
          **/
 
-        log_in_clickForgotPassword.setOnClickListener{
+        log_in_clickForgotPassword.setOnClickListener {
             startActivity(Intent(this@LogInActivity, ForgotPasswordActivity::class.java))
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 

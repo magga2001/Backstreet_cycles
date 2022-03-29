@@ -19,15 +19,13 @@ object PlannerUseCase {
         locations: MutableList<Locations>,
         numCyclists: Int,
         plannerInterface: Planner
-    )
-    {
+    ) {
         val points = mutableListOf<Point>()
 
-        for(i in 1 until locations.size)
-        {
+        for (i in 1 until locations.size) {
             Log.i("Looping: ", i.toString())
 
-            val journey = calcRoutePlanner(docks, locations[i-1], locations[i], numCyclists)
+            val journey = calcRoutePlanner(docks, locations[i - 1], locations[i], numCyclists)
             val pickUpPoint = journey["pickUpPoint"]!!
             val dropOffPoint = journey["dropOffPoint"]!!
 
@@ -37,11 +35,11 @@ object PlannerUseCase {
             points.add(PlannerHelper.convertLocationToPoint(pickUpPoint))
             points.add(PlannerHelper.convertLocationToPoint(dropOffPoint))
 
-            plannerInterface.onFetchJourney(mutableListOf(pickUpPoint,dropOffPoint))
+            plannerInterface.onFetchJourney(mutableListOf(pickUpPoint, dropOffPoint))
         }
 
         SharedPrefHelper.initialiseSharedPref(application, Constants.DOCKS_LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(points,Point::class.java)
+        SharedPrefHelper.overrideSharedPref(points, Point::class.java)
         SharedPrefHelper.getSharedPref(Point::class.java)
     }
 
@@ -74,8 +72,8 @@ object PlannerUseCase {
                 docks,
                 Point.fromLngLat(
                     ToLocation.lon,
-                    ToLocation.lat)
-                , numUser
+                    ToLocation.lat
+                ), numUser
             )
         val dropOffDock = PlannerHelper.convertDockToLocations(findClosestDropOff)
         //val dropOffPoint = Point.fromLngLat(findClosestDropOff.lon, findClosestDropOff.lat)

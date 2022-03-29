@@ -20,11 +20,11 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
-class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
-                         fireStore: FirebaseFirestore,
-                         fireBaseAuth: FirebaseAuth) : UserRepository
-
-{
+class UserRepositoryImpl(
+    @ApplicationContext applicationContext: Context,
+    fireStore: FirebaseFirestore,
+    fireBaseAuth: FirebaseAuth
+) : UserRepository {
     private val mutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
     private val loggedOutMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -41,31 +41,47 @@ class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
         }
     }
 
-    override fun register(fName: String, lName: String, email: String, password: String): FirebaseUser? {
+    override fun register(
+        fName: String,
+        lName: String,
+        email: String,
+        password: String
+    ): FirebaseUser? {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     mutableLiveData.postValue(firebaseAuth.currentUser)
-                    emailVerification(fName,lName,email)
+                    emailVerification(fName, lName, email)
 
                 } else {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
+                    ToastMessageHelper.createToastMessage(
+                        application,
+                        application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage
+                    )
                 }
             }
         return firebaseAuth.currentUser
     }
 
     private fun emailVerification(fName: String, lName: String, email: String) {
-        ToastMessageHelper.createToastMessage(application,"EMAIL VERIFICATION BEING SENT TO:  $email")
-        firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
+        ToastMessageHelper.createToastMessage(
+            application,
+            "EMAIL VERIFICATION BEING SENT TO:  $email"
+        )
+        firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 logout()
-                ToastMessageHelper.createToastMessage(application,"PLEASE VERIFY YOUR EMAIL:  $email")
+                ToastMessageHelper.createToastMessage(
+                    application,
+                    "PLEASE VERIFY YOUR EMAIL:  $email"
+                )
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
-            }
-            else{
-                ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
+            } else {
+                ToastMessageHelper.createToastMessage(
+                    application,
+                    application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage
+                )
             }
 
         }
@@ -89,30 +105,35 @@ class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
     override fun updateUserDetails(firstName: String, lastName: String): Job =
         CoroutineScope(Dispatchers.IO).launch {
 
-            val user =  dataBase
-            .collection("users")
-            .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
-            .get()
-            .await()
+            val user = dataBase
+                .collection("users")
+                .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)
+                .get()
+                .await()
 
             if (user.documents.isNotEmpty()) {
                 for (document in user) {
                     try {
-                        dataBase.collection("users").document(document.id).update("firstName", firstName)
-                        dataBase.collection("users").document(document.id).update("lastName", lastName)
+                        dataBase.collection("users").document(document.id)
+                            .update("firstName", firstName)
+                        dataBase.collection("users").document(document.id)
+                            .update("lastName", lastName)
                         dataBase.collection("users").document(document.id)
                             .update("email", firebaseAuth.currentUser!!.email)
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            ToastMessageHelper.createToastMessage(application,e.message)
+                            ToastMessageHelper.createToastMessage(application, e.message)
                         }
                     }
 
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.NO_PERSON_MATCH))
+                    ToastMessageHelper.createToastMessage(
+                        application,
+                        application.getString(R.string.NO_PERSON_MATCH)
+                    )
                 }
             }
         }
@@ -131,14 +152,23 @@ class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { t ->
                         if (t.isSuccessful) {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
+                            ToastMessageHelper.createToastMessage(
+                                application,
+                                application.getString(R.string.PASSWORD_CHANGED)
+                            )
                         } else {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+                            ToastMessageHelper.createToastMessage(
+                                application,
+                                application.getString(R.string.UPDATE_FAILED)
+                            )
                         }
                     }
                 }
             } else {
-                ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+                ToastMessageHelper.createToastMessage(
+                    application,
+                    application.getString(R.string.UPDATE_FAILED)
+                )
             }
         }
     }
@@ -158,33 +188,39 @@ class UserRepositoryImpl(@ApplicationContext applicationContext: Context,
             }
     }
 
-    override fun login(email: String, password: String) : FirebaseUser? {
+    override fun login(email: String, password: String): FirebaseUser? {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful){
+                if (task.isSuccessful) {
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
                         mutableLiveData.postValue(firebaseAuth.currentUser)
                         WorkHelper.setPeriodicallySendingLogs(application)
+                    } else {
+                        ToastMessageHelper.createToastMessage(
+                            application,
+                            application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address"
+                        )
                     }
-                    else{
-                        ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
-                    }
-                }
-                else {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
+                } else {
+                    ToastMessageHelper.createToastMessage(
+                        application,
+                        application.getString(R.string.LOG_IN_FAILED) + " " + task.exception!!.localizedMessage
+                    )
                 }
             }
         return firebaseAuth.currentUser
     }
 
     override fun resetPassword(email: String) {
-            FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
-                    task -> if (task.isSuccessful){
-                ToastMessageHelper.createToastMessage(application,"Email reset email sent")
-            }
-            else{
-                ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                ToastMessageHelper.createToastMessage(application, "Email reset email sent")
+            } else {
+                ToastMessageHelper.createToastMessage(
+                    application,
+                    task.exception!!.message.toString()
+                )
             }
         }
     }

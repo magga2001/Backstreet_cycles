@@ -17,34 +17,35 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
 object MapAnnotationUseCase {
 
-    private var pointAnnotationManager: PointAnnotationManager ?= null
+    private var pointAnnotationManager: PointAnnotationManager? = null
 
     fun addAnnotationToMap(
         context: Context,
         locations: MutableList<Locations>,
         annotationApi: AnnotationPlugin,
         state: JourneyState
-    )
-    {
+    ) {
         val bitmaps = constructMarker(context, locations, state)
 
         buildAnnotationToMap(locations, annotationApi, bitmaps)
     }
 
     fun removeAnnotations() {
-        if(pointAnnotationManager != null)
-        {
+        if (pointAnnotationManager != null) {
             pointAnnotationManager!!.deleteAll()
         }
     }
 
-    private fun buildAnnotationToMap(locations: MutableList<Locations>,annotationApi: AnnotationPlugin, bitmaps: List<Bitmap>) {
+    private fun buildAnnotationToMap(
+        locations: MutableList<Locations>,
+        annotationApi: AnnotationPlugin,
+        bitmaps: List<Bitmap>
+    ) {
 
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
-        for(i in locations.indices)
-        {
+        for (i in locations.indices) {
             val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
                 // Define a geographic coordinate.
                 .withPoint(PlannerHelper.convertLocationToPoint(locations[i]))
@@ -63,23 +64,36 @@ object MapAnnotationUseCase {
         }
     }
 
-    private fun constructMarker(context: Context, locations: MutableList<Locations>, state: JourneyState): List<Bitmap> {
-        val image = when(state)
-        {
-            JourneyState.START_WALKING -> constructImage(context, listOf(R.drawable.redmapmarker, R.drawable.redcycledock))
-            JourneyState.BIKING -> constructImage(context, listOf(R.drawable.redcycledock, R.drawable.redcycledock))
-            JourneyState.END_WALKING -> constructImage(context, listOf(R.drawable.redcycledock, R.drawable.redmapmarker))
-            else -> constructImage(context, locations.map { (R.drawable.ic_baseline_location_on_red_24dp) })
+    private fun constructMarker(
+        context: Context,
+        locations: MutableList<Locations>,
+        state: JourneyState
+    ): List<Bitmap> {
+        val image = when (state) {
+            JourneyState.START_WALKING -> constructImage(
+                context,
+                listOf(R.drawable.redmapmarker, R.drawable.redcycledock)
+            )
+            JourneyState.BIKING -> constructImage(
+                context,
+                listOf(R.drawable.redcycledock, R.drawable.redcycledock)
+            )
+            JourneyState.END_WALKING -> constructImage(
+                context,
+                listOf(R.drawable.redcycledock, R.drawable.redmapmarker)
+            )
+            else -> constructImage(
+                context,
+                locations.map { (R.drawable.ic_baseline_location_on_red_24dp) })
         }
 
         return image
     }
 
-    private fun constructImage(context: Context,drawables : List<Int>): List<Bitmap> {
+    private fun constructImage(context: Context, drawables: List<Int>): List<Bitmap> {
         val bitmaps = mutableListOf<Bitmap>()
 
-        for(drawable in drawables)
-        {
+        for (drawable in drawables) {
             bitmaps.add(constructBitmap(context, drawable))
         }
 

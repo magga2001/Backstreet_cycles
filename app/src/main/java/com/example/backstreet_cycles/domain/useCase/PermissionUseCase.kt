@@ -9,8 +9,7 @@ import com.example.backstreet_cycles.common.Constants
 
 object PermissionUseCase {
 
-    fun checkPermission(context: Context, activity: Activity)
-    {
+    fun checkPermission(context: Context, activity: Activity) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION

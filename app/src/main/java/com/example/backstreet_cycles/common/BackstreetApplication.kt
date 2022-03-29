@@ -30,17 +30,15 @@ class BackstreetApplication : Application(), Configuration.Provider {
         SharedPrefHelper.initialiseSharedPref(this, Constants.DOCKS_LOCATIONS)
 
         Handler(Looper.myLooper()!!).postDelayed({
-            if(FirebaseAuth.getInstance().currentUser != null)
-            {
+            if (FirebaseAuth.getInstance().currentUser != null) {
                 //Move this to appropriate place
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)
 
-            }else
-            {
+            } else {
                 WorkHelper.cancelWork(context = applicationContext)
             }
 //            WorkHelper.cancelWork(context = applicationContext)
-        },5000)
+        }, 5000)
 
     }
 

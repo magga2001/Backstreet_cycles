@@ -13,25 +13,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditUserProfileViewModel @Inject constructor(
-        tflRepository: TflRepository,
-        mapboxRepository: MapboxRepository,
-        cyclistRepository: CyclistRepository,
-        userRepository: UserRepository,
-        @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository, applicationContext){
+    tflRepository: TflRepository,
+    mapboxRepository: MapboxRepository,
+    cyclistRepository: CyclistRepository,
+    userRepository: UserRepository,
+    @ApplicationContext applicationContext: Context
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
-        private val updatedProfileMutableLiveData: MutableLiveData<Boolean> = userRepository.getUpdatedProfileMutableLiveData()
-        private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
+    private val updatedProfileMutableLiveData: MutableLiveData<Boolean> =
+        userRepository.getUpdatedProfileMutableLiveData()
+    private val userDetailsMutableLiveData: MutableLiveData<Users> =
+        userRepository.getUserDetailsMutableLiveData()
 
-        fun updateUserDetails(firstName: String, lastName: String) {
-                userRepository.updateUserDetails(firstName, lastName)
-        }
+    fun updateUserDetails(firstName: String, lastName: String) {
+        userRepository.updateUserDetails(firstName, lastName)
+    }
 
-        fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
-                return updatedProfileMutableLiveData
-        }
+    fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
+        return updatedProfileMutableLiveData
+    }
 
-        fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
-                return userDetailsMutableLiveData
-        }
+    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
+        return userDetailsMutableLiveData
+    }
 }

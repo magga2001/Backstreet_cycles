@@ -16,7 +16,13 @@ class ForgotPasswordViewModel @Inject constructor(
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository,userRepository, applicationContext) {
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
     fun resetPassword(email: String) {
         userRepository.resetPassword(email)

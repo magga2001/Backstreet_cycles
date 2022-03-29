@@ -6,9 +6,9 @@ import com.mapbox.maps.EdgeInsets
 object MapboxConstants {
 
     /**
-    * Below are generated camera padding values to ensure that the route fits well on screen while
-    * other elements are overlaid on top of the map (including instruction view, buttons, etc.)
-    */
+     * Below are generated camera padding values to ensure that the route fits well on screen while
+     * other elements are overlaid on top of the map (including instruction view, buttons, etc.)
+     */
 
     private val pixelDensity = Resources.getSystem().displayMetrics.density
 

@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-class MapboxRepositoryImpl@Inject constructor(
+class MapboxRepositoryImpl @Inject constructor(
     private val mapboxApi: MapboxApi
-): MapboxRepository {
+) : MapboxRepository {
 
     private var currentRoute = mutableListOf<DirectionsRoute>()
     private val distances = mutableListOf<Double>()
@@ -25,7 +25,11 @@ class MapboxRepositoryImpl@Inject constructor(
     private var locations = mutableListOf<Locations>()
     private val wayPoints = mutableListOf<Locations>()
 
-    override fun requestRoute(mapboxNavigation: MapboxNavigation, routeOptions : RouteOptions, info: Boolean): Flow<DirectionsRoute> = callbackFlow {
+    override fun requestRoute(
+        mapboxNavigation: MapboxNavigation,
+        routeOptions: RouteOptions,
+        info: Boolean
+    ): Flow<DirectionsRoute> = callbackFlow {
 
         val callBack = object : CallbackResource<DirectionsRoute> {
             override fun getResult(objects: DirectionsRoute) {
@@ -33,7 +37,13 @@ class MapboxRepositoryImpl@Inject constructor(
             }
         }
 
-        mapboxApi.requestRoute(mapboxNavigation, routeOptions, info, callBack, mapboxRepository = this@MapboxRepositoryImpl)
+        mapboxApi.requestRoute(
+            mapboxNavigation,
+            routeOptions,
+            info,
+            callBack,
+            mapboxRepository = this@MapboxRepositoryImpl
+        )
 
         awaitClose { channel.close() }
     }
@@ -58,8 +68,7 @@ class MapboxRepositoryImpl@Inject constructor(
         return wayPoints
     }
 
-    override fun setJourneyCurrentRoute(route: DirectionsRoute)
-    {
+    override fun setJourneyCurrentRoute(route: DirectionsRoute) {
         currentRoute.add(route)
     }
 

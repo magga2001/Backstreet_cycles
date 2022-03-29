@@ -20,18 +20,23 @@ class SplashScreenViewModel @Inject constructor(
     userRepository: UserRepository,
     private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
     private val isReadyMutableLiveData = MutableLiveData<Boolean>()
 
-    suspend fun loadData()
-    {
+    suspend fun loadData() {
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("Splash screen dock", result.data?.size.toString())
 
-                    if(result.data != null && result.data.isNotEmpty()){
+                    if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data!!)
                     }
                     loadTouristAttractions()
@@ -48,15 +53,13 @@ class SplashScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadTouristAttractions()
-    {
+    private fun loadTouristAttractions() {
         locationRepository.loadLocations(application = mApplication)
         isReadyMutableLiveData.postValue(true)
     }
 
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 

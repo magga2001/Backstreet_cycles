@@ -39,7 +39,7 @@ class FAQActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
     /**
@@ -47,6 +47,6 @@ class FAQActivity : AppCompatActivity() {
      */
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 }

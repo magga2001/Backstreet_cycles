@@ -55,7 +55,13 @@ class HomePageViewModel @Inject constructor(
     userRepository: UserRepository,
     private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext) {
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
     private val mapboxNavigation by lazy {
 
@@ -71,7 +77,7 @@ class HomePageViewModel @Inject constructor(
     }
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
-    private var updateInfo:Boolean = false
+    private var updateInfo: Boolean = false
 
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val hasCurrentLocation: MutableLiveData<Boolean> = MutableLiveData()
@@ -90,8 +96,7 @@ class HomePageViewModel @Inject constructor(
         showLocationComponent(locationComponent)
     }
 
-    private fun customiseLocationPuck(): LocationComponentOptions
-    {
+    private fun customiseLocationPuck(): LocationComponentOptions {
         return LocationComponentOptions.builder(mApplication)
             .pulseEnabled(true)
             .build()
@@ -101,8 +106,7 @@ class HomePageViewModel @Inject constructor(
         locationComponent: LocationComponent,
         loadedMapStyle: Style,
         customLocationComponentOptions: LocationComponentOptions
-    )
-    {
+    ) {
         locationComponent.activateLocationComponent(
             LocationComponentActivationOptions.builder(mApplication, loadedMapStyle)
                 .locationComponentOptions(customLocationComponentOptions)
@@ -111,14 +115,13 @@ class HomePageViewModel @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    private fun showLocationComponent(locationComponent: LocationComponent)
-    {
+    private fun showLocationComponent(locationComponent: LocationComponent) {
         locationComponent.isLocationComponentEnabled = true
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
-    fun setShowAlert(bool: Boolean){
+    fun setShowAlert(bool: Boolean) {
         showAlert.postValue(bool)
     }
 
@@ -126,19 +129,19 @@ class HomePageViewModel @Inject constructor(
         return showAlert
     }
 
-    fun addStop(stop: Locations){
+    fun addStop(stop: Locations) {
         stops.add(stop)
     }
 
-    fun addStop(index: Int, stop: Locations){
+    fun addStop(index: Int, stop: Locations) {
         stops.add(index, stop)
     }
 
-    fun removeStop(stop: Locations){
+    fun removeStop(stop: Locations) {
         stops.remove(stop)
     }
 
-    fun removeStopAt(index: Int){
+    fun removeStopAt(index: Int) {
         stops.removeAt(index)
     }
 
@@ -146,7 +149,7 @@ class HomePageViewModel @Inject constructor(
         return stops
     }
 
-    private fun checkIfAlreadyInStops(location : Locations): Boolean{
+    private fun checkIfAlreadyInStops(location: Locations): Boolean {
         return stops.contains(location)
     }
 
@@ -154,37 +157,34 @@ class HomePageViewModel @Inject constructor(
         return locationRepository.getTouristLocations()
     }
 
-    fun setUpdateInfo(info: Boolean)
-    {
+    fun setUpdateInfo(info: Boolean) {
         updateInfo = info
     }
 
-    private fun getUpdateInfo(): Boolean
-    {
+    private fun getUpdateInfo(): Boolean {
         return updateInfo
     }
 
-    override fun getRoute()
-    {
+    override fun getRoute() {
         super.getRoute()
         setCurrentJourney(stops)
         checkCurrentJourney()
     }
 
-    private fun getMapBoxRoute(routeOptions: RouteOptions)
-    {
-        mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
-            if(it != DirectionsRoute.fromJson("")){
+    private fun getMapBoxRoute(routeOptions: RouteOptions) {
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach {
+            if (it != DirectionsRoute.fromJson("")) {
                 isReadyMutableLiveData.postValue(true)
-            }else
-            {
+            } else {
                 isReadyMutableLiveData.postValue(false)
             }
         }.launchIn(viewModelScope)
     }
 
-    private fun fetchRoute(context: Context,
-                           locations: MutableList<Locations>) {
+    private fun fetchRoute(
+        context: Context,
+        locations: MutableList<Locations>
+    ) {
         clearDuplication(locations)
         val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
 
@@ -194,12 +194,17 @@ class HomePageViewModel @Inject constructor(
         getMapBoxRoute(routeOptions)
     }
 
-    fun displayingAttractions(symbolManager: SymbolManager, loadedMapStyle: Style, data: List<Locations>) {
+    fun displayingAttractions(
+        symbolManager: SymbolManager,
+        loadedMapStyle: Style,
+        data: List<Locations>
+    ) {
         val textSize = 15.0F
         val textColor = "black"
 
         symbolManager.iconAllowOverlap = true
-        val bitmap = BitmapHelper.bitmapFromDrawableRes(mApplication,
+        val bitmap = BitmapHelper.bitmapFromDrawableRes(
+            mApplication,
             R.drawable.tourist_attraction_icon
         ) as Bitmap
         loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 80, 80, false))
@@ -222,10 +227,9 @@ class HomePageViewModel @Inject constructor(
         hasCurrentLocation.postValue(stop)
     }
 
-    fun updateCurrentLocation(locationComponent: LocationComponent)
-    {
-        for(stop in stops){
-            if(stop.name == "Current Location"){
+    fun updateCurrentLocation(locationComponent: LocationComponent) {
+        for (stop in stops) {
+            if (stop.name == "Current Location") {
 
                 val longitude = getCurrentLocation(locationComponent)!!.longitude
                 val latitude = getCurrentLocation(locationComponent)!!.latitude
@@ -242,10 +246,9 @@ class HomePageViewModel @Inject constructor(
 
     fun initPlaceAutoComplete(activity: Activity): Intent {
         return PlaceAutocomplete.IntentBuilder()
-            .accessToken(mApplication.getString(R.string.mapbox_access_token)).
-            placeOptions(
+            .accessToken(mApplication.getString(R.string.mapbox_access_token)).placeOptions(
                 PlaceOptions.builder()
-                    .bbox(-0.240,51.455,-0.0005,51.600)
+                    .bbox(-0.240, 51.455, -0.0005, 51.600)
                     .country("GB") // Restricts searches to just Great Britain
                     .backgroundColor(Color.parseColor("#EEEEEE"))
                     .limit(10)
@@ -254,23 +257,24 @@ class HomePageViewModel @Inject constructor(
             .build(activity)
     }
 
-    fun searchLocation(mapboxMap: MapboxMap,selectedCarmenFeature: CarmenFeature, style: Style)
-    {
+    fun searchLocation(mapboxMap: MapboxMap, selectedCarmenFeature: CarmenFeature, style: Style) {
         val location = Locations(
             selectedCarmenFeature.placeName().toString(),
             selectedCarmenFeature.center()!!.latitude(),
-            selectedCarmenFeature.center()!!.longitude())
-        if(!checkIfAlreadyInStops(location)){
+            selectedCarmenFeature.center()!!.longitude()
+        )
+        if (!checkIfAlreadyInStops(location)) {
             updateStops(mapboxMap, selectedCarmenFeature, style)
-        }
-        else{
+        } else {
             hasDuplicationLocation.postValue(true)
         }
     }
 
-    private fun updateStops(mapboxMap: MapboxMap,
-                            selectedCarmenFeature: CarmenFeature,
-                            style: Style){
+    private fun updateStops(
+        mapboxMap: MapboxMap,
+        selectedCarmenFeature: CarmenFeature,
+        style: Style
+    ) {
 
         val latitude = selectedCarmenFeature.center()!!.latitude()
         val longitude = selectedCarmenFeature.center()!!.longitude()
@@ -302,7 +306,7 @@ class HomePageViewModel @Inject constructor(
         mapboxMap.animateCamera(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder()
-                    .target(LatLng(latitude,longitude))
+                    .target(LatLng(latitude, longitude))
                     .zoom(14.0)
                     .build()
             ), 4000
@@ -310,28 +314,27 @@ class HomePageViewModel @Inject constructor(
     }
 
     private fun checkCurrentJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if (!noCurrentJourney){
+        if (!noCurrentJourney) {
             showAlert.postValue(true)
-        } else{
+        } else {
             fetchRoute(mContext, getJourneyLocations())
         }
     }
 
     fun getCurrentJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)) {
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
             fetchRoute(mContext, listOfLocations)
-        }else
-        {
+        } else {
             hasCurrentJourneyMutableLiveData.postValue(false)
         }
     }
 
-    override fun continueWithCurrentJourney(){
+    override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
         fetchRoute(
             mContext,
@@ -339,7 +342,7 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
-    override fun continueWithNewJourney(newStops: MutableList<Locations>){
+    override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
         fetchRoute(
             mContext,
@@ -348,10 +351,13 @@ class HomePageViewModel @Inject constructor(
     }
 
     fun saveJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.NUM_USERS)
-        SharedPrefHelper.overrideSharedPref(mutableListOf(getNumCyclists().toString()),String::class.java)
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(getJourneyLocations(),Locations::class.java)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.overrideSharedPref(
+            mutableListOf(getNumCyclists().toString()),
+            String::class.java
+        )
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
     }
 
     fun cancelWork() {

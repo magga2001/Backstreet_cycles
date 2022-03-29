@@ -7,25 +7,24 @@ import android.util.Log
 
 class SharedPrefHelper {
 
-    companion object
-    {
+    companion object {
         private lateinit var sharedPref: SharedPreferences
-        private lateinit var key:String
+        private lateinit var key: String
         private lateinit var application: Application
 
-        fun initialiseSharedPref(application: Application, key: String)
-        {
+        fun initialiseSharedPref(application: Application, key: String) {
             this.application = application
             this.key = key
 
             sharedPref = application.getSharedPreferences(
-                key, Context.MODE_PRIVATE)
+                key, Context.MODE_PRIVATE
+            )
         }
 
-        fun checkIfSharedPrefEmpty(key: String):Boolean {
+        fun checkIfSharedPrefEmpty(key: String): Boolean {
             val serializedObject: String? = sharedPref.getString(key, null)
             sharedPref.contains(key)
-            if (serializedObject == null){
+            if (serializedObject == null) {
                 return true
             }
             return false
@@ -33,14 +32,14 @@ class SharedPrefHelper {
 
         fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
             val json = JsonHelper.objectToString(values, type)
-            with (sharedPref.edit()) {
+            with(sharedPref.edit()) {
                 putString(key, json)
                 apply()
             }
         }
 
         fun clearListLocations() {
-            with (sharedPref.edit()) {
+            with(sharedPref.edit()) {
                 clear()
                 apply()
             }
@@ -57,11 +56,11 @@ class SharedPrefHelper {
             }
         }
 
-        fun changeSharedPref(key:String)
-        {
+        fun changeSharedPref(key: String) {
             this.key = key
             sharedPref = application.getSharedPreferences(
-                key, Context.MODE_PRIVATE)
+                key, Context.MODE_PRIVATE
+            )
         }
     }
 }

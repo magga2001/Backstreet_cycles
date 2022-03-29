@@ -83,10 +83,10 @@
         android:id="@+id/cyclists_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="7dp"
         android:background="@drawable/rounded"
         android:orientation="horizontal"
-        android:padding="7dp"
-        android:layout_margin="7dp">
+        android:padding="7dp">
 
 
         <TextView

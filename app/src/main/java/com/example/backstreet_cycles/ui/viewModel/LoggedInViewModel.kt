@@ -18,14 +18,23 @@ class LoggedInViewModel @Inject constructor(
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository,cyclistRepository, userRepository, applicationContext) {
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
-    private val loggedOutMutableLiveData: MutableLiveData<Boolean> = userRepository.getLoggedOutMutableLiveData()
-    private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
+    private val loggedOutMutableLiveData: MutableLiveData<Boolean> =
+        userRepository.getLoggedOutMutableLiveData()
+    private val userDetailsMutableLiveData: MutableLiveData<Users> =
+        userRepository.getUserDetailsMutableLiveData()
 
     fun logOut() {
         userRepository.logout()
     }
+
     fun getLoggedOutMutableLiveData(): MutableLiveData<Boolean> {
         return loggedOutMutableLiveData
     }

@@ -18,15 +18,21 @@ class LogInViewModel @Inject constructor(
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository ,cyclistRepository, userRepository, applicationContext){
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
     private val mutableLiveData = userRepository.getMutableLiveData()
 
-    fun  login(email: String, password: String){
-         userRepository.login(email,password)
+    fun login(email: String, password: String) {
+        userRepository.login(email, password)
     }
 
     fun getMutableLiveData(): MutableLiveData<FirebaseUser> {
-         return mutableLiveData
+        return mutableLiveData
     }
 }

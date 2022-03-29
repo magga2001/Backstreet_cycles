@@ -17,9 +17,20 @@ class SignUpViewModel @Inject constructor(
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository, applicationContext){
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
-    fun register(firstName:String, lastName:String, email:String, password:String): FirebaseUser?{
-        return userRepository.register(firstName,lastName,email,password)
+    fun register(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ): FirebaseUser? {
+        return userRepository.register(firstName, lastName, email, password)
     }
 }

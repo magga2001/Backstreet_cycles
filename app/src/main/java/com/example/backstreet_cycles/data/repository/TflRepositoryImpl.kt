@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class TflRepositoryImpl @Inject constructor(
     private val tflApi: TflApi
-): TflRepository {
+) : TflRepository {
 
     var docks = mutableListOf<Dock>()
 
@@ -27,9 +27,9 @@ class TflRepositoryImpl @Inject constructor(
                 .filter { (it.nbDocks - (it.nbBikes + it.nbSpaces) == 0) }
                 .toMutableList()
             emit(Resource.Success(docks))
-        } catch(e: HttpException) {
+        } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
-        } catch(e: IOException) {
+        } catch (e: IOException) {
             emit(Resource.Error("Couldn't reach server. Check your internet connection."))
         }
     }

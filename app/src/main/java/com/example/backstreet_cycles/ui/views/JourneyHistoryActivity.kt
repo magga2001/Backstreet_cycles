@@ -28,7 +28,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private val journeyHistoryViewModel: JourneyHistoryViewModel by viewModels()
 
     private lateinit var nAdapter: JourneyHistoryAdapter
-    private var journeys: MutableList<List<Locations>> = emptyList<List<Locations>>().toMutableList()
+    private var journeys: MutableList<List<Locations>> =
+        emptyList<List<Locations>>().toMutableList()
 
     /**
      * Initialise the contents within the display of the Journey History
@@ -42,11 +43,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
 
         journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
-            if(ready)
-            {
+            if (ready) {
                 startActivity(Intent(this, JourneyActivity::class.java))
                 journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
-                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
@@ -77,7 +77,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private fun initCardView() {
 
         nAdapter = JourneyHistoryAdapter(journeys)
-        nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener{
+        nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 journeyHistoryViewModel.clearAllStops()
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
@@ -109,8 +109,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("You currently have a planned journey. " +
-                "Would you like to return to the current journey or create a new one?")
+        builder.setMessage(
+            "You currently have a planned journey. " +
+                    "Would you like to return to the current journey or create a new one?"
+        )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             journeyHistoryViewModel.continueWithCurrentJourney()
@@ -145,7 +147,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
 }

@@ -8,14 +8,14 @@
     tools:context=".ui.views.SplashScreenActivity">
 
 
-<!--    <pl.droidsonroids.gif.GifImageView-->
-<!--        android:id="@+id/GifImage"-->
-<!--        android:layout_width="422dp"-->
-<!--        android:layout_height="362dp"-->
-<!--        android:src="@drawable/splash_gif"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        tools:layout_editor_absoluteX="-8dp"-->
-<!--        tools:layout_editor_absoluteY="52dp" />-->
+    <!--    <pl.droidsonroids.gif.GifImageView-->
+    <!--        android:id="@+id/GifImage"-->
+    <!--        android:layout_width="422dp"-->
+    <!--        android:layout_height="362dp"-->
+    <!--        android:src="@drawable/splash_gif"-->
+    <!--        tools:ignore="MissingConstraints"-->
+    <!--        tools:layout_editor_absoluteX="-8dp"-->
+    <!--        tools:layout_editor_absoluteY="52dp" />-->
 
     <ImageView
         android:id="@+id/backStreet_cycles_image"

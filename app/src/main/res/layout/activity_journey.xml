@@ -2,10 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/journeyActivity"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.mapbox.maps.MapView
         android:id="@+id/journey_mapView"
@@ -20,12 +19,12 @@
         android:id="@+id/journey_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.views.JourneyActivity"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:context=".ui.views.JourneyActivity">
 
         <include
             android:id="@+id/journey_bottom_sheet_view"
-            layout="@layout/journey_bottom_sheet"/>
+            layout="@layout/journey_bottom_sheet" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

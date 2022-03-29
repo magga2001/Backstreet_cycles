@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class SplashScreenActivity(): AppCompatActivity() {
+class SplashScreenActivity() : AppCompatActivity() {
 
-    private val splashScreenViewModel : SplashScreenViewModel by viewModels()
+    private val splashScreenViewModel: SplashScreenViewModel by viewModels()
 
     /**
      * Initialise the contents within the display of the SplashScreenActivity
@@ -44,21 +44,18 @@ class SplashScreenActivity(): AppCompatActivity() {
     /**
      * Starts Homepage activity if the user is logged in, otherwise, Log In activity is started
      */
-    private fun initObservers()
-    {
-        splashScreenViewModel.getIsReadyMutableLiveData().observe(this){ ready ->
-            if(ready)
-            {
-                if(FirebaseAuth.getInstance().currentUser != null){
+    private fun initObservers() {
+        splashScreenViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+            if (ready) {
+                if (FirebaseAuth.getInstance().currentUser != null) {
                     startActivity(Intent(this, HomePageActivity::class.java))
                     finish()
-                }
-                else{
+                } else {
                     startActivity(Intent(this, LogInActivity::class.java))
                 }
 
                 finish()
-                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
             }
         }
     }

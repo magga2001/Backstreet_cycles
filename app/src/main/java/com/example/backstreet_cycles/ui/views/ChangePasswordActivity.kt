@@ -40,15 +40,18 @@ class ChangePasswordActivity : AppCompatActivity() {
         // Update the password in the database
         change_password_SaveButton.setOnClickListener {
             when {
-                TextUtils.isEmpty(change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
-                    change_password_currentPassword.error = "In order for use to change your email or password you need to" +
-                            " enter your old password"
+                TextUtils.isEmpty(
+                    change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
+                    change_password_currentPassword.error =
+                        "In order for use to change your email or password you need to" +
+                                " enter your old password"
                 }
                 else -> {
-                    val currentPassword = change_password_currentPassword.text.toString().trim { it <= ' ' }
+                    val currentPassword =
+                        change_password_currentPassword.text.toString().trim { it <= ' ' }
                     val newPassword = change_password_NewPassword.text.toString()
                     changePasswordViewModel.getUserDetails()
-                    changePasswordViewModel.updatePassword(currentPassword,newPassword)
+                    changePasswordViewModel.updatePassword(currentPassword, newPassword)
                 }
             }
         }
@@ -75,6 +78,6 @@ class ChangePasswordActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 }

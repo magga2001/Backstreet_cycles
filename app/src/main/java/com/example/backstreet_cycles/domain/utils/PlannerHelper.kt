@@ -13,23 +13,19 @@ object PlannerHelper {
         return name.split(delimiter)
     }
 
-    fun convertLocationToPoint(locations: Locations): Point
-    {
-        return Point.fromLngLat(locations.lon,locations.lat)
+    fun convertLocationToPoint(locations: Locations): Point {
+        return Point.fromLngLat(locations.lon, locations.lat)
     }
 
-    fun convertDockToLocations(dock: Dock): Locations
-    {
-        return Locations(dock.name,dock.lat, dock.lon)
+    fun convertDockToLocations(dock: Dock): Locations {
+        return Locations(dock.name, dock.lat, dock.lon)
     }
 
-    fun convertMToKm(distances: List<Double>): Int
-    {
-        return (distances.sum()/1000).roundToInt()
+    fun convertMToKm(distances: List<Double>): Int {
+        return (distances.sum() / 1000).roundToInt()
     }
 
-    fun convertMsToS(durations: List<Double>): Int
-    {
-        return (durations.sum()/60).roundToInt()
+    fun convertMsToS(durations: List<Double>): Int {
+        return (durations.sum() / 60).roundToInt()
     }
 }

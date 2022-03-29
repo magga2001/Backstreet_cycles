@@ -11,10 +11,10 @@
 
     <TextView
         android:id="@+id/homepage_LocationDataCardName"
-        android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
+        android:padding="15dp"
         android:text="@string/title"
         android:textColor="@color/indigo"
         android:textSize="22sp"

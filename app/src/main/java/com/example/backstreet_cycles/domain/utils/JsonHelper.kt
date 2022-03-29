@@ -18,19 +18,19 @@ object JsonHelper {
     }
 
     fun writeJsonToResources(application: Application, json: String, resourceId: Int) {
-        val writeFile : String = application.resources.getResourceName(resourceId)
+        val writeFile: String = application.resources.getResourceName(resourceId)
         File(writeFile).writeText(json)
     }
 
-    fun <T> stringToObject(text: String,  type: Class<T>): List<T>? {
-        val parameterizedType = Types.newParameterizedType(List::class.java,type)
+    fun <T> stringToObject(text: String, type: Class<T>): List<T>? {
+        val parameterizedType = Types.newParameterizedType(List::class.java, type)
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
         return adapter.fromJson(text)
     }
 
-    fun <T> objectToString(values: List<T>,  type: Class<T>): String{
-        val parameterizedType = Types.newParameterizedType(List::class.java,type)
+    fun <T> objectToString(values: List<T>, type: Class<T>): String {
+        val parameterizedType = Types.newParameterizedType(List::class.java, type)
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val adapter: JsonAdapter<List<T>> = moshi.adapter(parameterizedType)
         return adapter.toJson(values)

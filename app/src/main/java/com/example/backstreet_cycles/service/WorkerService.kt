@@ -45,8 +45,7 @@ class WorkerService @AssistedInject constructor(
         return Result.success()
     }
 
-    private suspend fun attemptNotification()
-    {
+    private suspend fun attemptNotification() {
 
         Log.i("Starting attempt", "Success")
 
@@ -56,11 +55,10 @@ class WorkerService @AssistedInject constructor(
                     is Resource.Success -> {
                         Log.i("Notification dock", result.data?.size.toString())
 
-                            if(checkUpdate(result.data))
-                            {
-                                createNotificationChannel(context = applicationContext)
-                                notificationTapAction(context = applicationContext)
-                            }
+                        if (checkUpdate(result.data)) {
+                            createNotificationChannel(context = applicationContext)
+                            notificationTapAction(context = applicationContext)
+                        }
                     }
 
                     is Resource.Error -> {
@@ -75,30 +73,34 @@ class WorkerService @AssistedInject constructor(
         }
     }
 
-    private fun checkUpdate(docks: MutableList<Dock>?): Boolean
-    {
-        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.DOCKS_LOCATIONS)
+    private fun checkUpdate(docks: MutableList<Dock>?): Boolean {
+        SharedPrefHelper.initialiseSharedPref(
+            getApplication(applicationContext),
+            Constants.DOCKS_LOCATIONS
+        )
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
-        SharedPrefHelper.initialiseSharedPref(getApplication(applicationContext),Constants.NUM_USERS)
+        SharedPrefHelper.initialiseSharedPref(
+            getApplication(applicationContext),
+            Constants.NUM_USERS
+        )
         val numUser = SharedPrefHelper.getSharedPref(String::class.java)
         numUser.map { it.toInt() }
 
-       return checkForNewDock(currentDocks, docks, numUser)
+        return checkForNewDock(currentDocks, docks, numUser)
     }
 
     private fun checkForNewDock(
         currentDocks: MutableList<Point>,
         docks: MutableList<Dock>?,
         numUser: MutableList<String>
-    ): Boolean{
+    ): Boolean {
         val currentPoint = mutableListOf<Point>()
 
-        for(point in currentDocks)
-        {
+        for (point in currentDocks) {
             val lon = point.longitude()
             val lat = point.latitude()
 
-            currentPoint.add(Point.fromLngLat(lon,lat))
+            currentPoint.add(Point.fromLngLat(lon, lat))
         }
 
         val filteredDock = docks?.filter {
@@ -107,9 +109,10 @@ class WorkerService @AssistedInject constructor(
         }
 
 
-        for(dock in filteredDock!!)
-            if(dock.nbSpaces >= numUser.first().toInt() && filteredDock.size == currentPoint.size)
-            {
+        for (dock in filteredDock!!)
+            if (dock.nbSpaces >= numUser.first()
+                    .toInt() && filteredDock.size == currentPoint.size
+            ) {
                 return false
             }
 
@@ -133,27 +136,25 @@ class WorkerService @AssistedInject constructor(
         }
     }
 
-    private fun notificationTapAction(context: Context)
-    {
+    private fun notificationTapAction(context: Context) {
         // Create an explicit intent for an Activity in your app
 
-        val intent : Intent
+        val intent: Intent
 
-        if(FirebaseAuth.getInstance().currentUser != null)
-        {
+        if (FirebaseAuth.getInstance().currentUser != null) {
             intent = Intent(context, HomePageActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-        }else
-        {
+        } else {
             intent = Intent(context, LogInActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
         }
 
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-       val notificationBuilder = NotificationCompat.Builder(context, "1337")
+        val notificationBuilder = NotificationCompat.Builder(context, "1337")
             .setSmallIcon(R.drawable.dock_station)
             .setContentTitle("Journey update!")
             .setContentText("One or more of docking stations in your journey has been changed due to spaces available")
@@ -165,8 +166,10 @@ class WorkerService @AssistedInject constructor(
         showNotification(context, notificationBuilder)
     }
 
-    private fun showNotification(context: Context, notificationBuilder: NotificationCompat.Builder)
-    {
+    private fun showNotification(
+        context: Context,
+        notificationBuilder: NotificationCompat.Builder
+    ) {
         Log.i("Sending notification", "Successful")
 
         with(NotificationManagerCompat.from(context)) {

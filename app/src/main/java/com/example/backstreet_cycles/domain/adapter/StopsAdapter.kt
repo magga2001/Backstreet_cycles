@@ -11,20 +11,23 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.PlannerHelper
 
-class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapter<StopsAdapter.StopViewHolder>(){
+class StopsAdapter(private val stops: MutableList<Locations>) :
+    RecyclerView.Adapter<StopsAdapter.StopViewHolder>() {
 
     private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
 
     private lateinit var clickListener: OnItemClickListener
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         clickListener = listener
     }
-    inner class StopViewHolder(itemView: View, listener: OnItemClickListener):RecyclerView.ViewHolder(itemView){
+
+    inner class StopViewHolder(itemView: View, listener: OnItemClickListener) :
+        RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.homepage_LocationDataCardName)
 
         init {
@@ -36,8 +39,8 @@ class StopsAdapter(private val stops: MutableList<Locations>):RecyclerView.Adapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.location_card,parent, false)
-        return StopViewHolder(view,clickListener)
+        val view = inflater.inflate(R.layout.location_card, parent, false)
+        return StopViewHolder(view, clickListener)
     }
 
     override fun onBindViewHolder(holder: StopViewHolder, position: Int) {

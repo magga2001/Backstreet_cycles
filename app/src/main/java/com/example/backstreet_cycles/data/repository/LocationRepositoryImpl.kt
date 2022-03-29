@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
     private val touristAttractionFile: TouristAttractionFile
-): LocationRepository{
+) : LocationRepository {
 
     override fun loadLocations(application: Application) {
         touristAttractionFile.loadLocations(application)
