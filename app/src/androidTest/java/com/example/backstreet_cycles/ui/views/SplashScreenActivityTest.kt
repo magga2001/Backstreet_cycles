@@ -73,10 +73,9 @@ class SplashScreenActivityTest{
     }
 
     @Test
-    suspend fun test_if_user_is_loggedin_goes_to_homepage(){
+     fun test_if_user_is_loggedin_goes_to_homepage(){
         test_splash_screen_activity_is_in_view()
         userRepoImpl.login(email, password)
-        Thread.sleep(10000)
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()

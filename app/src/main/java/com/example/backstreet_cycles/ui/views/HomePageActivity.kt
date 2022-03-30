@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
@@ -118,12 +119,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
 
         // Greets the user in the nav menu
+        EspressoIdlingResource.increment()
         homePageViewModel.getUserDetailsData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
             }
         }
+        EspressoIdlingResource.decrement()
 
         // Leads to the journey page with the searched locations
         homePageViewModel.getIsReadyMutableLiveData().observe(this) { ready ->

@@ -48,7 +48,7 @@ class ForgotPasswordActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    suspend fun setUp() {
+    fun setUp() {
         userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()

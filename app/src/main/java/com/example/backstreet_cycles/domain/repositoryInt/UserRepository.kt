@@ -19,19 +19,19 @@ import timber.log.Timber
 
 interface UserRepository {
 
-    suspend fun register(firstName: String, lastName: String, email: String, password: String): Flow<Resource<String>>
+    fun register(firstName: String, lastName: String, email: String, password: String): Flow<Resource<String>>
 
-    suspend fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>>
+    fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>>
 
-    suspend fun updatePassword(password: String, newPassword: String): Flow<Resource<String>>
+    fun updatePassword(password: String, newPassword: String): Flow<Resource<String>>
 
     fun getUserDetails(): Flow<Resource<Users>>
 
-    suspend fun login(email: String, password: String): Flow<Resource<FirebaseUser?>>
+    fun login(email: String, password: String): Flow<Resource<FirebaseUser?>>
 
-    suspend fun emailVerification(firstName: String, lastName: String, email: String): Flow<Resource<String>>
+    fun emailVerification(firstName: String, lastName: String, email: String): Flow<Resource<String>>
 
-    suspend fun resetPassword(email: String): Flow<Resource<String>>
+    fun resetPassword(email: String): Flow<Resource<String>>
 
     fun logOut()
 

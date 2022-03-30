@@ -36,7 +36,7 @@ class LogInViewModel @Inject constructor(
     private val firebaseUserMutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
     private val errorMessageMutableLiveData: MutableLiveData<String> = MutableLiveData()
 
-    suspend fun login(email: String, password: String) {
+    fun login(email: String, password: String) {
 
         userRepository.login(email, password).onEach { result ->
             when (result) {

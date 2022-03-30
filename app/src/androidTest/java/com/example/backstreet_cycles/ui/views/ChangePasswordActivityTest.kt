@@ -52,9 +52,10 @@ class ChangePasswordActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    suspend fun setUp() {
+    fun setUp() {
         userRepoImpl.logOut()
         userRepoImpl.login(email, password)
+        userRepoImpl.getUserDetails()
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)

@@ -65,7 +65,7 @@ class HomePageActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    suspend fun setUp() {
+    fun setUp() {
         userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
