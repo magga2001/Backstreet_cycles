@@ -54,9 +54,10 @@ class NavMenuTest{
 
     @Before
     fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() == null){
-            userRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
@@ -150,10 +151,10 @@ class NavMenuTest{
         onView(withId(R.id.user_name)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_nav_showUserEmail_textField(){
-        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_nav_showUserEmail_textField(){
+//        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
+//    }
 
     //get current user's first name
 //    @Test
@@ -162,16 +163,16 @@ class NavMenuTest{
 //        onView(withId(R.id.user_name)).check(matches(withText(userName)))
 //    }
 
-    @Test
-    fun test_email_field_matches_currentuserEmail(){
-        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
-    }
+//    @Test
+//    fun test_email_field_matches_currentuserEmail(){
+//        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
+//    }
 
     @After
     fun tearDown(){
         if(userRepoImpl.getFirebaseAuthUser() != null){
-            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
             userRepoImpl.logout()
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         }
     }
 }
