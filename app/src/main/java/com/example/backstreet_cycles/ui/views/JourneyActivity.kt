@@ -229,6 +229,10 @@ class JourneyActivity : AppCompatActivity() {
             }
         }
 
+        journeyViewModel.getMessage().observe(this){
+            SnackBarHelper.displaySnackBar(homePageActivity, it)
+        }
+
         planJourneyAdapter.getAllBoxesCheckedMutableLiveData()
             .observe(this) { allBoxesChecked ->
                 finish_journey.isEnabled = allBoxesChecked

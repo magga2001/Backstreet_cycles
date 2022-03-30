@@ -86,6 +86,7 @@ class HomePageViewModel @Inject constructor(
     private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val message: MutableLiveData<String> = MutableLiveData()
     private val logout: MutableLiveData<Boolean> = MutableLiveData()
 
     fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent {
@@ -175,11 +176,19 @@ class HomePageViewModel @Inject constructor(
     }
 
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach {
-            if (it != DirectionsRoute.fromJson("")) {
-                isReadyMutableLiveData.postValue(true)
-            } else {
-                isReadyMutableLiveData.postValue(false)
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
+
+            when (result) {
+                is Resource.Success -> {
+                    isReadyMutableLiveData.postValue(true)
+                }
+
+                is Resource.Error -> {
+                    //Fail
+                    message.postValue(result.message!!)
+                }
+                is Resource.Loading -> {
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -368,7 +377,6 @@ class HomePageViewModel @Inject constructor(
     }
 
     fun logOut() {
-        Log.i("Clicked2", "logout")
         userRepository.logOut()
         logout.postValue(true)
     }
@@ -405,5 +413,10 @@ class HomePageViewModel @Inject constructor(
     fun getLogout(): MutableLiveData<Boolean>
     {
         return logout
+    }
+
+    fun getMessage(): MutableLiveData<String>
+    {
+        return message
     }
 }

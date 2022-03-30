@@ -15,8 +15,10 @@ import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 import kotlinx.coroutines.launch
@@ -54,6 +56,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
             if (it) {
                 alertDialog(journeyHistoryViewModel.getJourneyLocations())
             }
+        }
+
+        journeyHistoryViewModel.getMessage().observe(this){
+            SnackBarHelper.displaySnackBar(homePageActivity, it)
         }
 
         journeyHistoryViewModel.getUserDetails()

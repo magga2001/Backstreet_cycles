@@ -18,7 +18,7 @@ interface MapboxRepository {
         mapboxNavigation: MapboxNavigation,
         routeOptions: RouteOptions,
         info: Boolean = false,
-    ): Flow<DirectionsRoute>
+    ): Flow<Resource<DirectionsRoute>>
 
     fun getJourneyCurrentRoute(): MutableList<DirectionsRoute>
 

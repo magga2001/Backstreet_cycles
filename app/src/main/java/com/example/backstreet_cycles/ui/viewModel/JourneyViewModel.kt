@@ -66,6 +66,7 @@ class JourneyViewModel @Inject constructor(
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val message: MutableLiveData<String> = MutableLiveData()
     private val fireStore = Firebase.firestore
 
     override suspend fun getDock() {
@@ -178,15 +179,36 @@ class JourneyViewModel @Inject constructor(
     }
 
     private fun updateMapRouteLine(routeOptions: RouteOptions, info: Boolean) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach {
-            isReadyMutableLiveData.postValue(status)
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    isReadyMutableLiveData.postValue(status)
+                }
+
+                is Resource.Error -> {
+                    //Fail
+                    message.postValue(result.message!!)
+                }
+                is Resource.Loading -> {
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
     private fun updateMapInfo(routeOptions: RouteOptions, info: Boolean) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach {
-            isReadyMutableLiveData.postValue(status)
-            calcJourneyInfo()
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    isReadyMutableLiveData.postValue(status)
+                    calcJourneyInfo()
+                }
+
+                is Resource.Error -> {
+                    //Fail
+                }
+                is Resource.Loading -> {
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -285,5 +307,10 @@ class JourneyViewModel @Inject constructor(
 
     fun getPriceMutableLiveData(): MutableLiveData<String> {
         return priceMutableLiveData
+    }
+
+    fun getMessage(): MutableLiveData<String>
+    {
+        return message
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
@@ -43,9 +44,8 @@ class JourneyHistoryViewModel @Inject constructor(
 
     private var stops: MutableList<Locations> = mutableListOf()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val message: MutableLiveData<String> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-//    private val userDetailsMutableLiveData: MutableLiveData<Users> =
-//        userRepository.getUserDetailsMutableLiveData()
     private val mapboxNavigation by lazy {
 
         if (MapboxNavigationProvider.isCreated()) {
@@ -66,11 +66,18 @@ class JourneyHistoryViewModel @Inject constructor(
     }
 
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach {
-            if (it != DirectionsRoute.fromJson("")) {
-                isReadyMutableLiveData.postValue(true)
-            } else {
-                isReadyMutableLiveData.postValue(false)
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    isReadyMutableLiveData.postValue(true)
+                }
+
+                is Resource.Error -> {
+                    //Fail
+                    message.postValue(result.message!!)
+                }
+                is Resource.Loading -> {
+                }
             }
         }.launchIn(viewModelScope)
     }
@@ -150,10 +157,6 @@ class JourneyHistoryViewModel @Inject constructor(
         return showAlert
     }
 
-//    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
-//        return userDetailsMutableLiveData
-//    }
-
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
@@ -169,6 +172,11 @@ class JourneyHistoryViewModel @Inject constructor(
                 stop.lon = longitude
             }
         }
+    }
+
+    fun getMessage(): MutableLiveData<String>
+    {
+        return message
     }
 
 }

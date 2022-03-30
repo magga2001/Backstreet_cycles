@@ -1,11 +1,17 @@
 package com.example.backstreet_cycles.data.repository
 
+import android.util.Log
 import com.example.backstreet_cycles.common.CallbackResource
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.utils.MapInfoHelper
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
+import com.mapbox.navigation.base.route.RouterCallback
+import com.mapbox.navigation.base.route.RouterFailure
+import com.mapbox.navigation.base.route.RouterOrigin
 import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -34,24 +40,82 @@ class MapboxRepositoryImpl @Inject constructor(
      * @param routeOptions - An object of Route Options that holds different options
      * @param info - a boolean
      */
+//    override fun requestRoute(
+//        mapboxNavigation: MapboxNavigation,
+//        routeOptions: RouteOptions,
+//        info: Boolean
+//    ): Flow<DirectionsRoute> = callbackFlow {
+//
+//        val callBack = object : CallbackResource<DirectionsRoute> {
+//            override fun getResult(objects: DirectionsRoute) {
+//                trySend(objects)
+//            }
+//        }
+//
+//        mapboxApi.requestRoute(
+//            mapboxNavigation,
+//            routeOptions,
+//            info,
+//            callBack,
+//            mapboxRepository = this@MapboxRepositoryImpl
+//        )
+//
+//        awaitClose { channel.close() }
+//    }
+
     override fun requestRoute(
         mapboxNavigation: MapboxNavigation,
         routeOptions: RouteOptions,
         info: Boolean
-    ): Flow<DirectionsRoute> = callbackFlow {
+    ): Flow<Resource<DirectionsRoute>> = callbackFlow {
 
-        val callBack = object : CallbackResource<DirectionsRoute> {
-            override fun getResult(objects: DirectionsRoute) {
-                trySend(objects)
-            }
-        }
-
-        mapboxApi.requestRoute(
-            mapboxNavigation,
+        mapboxNavigation.requestRoutes(
             routeOptions,
-            info,
-            callBack,
-            mapboxRepository = this@MapboxRepositoryImpl
+            object : RouterCallback {
+                /**
+                 * The callback is triggered when the routes are ready to be displayed.
+                 */
+                override fun onRoutesReady(
+                    routes: List<DirectionsRoute>,
+                    routerOrigin: RouterOrigin
+                ) {
+
+                    Log.i("retrieving route", "success")
+
+                    val fastestRoute = MapInfoHelper.getFastestRoute(routes)
+
+                    if (info) {
+                        val distance = MapInfoHelper.retrieveJourneyDistances(fastestRoute)
+                        val duration = MapInfoHelper.retrieveJourneyDurations(fastestRoute)
+
+                        addJourneyDistances(distance)
+                        addJourneyDuration(duration)
+                    } else {
+                        setJourneyCurrentRoute(fastestRoute)
+                    }
+
+                    trySend(Resource.Success(fastestRoute))
+                }
+
+                /**
+                 * The callback is triggered if the request to fetch a route was canceled.
+                 */
+                override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
+                    // This particular callback is executed if you invoke
+                    //mapboxNavigation.cancelRouteRequest()
+                    Log.i("retrieving route", "cancel")
+                    trySend(Resource.Error("Request to fetch a route was canceled"))
+                }
+
+                /**
+                 * The callback is triggered if the request to fetch a route failed for any reason.
+                 */
+                override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
+                    //Route request fail
+                    Log.i("retrieving route", "fail")
+                    trySend(Resource.Error("Fail to fetch the route"))
+                }
+            }
         )
 
         awaitClose { channel.close() }

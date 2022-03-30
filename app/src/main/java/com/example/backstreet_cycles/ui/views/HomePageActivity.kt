@@ -174,6 +174,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 )
             }
         }
+
+        homePageViewModel.getMessage().observe(this){
+            SnackBarHelper.displaySnackBar(homePageActivity, it)
+        }
     }
 
     /**
