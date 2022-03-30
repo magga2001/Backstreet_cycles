@@ -71,10 +71,10 @@ class ForgotPasswordActivityTest{
         onView(withId(R.id.forgot_password_title)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_email_text_field_is_visible() {
-        onView(withId(R.id.forgot_password_email)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_email_text_field_is_visible() {
+//        onView(withId(R.id.forgot_password_email)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_forgotButton_is_visible() {

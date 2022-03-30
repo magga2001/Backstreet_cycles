@@ -1,17 +1,9 @@
 package com.example.backstreet_cycles.domain.repositoryInt
 
-import android.content.ContentValues
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
-import com.example.backstreet_cycles.service.WorkHelper
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
-import timber.log.Timber
+import kotlinx.coroutines.Job
 
 interface UserRepository {
 

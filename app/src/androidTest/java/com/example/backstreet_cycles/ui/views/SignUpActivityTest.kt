@@ -148,30 +148,30 @@ class SignUpActivityTest {
         onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Please confirm your password")))
     }
 
-//    @Test
-//    fun test_password_do_not_match(){
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("user"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("testuser@gmail.com"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("123456"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("654321"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Passwords do not match")))
-//    }
+    @Test
+    fun test_password_do_not_match(){
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("user"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("testuser@gmail.com"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("123456"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("654321"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Passwords do not match")))
+    }
 
     //Fix!!
-//    @Test
-//    fun details_entered_correctly() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test@gmail.com"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        Intents.init()
-//        intending(hasComponent(LogInActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun details_entered_correctly() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test@gmail.com"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        Intents.init()
+        intending(hasComponent(LogInActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @Test
     fun test_backPressed_goes_back_to_LoginActivity(){

@@ -240,7 +240,7 @@ class JourneyViewModel @Inject constructor(
                         }
                         catch (e: Exception) {
                             withContext(Dispatchers.Main) {
-                                ToastMessageHelper.createToastMessage(mApplication,e.message)
+//                                ToastMessageHelper.createToastMessage(mApplication,e.message)
                             }
                         }
                     }
