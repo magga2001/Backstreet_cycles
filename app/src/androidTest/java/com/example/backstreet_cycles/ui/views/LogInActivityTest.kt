@@ -61,14 +61,23 @@ class LogInActivityTest{
         Intents.release()
     }
 
-//    @Test
-//    fun test_logo_is_visible() {
-//        onView(withId(R.id.log_in_image_view)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_logo_is_visible() {
+        onView(withId(R.id.log_in_image_view)).check(matches(isDisplayed()))
+    }
 
     @Test
-    fun test_buttonCreateAccount_is_visible() {
-        onView(withId(R.id.log_in_buttonCreateAccount)).check(matches(isDisplayed()))
+    fun test_email_textfield_is_visible() {
+        onView(withId(R.id.log_in_email)).check(matches(isDisplayed()))
+    }
+    @Test
+    fun test_email_password_is_visible() {
+        onView(withId(R.id.log_in_password)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_forgot_password_text_box_is_displayed() {
+        onView(withId(R.id.log_in_clickForgotPassword)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -76,10 +85,15 @@ class LogInActivityTest{
         onView(withId(R.id.log_in_button)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_email_text_box_validate_input() {
-//        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
-//    }
+    @Test
+    fun test_buttonCreateAccount_is_visible() {
+        onView(withId(R.id.log_in_buttonCreateAccount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_email_text_box_validate_input() {
+        onView(withId(R.id.log_in_email)).perform(typeText(email)).check(matches(withText(email)))
+    }
 
     @Test
     fun test_password_text_box_validate_input() {
@@ -91,19 +105,6 @@ class LogInActivityTest{
         onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
         Intents.init()
         intending(hasComponent(SignUpActivity::class.qualifiedName))
-        Intents.release()
-
-    }
-
-    @Test
-    fun test_backPress_toLogInActivity() {
-        onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
-        Intents.init()
-        intending(hasComponent(SignUpActivity::class.qualifiedName))
-        Intents.release()
-        pressBack()
-        Intents.init()
-        intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()
     }
 

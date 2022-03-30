@@ -65,7 +65,7 @@ class FAQActivityTest{
 
 
     @Test
-    fun test_about_help_to_FAQActivity() {
+    fun test_FAQActivity_is_displayed() {
         Intents.init()
         Intents.intending(IntentMatchers.hasComponent(FAQActivity::class.qualifiedName))
         Intents.release()

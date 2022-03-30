@@ -11,8 +11,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
@@ -72,14 +71,6 @@ class JourneyHistoryActivityTest {
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
-        pressBack()
-        Intents.init()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-        Intents.release()
-    }
-
-    @Test
     fun test_title_is_visible() {
 
         onView(
@@ -101,15 +92,38 @@ class JourneyHistoryActivityTest {
         ).check(matches(isDisplayed()))
     }
 
+    // Look into why this is not working
 //    @Test
 //    fun test_journey_summary_is_visible() {
-//        onView(withId(R.id.journeySummaryTextView)).check(matches(isDisplayed()))
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.recentJourneyCard_locationDataCardView),
+//                withParent(withId(R.id.JourneySummaryLayout1))
+//            )).check(matches(isDisplayed()))
 //    }
-//
-//    @Test
-//    fun test_card_is_visible() {
-//        onView(withId(R.id.recentJourneyCardViewText)).check(matches(isDisplayed()))
-//    }
+
+    @Test
+    fun test_card_is_visible() {
+        onView(withId(R.id.recentJourneyCard_locationDataCardView)).check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun test_recentJourneys_are_visible() {
+        onView(
+            Matchers.allOf(
+                withId(R.id.recentJourneyCardTextView),
+                withParent(withId(R.id.JourneySummaryLayout1))
+            )).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_on_pressBack_go_to_HomePageActivity() {
+        pressBack()
+        Intents.init()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @After
     fun tearDown(){
