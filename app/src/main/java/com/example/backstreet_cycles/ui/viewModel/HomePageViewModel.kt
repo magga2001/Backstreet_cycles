@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -20,7 +19,6 @@ import com.example.backstreet_cycles.domain.utils.BitmapHelper
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.geojson.Feature
@@ -81,11 +79,11 @@ class HomePageViewModel @Inject constructor(
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
 
-    private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val isReady: MutableLiveData<Boolean> = MutableLiveData()
     private val hasCurrentLocation: MutableLiveData<Boolean> = MutableLiveData()
-    private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val hasCurrentJourney: MutableLiveData<Boolean> = MutableLiveData()
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
-    private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val updateData: MutableLiveData<Boolean> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
     private val logout: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -129,7 +127,7 @@ class HomePageViewModel @Inject constructor(
         showAlert.postValue(bool)
     }
 
-    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
+    fun getShowAlert(): MutableLiveData<Boolean> {
         return showAlert
     }
 
@@ -180,7 +178,7 @@ class HomePageViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(true)
+                    isReady.postValue(true)
                 }
 
                 is Resource.Error -> {
@@ -307,10 +305,10 @@ class HomePageViewModel @Inject constructor(
 
     private fun postUpdateInfo() {
         if (getUpdateInfo()) {
-            updateMutableLiveData.postValue(updateInfo)
+            updateData.postValue(updateInfo)
             setUpdateInfo(false)
         } else {
-            updateMutableLiveData.postValue(updateInfo)
+            updateData.postValue(updateInfo)
         }
     }
 
@@ -342,7 +340,7 @@ class HomePageViewModel @Inject constructor(
             mapboxRepository.setJourneyLocations(listOfLocations)
             fetchRoute(mContext, listOfLocations)
         } else {
-            hasCurrentJourneyMutableLiveData.postValue(false)
+            hasCurrentJourney.postValue(false)
         }
     }
 
@@ -390,24 +388,24 @@ class HomePageViewModel @Inject constructor(
         mapboxNavigation.onDestroy()
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<Boolean> {
+        return isReady
     }
 
     fun hasCurrentLocation(): MutableLiveData<Boolean> {
         return hasCurrentLocation
     }
 
-    fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean> {
-        return hasCurrentJourneyMutableLiveData
+    fun gethasCurrentJourney(): MutableLiveData<Boolean> {
+        return hasCurrentJourney
     }
 
     fun getHasDuplicationLocation(): MutableLiveData<Boolean> {
         return hasDuplicationLocation
     }
 
-    fun getUpdateMutableLiveData(): MutableLiveData<Boolean> {
-        return updateMutableLiveData
+    fun getupdateData(): MutableLiveData<Boolean> {
+        return updateData
     }
 
     fun getLogout(): MutableLiveData<Boolean>

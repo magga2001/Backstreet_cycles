@@ -62,10 +62,10 @@ class JourneyViewModel @Inject constructor(
     }
     private var journeyState = JourneyState.START_WALKING
     private var status: String = "UPDATE"
-    private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
-    private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
-    private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
-    private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val isReady: MutableLiveData<String> = MutableLiveData()
+    private val distanceData: MutableLiveData<String> = MutableLiveData()
+    private val durationData: MutableLiveData<String> = MutableLiveData()
+    private val priceData: MutableLiveData<String> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
     private val fireStore = Firebase.firestore
 
@@ -182,7 +182,7 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(status)
+                    isReady.postValue(status)
                 }
 
                 is Resource.Error -> {
@@ -199,7 +199,7 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(status)
+                    isReady.postValue(status)
                     calcJourneyInfo()
                 }
 
@@ -213,10 +213,10 @@ class JourneyViewModel @Inject constructor(
     }
 
     private fun calcJourneyInfo() {
-        distanceMutableLiveData.postValue(
+        distanceData.postValue(
             ConvertHelper.convertMToKm(mapboxRepository.getJourneyDistances()).toString()
         )
-        durationMutableLiveData.postValue(
+        durationData.postValue(
             ConvertHelper.convertMsToS(mapboxRepository.getJourneyDurations()).toString()
         )
         displayPrice()
@@ -290,23 +290,23 @@ class JourneyViewModel @Inject constructor(
 
     private fun displayPrice() {
         val price = MapInfoHelper.getRental(getJourneyDurations())
-        priceMutableLiveData.postValue((price * getNumCyclists()).toString())
+        priceData.postValue((price * getNumCyclists()).toString())
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<String> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<String> {
+        return isReady
     }
 
-    fun getDistanceMutableLiveData(): MutableLiveData<String> {
-        return distanceMutableLiveData
+    fun getDistanceData(): MutableLiveData<String> {
+        return distanceData
     }
 
-    fun getDurationMutableLiveData(): MutableLiveData<String> {
-        return durationMutableLiveData
+    fun getDurationData(): MutableLiveData<String> {
+        return durationData
     }
 
-    fun getPriceMutableLiveData(): MutableLiveData<String> {
-        return priceMutableLiveData
+    fun getPriceData(): MutableLiveData<String> {
+        return priceData
     }
 
     fun getMessage(): MutableLiveData<String>

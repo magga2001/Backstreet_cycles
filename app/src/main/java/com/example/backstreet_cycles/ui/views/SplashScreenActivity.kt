@@ -45,7 +45,7 @@ class SplashScreenActivity() : AppCompatActivity() {
      * Starts Homepage activity if the user is logged in, otherwise, Log In activity is started
      */
     private fun initObservers() {
-        splashScreenViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        splashScreenViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 val currentUser = FirebaseAuth.getInstance().currentUser
                 if (currentUser != null && currentUser.isEmailVerified) {

@@ -101,7 +101,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      */
     @SuppressLint("SetTextI18n")
     private fun initObservers() {
-        homePageViewModel.getShowAlertMutableLiveData().observe(this) {
+        homePageViewModel.getShowAlert().observe(this) {
             if (it) {
                 alertDialog(homePageViewModel.getJourneyLocations())
             }
@@ -126,10 +126,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Leads to the journey page with the searched locations
-        homePageViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        homePageViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 homePageViewModel.saveJourney()
-                homePageViewModel.getIsReadyMutableLiveData().value = false
+                homePageViewModel.getIsReady().value = false
                 val intent = Intent(this, JourneyActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -145,7 +145,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Checks whether a current journey exists
-        homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this) { hasCurrentJourney ->
+        homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
             }
@@ -159,7 +159,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Update the card viewer
-        homePageViewModel.getUpdateMutableLiveData().observe(this) { updateInfo ->
+        homePageViewModel.getupdateData().observe(this) { updateInfo ->
             if (updateInfo) {
                 removeAndAddInfo(
                     selectedCarmenFeature.placeName().toString(),
