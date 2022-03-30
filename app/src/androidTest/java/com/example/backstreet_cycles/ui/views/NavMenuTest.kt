@@ -170,6 +170,7 @@ class NavMenuTest{
     @After
     fun tearDown(){
         if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
             userRepoImpl.logout()
         }
     }

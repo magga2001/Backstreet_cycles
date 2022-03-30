@@ -128,5 +128,6 @@ class JourneyHistoryActivityTest {
     @After
     fun tearDown(){
         userRepoImpl.logout()
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 }

@@ -72,7 +72,7 @@ class FAQActivityTest{
     }
 
     @Test
-    fun test_FAQtitle_is_displayed() {
+    fun test_FAQ_title_is_displayed() {
         onView(withId(R.id.FAQTitle)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -116,6 +116,8 @@ class FAQActivityTest{
     @After
     fun tearDown(){
         userRepoImpl.logout()
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+
     }
 
 }

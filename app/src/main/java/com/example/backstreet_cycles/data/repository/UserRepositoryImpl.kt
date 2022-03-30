@@ -88,7 +88,6 @@ open class UserRepositoryImpl() : UserRepository
 
     override fun updateUserDetails(firstName: String, lastName: String): Job =
         CoroutineScope(Dispatchers.IO).launch {
-
             val user =  dataBase
             .collection("users")
             .whereEqualTo("email", userDetailsMutableLiveData.value!!.email)

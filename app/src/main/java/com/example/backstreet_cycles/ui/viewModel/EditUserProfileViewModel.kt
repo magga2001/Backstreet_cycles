@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.viewModel;
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
@@ -24,7 +25,9 @@ class EditUserProfileViewModel @Inject constructor(
         private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
 
         fun updateUserDetails(firstName: String, lastName: String) {
+                EspressoIdlingResource.increment()
                 userRepository.updateUserDetails(firstName, lastName)
+                EspressoIdlingResource.decrement()
         }
 
         fun getUpdatedProfileMutableLiveData(): MutableLiveData<Boolean> {
