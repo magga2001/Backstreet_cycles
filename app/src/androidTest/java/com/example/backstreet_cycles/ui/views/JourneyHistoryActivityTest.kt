@@ -53,9 +53,10 @@ class JourneyHistoryActivityTest {
 
     @Before
     fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() == null){
-            userRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
@@ -127,7 +128,9 @@ class JourneyHistoryActivityTest {
 
     @After
     fun tearDown(){
-        userRepoImpl.logout()
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+            userRepoImpl.logout()
+        }
     }
 }

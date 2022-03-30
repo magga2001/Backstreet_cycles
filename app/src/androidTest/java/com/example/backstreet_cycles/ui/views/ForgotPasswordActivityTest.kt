@@ -56,6 +56,7 @@ class ForgotPasswordActivityTest{
         if(userRepoImpl.getFirebaseAuthUser() != null){
             userRepoImpl.logout()
         }
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(LogInActivity::class.java)
@@ -113,6 +114,9 @@ class ForgotPasswordActivityTest{
 
     @After
     fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+            userRepoImpl.logout()
+        }
     }
 }
