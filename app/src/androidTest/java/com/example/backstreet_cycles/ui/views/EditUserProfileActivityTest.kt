@@ -78,28 +78,35 @@ class EditUserProfileActivityTest{
     }
 
     @Test
+    fun test_et_first_name_field_is_visible() {
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_et_last_name_field_is_visible() {
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun test_buttonUpdateProfile_is_visible() {
         onView(withId(R.id.edit_user_details_SaveButton)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_et_first_name_field_is_visible() {
-//        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_et_last_name_field_is_visible() {
-//        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_check_if_first_name_is_inputted(){
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
+        val testInput = "Test"
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(testInput))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(ViewMatchers.withText(testInput)))
+    }
+    @Test
+    fun test_check_if_last_name_is_inputted(){
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
+        val testInput = "User"
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(testInput))
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(ViewMatchers.withText(testInput)))
 
-//    @Test
-//    fun test_check_if_first_name_is_inputted(){
-//
-//    }
-//    @Test
-//    fun test_check_if_last_name_is_inputted(){
-//
-//    }
+    }
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity(){

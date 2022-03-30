@@ -59,7 +59,7 @@ class AboutActivityTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.homepage_nav_view)).perform(click())
+        onView(withId(R.id.about)).perform(click())
     }
 
     @Test

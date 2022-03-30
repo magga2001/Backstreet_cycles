@@ -9,6 +9,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -74,71 +75,102 @@ class NavMenuTest{
     }
 
     @Test
-    fun test_navToggle_toNavMenu() {
+    fun test_EditProfile_in_NavMenu_is_visible() {
         onView(withId(R.id.profile)).check(matches(isDisplayed()))
-        onView(withId(R.id.changePassword)).check(matches(isDisplayed()))
-        onView(withId(R.id.about)).check(matches(isDisplayed()))
-        onView(withId(R.id.faq)).check(matches(isDisplayed()))
-        onView(withId(R.id.logout)).check(matches(isDisplayed()))
     }
+    @Test
+    fun test_ChangePassword_in_NavMenu_is_visible() {
+        onView(withId(R.id.changePassword)).check(matches(isDisplayed()))
+    }
+    @Test
+    fun test_JourneyHistory_in_NavMenu_is_visible() {
+        onView(withId(R.id.journeyHistory)).check(matches(isDisplayed()))
+    }
+    @Test
+    fun test_About_in_NavMenu_is_visible() {
+        onView(withId(R.id.about)).check(matches(isDisplayed()))
+    }
+    @Test
+    fun test_FAQ_in_NavMenu_is_visible() {
+        onView(withId(R.id.faq)).check(matches(isDisplayed()))
+    }
+//    @Test
+//    fun test_logout_in_NavMenu_is_visible() {
+//        onView(withId(R.id.logout)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_viewProfileButton_toEditProfileActivity() {
         onView(withId(R.id.profile)).perform(click())
-        onView(withId(R.id.editUserProfileActivity)).check(matches(isDisplayed()))
+        Intents.init()
+        Intents.intending(IntentMatchers.hasComponent(EditUserProfileActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test
-    fun test_changePassword_toChangeEmailOrPasswordActivity() {
+    fun test_changePassword_toChangePasswordActivity() {
         onView(withId(R.id.changePassword)).perform(click())
-        onView(withId(R.id.changePasswordActivity)).check(matches(isDisplayed()))
+        Intents.init()
+        Intents.intending(IntentMatchers.hasComponent(ChangePasswordActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test
-    fun test_aboutButton(){
+    fun test_JourneyHistory_to_JourneyHistoryActivity(){
+        onView(withId(R.id.journeyHistory)).perform(click())
+        Intents.init()
+        Intents.intending(IntentMatchers.hasComponent(JourneyActivity::class.qualifiedName))
+        Intents.release()
+    }
+    @Test
+    fun test_aboutButton_to_AboutActivity(){
         onView(withId(R.id.about)).perform(click())
-        onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
+        Intents.init()
+        Intents.intending(IntentMatchers.hasComponent(AboutActivity::class.qualifiedName))
+        Intents.release()
+    }
+    @Test
+    fun test_FAQ_to_FaqActivity(){
+        onView(withId(R.id.faq)).perform(click())
+        Intents.init()
+        Intents.intending(IntentMatchers.hasComponent(FAQActivity::class.qualifiedName))
+        Intents.release()
     }
 
+//    @Test
+//    fun test_logout_to_loginActivity(){
+//        onView(withId(R.id.logout)).perform(click())
+//        Intents.init()
+//        Intents.intending(IntentMatchers.hasComponent(LogInActivity::class.qualifiedName))
+//        Intents.release()
+//    }
 
     @Test
-    fun test_nav_showUserName(){
+    fun test_nav_showUserName_textField(){
         onView(withId(R.id.user_name)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun test_nav_showUserEmail_textField(){
+        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
+    }
+
+    //get current user's first name
 //    @Test
-//    fun test_nav_showUserEmail(){
-//        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
+//    fun test_username_field_matches_currentuserName(){
+//        val userName = "Hello + " //current user's name
+//        onView(withId(R.id.user_name)).check(matches(withText(userName)))
 //    }
 
-//    @Test
-//    fun test_nav_equalCurrentUserName(){
-//
-//        val testUserName = FirebaseFirestore.getInstance().collection("users")
-//            .whereEqualTo("email", FirebaseAuth.getInstance().currentUser!!.email)
-//            .get().result.toObjects(Users::class.java)[0].firstName
-//
-//        val textElement = "Hello: $testUserName"
-//
-//        val testDisplayedName = getApplicationContext<Application>().getString(R.id.user_name)
-//
-//
-//        assert(testDisplayedName == textElement)
-//    }
+    @Test
+    fun test_email_field_matches_currentuserEmail(){
+        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
+    }
 
-//    @Test
-//    fun test_nav_equalCurrentUserEmail(){
-//        //setContentView(R.layout.activity_homepage)
-//        val email = FirebaseAuth.getInstance().currentUser?.email
-//
-//        //val testDisplayedEmail = onView(withId(R.id.nav_header_textView_email)).toString()
-//            //getApplicationContext<Application>().onView(R.id.tv_email).text
-//
-//        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
-//        //assert(testDisplayedEmail == email)
-//    }
     @After
     fun tearDown(){
-        userRepoImpl.logout()
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
+        }
     }
 }
