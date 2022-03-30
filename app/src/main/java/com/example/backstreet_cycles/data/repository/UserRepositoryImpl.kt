@@ -2,21 +2,15 @@ package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
-import com.example.backstreet_cycles.service.WorkHelper
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import dagger.hilt.android.internal.Contexts
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -49,23 +43,23 @@ open class UserRepositoryImpl() : UserRepository
                     emailVerification(fName,lName,email)
 
                 } else {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
+//                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
                 }
             }
         return firebaseAuth.currentUser
     }
 
     private fun emailVerification(fName: String, lName: String, email: String) {
-        ToastMessageHelper.createToastMessage(application,"EMAIL VERIFICATION BEING SENT TO:  $email")
+//        ToastMessageHelper.createToastMessage(application,"EMAIL VERIFICATION BEING SENT TO:  $email")
         firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task->
             if (task.isSuccessful) {
                 logout()
-                ToastMessageHelper.createToastMessage(application,"PLEASE VERIFY YOUR EMAIL:  $email")
+//                ToastMessageHelper.createToastMessage(application,"PLEASE VERIFY YOUR EMAIL:  $email")
                 //this needs to be relocated
                 createUserAccount(fName, lName, email)
             }
             else{
-                ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
+//                ToastMessageHelper.createToastMessage(application,application.getString(R.string.REGISTRATION_FAILED) + task.exception!!.localizedMessage)
             }
 
         }
@@ -104,7 +98,7 @@ open class UserRepositoryImpl() : UserRepository
                         updatedProfileMutableLiveData.postValue(true)
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            ToastMessageHelper.createToastMessage(application,e.message)
+//                            ToastMessageHelper.createToastMessage(application,e.message)
                         }
                     }
 
@@ -130,9 +124,9 @@ open class UserRepositoryImpl() : UserRepository
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { t ->
                         if (t.isSuccessful) {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
+//                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
                         } else {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+//                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
                         }
                     }
                 }
@@ -173,12 +167,12 @@ open class UserRepositoryImpl() : UserRepository
                         EspressoIdlingResource.decrement()
                     }
                     else{
-                        ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
+//                        ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
                         EspressoIdlingResource.decrement()
                     }
                 }
                 else {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
+//                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
                     EspressoIdlingResource.decrement()
                 }
             }
@@ -188,10 +182,10 @@ open class UserRepositoryImpl() : UserRepository
     override fun resetPassword(email: String) {
             FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
                     task -> if (task.isSuccessful){
-                ToastMessageHelper.createToastMessage(application,"Email reset email sent")
+//                ToastMessageHelper.createToastMessage(application,"Email reset email sent")
             }
             else{
-                ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
+//                ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
             }
         }
     }
