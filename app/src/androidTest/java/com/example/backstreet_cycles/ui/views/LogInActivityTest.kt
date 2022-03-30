@@ -46,9 +46,7 @@ class LogInActivityTest{
 
     @Before
     fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-        }
+        userRepoImpl.logOut()
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(LogInActivity::class.java)

@@ -1,17 +1,17 @@
 package com.example.backstreet_cycles.utils
 
-import android.view.View
-import androidx.constraintlayout.utils.widget.MockView
-import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
-import com.example.backstreet_cycles.domain.utils.SnackbarHelper
-import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
-import com.example.backstreet_cycles.ui.views.HomePageActivity
-import com.google.android.material.snackbar.Snackbar
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.Mockito.mock
+//import android.view.View
+//import androidx.constraintlayout.utils.widget.MockView
+//import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+//import com.example.backstreet_cycles.domain.utils.SnackbarHelper
+//import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
+//import com.example.backstreet_cycles.ui.views.HomePageActivity
+//import com.google.android.material.snackbar.Snackbar
+//import org.junit.Assert.assertEquals
+//import org.junit.Test
+//import org.junit.runner.RunWith
+//import org.junit.runners.JUnit4
+//import org.mockito.Mockito.mock
 
 //
 //@RunWith(JUnit4::class)

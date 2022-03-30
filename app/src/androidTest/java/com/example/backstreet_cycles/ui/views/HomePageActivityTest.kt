@@ -65,14 +65,11 @@ class HomePageActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() == null){
-            userRepoImpl.login(email, password)
-        }
+    suspend fun setUp() {
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
-
     }
 
 
@@ -395,7 +392,7 @@ class HomePageActivityTest{
 
     @After
     fun tearDown(){
-        userRepoImpl.logout()
+        userRepoImpl.logOut()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 

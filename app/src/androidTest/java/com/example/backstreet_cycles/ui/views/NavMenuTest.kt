@@ -49,10 +49,8 @@ class NavMenuTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-        }
+    suspend fun setUp() {
+        userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
@@ -166,9 +164,7 @@ class NavMenuTest{
 
     @After
     fun tearDown(){
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-        }
+        userRepoImpl.logOut()
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 }

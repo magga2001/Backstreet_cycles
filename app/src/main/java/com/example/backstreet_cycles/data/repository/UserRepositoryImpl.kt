@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.content.ContentValues.TAG
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
@@ -14,12 +15,9 @@ import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
-class UserRepositoryImpl(
-    fireStore: FirebaseFirestore,
-    fireBaseAuth: FirebaseAuth
-) : UserRepository {
-    private val firebaseAuth: FirebaseAuth = fireBaseAuth
-    private val dataBase = fireStore
+class UserRepositoryImpl() : UserRepository {
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val dataBase = FirebaseFirestore.getInstance()
 
     override suspend fun register(
         firstName: String,
@@ -129,37 +127,49 @@ class UserRepositoryImpl(
     }
 
     override fun getUserDetails(): Flow<Resource<Users>> = callbackFlow {
-        dataBase
-            .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        val userDetails = document.toObject(Users::class.java)
-                        trySend(Resource.Success(userDetails))
+
+        try {
+            EspressoIdlingResource.increment()
+            dataBase
+                .collection("users")
+                .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            val userDetails = document.toObject(Users::class.java)
+                            trySend(Resource.Success(userDetails))
+                        }
                     }
                 }
-            }
+
+        }catch(e: Exception) {
+            trySend(Resource.Error<Users>("No user"))
+        }finally {
+            EspressoIdlingResource.decrement()
+        }
 
         awaitClose { channel.close() }
 
     }
 
     override suspend fun login(email: String, password: String): Flow<Resource<FirebaseUser?>> = callbackFlow {
-
+        EspressoIdlingResource.increment()
         trySend(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
                         trySend((Resource.Success(firebaseAuth.currentUser)))
+                        EspressoIdlingResource.decrement()
                     } else {
                         trySend(Resource.Error<FirebaseUser?>("Please verify your email address"))
+                        EspressoIdlingResource.decrement()
                     }
                 } else {
 
                     trySend(Resource.Error<FirebaseUser?>(task.exception!!.localizedMessage))
+                    EspressoIdlingResource.decrement()
                 }
             }
 
@@ -180,7 +190,9 @@ class UserRepositoryImpl(
     }
 
     override fun logOut() {
+        EspressoIdlingResource.increment()
         firebaseAuth.signOut()
+        EspressoIdlingResource.decrement()
     }
 
     override fun getFirebaseAuth(): FirebaseAuth {

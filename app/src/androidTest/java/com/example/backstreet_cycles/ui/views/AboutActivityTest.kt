@@ -21,6 +21,13 @@ import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -35,6 +42,8 @@ class AboutActivityTest {
     private val password = "123456"
 
     private val userRepoImpl = UserRepositoryImpl()
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(testDispatcher)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -46,13 +55,12 @@ class AboutActivityTest {
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
+
     @Before
-    fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-        }
-        userRepoImpl.login(email, password)
+    fun setUp() = testScope.runBlockingTest {
         hiltRule.inject()
+        userRepoImpl.logOut()
+        userRepoImpl.login(email, password)
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
@@ -89,9 +97,7 @@ class AboutActivityTest {
 
     @After
     fun tearDown(){
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-            userRepoImpl.logout()
-        }
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        userRepoImpl.logOut()
     }
 }

@@ -73,26 +73,20 @@ class SplashScreenActivityTest{
     }
 
     @Test
-    fun test_text_is_in_view() {
-        onView(withId(R.id.splash_screen_activity_text)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_if_user_is_loggedin_goes_to_homepage(){
+    suspend fun test_if_user_is_loggedin_goes_to_homepage(){
         test_splash_screen_activity_is_in_view()
         userRepoImpl.login(email, password)
         Thread.sleep(10000)
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
-        userRepoImpl.logout()
+        userRepoImpl.logOut()
     }
 
     @Test
-    fun test_if_user_is_not_loggedin_goes_to_login(){
+    fun test_if_user_is_not_logged_in_goes_to_login(){
         test_splash_screen_activity_is_in_view()
-        userRepoImpl.logout()
-        Thread.sleep(10000)
+        userRepoImpl.logOut()
         Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()

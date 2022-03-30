@@ -49,10 +49,8 @@ class EditUserProfileActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-        }
+    suspend fun setUp() {
+        userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
@@ -146,10 +144,9 @@ class EditUserProfileActivityTest{
 
     @After
     fun tearDown(){
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-            userRepoImpl.logout()
-        }
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        userRepoImpl.logOut()
+
     }
 
 

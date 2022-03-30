@@ -48,10 +48,8 @@ class ForgotPasswordActivityTest{
             android.Manifest.permission.INTERNET)
 
     @Before
-    fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            userRepoImpl.logout()
-        }
+    suspend fun setUp() {
+        userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
@@ -101,7 +99,7 @@ class ForgotPasswordActivityTest{
 //    }
 
     @Test
-    fun test_back_pressed_takes_back_to_loginpage(){
+    fun test_back_pressed_takes_back_to_log_in_page(){
         pressBack()
         Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
@@ -110,9 +108,7 @@ class ForgotPasswordActivityTest{
 
     @After
     fun tearDown(){
-        if(userRepoImpl.getFirebaseAuthUser() != null){
-            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-            userRepoImpl.logout()
-        }
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        userRepoImpl.logOut()
     }
 }
