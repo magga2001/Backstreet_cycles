@@ -52,14 +52,15 @@ class AboutActivityTest {
 
     @Before
     fun setUp() {
-        if(userRepoImpl.getFirebaseAuthUser() == null){
-            userRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.homepage_nav_view)).perform(click())
+        onView(withId(R.id.about)).perform(click())
     }
 
     @Test
@@ -92,6 +93,9 @@ class AboutActivityTest {
 
     @After
     fun tearDown(){
-        userRepoImpl.logout()
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+            userRepoImpl.logout()
+        }
     }
 }

@@ -1,19 +1,23 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,20 +39,10 @@ class JourneyHistoryActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val fakeUserRepoImpl = FakeUserRepoImpl()
-    private val fakeTflRepoImpl = FakeTflRepoImpl()
-    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-    private val context = Application()
-
-    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+    private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<HomePageActivity> =
-        ActivityScenarioRule(HomePageActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -59,27 +53,23 @@ class JourneyHistoryActivityTest {
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        if (logInViewModel.getMutableLiveData().value == null){
-            fakeUserRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
-        Intents.init()
+        userRepoImpl.login(email, password)
+        hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
         onView(withId(R.id.journeyHistory)).perform(ViewActions.click())
     }
 
     @Test
     fun test_activity_is_in_view() {
+        Intents.init()
         intending(hasComponent(JourneyHistoryActivity::class.qualifiedName))
-
+        Intents.release()
     }
-
-//    @Test
-//    fun test_on_pressBack_go_to_HomePageActivity() {
-//        Espresso.pressBack()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//
-//    }
 
     @Test
     fun test_title_is_visible() {
@@ -103,18 +93,44 @@ class JourneyHistoryActivityTest {
         ).check(matches(isDisplayed()))
     }
 
+    // Look into why this is not working
 //    @Test
 //    fun test_journey_summary_is_visible() {
-//        onView(withId(R.id.journeySummaryTextView)).check(matches(isDisplayed()))
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.recentJourneyCard_locationDataCardView),
+//                withParent(withId(R.id.JourneySummaryLayout1))
+//            )).check(matches(isDisplayed()))
 //    }
-//
-//    @Test
-//    fun test_card_is_visible() {
-//        onView(withId(R.id.recentJourneyCardViewText)).check(matches(isDisplayed()))
-//    }
+
+    @Test
+    fun test_card_is_visible() {
+        onView(withId(R.id.recentJourneyCard_locationDataCardView)).check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun test_recentJourneys_are_visible() {
+        onView(
+            Matchers.allOf(
+                withId(R.id.recentJourneyCardTextView),
+                withParent(withId(R.id.JourneySummaryLayout1))
+            )).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_on_pressBack_go_to_HomePageActivity() {
+        pressBack()
+        Intents.init()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @After
     fun tearDown(){
-        Intents.release()
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+            userRepoImpl.logout()
+        }
     }
 }
