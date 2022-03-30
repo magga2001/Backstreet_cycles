@@ -1,21 +1,27 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -30,23 +36,14 @@ import java.com.example.backstreet_cycles.FakeUserRepoImpl
 @HiltAndroidTest
 class HomePageActivityTest{
 
+
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val fakeUserRepoImpl = FakeUserRepoImpl()
-    private val fakeTflRepoImpl = FakeTflRepoImpl()
-    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-    private val context = Application()
-
-    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+    private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<HomePageActivity> =
-        ActivityScenarioRule(HomePageActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -57,12 +54,15 @@ class HomePageActivityTest{
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        if (logInViewModel.getMutableLiveData().value == null){
-            fakeUserRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() == null){
+            userRepoImpl.login(email, password)
         }
-        Intents.init()
+        hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(HomePageActivity::class.java)
+
     }
+
 
     @Test
     fun test_map_on_homepage_is_displayed() {
@@ -80,33 +80,34 @@ class HomePageActivityTest{
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
-//    @Test
-//    fun test_current_location_card_shown() {
-//        //ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.card_name),
-//                withParent(withId(R.id.cardView))
-//            )
-//        ).check(matches(withText("Current Location")))
-//
-//        //onView(withId(R.id.card_name)).check(matches(withText("Current Location")))
-//    }
+    @Test
+    fun test_current_location_card_shown() {
+        onView(
+            Matchers.allOf(
+                withId(R.id.homepage_LocationDataCardName),
+                withParent(withId(R.id.homepage_locationDataCardView))
+            )
+        ).check(matches(withText("Current Location")))
 
-//    @Test
-//    fun navigation_drawer_shows_about_button() {
-//        ActivityScenario.launch(HomePageActivity::class.java)
-//
-//    }
-//
-//    @Test
-//    fun navigation_drawer_shows_help_button() {
-//
-//    }
+        onView(withId(R.id.homepage_LocationDataCardName)).check(matches(withText("Current Location")))
+    }
+
+    @Test
+    fun navigation_drawer_shows_about_button() {
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.about)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun navigation_drawer_shows_faq_button() {
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.faq)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_add_stop_button_is_enabled(){
         onView(withId(R.id.addingBtn)).check(matches(isEnabled()))
+
     }
 
     @Test
@@ -124,28 +125,28 @@ class HomePageActivityTest{
         onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
     }
 
-//    @Test
-//    fun test_recyclerView_is_displayed(){
-//        onView(withId(R.id.recyclerView)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_recyclerView_is_displayed(){
+        onView(withId(R.id.homepage_recyclerView)).check(matches(isDisplayed()))
+    }
 
-//    @Test
-//    fun test_cardView_is_visible(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.cardView)).check(matches(isDisplayed()))
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.cardView),
-//                withParent(withId(R.id.recyclerView))
-//            )).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_cardView_is_swipeable(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.cardView)).perform(swipeLeft())
-//    }
-//
+    @Test
+    fun test_cardView_is_visible(){
+        onView(withId(R.id.homepage_locationDataCardView)).check(matches(isDisplayed()))
+        onView(
+            Matchers.allOf(
+                withId(R.id.homepage_locationDataCardView),
+                withParent(withId(R.id.homepage_recyclerView))
+            )).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_cardView_is_swipeable(){
+        onView(withId(R.id.addingBtn)).perform(click()).perform(typeText("Covent Garden",), click())
+
+        onView(withId(R.id.homepage_locationDataCardView)).perform(swipeLeft())
+   }
+
 //    @Test
 //    fun test_cardView_is_draggable(){
 ////        ActivityScenario.launch(HomePageActivity::class.java)
@@ -230,9 +231,13 @@ class HomePageActivityTest{
     fun back_button_from_ChangeEmailOrPasswordActivity_to_HomePageActivity() {
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.changePassword)).perform(click())
+        Intents.init()
         intending(hasComponent(ChangePasswordActivity::class.qualifiedName))
+        Intents.release()
         pressBack()
+        Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test
@@ -315,10 +320,11 @@ class HomePageActivityTest{
 //        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //    }
 
-        @After
-        fun tearDown(){
-            Intents.release()
-        }
+    @After
+    fun tearDown(){
+        userRepoImpl.logout()
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+    }
 
 
 }
