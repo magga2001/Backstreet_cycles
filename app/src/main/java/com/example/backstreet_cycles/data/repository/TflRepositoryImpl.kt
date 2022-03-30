@@ -18,7 +18,7 @@ class TflRepositoryImpl @Inject constructor(
     var docks = mutableListOf<Dock>()
 
     /**
-     * Recieve the dock from the TFL API and maps them to the dataclass
+     * Receive the dock from the TFL API and maps them to the dataclass
      */
     override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = flow {
         try {

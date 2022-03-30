@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Button
@@ -22,10 +23,9 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.SnackbarHelper
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.LoggedInViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -71,8 +71,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var minusBtn: Button
 
     private val homePageViewModel: HomePageViewModel by viewModels()
-    private val loggedInViewModel: LoggedInViewModel by viewModels()
-
     /**
      * Initialise the contents within the display of the HomePage
      * @param savedInstanceState used to restore a saved state so activity can be recreated
@@ -110,19 +108,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Return to login page when logged out
-        loggedInViewModel.getLoggedOutMutableLiveData()
-            .observe(this) { loggedOut ->
-                if (loggedOut) {
+        homePageViewModel.getLogout()
+            .observe(this) { logOut ->
+                if (logOut) {
                     startActivity(Intent(this@HomePageActivity, LogInActivity::class.java))
                     finish()
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 }
             }
 
-        loggedInViewModel.getUserDetails()
-
         // Greets the user in the nav menu
-        loggedInViewModel.getUserDetailsMutableLiveData().observe(this) { firebaseUser ->
+        homePageViewModel.getUserDetailsData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
@@ -139,7 +135,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             } else {
                 nextPageButton.isEnabled = true
-                SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot find route")
+                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot find route")
             }
         }
 
@@ -151,14 +147,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Checks whether a current journey exists
         homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
-                SnackbarHelper.displaySnackbar(HomePageActivity, "There is no current journey")
+                SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
             }
         }
 
         // Ensures that the user doesn't add duplicate locations
         homePageViewModel.getHasDuplicationLocation().observe(this) { duplicate ->
             if (duplicate) {
-                SnackbarHelper.displaySnackbar(HomePageActivity, "Location already in list")
+                SnackBarHelper.displaySnackBar(homePageActivity, "Location already in list")
             }
         }
 
@@ -192,7 +188,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         plusBtn.setOnClickListener {
             if (homePageViewModel.getNumCyclists() > 3) {
-                SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have more than 4 users")
+                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have more than 4 users")
             } else {
                 homePageViewModel.incrementNumCyclists()
                 textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
@@ -204,7 +200,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 homePageViewModel.decrementNumCyclists()
                 textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
             } else {
-                SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot have less than one user")
+                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have less than one user")
             }
         }
     }
@@ -219,7 +215,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        SnackbarHelper.displaySnackbar(HomePageActivity, "Adding Stop")
+        SnackBarHelper.displaySnackBar(homePageActivity, "Adding Stop")
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -235,7 +231,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop, Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        SnackbarHelper.displaySnackbar(HomePageActivity, "Changing Location Of Stop")
+        SnackBarHelper.displaySnackBar(homePageActivity, "Changing Location Of Stop")
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -259,21 +255,21 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      * Initialise the navigation menu
      */
     private fun initNavigationDrawer() {
-        toggle = ActionBarDrawerToggle(this, HomePageActivity, R.string.open, R.string.close)
-        HomePageActivity.addDrawerListener(toggle)
+        toggle = ActionBarDrawerToggle(this, homePageActivity, R.string.open, R.string.close)
+        homePageActivity.addDrawerListener(toggle)
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         homepage_nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.changePassword -> {
-                    loggedInViewModel.getUserDetails()
+                    homePageViewModel.getUserDetails()
                     startActivity(Intent(this@HomePageActivity, ChangePasswordActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
 
                 R.id.profile -> {
-                    loggedInViewModel.getUserDetails()
+                    homePageViewModel.getUserDetails()
                     startActivity(
                         Intent(
                             this@HomePageActivity,
@@ -308,7 +304,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
 
                 R.id.logout -> {
-                    loggedInViewModel.logOut()
+                    Log.i("Clicked", "logout")
+                    homePageViewModel.logOut()
                     homePageViewModel.cancelWork()
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
@@ -404,7 +401,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     enableMyLocationButton()
                     enableNextPageButton()
                 } else {
-                    SnackbarHelper.displaySnackbar(HomePageActivity, "Cannot remove location")
+                    SnackBarHelper.displaySnackBar(homePageActivity, "Cannot remove location")
                 }
             }
 
@@ -525,14 +522,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             nextPageButton.isEnabled = false
-            SnackbarHelper.displaySnackbar(HomePageActivity, "Loading...")
+            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
             nextPageButton.isEnabled = false
-            SnackbarHelper.displaySnackbar(HomePageActivity, "Loading...")
+            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }
@@ -572,8 +569,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      * Indicates when a permission is needed
      */
     override fun onExplanationNeeded(permissionsToExplain: List<String?>?) {
-        SnackbarHelper.displaySnackbar(
-            HomePageActivity,
+        SnackBarHelper.displaySnackBar(
+            homePageActivity,
             R.string.user_location_permission_explanation.toString()
         )
     }
@@ -586,8 +583,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         if (granted) {
             mapboxMap.getStyle { style -> enableLocationComponent(style) }
         } else {
-            SnackbarHelper.displaySnackbar(
-                HomePageActivity,
+            SnackBarHelper.displaySnackBar(
+                homePageActivity,
                 R.string.user_location_permission_not_granted.toString()
             )
             finish()
@@ -612,6 +609,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     override fun onStart() {
         super.onStart()
         homepage_mapView?.onStart()
+        homePageViewModel.getUserDetails()
         homePageViewModel.destroyMapboxNavigation()
         homePageViewModel.getMapBoxNavigation()
     }

@@ -7,10 +7,13 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_password.*
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -30,11 +33,17 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        changePasswordViewModel.getUserDetails()
+
         // Display email of the logged in user
-        changePasswordViewModel.getMutableLiveData().observe(this) { firebaseUser ->
+        changePasswordViewModel.getUserDetailsData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 change_password_email.text = firebaseUser.email
             }
+        }
+
+        changePasswordViewModel.getUpdateDetail().observe(this){
+            SnackBarHelper.displaySnackBar(changePasswordActivity, it)
         }
 
         // Update the password in the database
@@ -50,8 +59,9 @@ class ChangePasswordActivity : AppCompatActivity() {
                     val currentPassword =
                         change_password_currentPassword.text.toString().trim { it <= ' ' }
                     val newPassword = change_password_NewPassword.text.toString()
-                    changePasswordViewModel.getUserDetails()
-                    changePasswordViewModel.updatePassword(currentPassword, newPassword)
+                    lifecycleScope.launch {
+                        changePasswordViewModel.updatePassword(currentPassword, newPassword)
+                    }
                 }
             }
         }

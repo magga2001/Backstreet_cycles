@@ -6,11 +6,13 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.domain.utils.SnackbarHelper
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.EditUserProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditUserProfileActivity : AppCompatActivity() {
@@ -28,23 +30,14 @@ class EditUserProfileActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Indication that the profile has been updated
-        editUserProfileViewModel.getUpdatedProfileMutableLiveData().observe(this) { updated ->
-            if (updated) {
-                SnackbarHelper.displaySnackbar(
-                    editUserProfileActivity,
-                    "Profile Updated Successfully"
-                )
-                val intent = Intent(this@EditUserProfileActivity, HomePageActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
+        editUserProfileViewModel.getUpdatedProfile().observe(this) {
+            SnackBarHelper.displaySnackBar(editUserProfileActivity, it)
         }
 
         editUserProfileViewModel.getUserDetails()
 
         // Display the first and last name of the user if they exist
-        editUserProfileViewModel.getUserDetailsMutableLiveData().observe(this) { details ->
+        editUserProfileViewModel.getUserDetailsData().observe(this) { details ->
             if (details != null) {
                 edit_user_details_firstName.setText(details.firstName)
                 edit_user_details_lastName.setText(details.lastName)
@@ -71,7 +64,9 @@ class EditUserProfileActivity : AppCompatActivity() {
                         edit_user_details_firstName.text.toString().trim { it <= ' ' }
                     val lastName: String =
                         edit_user_details_lastName.text.toString().trim { it <= ' ' }
-                    editUserProfileViewModel.updateUserDetails(firstName, lastName)
+                    lifecycleScope.launch {
+                        editUserProfileViewModel.updateUserDetails(firstName, lastName)
+                    }
                 }
             }
         }

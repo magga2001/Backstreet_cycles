@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.utils.PermissionHelper
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
@@ -29,7 +33,7 @@ class LogInActivity : AppCompatActivity() {
         /**
          * Checks whether user is not null and starts HomePage activity
          **/
-        logInViewModel.getMutableLiveData()
+        logInViewModel.getFirebaseUserMutableLiveData()
             .observe(this) { firebaseUser ->
                 if (firebaseUser != null) {
                     val intent = Intent(this@LogInActivity, HomePageActivity::class.java)
@@ -38,6 +42,11 @@ class LogInActivity : AppCompatActivity() {
                     finish()
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 }
+            }
+
+        logInViewModel.getErrorMessageMutableLiveData()
+            .observe(this) {
+                SnackBarHelper.displaySnackBar(logInActivity, it)
             }
 
         initListener()
@@ -63,10 +72,12 @@ class LogInActivity : AppCompatActivity() {
                 }
 
                 else ->
-                    logInViewModel.login(
-                        log_in_email.text.trim().toString(),
-                        log_in_password.text.trim().toString()
-                    )
+                    lifecycleScope.launch {
+                        logInViewModel.login(
+                            log_in_email.text.trim().toString(),
+                            log_in_password.text.trim().toString()
+                        )
+                    }
             }
         }
 

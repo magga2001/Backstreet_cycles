@@ -7,11 +7,13 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
@@ -84,6 +86,7 @@ class HomePageViewModel @Inject constructor(
     private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val logout: MutableLiveData<Boolean> = MutableLiveData()
 
     fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent {
         return mapboxMap.locationComponent
@@ -364,6 +367,12 @@ class HomePageViewModel @Inject constructor(
         WorkHelper.cancelWork(mContext)
     }
 
+    fun logOut() {
+        Log.i("Clicked2", "logout")
+        userRepository.logOut()
+        logout.postValue(true)
+    }
+
     fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
@@ -391,5 +400,10 @@ class HomePageViewModel @Inject constructor(
 
     fun getUpdateMutableLiveData(): MutableLiveData<Boolean> {
         return updateMutableLiveData
+    }
+
+    fun getLogout(): MutableLiveData<Boolean>
+    {
+        return logout
     }
 }

@@ -88,10 +88,9 @@ object AppModule {
 
     @Provides
     fun provideUserRepository(
-        @ApplicationContext applicationContext: Context,
         fireStore: FirebaseFirestore,
         firebaseAuth: FirebaseAuth
     ): UserRepository {
-        return UserRepositoryImpl(applicationContext, fireStore, firebaseAuth)
+        return UserRepositoryImpl(fireStore, firebaseAuth)
     }
 }

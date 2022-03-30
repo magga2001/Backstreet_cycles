@@ -66,7 +66,7 @@ object MapboxApi {
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
                     //Route request fail
                     Log.i("retrieving route", "fail")
-                    listener.getResult(DirectionsRoute.fromJson(""))
+//                    listener.getResult(DirectionsRoute.fromJson(""))
                 }
             }
         )

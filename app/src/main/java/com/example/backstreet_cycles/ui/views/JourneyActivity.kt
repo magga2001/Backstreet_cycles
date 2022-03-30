@@ -17,7 +17,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.utils.PermissionHelper
-import com.example.backstreet_cycles.domain.utils.SnackbarHelper
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.maps.MapboxMap
@@ -291,7 +291,7 @@ class JourneyActivity : AppCompatActivity() {
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
             start_navigation.isEnabled = false
-            SnackbarHelper.displaySnackbar(it, "Make sure to set your journey to start your navigation!")
+            SnackBarHelper.displaySnackBar(it, "Make sure to set your journey to start your navigation!")
         }
 
         santander_link.setOnClickListener {
@@ -313,7 +313,7 @@ class JourneyActivity : AppCompatActivity() {
         finish_journey.setOnClickListener {
 
             journeyViewModel.getUserDetails()
-            journeyViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+            journeyViewModel.getUserDetailsData().observe(this) { userDetails ->
 
                 if (userDetails != null) {
                     journeyViewModel.clearView()

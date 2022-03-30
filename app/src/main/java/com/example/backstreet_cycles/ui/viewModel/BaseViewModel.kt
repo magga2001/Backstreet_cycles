@@ -3,13 +3,16 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
@@ -39,6 +42,7 @@ open class BaseViewModel @Inject constructor(
 
     protected val mApplication: Application = getApplication(applicationContext)
     protected val mContext = applicationContext
+    private val userDetail: MutableLiveData<Users> = MutableLiveData()
 
     //GENERIC
 
@@ -61,7 +65,24 @@ open class BaseViewModel @Inject constructor(
     //FIREBASE
 
     open fun getUserDetails() {
-        return userRepository.getUserDetails()
+        userRepository.getUserDetails().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    userDetail.postValue(result.data!!)
+                }
+                is Resource.Error -> {
+
+                }
+                is Resource.Loading -> {
+
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun getUserDetailsData(): MutableLiveData<Users>
+    {
+        return userDetail
     }
 
     //TFL

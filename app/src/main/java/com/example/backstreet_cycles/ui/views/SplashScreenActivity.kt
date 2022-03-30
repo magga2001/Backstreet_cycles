@@ -47,7 +47,8 @@ class SplashScreenActivity() : AppCompatActivity() {
     private fun initObservers() {
         splashScreenViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                if (FirebaseAuth.getInstance().currentUser != null) {
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                if (currentUser != null && currentUser.isEmailVerified) {
                     startActivity(Intent(this, HomePageActivity::class.java))
                     finish()
                 } else {

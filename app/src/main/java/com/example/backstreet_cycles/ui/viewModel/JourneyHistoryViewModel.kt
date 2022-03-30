@@ -44,8 +44,8 @@ class JourneyHistoryViewModel @Inject constructor(
     private var stops: MutableList<Locations> = mutableListOf()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val userDetailsMutableLiveData: MutableLiveData<Users> =
-        userRepository.getUserDetailsMutableLiveData()
+//    private val userDetailsMutableLiveData: MutableLiveData<Users> =
+//        userRepository.getUserDetailsMutableLiveData()
     private val mapboxNavigation by lazy {
 
         if (MapboxNavigationProvider.isCreated()) {
@@ -150,9 +150,9 @@ class JourneyHistoryViewModel @Inject constructor(
         return showAlert
     }
 
-    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
-        return userDetailsMutableLiveData
-    }
+//    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
+//        return userDetailsMutableLiveData
+//    }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
