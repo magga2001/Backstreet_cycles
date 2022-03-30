@@ -5,12 +5,37 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'dagger.hilt.android.plugin'
+//    id("org.jetbrains.kotlinx.kover")
+    id "org.jetbrains.kotlinx.kover" version "0.5.0"
+    id "org.sonarqube" version "3.3"
     id 'jacoco'
 }
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/kover/report.xml"
+    }
+}
+
+project.tasks["sonarqube"].dependsOn "koverReport"
+
+
 
 jacoco {
     toolVersion = '0.8.7'
 }
+
+//kover {
+//    isDisabled = false                      // true to disable instrumentation of all test tasks in all projects
+//    coverageEngine.set(kotlinx.kover.api.CoverageEngine.INTELLIJ) // change instrumentation agent and reporter
+//    intellijEngineVersion.set("1.0.656")    // change version of IntelliJ agent and reporter
+//    jacocoEngineVersion.set("0.8.7")        // change version of JaCoCo agent and reporter
+//    generateReportOnCheck = true            // false to do not execute `koverMergedReport` task before `check` task
+//    disabledProjects = setOf()              // setOf("project-name") to disable coverage for project with name `project-name`
+//    instrumentAndroidPackage = false        // true to instrument packages `android.*` and `com.android.*`
+//    runAllTestsForProjectTask = false       // true to run all tests in all projects if `koverHtmlReport`, `koverXmlReport`, `koverReport`, `koverVerify` or `check` tasks executed on some project
+//}
 
 android {
     compileSdk 31
@@ -27,13 +52,19 @@ android {
 
     buildTypes {
         release {
+            lintOptions {
+                checkReleaseBuilds false
+                abortOnError false
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            crunchPngs false // or true
         }
         debug{
             //debuggable true
             //minifyEnabled false
             //multiDexEnabled true
+            signingConfig signingConfigs.debug
             testCoverageEnabled true
         }
     }
@@ -50,6 +81,17 @@ android {
     }
 
     testOptions {
+
+//        unitTests.all {
+//            if (it.name == "testDebugUnitTest") {
+//                it.extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+//                    isDisabled = false
+//                    binaryReportFile.set(file("$buildDir/custom/debug-report.bin"))
+//                    includes = listOf("com.example.*")
+//                    excludes = listOf("com.example.subpackage.*")
+//                }
+//            }
+//        }
 //        tasks.withType(Test) {
 //            useJUnitPlatform()
 //        }
@@ -67,6 +109,7 @@ android {
             java.srcDirs += "$projectDir/src/testShared"
         }
     }
+
 
 }
 
@@ -210,15 +253,36 @@ dependencies {
 
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.7.0"
 
-    androidTestImplementation "io.mockk:mockk-android:1.12.3"
-
-
-//
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
-//    testImplemenstation 'org.junit.platform:junit-platform-commons:1.7.1'
-
 }
+
+//tasks.test {
+//    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+//        isDisabled = false
+//        binaryReportFile.set(file("$buildDir/custom/result.bin"))
+//        includes = listOf("com.example.*")
+////        excludes = listOf("com.example.subpackage.*")
+//    }
+//}
+//
+//tasks.koverMergedHtmlReport {
+//    isEnabled = true                        // false to disable report generation
+//    htmlReportDir.set(layout.buildDirectory.dir("my-merged-report/html-result"))
+//
+//    includes = listOf("com.example.*")            // inclusion rules for classes
+////    excludes = listOf("com.example.subpackage.*") // exclusion rules for classes
+//}
+//
+//tasks.koverMergedXmlReport {
+//    isEnabled = true                        // false to disable report generation
+//    xmlReportFile.set(layout.buildDirectory.file("my-merged-report/result.xml"))
+//
+//    includes = listOf("com.example.*")            // inclusion rules for classes
+////    excludes = listOf("com.example.subpackage.*") // exclusion rules for classes
+//}
+//
+//tasks.koverCollectReports {
+//    outputDir.set(layout.buildDirectory.dir("all-projects-reports") )
+//}
 
 configurations.all{
     resolutionStrategy {

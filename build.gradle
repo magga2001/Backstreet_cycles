@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
+//        classpath("org.jetbrains.kotlinx:kover:0.5.0")
     }
 }
 
@@ -16,6 +17,41 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
 }
 
+//apply(plugin = "kover")
+
+
+
+
+
+//tasks.koverMergedVerify {
+//    includes = listOf("com.example.*")            // inclusion rules for classes
+//    excludes = listOf("com.example.subpackage.*") // exclusion rules for classes
+//
+//    rule {
+//        name = "Minimum number of lines covered"
+//        bound {
+//            minValue = 100000
+//            valueType = kotlinx.kover.api.VerificationValueType.COVERED_LINES_COUNT
+//        }
+//    }
+//    rule {
+//        // rule without a custom name
+//        bound {
+//            minValue = 1
+//            maxValue = 1000
+//            valueType = kotlinx.kover.api.VerificationValueType.MISSED_LINES_COUNT
+//        }
+//    }
+//    rule {
+//        name = "Minimal line coverage rate in percent"
+//        bound {
+//            minValue = 50
+//            // valueType is kotlinx.kover.api.VerificationValueType.COVERED_LINES_PERCENTAGE by default
+//        }
+//    }
+//}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

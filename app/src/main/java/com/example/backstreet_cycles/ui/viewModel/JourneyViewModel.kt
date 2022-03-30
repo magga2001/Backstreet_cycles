@@ -5,15 +5,21 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.domain.repositoryInt.*
-import com.example.backstreet_cycles.domain.useCase.*
-import com.example.backstreet_cycles.domain.utils.*
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
+import com.example.backstreet_cycles.domain.useCase.MapAnnotationUseCase
+import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
+import com.example.backstreet_cycles.domain.useCase.PlannerUseCase
+import com.example.backstreet_cycles.domain.utils.JourneyState
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -35,7 +41,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
@@ -73,7 +78,7 @@ class JourneyViewModel @Inject constructor(
                     Log.i("New dock", result.data?.size.toString())
 
                     if(result.data != null && result.data.isNotEmpty()){
-                        tflRepository.setCurrentDocks(result.data!!)
+                        tflRepository.setCurrentDocks(result.data)
                     }
                     status = "REFRESH"
                     fetchRoute(context = mContext, getJourneyLocations(), MapboxConstants.CYCLING, false)
@@ -240,7 +245,7 @@ class JourneyViewModel @Inject constructor(
                         }
                         catch (e: Exception) {
                             withContext(Dispatchers.Main) {
-                                ToastMessageHelper.createToastMessage(mApplication,e.message)
+//                                ToastMessageHelper.createToastMessage(mApplication,e.message)
                             }
                         }
                     }
