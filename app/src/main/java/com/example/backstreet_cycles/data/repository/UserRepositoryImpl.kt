@@ -131,9 +131,9 @@ open class UserRepositoryImpl() : UserRepository
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { t ->
                         if (t.isSuccessful) {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
+                           // ToastMessageHelper.createToastMessage(application,application.getString(R.string.PASSWORD_CHANGED))
                         } else {
-                            ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
+                           // ToastMessageHelper.createToastMessage(application,application.getString(R.string.UPDATE_FAILED))
                         }
                     }
                 }
@@ -174,12 +174,12 @@ open class UserRepositoryImpl() : UserRepository
                         EspressoIdlingResource.decrement()
                     }
                     else{
-                        ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
+                      //  ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) + " Please verify your email address")
                         EspressoIdlingResource.decrement()
                     }
                 }
                 else {
-                    ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
+                    //ToastMessageHelper.createToastMessage(application,application.getString(R.string.LOG_IN_FAILED) +" "+ task.exception!!.localizedMessage)
                     EspressoIdlingResource.decrement()
                 }
             }
@@ -189,10 +189,10 @@ open class UserRepositoryImpl() : UserRepository
     override fun resetPassword(email: String) {
             FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener {
                     task -> if (task.isSuccessful){
-                ToastMessageHelper.createToastMessage(application,"Email reset email sent")
+               // ToastMessageHelper.createToastMessage(application,"Email reset email sent")
             }
             else{
-                ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
+                //ToastMessageHelper.createToastMessage(application,task.exception!!.message.toString())
             }
         }
     }

@@ -1,11 +1,13 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import android.provider.CallLog
 import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -14,6 +16,8 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -26,6 +30,8 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.domain.adapter.StopsAdapter
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,12 +44,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
 class HomePageActivityTest{
 
-    private val email = "vafai.vandad@gmail.com"
+    private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
     private val userRepoImpl = UserRepositoryImpl()
@@ -154,9 +161,11 @@ class HomePageActivityTest{
 
     @Test
     fun test_stop_added(){
-        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
-        add_stop("covent gardens")
+//        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+        add_stop("covent garden")
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+        onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(3))))
+
        }
 
     fun add_stop(name: String){
@@ -192,7 +201,10 @@ class HomePageActivityTest{
                 isDisplayed()
             )
         )
-        location.perform(replaceText(name),pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER) )
+        //location.perform(replaceText(name),pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER) )
+        location.perform(replaceText(name))
+        sleep(2500)
+        location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
 
     }
 
@@ -215,9 +227,25 @@ class HomePageActivityTest{
 
     @Test
     fun test_cardView_is_swipeable(){
-        onView(withId(R.id.addingBtn)).perform(click()).perform(typeText("Covent Garden",), click())
+//        onView(withId(R.id.addingBtn)).perform(click()).perform(typeText("Covent Garden",), click())
+//
+//        onView(withId(R.id.homepage_locationDataCardView)).perform(swipeLeft())
+        add_stop("Covent Garden")
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.homepage_locationDataCardView),
+//                withParent(withId(R.id.homepage_recyclerView))
+//            )).perform(swipeLeft())
 
-        onView(withId(R.id.homepage_locationDataCardView)).perform(swipeLeft())
+        onView(withId(R.id.homepage_recyclerView)).perform(scrollToPosition<StopsAdapter.StopViewHolder>(3))
+
+        onView(withId(R.id.homepage_recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(3, swipeLeft()))
+
+
+        //onView(withId(R.id.homepage_locationDataCardView)).perform((swipeLeft()))
+        //onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(1))))
+
+
    }
 
 //    @Test
