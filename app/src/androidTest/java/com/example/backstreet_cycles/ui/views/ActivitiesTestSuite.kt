@@ -7,7 +7,7 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
 
-    SplashScreenActivityTest::class,
+//    SplashScreenActivityTest::class,
     SignUpActivityTest::class,
     LogInActivityTest::class,
 //    HomePageActivityTest::class,
