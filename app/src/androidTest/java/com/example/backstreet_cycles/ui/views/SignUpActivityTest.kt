@@ -26,10 +26,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.com.example.backstreet_cycles.FakeCyclistRepoImpl
-import java.com.example.backstreet_cycles.FakeMapboxRepoImpl
-import java.com.example.backstreet_cycles.FakeTflRepoImpl
-import java.com.example.backstreet_cycles.FakeUserRepoImpl
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -164,18 +160,18 @@ class SignUpActivityTest {
     }
 
     //Fix!!
-//    @Test
-//    fun details_entered_correctly() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test@gmail.com"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        Intents.init()
-//        intending(hasComponent(LogInActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun details_entered_correctly() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test@gmail.com"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        Intents.init()
+        intending(hasComponent(LogInActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @Test
     fun test_backPressed_goes_back_to_LoginActivity(){

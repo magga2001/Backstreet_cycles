@@ -6,10 +6,6 @@ import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
-import java.com.example.backstreet_cycles.FakeCyclistRepoImpl
-import java.com.example.backstreet_cycles.FakeMapboxRepoImpl
-import java.com.example.backstreet_cycles.FakeTflRepoImpl
-import java.com.example.backstreet_cycles.FakeUserRepoImpl
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -75,10 +71,10 @@ class ForgotPasswordActivityTest{
         onView(withId(R.id.forgot_password_title)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_email_text_field_is_visible() {
-        onView(withId(R.id.forgot_password_email)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_email_text_field_is_visible() {
+//        onView(withId(R.id.forgot_password_email)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_forgotButton_is_visible() {

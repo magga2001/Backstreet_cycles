@@ -29,10 +29,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.com.example.backstreet_cycles.FakeCyclistRepoImpl
-import java.com.example.backstreet_cycles.FakeMapboxRepoImpl
-import java.com.example.backstreet_cycles.FakeTflRepoImpl
-import java.com.example.backstreet_cycles.FakeUserRepoImpl
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest

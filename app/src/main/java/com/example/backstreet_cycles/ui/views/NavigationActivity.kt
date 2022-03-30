@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -156,11 +155,11 @@ class NavigationActivity : AppCompatActivity() {
             val maneuvers = maneuverApi.getManeuvers(routeProgress)
             maneuvers.fold(
                 { error ->
-                    Toast.makeText(
-                        applicationContext,
-                        error.errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        applicationContext,
+//                        error.errorMessage,
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 },
                 {
                     maneuverView.visibility = View.VISIBLE
