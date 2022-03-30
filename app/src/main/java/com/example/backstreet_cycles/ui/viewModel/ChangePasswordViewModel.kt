@@ -35,7 +35,7 @@ class ChangePasswordViewModel @Inject constructor(
 
     private val updatePassword : MutableLiveData<String> = MutableLiveData()
 
-    suspend fun updatePassword(password: String, newPassword: String) {
+    fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
                 is Resource.Success -> {

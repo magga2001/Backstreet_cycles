@@ -21,7 +21,7 @@ class UserRepositoryImpl(
     private val firebaseAuth: FirebaseAuth = fireBaseAuth
     private val dataBase = fireStore
 
-    override suspend fun register(
+    override fun register(
         firstName: String,
         lastName: String,
         email: String,
@@ -40,7 +40,7 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
-    override suspend fun emailVerification(
+    override fun emailVerification(
         firstName: String,
         lastName: String,
         email: String
@@ -76,7 +76,7 @@ class UserRepositoryImpl(
             }
     }
 
-    override suspend fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = callbackFlow {
+    override fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = callbackFlow {
 
         dataBase
             .collection("users")
@@ -101,7 +101,7 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
-    override suspend fun updatePassword(password: String, newPassword: String): Flow<Resource<String>> = callbackFlow {
+    override fun updatePassword(password: String, newPassword: String): Flow<Resource<String>> = callbackFlow {
 
         val credential =
             EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
@@ -146,7 +146,7 @@ class UserRepositoryImpl(
 
     }
 
-    override suspend fun login(email: String, password: String): Flow<Resource<FirebaseUser?>> = callbackFlow {
+    override fun login(email: String, password: String): Flow<Resource<FirebaseUser?>> = callbackFlow {
 
         trySend(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -166,7 +166,7 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
-    override suspend fun resetPassword(email: String): Flow<Resource<String>> = callbackFlow  {
+    override fun resetPassword(email: String): Flow<Resource<String>> = callbackFlow  {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 trySend(Resource.Success("Password reset link sent to email."))

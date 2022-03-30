@@ -37,7 +37,7 @@ class SignUpViewModel @Inject constructor(
 
     private val message: MutableLiveData<String> = MutableLiveData()
 
-    suspend fun register(
+    fun register(
         firstName: String,
         lastName: String,
         email: String,
@@ -62,7 +62,7 @@ class SignUpViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun emailVerification(
+    private fun emailVerification(
         firstName: String,
         lastName: String,
         email: String

@@ -31,7 +31,7 @@ class ForgotPasswordViewModel @Inject constructor(
 
     private val resetPassword: MutableLiveData<String> = MutableLiveData()
 
-    suspend fun resetPassword(email: String) {
+    fun resetPassword(email: String) {
         userRepository.resetPassword(email).onEach { result ->
             when (result) {
                 is Resource.Success -> {
