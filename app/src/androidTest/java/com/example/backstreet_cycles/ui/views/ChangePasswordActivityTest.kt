@@ -1,9 +1,13 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -20,6 +24,8 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.rule.GrantPermissionRule
+import com.example.backstreet_cycles.common.EspressoIdlingResource
+import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -37,20 +43,10 @@ class ChangePasswordActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val fakeUserRepoImpl = FakeUserRepoImpl()
-    private val fakeTflRepoImpl = FakeTflRepoImpl()
-    private val fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-    private val fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-    private val context = Application()
-
-    private val logInViewModel = LogInViewModel(fakeTflRepoImpl,fakeMapboxRepoImpl,fakeCyclistRepoImpl,fakeUserRepoImpl,context)
+    private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<HomePageActivity> =
-        ActivityScenarioRule(HomePageActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -61,13 +57,20 @@ class ChangePasswordActivityTest{
 
     @Before
     fun setUp() {
-        hiltRule.inject()
-        if (logInViewModel.getMutableLiveData().value == null){
-            fakeUserRepoImpl.login(email, password)
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            userRepoImpl.logout()
         }
-        Intents.init()
+        userRepoImpl.login(email, password)
+        hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
         onView(withId(R.id.changePassword)).perform(ViewActions.click())
+    }
+
+    @Test
+    fun test_activity_launched_title_displayed() {
+        onView(withId(R.id.change_password_title)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -107,14 +110,31 @@ class ChangePasswordActivityTest{
         onView(withId(R.id.change_password_NewPassword)).check(matches(ViewMatchers.withText(testInput)))
     }
 
+    // will work in refactored branch
+//    @Test
+//    fun test_saves_new_password() {
+//        onView(withId(R.id.change_password_currentPassword)).perform(typeText(password))
+//        val testInput = "password"
+//        onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput), closeSoftKeyboard())
+//
+//        Intents.init()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        Intents.release()
+//    }
+
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
-        Espresso.pressBack()
+        pressBack()
+        Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @After
     fun tearDown(){
-        Intents.release()
+        if(userRepoImpl.getFirebaseAuthUser() != null){
+            IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+            userRepoImpl.logout()
+        }
     }
 }
