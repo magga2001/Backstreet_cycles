@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
@@ -13,8 +14,9 @@ import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.JsonHelper
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -32,12 +34,18 @@ class JourneyHistoryViewModel @Inject constructor(
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext)  {
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    applicationContext
+) {
 
     private var stops: MutableList<Locations> = mutableListOf()
     private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val message: MutableLiveData<String> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
-    private val userDetailsMutableLiveData: MutableLiveData<Users> = userRepository.getUserDetailsMutableLiveData()
     private val mapboxNavigation by lazy {
 
         if (MapboxNavigationProvider.isCreated()) {
@@ -58,17 +66,30 @@ class JourneyHistoryViewModel @Inject constructor(
     }
 
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        mapboxRepository.requestRoute(mapboxNavigation,routeOptions).onEach {
-            isReadyMutableLiveData.postValue(true)
+        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    isReadyMutableLiveData.postValue(true)
+                }
+
+                is Resource.Error -> {
+                    //Fail
+                    message.postValue(result.message!!)
+                }
+                is Resource.Loading -> {
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
-    private fun fetchRoute(context: Context,
-                           locations: MutableList<Locations>) {
+    private fun fetchRoute(
+        context: Context,
+        locations: MutableList<Locations>
+    ) {
 
         resetNumCyclists()
         clearDuplication(locations)
-        val points = locations.map { PlannerHelper.convertLocationToPoint(it) }
+        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
 
         clearInfo()
         setCurrentWayPoint(locations)
@@ -79,14 +100,14 @@ class JourneyHistoryViewModel @Inject constructor(
     private fun checkCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if (!noCurrentJourney){
+        if (!noCurrentJourney) {
             showAlert.postValue(true)
-        } else{
+        } else {
             fetchRoute(mContext, getJourneyLocations())
         }
     }
 
-    override fun continueWithCurrentJourney(){
+    override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
         fetchRoute(
             mContext,
@@ -94,7 +115,7 @@ class JourneyHistoryViewModel @Inject constructor(
         )
     }
 
-    override fun continueWithNewJourney(newStops: MutableList<Locations>){
+    override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
         fetchRoute(
             mContext,
@@ -102,17 +123,17 @@ class JourneyHistoryViewModel @Inject constructor(
         )
     }
 
-    fun getJourneyHistory(userDetails: Users):MutableList<List<Locations>> {
+    fun getJourneyHistory(userDetails: Users): MutableList<List<Locations>> {
         val listLocations = emptyList<List<Locations>>().toMutableList()
-        for (journey in userDetails.journeyHistory){
+        for (journey in userDetails.journeyHistory) {
             val serializedObject: String = journey
-            JsonHelper.stringToObject(serializedObject,Locations::class.java)
+            JsonHelper.stringToObject(serializedObject, Locations::class.java)
                 ?.let { listLocations.add(it) }
         }
         return listLocations
     }
 
-    fun addAllStops(checkpoints: MutableList<Locations>){
+    fun addAllStops(checkpoints: MutableList<Locations>) {
         stops.addAll(checkpoints)
     }
 
@@ -120,17 +141,15 @@ class JourneyHistoryViewModel @Inject constructor(
         stops.clear()
     }
 
-    fun getMapBoxNavigation(): MapboxNavigation
-    {
+    fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
-    fun destroyMapboxNavigation()
-    {
+    fun destroyMapboxNavigation() {
         MapboxNavigationProvider.destroy()
     }
 
-    fun setShowAlert(bool: Boolean){
+    fun setShowAlert(bool: Boolean) {
         showAlert.postValue(bool)
     }
 
@@ -138,18 +157,13 @@ class JourneyHistoryViewModel @Inject constructor(
         return showAlert
     }
 
-    fun getUserDetailsMutableLiveData(): MutableLiveData<Users> {
-        return userDetailsMutableLiveData
-    }
-
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 
     fun updateCurrentLocation(currentLocation: Location) {
-        for(stop in stops){
-            if(stop.name == "Current Location"){
+        for (stop in stops) {
+            if (stop.name == "Current Location") {
 
                 val longitude = currentLocation.longitude
                 val latitude = currentLocation.latitude
@@ -158,6 +172,11 @@ class JourneyHistoryViewModel @Inject constructor(
                 stop.lon = longitude
             }
         }
+    }
+
+    fun getMessage(): MutableLiveData<String>
+    {
+        return message
     }
 
 }

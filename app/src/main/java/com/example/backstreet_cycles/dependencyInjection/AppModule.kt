@@ -20,6 +20,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+
+/**
+ * All the dependencies bound into the dependency graph
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -83,10 +87,10 @@ object AppModule {
     fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 
     @Provides
-    fun provideUserRepository(@ApplicationContext applicationContext: Context,
-                              fireStore: FirebaseFirestore,
-                              firebaseAuth: FirebaseAuth): UserRepository
-    {
-        return UserRepositoryImpl()
+    fun provideUserRepository(
+        fireStore: FirebaseFirestore,
+        firebaseAuth: FirebaseAuth
+    ): UserRepository {
+        return UserRepositoryImpl(fireStore, firebaseAuth)
     }
 }

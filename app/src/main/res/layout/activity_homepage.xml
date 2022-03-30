@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homePageActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.views.HomePageActivity"
-    android:id="@+id/HomePageActivity">
+    tools:context=".ui.views.HomePageActivity">
 
     <RelativeLayout
         android:id="@+id/homepage_relativeLayout"
@@ -32,12 +31,12 @@
         android:id="@+id/homepage_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.views.JourneyActivity"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:context=".ui.views.JourneyActivity">
 
         <include
             android:id="@+id/homepage_bottom_sheet_view"
-            layout="@layout/homepage_bottom_sheet"/>
+            layout="@layout/homepage_bottom_sheet" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -46,10 +45,10 @@
         android:id="@+id/homepage_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true" >
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu">
 
     </com.google.android.material.navigation.NavigationView>
 

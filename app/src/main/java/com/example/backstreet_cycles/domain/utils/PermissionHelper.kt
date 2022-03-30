@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.domain.useCase
+package com.example.backstreet_cycles.domain.utils
 
 import android.Manifest
 import android.app.Activity
@@ -7,10 +7,12 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.example.backstreet_cycles.common.Constants
 
-object PermissionUseCase {
+object PermissionHelper {
 
-    fun checkPermission(context: Context, activity: Activity)
-    {
+    /**
+     *
+     */
+    fun checkPermission(context: Context, activity: Activity) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION

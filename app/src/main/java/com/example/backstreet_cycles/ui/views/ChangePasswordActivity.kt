@@ -7,17 +7,25 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_password.*
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
+    //
     private val changePasswordViewModel: ChangePasswordViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the ChangePasswordPage
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,50 +33,61 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        changePasswordViewModel.getMutableLiveData().observe(this) { firebaseUser ->
+        changePasswordViewModel.getUserDetails()
+
+        // Display email of the logged in user
+        changePasswordViewModel.getUserDetailsData().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 change_password_email.text = firebaseUser.email
             }
         }
 
+        changePasswordViewModel.getUpdateDetail().observe(this){
+            SnackBarHelper.displaySnackBar(changePasswordActivity, it)
+        }
+
+        // Update the password in the database
         change_password_SaveButton.setOnClickListener {
             when {
-                TextUtils.isEmpty(change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
-                    change_password_currentPassword.error = "In order for use to change your email or password you need to" +
-                            " enter your old password"
+                TextUtils.isEmpty(
+                    change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
+                    change_password_currentPassword.error =
+                        "In order for use to change your email or password you need to" +
+                                " enter your old password"
                 }
                 else -> {
-                    val currentPassword = change_password_currentPassword.text.toString().trim { it <= ' ' }
+                    val currentPassword =
+                        change_password_currentPassword.text.toString().trim { it <= ' ' }
                     val newPassword = change_password_NewPassword.text.toString()
-                    changePasswordViewModel.getUserDetails()
-                    changePasswordViewModel.updatePassword(currentPassword,newPassword)
+                    lifecycleScope.launch {
+                        changePasswordViewModel.updatePassword(currentPassword, newPassword)
+                    }
                 }
             }
         }
     }
 
-    override fun onBackPressed() {
-        val intent = Intent(this@ChangePasswordActivity, HomePageActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
-    }
-
+    /**
+     * Return to the HomePage if the back button is clicked
+     * @param item from the nav_header
+     * @return true if clicked
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onClickHome()
+                onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun onClickHome() {
+    /**
+     * Terminate the ChangePassword display when back button is clicked
+     */
+    override fun onBackPressed() {
         super.onBackPressed()
+        finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
-
-
-
 }

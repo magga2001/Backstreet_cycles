@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 //import androidx.hilt.work.HiltWorkerFactory
@@ -20,33 +21,35 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider {
-
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    /**
+     * Creates the application
+     */
     override fun onCreate() {
         super.onCreate()
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         SharedPrefHelper.initialiseSharedPref(this, Constants.DOCKS_LOCATIONS)
 
         Handler(Looper.myLooper()!!).postDelayed({
-            if(FirebaseAuth.getInstance().currentUser != null)
-            {
+            if (FirebaseAuth.getInstance().currentUser != null) {
                 //Move this to appropriate place
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)
-
-            }else
-            {
+            } else {
                 WorkHelper.cancelWork(context = applicationContext)
             }
 //            WorkHelper.cancelWork(context = applicationContext)
-        },5000)
-
+        }, 5000)
     }
 
+    /**
+     *
+     */
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-
 }
