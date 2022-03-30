@@ -33,20 +33,20 @@ class LogInViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val firebaseUserMutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
-    private val errorMessageMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private val firebaseUser: MutableLiveData<FirebaseUser> = MutableLiveData()
+    private val errorMessage: MutableLiveData<String> = MutableLiveData()
 
     suspend fun login(email: String, password: String) {
 
         userRepository.login(email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    firebaseUserMutableLiveData.postValue(result.data!!)
+                    firebaseUser.postValue(result.data!!)
                     WorkHelper.setPeriodicallySendingLogs(mApplication)
                 }
 
                 is Resource.Error -> {
-                    errorMessageMutableLiveData.postValue(
+                    errorMessage.postValue(
                         mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
                     )
                 }
@@ -57,11 +57,11 @@ class LogInViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getFirebaseUserMutableLiveData(): MutableLiveData<FirebaseUser> {
-        return firebaseUserMutableLiveData
+    fun getFirebaseUser(): MutableLiveData<FirebaseUser> {
+        return firebaseUser
     }
 
-    fun getErrorMessageMutableLiveData(): MutableLiveData<String> {
-        return errorMessageMutableLiveData
+    fun getErrorMessage(): MutableLiveData<String> {
+        return errorMessage
     }
 }

@@ -11,7 +11,6 @@ import com.example.backstreet_cycles.domain.utils.PermissionHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.coroutines.launch
 
@@ -33,7 +32,7 @@ class LogInActivity : AppCompatActivity() {
         /**
          * Checks whether user is not null and starts HomePage activity
          **/
-        logInViewModel.getFirebaseUserMutableLiveData()
+        logInViewModel.getFirebaseUser()
             .observe(this) { firebaseUser ->
                 if (firebaseUser != null) {
                     val intent = Intent(this@LogInActivity, HomePageActivity::class.java)
@@ -44,7 +43,7 @@ class LogInActivity : AppCompatActivity() {
                 }
             }
 
-        logInViewModel.getErrorMessageMutableLiveData()
+        logInViewModel.getErrorMessage()
             .observe(this) {
                 SnackBarHelper.displaySnackBar(logInActivity, it)
             }

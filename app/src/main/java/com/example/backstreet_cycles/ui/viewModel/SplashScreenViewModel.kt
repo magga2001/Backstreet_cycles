@@ -28,7 +28,7 @@ class SplashScreenViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val isReadyMutableLiveData = MutableLiveData<Boolean>()
+    private val isReady = MutableLiveData<Boolean>()
 
     suspend fun loadData() {
         tflRepository.getDocks().onEach { result ->
@@ -55,12 +55,12 @@ class SplashScreenViewModel @Inject constructor(
 
     private fun loadTouristAttractions() {
         locationRepository.loadLocations(application = mApplication)
-        isReadyMutableLiveData.postValue(true)
+        isReady.postValue(true)
     }
 
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<Boolean> {
+        return isReady
     }
 
 }

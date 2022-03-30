@@ -33,7 +33,7 @@ class ChangePasswordViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val updatePassword : MutableLiveData<String> = MutableLiveData()
+    private val updatePassword: MutableLiveData<String> = MutableLiveData()
 
     suspend fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
@@ -54,8 +54,7 @@ class ChangePasswordViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getUpdateDetail(): MutableLiveData<String>
-    {
+    fun getUpdateDetail(): MutableLiveData<String> {
         return updatePassword
     }
 }

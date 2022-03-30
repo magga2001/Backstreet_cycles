@@ -44,15 +44,15 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        journeyHistoryViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 startActivity(Intent(this, JourneyActivity::class.java))
-                journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
+                journeyHistoryViewModel.getIsReady().value = false
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
-        journeyHistoryViewModel.getShowAlertMutableLiveData().observe(this) {
+        journeyHistoryViewModel.getShowAlert().observe(this) {
             if (it) {
                 alertDialog(journeyHistoryViewModel.getJourneyLocations())
             }
