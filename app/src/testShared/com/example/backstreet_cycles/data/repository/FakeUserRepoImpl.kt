@@ -10,7 +10,7 @@ class FakeUserRepoImpl : UserRepository{
 
     private val PASSWORD_MINIMUM_LENGTH = 6
 
-    private lateinit var users: HashMap<String, HashMap<Users, String>>
+    private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
     private var currentUser: Users? = null
     private var isVerified = false
 
@@ -26,6 +26,7 @@ class FakeUserRepoImpl : UserRepository{
         }else{
             if(!users.containsKey(email)){
                 val user = Users(firstName,lastName, email)
+
                 users[email] = hashMapOf(
                     user to password
                 )
@@ -129,6 +130,11 @@ class FakeUserRepoImpl : UserRepository{
     fun verifyEmail()
     {
         isVerified = true
+    }
+
+    fun getUsersDb(): HashMap<String, HashMap<Users, String>>
+    {
+        return users
     }
 
 }
