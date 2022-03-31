@@ -1,19 +1,14 @@
 package com.example.backstreet_cycles.ui.viewModel
 
-import android.app.Application
 import android.content.Context
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import androidx.test.runner.AndroidJUnit4
-import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.FakeTflRepoImpl
 import com.example.backstreet_cycles.FakeUserRepoImpl
 import com.example.backstreet_cycles.common.BackstreetApplication
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -52,7 +47,6 @@ class BaseViewModelTest {
         assertThat(baseViewModel.getNumCyclists()).isEqualTo(2)
     }
 
-    //Probably wrong
     @Test
     fun test_decrement_cyclists()
     {

@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.data.repository
 
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,11 +39,6 @@ class CyclistRepositoryImplTest{
     @Test
     fun `test if the number of cyclists can be retrieved`() {
         assert(cyclistRepositoryImpl.getNumCyclists() == numCyclists)
-    }
-
-    @After
-    fun tearDown() {
-        numCyclists = 1
     }
 
 }

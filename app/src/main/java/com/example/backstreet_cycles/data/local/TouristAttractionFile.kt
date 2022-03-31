@@ -4,7 +4,6 @@ import android.app.Application
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.JsonHelper
-import timber.log.Timber
 
 object TouristAttractionFile {
 
@@ -26,9 +25,8 @@ object TouristAttractionFile {
      *
      * @param text - a String that holds the name of the tourist attraction
      */
-    private fun addTouristLocations(text: String) {
+    fun addTouristLocations(text: String) {
         val attractionTouristData = JsonHelper.stringToObject(text, Locations::class.java)
-
         for (attraction in attractionTouristData ?: emptyList()) {
             touristAttractions.add(attraction)
         }
