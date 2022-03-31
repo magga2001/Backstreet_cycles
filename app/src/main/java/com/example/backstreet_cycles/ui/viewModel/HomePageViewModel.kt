@@ -244,15 +244,19 @@ class HomePageViewModel @Inject constructor(
     }
 
     fun updateCurrentLocation(locationComponent: LocationComponent) {
-        for (stop in stops) {
-            if (stop.name == "Current Location") {
+        try {
+            for (stop in stops) {
+                if (stop.name == "Current Location") {
 
-                val longitude = getCurrentLocation(locationComponent)!!.longitude
-                val latitude = getCurrentLocation(locationComponent)!!.latitude
+                    val longitude = getCurrentLocation(locationComponent)!!.longitude
+                    val latitude = getCurrentLocation(locationComponent)!!.latitude
 
-                stop.lat = latitude
-                stop.lon = longitude
+                    stop.lat = latitude
+                    stop.lon = longitude
+                }
             }
+        } catch(e: NullPointerException){
+
         }
     }
 
