@@ -4,12 +4,13 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -21,6 +22,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runBlockingTest
@@ -39,7 +41,7 @@ import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
-class JourneyActivityTest{
+class JourneyActivityTest {
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
@@ -58,33 +60,36 @@ class JourneyActivityTest{
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
-            android.Manifest.permission.INTERNET)
+            android.Manifest.permission.INTERNET
+        )
 
     @Before
     fun setUp() {
         userRepoImpl.logOut()
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+
         ActivityScenario.launch(HomePageActivity::class.java)
-        //add_stop("covent gardens")
+        add_stop("covent gardens")
+        add_stop("Buckingham Palace")
         onView(withId(R.id.nextPageButton)).perform(click())
         ActivityScenario.launch(JourneyActivity::class.java)
     }
 
     @Test
-    fun test_journey_activity_is_visible(){
+    fun test_journey_activity_is_visible() {
         Intents.init()
         intending(hasComponent(JourneyActivity::class.qualifiedName))
         Intents.release()
     }
 
     @Test
-    fun test_bottom_sheet_visible(){
+    fun test_bottom_sheet_visible() {
         onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_journey_overview_button_visible(){
+    fun test_journey_overview_button_visible() {
         onView(withId(R.id.overview_journey)).check(matches(isDisplayed()))
     }
 
@@ -93,23 +98,35 @@ class JourneyActivityTest{
         onView(withId(R.id.start_navigation)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-//    @Test
-//    fun test_next_button_from_home_to_journey(){
-//        pressBack()
-//        Intents.init()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun test_on_pressBack_go_to_HomePageActivity() {
+        pressBackUnconditionally()
+        Intents.init()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @Test
-    fun test_stops_recycling_view_displayed(){
+    fun test_next_button_from_home_to_journey() {
+        pressBackUnconditionally()
+        Intents.init()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
+        ActivityScenario.launch(HomePageActivity::class.java)
+        onView(withId(R.id.nextPageButton)).perform(click())
+        Intents.init()
+        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        Intents.release()
+    }
+
+    @Test
+    fun test_stops_recycling_view_displayed() {
         onView(withId(R.id.plan_journey_recycling_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test
-    fun test_journey_overview_is_clickable(){
+    fun test_journey_overview_is_clickable() {
         onView(withId(R.id.overview_journey)).check(matches(isClickable()))
-
     }
 
 //    @Test
@@ -124,69 +141,79 @@ class JourneyActivityTest{
 //        onView(withId(R.id.navigation_layout)).check(matches(isDisplayed()))
 //    }
 
-//    @Test
-//    fun test_expand_button(){
-//        onView(withId(R.id.planJourney_button_expand)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_expand_button(){
+        onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
 
 //    @Test
 //    fun test_button_expand() {
-//        onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
-//        onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
-//        onView(withId(R.id.plan_journey_recycling_view)).perform(RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(0))
+//       // onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
+//       // onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
+//        onView(withId(R.id.plan_journey_recycling_view)).perform(
+//            RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(
+//                0
+//            )
+//        )
 //
 //        onView(withId(R.id.plan_journey_recycling_view))
 //            // scrollTo will fail the test if no item matches.
-//            .perform(RecyclerViewActions.actionOnItemAtPosition<PlanJourneyAdapter.ViewHolder>(0, click()))
+//            .perform(
+//                RecyclerViewActions.actionOnItemAtPosition<PlanJourneyAdapter.ViewHolder>(
+//                    0,
+//                    click()
+//                )
+//            )
 //        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
-
-
-
-    //
-    //        onView(withId(R.id.bottom_sheet_journey)).perform(ViewActions.swipeUp())
-    //        onView(withId(R.id.button_expand)).check(matches(isDisplayed()))
-    //}
+//
+//
+//        //
+//        //        onView(withId(R.id.bottom_sheet_journey)).perform(ViewActions.swipeUp())
+//        //        onView(withId(R.id.button_expand)).check(matches(isDisplayed()))
+//    }
 
 
 //    @Test
 //    fun test_stop_clicked_set_navigation_displayed(){
-//        onView(withId(R.id.bottom_sheet_journey)).check(matches(isDisplayed()))
-//        onView(withId(R.id.bottom_sheet_journey)).perform(scrollTo())
+//        onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
+//        onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
 //        //onView(withId(R.id.button_expand)).perform(ViewActions.)
 //        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
 //
 //    }
-//
+
 //    @Test
 //    fun test_stop_clicked_images_displayed(){
 //        onView(withId(R.id.planJourney_button_expand)).perform(click())
-//        onView(withId(R.id.imageView13)).check(matches(isDisplayed()))
-//        onView(withId(R.id.imageView14)).check(matches(isDisplayed()))
-    // }
-
-    @Test
-    fun test_set_navigation_displayed(){
-
-        onView(withId(R.id.journeyActivity)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun test_hire_button_visible(){
-        onView(withId(R.id.santander_link)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-//    @Test
-//    fun test_hire_image_visible(){
-//        onView(withId(R.id.SantanderCycleImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        onView(withId(R.id.walk_from_dock)).check(matches(isDisplayed()))
+//        onView(withId(R.id.dock_to_cycle)).check(matches(isDisplayed()))
+//        onView(withId(R.id.planJourney_log_in_image_view)).check(matches(isDisplayed()))
+//
 //    }
+
+//        @Test
+//        fun test_set_navigation_displayed() {
+//
+//            onView(withId(R.id.journeyActivity)).check(matches(isDisplayed()))
+//        }
+
+        @Test
+        fun test_hire_button_visible() {
+            onView(withId(R.id.santander_link)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
+
+    @Test
+    fun test_hire_image_visible(){
+        onView(withId(R.id.SantanderCycleImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
 
 //    @Test
 //    fun test_from_text(){
-//        onView(withId(R.id.planJourney_from)).check(matches(isDisplayed()))
+//        onView(withId(R.id.planJourney_from)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 //    }
 
 //    @Test
@@ -194,12 +221,12 @@ class JourneyActivityTest{
 //        onView(withId(R.id.planJourney_to)).check(matches(isDisplayed()))
 //    }
 
-    @Test
-    fun test_finish_journey_button_visible(){
+        @Test
+        fun test_finish_journey_button_visible() {
 //        onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
 
-        onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+            onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
 
 //    @Test
 //    fun test_checkbox_visible(){
@@ -216,34 +243,34 @@ class JourneyActivityTest{
 //
 //    }
 
-    @Test
-    fun test_distance_text_field_displayed(){
+        @Test
+        fun test_distance_text_field_displayed() {
 //        onView(withId(R.id.distances)).check(matches(withText("Distance:")))
-        onView(withId(R.id.distances)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+            onView(withId(R.id.distances)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
-    }
+        }
 
-    @Test
-    fun test_price_text_field_displayed(){
+        @Test
+        fun test_price_text_field_displayed() {
 //        onView(withId(R.id.prices)).check(matches(withText("Price:")))
-        onView(withId(R.id.prices)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+            onView(withId(R.id.prices)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 //        onView(withId(R.id.prices)).check(matches(isDisplayed()))
-    }
+        }
 
-    @Test
-    fun test_duration_image_field_displayed(){
-        onView(withId(R.id.duration_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+        @Test
+        fun test_duration_image_field_displayed() {
+            onView(withId(R.id.duration_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
 
-    @Test
-    fun test_distance_image_field_displayed(){
-        onView(withId(R.id.DistanceImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+        @Test
+        fun test_distance_image_field_displayed() {
+            onView(withId(R.id.DistanceImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
 
-    @Test
-    fun test_price_image_field_displayed(){
-        onView(withId(R.id.price_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+        @Test
+        fun test_price_image_field_displayed() {
+            onView(withId(R.id.price_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
 
 //    @Test
 //    fun test_check_not_checked(){
@@ -255,15 +282,15 @@ class JourneyActivityTest{
 //
 //    }
 
-    @Test
-    fun test_finish_button_visible(){
-        onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+        @Test
+        fun test_finish_button_visible() {
+            onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        }
 
-    @Test
-    fun test_finish_not_clickable(){
-        onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
-    }
+        @Test
+        fun test_finish_not_clickable() {
+            onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
+        }
 
 //    @Test
 //    fun test_not_checked_stop_clickable(){
@@ -291,66 +318,70 @@ class JourneyActivityTest{
 //        onView(withId(R.id.finish_journey)).check(matches(isClickable()));
 //    }
 
-    fun add_stop(name: String){
+        fun add_stop(name: String) {
 
-        val addStopButton = onView(
-            Matchers.allOf(
-                withId(R.id.addingBtn), withText("Add Stop"),
-                childAtPosition(
-                    Matchers.allOf(
-                        withId(R.id.homepage_bottom_sheet_constraintLayout),
-                        childAtPosition(
-                            withId(R.id.homepage_bottom_sheet_linearLayout),
-                            0
-                        )
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        addStopButton.perform(click())
-
-        val location = onView(
-            Matchers.allOf(
-                withId(R.id.edittext_search),
-                childAtPosition(
+            val addStopButton = onView(
+                Matchers.allOf(
+                    withId(R.id.addingBtn), withText("Add Stop"),
                     childAtPosition(
-                        withId(R.id.searchView),
+                        Matchers.allOf(
+                            withId(R.id.homepage_bottom_sheet_constraintLayout),
+                            childAtPosition(
+                                withId(R.id.homepage_bottom_sheet_linearLayout),
+                                0
+                            )
+                        ),
                         0
                     ),
-                    0
-                ),
-                isDisplayed()
+                    isDisplayed()
+                )
             )
-        )
+            addStopButton.perform(click())
+
+            val location = onView(
+                Matchers.allOf(
+                    withId(R.id.edittext_search),
+                    childAtPosition(
+                        childAtPosition(
+                            withId(R.id.searchView),
+                            0
+                        ),
+                        0
+                    ),
+                    isDisplayed()
+                )
+            )
 //        location.perform(
 //            ViewActions.replaceText(name),
 //            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
 //            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
 //        )
-        location.perform(ViewActions.replaceText(name))
-        sleep(2500)
-        location.perform(ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
-            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER))
+            location.perform(ViewActions.replaceText(name))
+            //sleep(2500)
+            location.perform(
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+            )
 
-    }
+        }
 
-    private fun childAtPosition(
-        parentMatcher: Matcher<View>, position: Int): Matcher<View> {
+        private fun childAtPosition(
+            parentMatcher: Matcher<View>, position: Int
+        ): Matcher<View> {
 
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Child at position $position in parent ")
-                parentMatcher.describeTo(description)
-            }
+            return object : TypeSafeMatcher<View>() {
+                override fun describeTo(description: Description) {
+                    description.appendText("Child at position $position in parent ")
+                    parentMatcher.describeTo(description)
+                }
 
-            public override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
+                public override fun matchesSafely(view: View): Boolean {
+                    val parent = view.parent
+                    return parent is ViewGroup && parentMatcher.matches(parent)
+                            && view == parent.getChildAt(position)
+                }
             }
         }
     }
-}
+
 
