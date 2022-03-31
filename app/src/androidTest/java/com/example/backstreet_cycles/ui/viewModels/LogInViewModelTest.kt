@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.ui.viewModel
+package com.example.backstreet_cycles.ui.viewModels
 //
 //import android.app.Application
 //import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
@@ -13,11 +13,15 @@ package com.example.backstreet_cycles.ui.viewModel
 //import com.google.firebase.ktx.initialize
 //import org.junit.Assert.*
 //import org.junit.Test
+//import org.junit.runner.RunWith
+//import org.junit.runners.JUnit4
 //import java.com.example.backstreet_cycles.FakeUserRepoImpl
 //
-//class LoggedInViewModelTest(app: Application) {
 //
-//    private var loggedInViewModel: LoggedInViewModel
+//@RunWith(JUnit4::class)
+//class LogInViewModelTest(app: Application){
+//
+//    private var logInViewModel: LogInViewModel
 //
 //    private lateinit var tflRepository: TflRepository
 //
@@ -27,24 +31,27 @@ package com.example.backstreet_cycles.ui.viewModel
 //
 //    private val fakeUserRepoImpl = FakeUserRepoImpl()
 //
-//    init {
-//        loggedInViewModel = LoggedInViewModel(
-//            tflRepository,
+//    private val email = "backstreet.cycles.test.user@gmail.com"
+//    private val password = "123456"
+//
+//    init{
+//        logInViewModel = LogInViewModel(tflRepository,
 //            mapboxRepository,
 //            cyclistRepository,
 //            fakeUserRepoImpl,
 //            app
-//        )
+//            )
 //    }
 //
 //    fun getUserDetails(): FirebaseUser? {
 //        return fakeUserRepoImpl.getCurrentUser()
 //    }
 //
-//    @Test
-//    fun check_user_is_logged_out(){
-//        fakeUserRepoImpl.logout()
-//        val currentUser = fakeUserRepoImpl.getCurrentUser()
-//        assertNull(currentUser)
-//    }
+////    @Test
+////    fun fetch_test_profile_from_database(){
+////        fakeUserRepoImpl.login(email,password)
+////        val currentUser = fakeUserRepoImpl.getCurrentUser()
+////        assertNotNull(currentUser)
+////        assertEquals(currentUser?.email, email)
+////    }
 //}
