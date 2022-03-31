@@ -110,13 +110,13 @@ class NavMenuTest{
         Intents.release()
     }
 
-    @Test
-    fun test_JourneyHistory_to_JourneyHistoryActivity(){
-        onView(withId(R.id.journeyHistory)).perform(click())
-        Intents.init()
-        Intents.intending(IntentMatchers.hasComponent(JourneyActivity::class.qualifiedName))
-        Intents.release()
-    }
+//    @Test
+//    fun test_JourneyHistory_to_JourneyHistoryActivity(){
+//        onView(withId(R.id.journeyHistory)).perform(click())
+//        Intents.init()
+//        Intents.intending(IntentMatchers.hasComponent(JourneyActivity::class.qualifiedName))
+//        Intents.release()
+//    }
     @Test
     fun test_aboutButton_to_AboutActivity(){
         onView(withId(R.id.about)).perform(click())

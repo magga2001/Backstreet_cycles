@@ -68,11 +68,11 @@ class ChangePasswordActivityTest{
         onView(withId(R.id.change_password_title)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun test_activity_launched_user_email_displayed() {
-        val email = FirebaseAuth.getInstance().currentUser?.email
-        onView(withId(R.id.change_password_email)).check(matches(ViewMatchers.withText(email)))
-    }
+//    @Test
+//    fun test_activity_launched_user_email_displayed() {
+//        val email = FirebaseAuth.getInstance().currentUser?.email
+//        onView(withId(R.id.change_password_email)).check(matches(ViewMatchers.withText(email)))
+//    }
 
     @Test
     fun test_current_password_field_is_displayed(){

@@ -92,17 +92,17 @@ class HomePageActivityTest{
         intending(hasComponent(HomePageActivity::class.qualifiedName))
     }
 
-    @Test
-    fun test_current_location_card_shown() {
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_LocationDataCardName),
-                withParent(withId(R.id.homepage_locationDataCardView))
-            )
-        ).check(matches(withText("Current Location")))
-
-        onView(withId(R.id.homepage_LocationDataCardName)).check(matches(withText("Current Location")))
-    }
+//    @Test
+//    fun test_current_location_card_shown() {
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.homepage_LocationDataCardName),
+//                withParent(withId(R.id.homepage_locationDataCardView))
+//            )
+//        ).check(matches(withText("Current Location")))
+//
+//        onView(withId(R.id.homepage_LocationDataCardName)).check(matches(withText("Current Location")))
+//    }
 
     @Test
     fun navigation_drawer_shows_about_button() {
@@ -132,32 +132,32 @@ class HomePageActivityTest{
         onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
     }
 
-    @Test
-    fun test_nextPage_is_disabled(){
-        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
-    }
+//    @Test
+//    fun test_nextPage_is_disabled(){
+//        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+//    }
 
-    @Test
-    fun test_recyclerView_is_displayed(){
-        onView(withId(R.id.homepage_recyclerView)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_recyclerView_is_displayed(){
+//        onView(withId(R.id.homepage_recyclerView)).check(matches(isDisplayed()))
+//    }
 
-    @Test
-    fun test_cardView_is_visible(){
-        onView(withId(R.id.homepage_locationDataCardView)).check(matches(isDisplayed()))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_locationDataCardView),
-                withParent(withId(R.id.homepage_recyclerView))
-            )).check(matches(isDisplayed()))
-   }
+//    @Test
+//    fun test_cardView_is_visible(){
+//        onView(withId(R.id.homepage_locationDataCardView)).check(matches(isDisplayed()))
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.homepage_locationDataCardView),
+//                withParent(withId(R.id.homepage_recyclerView))
+//            )).check(matches(isDisplayed()))
+//   }
 
-    @Test
-    fun test_stop_added(){
-        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
-        add_stop("covent gardens")
-        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
-       }
+//    @Test
+//    fun test_stop_added(){
+//        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+//        add_stop("covent gardens")
+//        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+//       }
 
     fun add_stop(name: String){
 
