@@ -8,6 +8,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -34,7 +36,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
+
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -49,7 +51,7 @@ class HomePageActivityTest {
 
     @Rule
     @JvmField
-    var mGrantPermissionRule = GrantPermissionRule.grant(
+    var mGrantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION"
     )
@@ -67,6 +69,16 @@ class HomePageActivityTest {
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
+    }
+
+    fun waitFor(delay: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        }
     }
 
 
@@ -88,6 +100,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_current_location_card_shown() {
+        onView(isRoot()).perform(waitFor(1000))
         onView(
             Matchers.allOf(
                 withId(R.id.homepage_LocationDataCardName),
@@ -128,16 +141,19 @@ class HomePageActivityTest {
 
     @Test
     fun test_nextPage_is_disabled(){
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
     }
 
     @Test
     fun test_recyclerView_is_displayed(){
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_cardView_is_visible(){
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_locationDataCardView)).check(matches(isDisplayed()))
         onView(
             Matchers.allOf(
@@ -148,13 +164,13 @@ class HomePageActivityTest {
 
     @Test
     fun test_stop_added(){
+        onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
         //onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
        }
 
-    fun add_stop(name: String) {
-
+    private fun add_stop(name: String) {
         val addStopButton = onView(
             Matchers.allOf(
                 withId(R.id.addingBtn), withText("Add Stop"),
@@ -173,6 +189,7 @@ class HomePageActivityTest {
         )
         addStopButton.perform(click())
 
+        onView(isRoot()).perform(waitFor(1000))
         val location = onView(
             Matchers.allOf(
                 withId(R.id.edittext_search),
@@ -186,9 +203,8 @@ class HomePageActivityTest {
                 isDisplayed()
             )
         )
-        //location.perform(replaceText(name),pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER) )
+        onView(isRoot()).perform(waitFor(1000))
         location.perform(replaceText(name))
-        sleep(2500)
         location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
 
     }
@@ -212,6 +228,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_cardView_is_swipeable() {
+        onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
         add_stop("Buckingham Palace")
         add_stop("Westminister")
@@ -229,6 +246,7 @@ class HomePageActivityTest {
     //failing
     @Test
     fun test_cardView_is_draggable() {
+        onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
         add_stop("Buckingham Palace")
         add_stop("Westminister")
@@ -238,12 +256,14 @@ class HomePageActivityTest {
             .perform(scrollToPosition<StopsAdapter.StopViewHolder>(3))
             .check(matches(hasDescendant(withText("Stamford Bridge"))))
 
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).perform(
             RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(
                 3,
                 swipeUp()
             )
         )
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView))
             .perform(scrollToPosition<StopsAdapter.StopViewHolder>(2))
             .check(matches(hasDescendant(withText("Stamford Bridge"))))
@@ -252,6 +272,8 @@ class HomePageActivityTest {
 //failing
     @Test
     fun test_first_item_in_recycler_view_is_current_location(){
+        onView(isRoot()).perform(waitFor(1000))
+
         onView(withId(R.id.homepage_recyclerView))
             .perform(scrollToPosition<StopsAdapter.StopViewHolder>(0))
             .check(matches(hasDescendant(withText("Current Location"))))
@@ -260,6 +282,7 @@ class HomePageActivityTest {
     //failing
     @Test
     fun test_next_page_button_disabled_when_one_item_in_recyclerView(){
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(1))))
         onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
     }
@@ -341,6 +364,8 @@ class HomePageActivityTest {
 
     @Test
     fun test_current_location_button_disabled_when_already_in_recyclerView(){
+        onView(isRoot()).perform(waitFor(1000))
+
         //test_current_location_is_in_list()
          onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
     }
@@ -348,6 +373,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_fail_to_delete_first_item_in_recyclerView() {
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).perform(
             RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(
                 0,
@@ -364,6 +390,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_stop_is_changed_when_stop_is_clicked(){
+        onView(isRoot()).perform(waitFor(1000))
         onView(
             Matchers.allOf(
                 withId(R.id.homepage_recyclerView),
@@ -379,6 +406,7 @@ class HomePageActivityTest {
             )
         )
 
+        onView(isRoot()).perform(waitFor(1000))
         val locationSearched = onView(
             Matchers.allOf(
                 withId(R.id.edittext_search),
@@ -393,9 +421,10 @@ class HomePageActivityTest {
             )
         ).perform(replaceText("covent garden"), closeSoftKeyboard())
 
-        sleep(2500)
+        onView(isRoot()).perform(waitFor(1000))
         locationSearched.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
 
+        onView(isRoot()).perform(waitFor(1000))
         onView(
             Matchers.allOf(
                 withId(R.id.homepage_LocationDataCardName),
@@ -427,9 +456,9 @@ class HomePageActivityTest {
 
     @Test
     fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
-
         onView(withId(R.id.addingBtn)).perform(click())
-        sleep(1500)
+        onView(isRoot()).perform(waitFor(1000))
+//        sleep(1500)
         onView(
             allOf(
                 withId(R.id.button_search_back),
@@ -447,18 +476,20 @@ class HomePageActivityTest {
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
     }
 
     @Test
     fun test_fail_to_add_same_stop() {
+        onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
         onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
 
+        onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
-        sleep(2000)
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
+        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
     }
 
     @After
