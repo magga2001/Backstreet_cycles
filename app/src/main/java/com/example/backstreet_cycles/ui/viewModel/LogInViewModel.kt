@@ -37,7 +37,7 @@ class LogInViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val firebaseUserMutableLiveData: MutableLiveData<FirebaseUser> = MutableLiveData()
+    private val firebaseUserMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val errorMessageMutableLiveData: MutableLiveData<String> = MutableLiveData()
 
     fun login(email: String, password: String) {
@@ -61,7 +61,7 @@ class LogInViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getFirebaseUserMutableLiveData(): MutableLiveData<FirebaseUser> {
+    fun getFirebaseUserMutableLiveData(): MutableLiveData<Boolean> {
         return firebaseUserMutableLiveData
     }
 

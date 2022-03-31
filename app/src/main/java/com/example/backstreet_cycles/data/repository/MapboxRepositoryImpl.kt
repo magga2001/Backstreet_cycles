@@ -95,6 +95,7 @@ class MapboxRepositoryImpl @Inject constructor(
                     }
 
                     trySend(Resource.Success(fastestRoute))
+                    Log.i("THE CURRENT ROUTE", fastestRoute.toString())
                 }
 
                 /**
