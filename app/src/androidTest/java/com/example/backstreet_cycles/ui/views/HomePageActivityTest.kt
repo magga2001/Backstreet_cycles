@@ -1,9 +1,6 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.app.Application
-import android.util.Log
 import android.view.KeyEvent
-import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +8,6 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -20,18 +15,13 @@ import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
-import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -45,7 +35,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.Thread.sleep
-import java.util.*
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -460,6 +449,16 @@ class HomePageActivityTest {
         Intents.release()
         onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
+    }
+
+    @Test
+    fun test_fail_to_add_same_stop() {
+        add_stop("covent garden")
+        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+
+        add_stop("covent garden")
+        sleep(2000)
+        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
     }
 
     @After
