@@ -1,14 +1,9 @@
 package com.example.backstreet_cycles.data.local
 
-import com.example.backstreet_cycles.common.BackstreetApplication
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
-@Config(application = BackstreetApplication::class, manifest = Config.NONE)
+
 class TouristAttractionFileTest{
 
 //    @Test
@@ -36,7 +31,10 @@ class TouristAttractionFileTest{
     @Test
     fun `test if the tourist locations are being added`(){
         TouristAttractionFile.addTouristLocations(string)
-        assert(TouristAttractionFile.getTouristLocations().size == 2)
+        print(TouristAttractionFile.getTouristLocations()[0].toString())
+        print("Test")
+        val test = TouristAttractionFile.getTouristLocations()
+        assert(test.size == 2)
     }
 
     @Test
