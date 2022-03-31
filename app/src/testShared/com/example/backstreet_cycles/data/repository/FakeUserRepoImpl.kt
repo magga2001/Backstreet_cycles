@@ -11,8 +11,8 @@ class FakeUserRepoImpl : UserRepository{
     private val PASSWORD_MINIMUM_LENGTH = 6
 
     private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
+    private var verifiedUser: HashMap<String, Boolean> = hashMapOf()
     private var currentUser: Users? = null
-    private var isVerified = false
 
     override fun register(
         firstName: String,
@@ -30,7 +30,10 @@ class FakeUserRepoImpl : UserRepository{
                 users[email] = hashMapOf(
                     user to password
                 )
-                emit(Resource.Success("Registration Successful"))
+
+                verifiedUser[email] = false
+
+                emit(Resource.Success("Email verification sent"))
             }
         }
     }
@@ -91,11 +94,13 @@ class FakeUserRepoImpl : UserRepository{
             val user = users[email]
             val existedUser = user?.keys?.first()
 
-            if(user?.get(existedUser) == password){
+            if(verifiedUser[email] == true && user?.get(existedUser) == password){
                 currentUser = existedUser
-                //Probably doesn't work
                 emit(Resource.Success(true))
+            }else{
+                emit(Resource.Error("Please verify your email"))
             }
+
         }else{
             emit(Resource.Error("No user"))
         }
@@ -127,9 +132,11 @@ class FakeUserRepoImpl : UserRepository{
         return currentUser
     }
 
-    fun verifyEmail()
+    fun verifyEmail(email: String)
     {
-        isVerified = true
+        if(users.containsKey(email)){
+            verifiedUser[email] = true
+        }
     }
 
     fun getUsersDb(): HashMap<String, HashMap<Users, String>>
