@@ -61,26 +61,22 @@ class SignUpViewModelTest {
     }
 
     @Test
-    fun test_sign_up_user() = runBlocking {
-
-//        flowOf("one", "two").test {
-//            assertEquals("one", awaitItem())
-//            assertEquals("two", awaitItem())
-//            awaitComplete()
-//        }
-
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-
-        fakeUserRepoImpl.register("John","Doe","johndoe@example.com","123456").onEach { Log.i("Flow..", it.toString()) }.test {
-            assert(awaitItem() is Resource.Success)
-            awaitComplete()
-        }
+    fun test_sign_up_user_success_with_valid_password() = runBlocking{
+        signUpViewModel.register("John","Doe","johndoee@example.com","123456")
+        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
     }
 
     @Test
-    fun tests() = runBlocking{
-        val size= fakeUserRepoImpl.getUsersDb().size
+    fun test_sign_up_user_fail_with_invalid_password() = runBlocking {
+        signUpViewModel.register("John","Doe","johndoee@example.com","12345")
+        assertEquals("Password is too short", signUpViewModel.getMessage().getOrAwaitValue(),)
+    }
+
+    @Test
+    fun test_sign_up_with_existed_account() = runBlocking {
         signUpViewModel.register("John","Doe","johndoee@example.com","123456")
-        assertEquals(signUpViewModel.getMessage().getOrAwaitValue(),"Registration Successful")
+        signUpViewModel.register("John","Doe","johndoee@example.com","123456")
+        assertEquals("Email already existed", signUpViewModel.getMessage().getOrAwaitValue(),)
+
     }
 }
