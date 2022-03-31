@@ -14,6 +14,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -26,6 +27,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,6 +40,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -189,7 +192,10 @@ class HomePageActivityTest{
                 isDisplayed()
             )
         )
-        location.perform(replaceText(name),pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER) )
+        //location.perform(replaceText(name),pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER) )
+        location.perform(replaceText(name))
+        sleep(2500)
+        location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
 
     }
 
@@ -210,12 +216,12 @@ class HomePageActivityTest{
         }
     }
 
-    @Test
-    fun test_cardView_is_swipeable(){
-        onView(withId(R.id.addingBtn)).perform(click()).perform(typeText("Covent Garden",), click())
-
-        onView(withId(R.id.homepage_locationDataCardView)).perform(swipeLeft())
-   }
+//    @Test
+//    fun test_cardView_is_swipeable(){
+//        onView(withId(R.id.addingBtn)).perform(click()).perform(typeText("Covent Garden",), click())
+//
+//        onView(withId(R.id.homepage_locationDataCardView)).perform(swipeLeft())
+//   }
 
 //    @Test
 //    fun test_cardView_is_draggable(){
@@ -224,25 +230,25 @@ class HomePageActivityTest{
 //        onView(withId(R.id.cardView)).perform(ViewActions.swipeDown())
 //    }
 
-//    @Test
-//    fun test_first_item_in_recycler_view_is_current_location(){
-//
-//        onView(withId(R.id.recyclerView))
-//            .perform(scrollToPosition<StopsAdapter.StopViewHolder>(0))
-//            .check(matches(hasDescendant(withText("Current Location"))))
-//    }
+    @Test
+    fun test_first_item_in_recycler_view_is_current_location(){
+        onView(withId(R.id.homepage_recyclerView))
+            .perform(scrollToPosition<StopsAdapter.StopViewHolder>(0))
+            .check(matches(hasDescendant(withText("Current Location"))))
+    }
 
 //    @Test
 //    fun test_next_page_button_disabled_when_one_item_in_recyclerView(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
 //
-//        if(onView(withId(R.id.recyclerView)).(hasChildCount(1))){
+//        if(){
 //            onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
 //        }
 //        else{
 //            onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
 //
 //        }
+//        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
+//        onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(1))))
 //        onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
 //    }
 
@@ -365,19 +371,16 @@ class HomePageActivityTest{
 //
 //    }
 
+
+
 //    @Test
 //    fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
 ////        ActivityScenario.launch(HomePageActivity::class.java)
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+////        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //        onView(withId(R.id.addingBtn)).perform(click())
-//        onView(withId(R.id.HomePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+//        onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
 //    }
 
-    /*@Test
-    fun test_refresh_button_is_visible() {
-        onView(withId(R.id.refresh_button)).check(matches(isDisplayed()))
-
-    }*/
 
 //    @Test
 //    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
