@@ -38,7 +38,7 @@ class EditUserProfileViewModel @Inject constructor(
 
     private val updatedProfile: MutableLiveData<String> = MutableLiveData()
 
-    suspend fun updateUserDetails(firstName: String, lastName: String) {
+    fun updateUserDetails(firstName: String, lastName: String) {
         userRepository.updateUserDetails(firstName, lastName).onEach { result ->
             when (result) {
                 is Resource.Success -> {

@@ -53,7 +53,6 @@ class HomePageActivityTest {
 
     private val email = "vafai.vandad@gmail.com"
     private val password = "123456"
-
     private val userRepoImpl = UserRepositoryImpl()
 
     @get:Rule
@@ -161,8 +160,8 @@ class HomePageActivityTest {
     @Test
     fun test_stop_added(){
         add_stop("covent garden")
-        //onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+        //onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
        }
 
     fun add_stop(name: String) {
@@ -237,6 +236,8 @@ class HomePageActivityTest {
         )
     }
 
+
+    //failing
     @Test
     fun test_cardView_is_draggable() {
         add_stop("covent garden")
@@ -259,7 +260,7 @@ class HomePageActivityTest {
             .check(matches(hasDescendant(withText("Stamford Bridge"))))
     }
 
-
+//failing
     @Test
     fun test_first_item_in_recycler_view_is_current_location(){
         onView(withId(R.id.homepage_recyclerView))
@@ -267,6 +268,7 @@ class HomePageActivityTest {
             .check(matches(hasDescendant(withText("Current Location"))))
     }
 
+    //failing
     @Test
     fun test_next_page_button_disabled_when_one_item_in_recyclerView(){
         onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(1))))
@@ -355,43 +357,69 @@ class HomePageActivityTest {
     }
 
 
-//    @Test
-//    fun test_fail_to_delete_first_item_in_recyclerView(){
-////        ActivityScenario.launch(HomePageActivity::class.java)
-////        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(1)))
-////        onView(withId(R.id.recyclerView)).perform(
-////            RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(0, swipeLeft()))
-////        //swipeleft usu
-////        ally deletes the card but since it's at the first place, it is not swipeable, the swipe is considered as a click
-////        // so press back goes back to the home page and checks the number of items
-////        pressBack()
-////        onView(withId(R.id.recyclerView)).check(matches(hasChildCount(1)))
-//        onView(withId(R.id.homepage_recyclerView)).perform(
-//              RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(
-//                  1,
-//                  swipeLeft()
-//              ))
-//        test_current_location_card_shown()
-//
-//    }
-
-//    @Test
-//    fun test_search_location_is_shown_when_a_stop_is_clicked(){
-//        ActivityScenario.launch(HomePageActivity::class.java)
-//        onView(withId(R.id.HomePageActivity)).isVisible()
-//        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(0,
-//            click()))
-//        onView(withId(R.id.HomePageActivity)).isGone()
-//
-//    }
+    @Test
+    fun test_fail_to_delete_first_item_in_recyclerView() {
+        onView(withId(R.id.homepage_recyclerView)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(
+                0,
+                swipeLeft()
+            )
+        )
+        pressBack()
+        onView(withId(R.id.homepage_recyclerView))
+            .perform(scrollToPosition<StopsAdapter.StopViewHolder>(0))
+            .check(matches(hasDescendant(withText("Current Location"))))
+    }
 
 
+
+    @Test
+    fun test_stop_is_changed_when_stop_is_clicked(){
+        onView(
+            Matchers.allOf(
+                withId(R.id.homepage_recyclerView),
+                childAtPosition(
+                    withId(R.id.homepage_bottom_sheet_view),
+                    2
+                )
+            )
+        ).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        val locationSearched = onView(
+            Matchers.allOf(
+                withId(R.id.edittext_search),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.searchView),
+                        0
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        ).perform(replaceText("covent garden"), closeSoftKeyboard())
+
+        sleep(2500)
+        locationSearched.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
+
+        onView(
+            Matchers.allOf(
+                withId(R.id.homepage_LocationDataCardName),
+                withParent(withId(R.id.homepage_locationDataCardView))
+            )
+        ).check(matches(withText("Covent Garden")))
+
+    }
 
     @Test
     fun test_search_location_is_shown_when_add_stop_button_is_clicked(){
 
         onView(withId(R.id.addingBtn)).perform(click())
-        //onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(
             allOf(
                 withId(R.id.edittext_search),
@@ -405,7 +433,6 @@ class HomePageActivityTest {
                 isDisplayed()
             )
         ).check(matches(isDisplayed()))
-            //.perform(replaceText("covent garden"), closeSoftKeyboard())
     }
 
 
