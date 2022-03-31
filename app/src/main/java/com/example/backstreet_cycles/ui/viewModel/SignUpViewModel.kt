@@ -56,9 +56,8 @@ class SignUpViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    message.postValue(
-                        mApplication.getString(R.string.REGISTRATION_FAILED) + result.message!!
-                    )
+                    message.value = mApplication.getString(R.string.REGISTRATION_FAILED) + result.message!!
+
                 }
                 is Resource.Loading -> {
 

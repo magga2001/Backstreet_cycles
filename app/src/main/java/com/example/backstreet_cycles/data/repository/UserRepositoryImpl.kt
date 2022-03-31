@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
-class UserRepositoryImpl() : UserRepository {
+class UserRepositoryImpl : UserRepository {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val dataBase = FirebaseFirestore.getInstance()

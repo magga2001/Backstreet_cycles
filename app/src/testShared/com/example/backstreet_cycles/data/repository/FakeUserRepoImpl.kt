@@ -34,6 +34,8 @@ class FakeUserRepoImpl : UserRepository{
                 verifiedUser[email] = false
 
                 emit(Resource.Success("Email verification sent"))
+            }else{
+                emit(Resource.Error("Email already existed"))
             }
         }
     }
@@ -111,7 +113,7 @@ class FakeUserRepoImpl : UserRepository{
         lastName: String,
         email: String
     ): Flow<Resource<String>> = flow {
-        emit(Resource.Success("Email sent"))
+
     }
 
     override fun resetPassword(email: String): Flow<Resource<String>> = flow{
