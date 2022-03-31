@@ -66,17 +66,15 @@ class JourneyHistoryActivityTest {
         Intents.release()
     }
 
-    @Test
-    fun test_title_is_visible() {
-
-        onView(
-            Matchers.allOf(
-                withId(R.id.journey_history_title),
-                ViewMatchers.withParent(withId(R.id.recentJourney_layout))
-            )
-        ).check(matches(isDisplayed()))
-
-    }
+//    @Test
+//    fun test_title_is_visible() {
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.journey_history_title),
+//                ViewMatchers.withParent(withId(R.id.recentJourney_layout))
+//            )
+//        ).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_recycler_view_is_visible() {
@@ -98,20 +96,19 @@ class JourneyHistoryActivityTest {
 //            )).check(matches(isDisplayed()))
 //    }
 
-    @Test
-    fun test_card_is_visible() {
-        onView(withId(R.id.recentJourneyCard_locationDataCardView)).check(matches(isDisplayed()))
+//    @Test
+//    fun test_card_is_visible() {
+//        onView(withId(R.id.recentJourneyCard_locationDataCardView)).check(matches(isDisplayed()))
+//    }
 
-    }
-
-    @Test
-    fun test_recentJourneys_are_visible() {
-        onView(
-            Matchers.allOf(
-                withId(R.id.recentJourneyCardTextView),
-                withParent(withId(R.id.JourneySummaryLayout1))
-            )).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun test_recentJourneys_are_visible() {
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.recentJourneyCardTextView),
+//                withParent(withId(R.id.JourneySummaryLayout1))
+//            )).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
