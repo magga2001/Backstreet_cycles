@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.dto.BikeStatusInfo

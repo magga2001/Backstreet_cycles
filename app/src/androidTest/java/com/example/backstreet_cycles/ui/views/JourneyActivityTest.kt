@@ -137,7 +137,7 @@ class JourneyActivityTest {
 
     @Test
     fun test_expand_button_visible(){
-        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(android.R.id.button2)).perform(click())
         onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
@@ -155,7 +155,7 @@ class JourneyActivityTest {
 
     @Test
     fun test_checkbox_visible(){
-        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(android.R.id.button2)).perform(click())
         onView(withId(R.id.checkBoxFinishJourney)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
@@ -210,6 +210,37 @@ class JourneyActivityTest {
         onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
     }
 
+    @Test
+    fun test_from_text(){
+        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(R.id.planJourney_from)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_to_text(){
+        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(R.id.planJourney_to)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_check_not_checked(){
+        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+    }
+
+    @Test
+    fun test_not_checked_stop_clickable(){
+        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+        onView(withId(R.id.planJourney_button_expand)).check(matches((isEnabled())));
+    }
+
+    @Test
+    fun test_not_checked_finish_not_clickable(){
+        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+        onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
+    }
     //    @Test
 //    fun test_button_expand() {
     //onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
@@ -242,9 +273,11 @@ class JourneyActivityTest {
 
 //    @Test
 //    fun test_stop_clicked_set_navigation_displayed(){
-//        onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
-//        onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
+//        //onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
+//        //onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
 //        //onView(withId(R.id.button_expand)).perform(ViewActions.)
+//        onView(withId(android.R.id.button2)).perform(click())
+//        onView(withId(R.id.planJourney_button_expand)).perform(click())
 //        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
 //        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
@@ -254,11 +287,13 @@ class JourneyActivityTest {
 //    @Test
 //    fun test_stop_clicked_images_displayed(){
 //
-//        onView(withId(android.R.id.button1)).perform(click())
+//        onView(withId(android.R.id.button2)).perform(click())
+//        //onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
+//        //onView(withId(R.id.planJourney_button_expand)).perform(scrollTo(), click());
 //        onView(withId(R.id.planJourney_button_expand)).perform(click())
-//        onView(withId(R.id.walk_from_dock)).check(matches(isDisplayed()))
-//        onView(withId(R.id.dock_to_cycle)).check(matches(isDisplayed()))
-//        onView(withId(R.id.planJourney_log_in_image_view)).check(matches(isDisplayed()))
+//        onView(withId(R.id.walk_from_dock)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        onView(withId(R.id.dock_to_cycle)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        onView(withId(R.id.planJourney_log_in_image_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 //
 //    }
 
@@ -268,49 +303,14 @@ class JourneyActivityTest {
 //            onView(withId(R.id.journeyActivity)).check(matches(isDisplayed()))
 //        }
 
-    @Test
-    fun test_from_text(){
-        onView(withId(android.R.id.button1)).perform(click())
-        onView(withId(R.id.planJourney_from)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun test_to_text(){
-        onView(withId(android.R.id.button1)).perform(click())
-        onView(withId(R.id.planJourney_to)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun test_check_not_checked(){
-        onView(withId(android.R.id.button1)).perform(click())
-        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
-    }
-
-//    @Test
-//    fun test_journey_nav_not_clickable_if_not_set(){
-//
-//    }
-
-//    @Test
-//    fun test_not_checked_stop_clickable(){
-//        onView(withId(android.R.id.button1)).perform(click())
-//        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
-//        onView(withId(R.id.planJourney_button_expand)).check(matches(isClickable()))
-//    }
-//
-//    @Test
-//    fun test_not_checked_finish_not_clickable(){
-//        onView(withId(android.R.id.button1)).perform(click())
-//        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
-//        onView(withId(R.id.finish_journey)).check(matches(isNotClickable()))
-//    }
 //
 //    @Test
 //    fun test_checked_stop_not_clickable(){
 //        onView(withId(android.R.id.button1)).perform(click())
-//        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
+//        //onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked())).perform(click()).check(matches(isChecked()));
+//        //onView(withId(R.id.checkBoxFinishJourney)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
-//        onView(withId(R.id.planJourney_button_expand)).check(matches(isNotClickable()))
+//        onView(withId(R.id.planJourney_button_expand)).check(matches(not(isEnabled())));
 //    }
 //
 //    @Test
@@ -331,6 +331,11 @@ class JourneyActivityTest {
 //    fun test_start_navigation_clicked_goes_to_navigation_activity(){
 //        onView(withId(R.id.start_navigation)).perform(click())
 //        onView(withId(R.id.navigation_layout)).check(matches(isDisplayed()))
+//    }
+
+//    @Test
+//    fun test_journey_nav_not_clickable_if_not_set(){
+//
 //    }
 
         fun add_stop(name: String) {
