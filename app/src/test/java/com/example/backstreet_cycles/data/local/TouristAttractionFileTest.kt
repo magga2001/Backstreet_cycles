@@ -40,7 +40,7 @@ class TouristAttractionFileTest{
     }
 
     @Test
-    fun `test if the locations are bing retrieved`(){
+    fun `test if the locations are being retrieved`(){
         assert(TouristAttractionFile.getTouristLocations().isEmpty())
     }
 
