@@ -35,7 +35,7 @@ class LogInActivity : AppCompatActivity() {
          **/
         logInViewModel.getFirebaseUserMutableLiveData()
             .observe(this) { firebaseUser ->
-                if (firebaseUser != null) {
+                if (firebaseUser) {
                     val intent = Intent(this@LogInActivity, HomePageActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
