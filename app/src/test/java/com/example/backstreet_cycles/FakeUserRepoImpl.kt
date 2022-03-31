@@ -3,15 +3,12 @@ package com.example.backstreet_cycles
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeUserRepoImpl : UserRepository{
 
-    val PASSWORD_MINIMUM_LENGTH = 6
+    private val PASSWORD_MINIMUM_LENGTH = 6
 
     private lateinit var users: HashMap<String, HashMap<Users, String>>
     private var currentUser: Users? = null
