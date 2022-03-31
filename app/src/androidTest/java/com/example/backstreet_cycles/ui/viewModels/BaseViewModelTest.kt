@@ -1,19 +1,15 @@
 package com.example.backstreet_cycles.ui.viewModels
 
-import android.app.Application
 import android.content.Context
-import android.support.test.InstrumentationRegistry
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 //import com.google.common.truth.Truth.assertThat
-import com.example.backstreet_cycles.FakeCyclistRepoImpl
-import com.example.backstreet_cycles.FakeMapboxRepoImpl
-import com.example.backstreet_cycles.FakeTflRepoImpl
-import com.example.backstreet_cycles.FakeUserRepoImpl
-import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
+import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
+import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
+import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import dagger.hilt.android.internal.Contexts.getApplication
-import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

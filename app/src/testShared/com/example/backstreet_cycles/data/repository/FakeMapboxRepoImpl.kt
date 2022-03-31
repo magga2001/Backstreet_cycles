@@ -1,15 +1,12 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.repository.MapboxRepositoryImpl
-import com.example.backstreet_cycles.dependencyInjection.AppModule
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 class FakeMapboxRepoImpl: MapboxRepository{
 

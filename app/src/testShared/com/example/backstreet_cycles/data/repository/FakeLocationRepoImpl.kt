@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles
+package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
