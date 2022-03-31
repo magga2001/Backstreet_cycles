@@ -162,23 +162,27 @@ class UserRepositoryImpl() : UserRepository {
 
     }
 
-    @Synchronized
-    override fun login(email: String, password: String): Flow<Resource<FirebaseUser?>> = callbackFlow {
+    override fun login(email: String, password: String): Flow<Resource<Boolean>> = callbackFlow {
         EspressoIdlingResource.increment()
         trySend(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (firebaseAuth.currentUser?.isEmailVerified == true) {
-                        trySend((Resource.Success(firebaseAuth.currentUser)))
+
+                        if(firebaseAuth.currentUser != null){
+                            trySend((Resource.Success(true)))
+                        }else{
+                            trySend(Resource.Error<Boolean>("Couldn't reach server"))
+                        }
                         EspressoIdlingResource.decrement()
                     } else {
-                        trySend(Resource.Error<FirebaseUser?>("Please verify your email address"))
+                        trySend(Resource.Error<Boolean>("Please verify your email address"))
                         EspressoIdlingResource.decrement()
                     }
                 } else {
 
-                    trySend(Resource.Error<FirebaseUser?>(task.exception!!.localizedMessage))
+                    trySend(Resource.Error<Boolean>(task.exception!!.localizedMessage))
                     EspressoIdlingResource.decrement()
                 }
             }

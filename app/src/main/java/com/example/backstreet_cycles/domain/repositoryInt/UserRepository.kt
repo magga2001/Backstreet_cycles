@@ -27,7 +27,7 @@ interface UserRepository {
 
     fun getUserDetails(): Flow<Resource<Users>>
 
-    fun login(email: String, password: String): Flow<Resource<FirebaseUser?>>
+    fun login(email: String, password: String): Flow<Resource<Boolean>>
 
     fun emailVerification(firstName: String, lastName: String, email: String): Flow<Resource<String>>
 
