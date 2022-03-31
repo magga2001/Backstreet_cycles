@@ -9,7 +9,9 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -56,6 +58,14 @@ class NavMenuTest{
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
+    }
+
+    @Test
+    fun test_current_journey() {
+        onView(withId(R.id.currentJourney)).perform(click())
+        Intents.init()
+        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        Intents.release()
     }
 
     @Test

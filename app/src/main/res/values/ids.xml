@@ -8,5 +8,6 @@
     <item name="edittext_search" type="id" />
     <item name="searchView" type="id" />
     <item name="rv_search_results" type="id" />
+    <item name="button_1" type="id" />
     <item name="button_search_back" type="id" />
 </resources>
