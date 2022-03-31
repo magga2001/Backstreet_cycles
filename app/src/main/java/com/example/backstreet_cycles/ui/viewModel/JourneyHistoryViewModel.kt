@@ -1,10 +1,12 @@
 package com.example.backstreet_cycles.ui.viewModel
 
+import android.app.Application
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
@@ -33,12 +35,14 @@ class JourneyHistoryViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    application: Application,
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(
     tflRepository,
     mapboxRepository,
     cyclistRepository,
     userRepository,
+    application,
     applicationContext
 ) {
 
