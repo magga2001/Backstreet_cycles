@@ -73,11 +73,12 @@ class JourneyActivityTest {
         add_stop("covent gardens")
         add_stop("Buckingham Palace")
         onView(withId(R.id.nextPageButton)).perform(click())
-        ActivityScenario.launch(JourneyActivity::class.java)
+        sleep(1000)
     }
 
     @Test
     fun test_journey_activity_is_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         Intents.init()
         intending(hasComponent(JourneyActivity::class.qualifiedName))
         Intents.release()
@@ -85,16 +86,19 @@ class JourneyActivityTest {
 
     @Test
     fun test_bottom_sheet_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_journey_overview_button_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         onView(withId(R.id.overview_journey)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_start_navigation_button_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         onView(withId(R.id.start_navigation)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
@@ -121,33 +125,94 @@ class JourneyActivityTest {
 
     @Test
     fun test_stops_recycling_view_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         onView(withId(R.id.plan_journey_recycling_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test
     fun test_journey_overview_is_clickable() {
+        ActivityScenario.launch(JourneyActivity::class.java)
         onView(withId(R.id.overview_journey)).check(matches(isClickable()))
     }
 
-//    @Test
-//    fun test_journey_overview_is_clicked(){
-//        onView(withId(R.id.overview_journey)).perform(click())
-//        intending(hasComponent(JourneyActivity::class.qualifiedName))
-//    }
-
-//    @Test
-//    fun test_start_navigation_clicked_goes_to_navigation_activity(){
-//        onView(withId(R.id.start_navigation)).perform(click())
-//        onView(withId(R.id.navigation_layout)).check(matches(isDisplayed()))
-//    }
-
     @Test
-    fun test_expand_button(){
+    fun test_expand_button_visible(){
+        onView(withId(android.R.id.button1)).perform(click())
         onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-//    @Test
+    @Test
+    fun test_hire_button_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.santander_link)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_hire_image_visible(){
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.SantanderCycleImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_checkbox_visible(){
+        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_duration_text_field_displayed(){
+        ActivityScenario.launch(JourneyActivity::class.java)
+        //onView(withId(R.id.durations)).check(matches(withText("Duration:")))
+        onView(withId(R.id.durations)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_distance_text_field_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        //onView(withId(R.id.distances)).check(matches(withText("Distance:")))
+        onView(withId(R.id.distances)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_price_text_field_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        //onView(withId(R.id.prices)).check(matches(withText("Price:")))
+        onView(withId(R.id.prices)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_duration_image_field_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.duration_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_distance_image_field_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.DistanceImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_price_image_field_displayed() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.price_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_finish_button_visible() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun test_finish_not_clickable() {
+        ActivityScenario.launch(JourneyActivity::class.java)
+        onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
+    }
+
+    //    @Test
 //    fun test_button_expand() {
+    //onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
 //       // onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
 //       // onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
 //        onView(withId(R.id.plan_journey_recycling_view)).perform(
@@ -188,6 +253,8 @@ class JourneyActivityTest {
 
 //    @Test
 //    fun test_stop_clicked_images_displayed(){
+//
+//        onView(withId(android.R.id.button1)).perform(click())
 //        onView(withId(R.id.planJourney_button_expand)).perform(click())
 //        onView(withId(R.id.walk_from_dock)).check(matches(isDisplayed()))
 //        onView(withId(R.id.dock_to_cycle)).check(matches(isDisplayed()))
@@ -201,121 +268,69 @@ class JourneyActivityTest {
 //            onView(withId(R.id.journeyActivity)).check(matches(isDisplayed()))
 //        }
 
-        @Test
-        fun test_hire_button_visible() {
-            onView(withId(R.id.santander_link)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
     @Test
-    fun test_hire_image_visible(){
-        onView(withId(R.id.SantanderCycleImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    fun test_from_text(){
+        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(R.id.planJourney_from)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-//    @Test
-//    fun test_from_text(){
-//        onView(withId(R.id.planJourney_from)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//    }
+    @Test
+    fun test_to_text(){
+        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(R.id.planJourney_to)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
 
-//    @Test
-//    fun test_to_text(){
-//        onView(withId(R.id.planJourney_to)).check(matches(isDisplayed()))
-//    }
-
-        @Test
-        fun test_finish_journey_button_visible() {
-//        onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
-
-            onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
-//    @Test
-//    fun test_checkbox_visible(){
-//        //onView(withId(R.id.checkBoxFinishJourney)).check(matches(isDisplayed()))
-//        onView(withId(R.id.checkBoxFinishJourney)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//
-//    }
-
-//    @Test
-//    fun test_duration_text_field_displayed(){
-////        onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
-////        onView(withId(R.id.durations)).check(matches(withText("Distance:")))
-//        onView(withId(R.id.durations)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//
-//    }
-
-        @Test
-        fun test_distance_text_field_displayed() {
-//        onView(withId(R.id.distances)).check(matches(withText("Distance:")))
-            onView(withId(R.id.distances)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
-        }
-
-        @Test
-        fun test_price_text_field_displayed() {
-//        onView(withId(R.id.prices)).check(matches(withText("Price:")))
-            onView(withId(R.id.prices)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        onView(withId(R.id.prices)).check(matches(isDisplayed()))
-        }
-
-        @Test
-        fun test_duration_image_field_displayed() {
-            onView(withId(R.id.duration_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
-        @Test
-        fun test_distance_image_field_displayed() {
-            onView(withId(R.id.DistanceImage)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
-        @Test
-        fun test_price_image_field_displayed() {
-            onView(withId(R.id.price_image)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
-//    @Test
-//    fun test_check_not_checked(){
-//        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
-//    }
+    @Test
+    fun test_check_not_checked(){
+        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+    }
 
 //    @Test
 //    fun test_journey_nav_not_clickable_if_not_set(){
 //
 //    }
 
-        @Test
-        fun test_finish_button_visible() {
-            onView(withId(R.id.finish_journey)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        }
-
-        @Test
-        fun test_finish_not_clickable() {
-            onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
-        }
-
 //    @Test
 //    fun test_not_checked_stop_clickable(){
+//        onView(withId(android.R.id.button1)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
 //        onView(withId(R.id.planJourney_button_expand)).check(matches(isClickable()))
 //    }
-
+//
 //    @Test
 //    fun test_not_checked_finish_not_clickable(){
+//        onView(withId(android.R.id.button1)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
 //        onView(withId(R.id.finish_journey)).check(matches(isNotClickable()))
 //    }
-
+//
 //    @Test
 //    fun test_checked_stop_not_clickable(){
+//        onView(withId(android.R.id.button1)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
 //        onView(withId(R.id.planJourney_button_expand)).check(matches(isNotClickable()))
 //    }
-
+//
 //    @Test
 //    fun test_checked_finish_clickable(){
+//        onView(withId(android.R.id.button1)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
 //        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
 //        onView(withId(R.id.finish_journey)).check(matches(isClickable()));
+//    }
+
+//    @Test
+//    fun test_journey_overview_is_clicked(){
+//        onView(withId(R.id.overview_journey)).perform(click())
+//        intending(hasComponent(JourneyActivity::class.qualifiedName))
+//    }
+
+//    @Test
+//    fun test_start_navigation_clicked_goes_to_navigation_activity(){
+//        onView(withId(R.id.start_navigation)).perform(click())
+//        onView(withId(R.id.navigation_layout)).check(matches(isDisplayed()))
 //    }
 
         fun add_stop(name: String) {
@@ -351,13 +366,7 @@ class JourneyActivityTest {
                     isDisplayed()
                 )
             )
-//        location.perform(
-//            ViewActions.replaceText(name),
-//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
-//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
-//        )
             location.perform(ViewActions.replaceText(name))
-            //sleep(2500)
             location.perform(
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
