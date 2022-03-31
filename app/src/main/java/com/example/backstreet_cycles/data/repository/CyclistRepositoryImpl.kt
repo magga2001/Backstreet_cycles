@@ -2,23 +2,35 @@ package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 
-class CyclistRepositoryImpl: CyclistRepository{
+class CyclistRepositoryImpl : CyclistRepository {
 
     private var numCyclists = 1
 
-    override fun incrementNumCyclists(){
+    /**
+     * Incrementing the number of bicycles users add to cycle along.
+     */
+    override fun incrementNumCyclists() {
         ++numCyclists
     }
 
-    override fun decrementNumCyclists(){
+    /**
+     * Decrementing the number of bicycles users add to cycle along.
+     */
+    override fun decrementNumCyclists() {
         --numCyclists
     }
 
+    /**
+     * Resets the number of bicycles users add to cycle along to one.
+     */
     override fun resetNumCyclist() {
         numCyclists = 1
     }
 
-    override fun getNumCyclists(): Int{
+    /**
+     * @return the number of cycles the user selects
+     */
+    override fun getNumCyclists(): Int {
         return numCyclists
     }
 }

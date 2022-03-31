@@ -1,10 +1,9 @@
 package com.example.backstreet_cycles.data.remote
 
 import android.util.Log
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
-import com.example.backstreet_cycles.domain.useCase.MapInfoUseCase
+import com.example.backstreet_cycles.domain.utils.MapInfoHelper
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.route.RouterCallback
@@ -14,12 +13,13 @@ import com.mapbox.navigation.core.MapboxNavigation
 
 object MapboxApi {
 
-    fun requestRoute(mapboxNavigation: MapboxNavigation,
-                             routeOptions: RouteOptions,
-                             info: Boolean,
-                             listener: CallbackResource<DirectionsRoute>,
-                             mapboxRepository: MapboxRepository)
-    {
+    fun requestRoute(
+        mapboxNavigation: MapboxNavigation,
+        routeOptions: RouteOptions,
+        info: Boolean,
+        listener: CallbackResource<DirectionsRoute>,
+        mapboxRepository: MapboxRepository
+    ) {
 
         Log.i("retrieving the route", "success")
 
@@ -36,18 +36,15 @@ object MapboxApi {
 
                     Log.i("retrieving route", "success")
 
-                    val fastestRoute = MapInfoUseCase.getFastestRoute(routes)
+                    val fastestRoute = MapInfoHelper.getFastestRoute(routes)
 
-                    if(info)
-                    {
-                        val distance = MapInfoUseCase.retrieveJourneyDistances(fastestRoute)
-                        val duration = MapInfoUseCase.retrieveJourneyDurations(fastestRoute)
+                    if (info) {
+                        val distance = MapInfoHelper.retrieveJourneyDistances(fastestRoute)
+                        val duration = MapInfoHelper.retrieveJourneyDurations(fastestRoute)
 
-                        mapboxRepository.addJourneyDistances(duration)
+                        mapboxRepository.addJourneyDistances(distance)
                         mapboxRepository.addJourneyDuration(duration)
-                    }
-                    else
-                    {
+                    } else {
                         mapboxRepository.setJourneyCurrentRoute(fastestRoute)
                     }
 
@@ -69,6 +66,7 @@ object MapboxApi {
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
                     //Route request fail
                     Log.i("retrieving route", "fail")
+//                    listener.getResult(DirectionsRoute.fromJson(""))
                 }
             }
         )

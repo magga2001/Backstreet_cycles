@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signUpActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/signUpActivity"
-    tools:context=".ui.views.SignUpActivity"
-    >
+    tools:context=".ui.views.SignUpActivity">
 
     <TextView
         android:id="@+id/sign_up_create_account_title"

@@ -1,6 +1,8 @@
 package com.example.backstreet_cycles.ui.viewModel
 
+import android.app.Application
 import android.content.Context
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
@@ -27,10 +29,18 @@ class NavigationViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    application: Application,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    application,
+    applicationContext
+) {
 
-    private val mapboxNavigation: MapboxNavigation by lazy{
+    private val mapboxNavigation: MapboxNavigation by lazy {
         if (MapboxNavigationProvider.isCreated()) {
             MapboxNavigationProvider.retrieve()
         } else {
@@ -90,12 +100,12 @@ class NavigationViewModel @Inject constructor(
         }
     }
 
-    fun registerObservers(routesObserver: RoutesObserver,
-                          routeProgressObserver: RouteProgressObserver,
-                          locationObserver: LocationObserver,
-                          voiceInstructionsObserver: VoiceInstructionsObserver
-    )
-    {
+    fun registerObservers(
+        routesObserver: RoutesObserver,
+        routeProgressObserver: RouteProgressObserver,
+        locationObserver: LocationObserver,
+        voiceInstructionsObserver: VoiceInstructionsObserver
+    ) {
         mapboxNavigation.registerRoutesObserver(routesObserver)
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
         mapboxNavigation.registerLocationObserver(locationObserver)
@@ -103,12 +113,12 @@ class NavigationViewModel @Inject constructor(
         mapboxNavigation.registerRouteProgressObserver(replayProgressObserver)
     }
 
-    fun unregisterObservers(routesObserver: RoutesObserver,
-                            routeProgressObserver: RouteProgressObserver,
-                            locationObserver: LocationObserver,
-                            voiceInstructionsObserver: VoiceInstructionsObserver
-    )
-    {
+    fun unregisterObservers(
+        routesObserver: RoutesObserver,
+        routeProgressObserver: RouteProgressObserver,
+        locationObserver: LocationObserver,
+        voiceInstructionsObserver: VoiceInstructionsObserver
+    ) {
         mapboxNavigation.unregisterRoutesObserver(routesObserver)
         mapboxNavigation.unregisterRouteProgressObserver(routeProgressObserver)
         mapboxNavigation.unregisterLocationObserver(locationObserver)
@@ -116,18 +126,15 @@ class NavigationViewModel @Inject constructor(
         mapboxNavigation.unregisterRouteProgressObserver(replayProgressObserver)
     }
 
-    fun finishMapboxReplayer()
-    {
+    fun finishMapboxReplayer() {
         mapboxReplayer.finish()
     }
 
-    fun getMapBoxNavigation(): MapboxNavigation
-    {
+    fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
-    fun destroyMapboxNavigation()
-    {
+    fun destroyMapboxNavigation() {
         mapboxNavigation.onDestroy()
     }
 }

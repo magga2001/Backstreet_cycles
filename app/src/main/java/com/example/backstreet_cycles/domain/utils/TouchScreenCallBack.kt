@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
 
+    /**
+     *
+     */
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -17,11 +20,17 @@ abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
         return makeMovementFlags(dragFlags, swipeFlag)
     }
 
+    /**
+     *
+     */
     private fun disableFlags(position: Int): Int {
         return if (position == 0) 0
         else ItemTouchHelper.LEFT
     }
 
+    /**
+     *
+     */
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,

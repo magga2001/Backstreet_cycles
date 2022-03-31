@@ -14,16 +14,17 @@ import java.time.Duration
 
 interface MapboxRepository {
 
-    fun requestRoute(mapboxNavigation: MapboxNavigation,
-                           routeOptions: RouteOptions,
-                           info: Boolean = false,
-    ):  Flow<DirectionsRoute>
+    fun requestRoute(
+        mapboxNavigation: MapboxNavigation,
+        routeOptions: RouteOptions,
+        info: Boolean = false,
+    ): Flow<Resource<DirectionsRoute>>
 
-    fun getJourneyCurrentRoute() : MutableList<DirectionsRoute>
+    fun getJourneyCurrentRoute(): MutableList<DirectionsRoute>
 
-    fun getJourneyDistances() : MutableList<Double>
+    fun getJourneyDistances(): MutableList<Double>
 
-    fun getJourneyDurations() : MutableList<Double>
+    fun getJourneyDurations(): MutableList<Double>
 
     fun getJourneyLocations(): MutableList<Locations>
 

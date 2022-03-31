@@ -16,7 +16,11 @@ import org.junit.runners.Suite
     AboutActivityTest::class,
     JourneyHistoryActivityTest::class,
     NavMenuTest::class,
-    CurrentJourneyTest::class
+    ChangePasswordActivityTest::class,
+    FAQActivityTest::class,
+    ForgotPasswordActivityTest::class,
+    // NavigationActivityTest::class,
+//    CurrentJourneyTest::class
 )
 
 class ActivitiesTestSuite

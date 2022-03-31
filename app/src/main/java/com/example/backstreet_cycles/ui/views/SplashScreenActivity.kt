@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,16 +18,21 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class SplashScreenActivity(): AppCompatActivity() {
+class SplashScreenActivity() : AppCompatActivity() {
 
-    private val splashScreenViewModel : SplashScreenViewModel by viewModels()
+    private val splashScreenViewModel: SplashScreenViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the SplashScreenActivity
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         initObservers()
 
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         supportActionBar?.hide()
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -35,21 +41,22 @@ class SplashScreenActivity(): AppCompatActivity() {
         }, Constants.SPLASH_TIME)
     }
 
-    private fun initObservers()
-    {
-        splashScreenViewModel.getIsReadyMutableLiveData().observe(this){ ready ->
-            if(ready)
-            {
-                if(FirebaseAuth.getInstance().currentUser != null){
+    /**
+     * Starts Homepage activity if the user is logged in, otherwise, Log In activity is started
+     */
+    private fun initObservers() {
+        splashScreenViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+            if (ready) {
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                if (currentUser != null && currentUser.isEmailVerified) {
                     startActivity(Intent(this, HomePageActivity::class.java))
                     finish()
-                }
-                else{
+                } else {
                     startActivity(Intent(this, LogInActivity::class.java))
                 }
 
                 finish()
-                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
             }
         }
     }

@@ -4,6 +4,7 @@ package com.example.backstreet_cycles.ui.views
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +15,10 @@ import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 import kotlinx.coroutines.launch
@@ -27,7 +30,13 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private val journeyHistoryViewModel: JourneyHistoryViewModel by viewModels()
 
     private lateinit var nAdapter: JourneyHistoryAdapter
-    private var journeys: MutableList<List<Locations>> = emptyList<List<Locations>>().toMutableList()
+    private var journeys: MutableList<List<Locations>> =
+        emptyList<List<Locations>>().toMutableList()
+
+    /**
+     * Initialise the contents within the display of the Journey History
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +45,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
 
         journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
-            if(ready)
-            {
+            if (ready) {
                 startActivity(Intent(this, JourneyActivity::class.java))
                 journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
-                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
@@ -50,15 +58,23 @@ class JourneyHistoryActivity : AppCompatActivity() {
             }
         }
 
+        journeyHistoryViewModel.getMessage().observe(this){
+            SnackBarHelper.displaySnackBar(homePageActivity, it)
+        }
+
         journeyHistoryViewModel.getUserDetails()
-        journeyHistoryViewModel.getUserDetailsMutableLiveData().observe(this) { userDetails ->
+        journeyHistoryViewModel.getUserDetailsData().observe(this) { userDetails ->
             if (userDetails != null) {
-                journeys = journeyHistoryViewModel.getJourneyHistory(userDetails)
+                journeys = journeyHistoryViewModel.getJourneyHistory(userDetails).reversed().toMutableList()
                 userCredentials = userDetails
             }
             init()
         }
     }
+
+    /**
+     * Initialise the Card View behaviour
+     */
 
     private fun init() {
         initCardView()
@@ -67,7 +83,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
     private fun initCardView() {
 
         nAdapter = JourneyHistoryAdapter(journeys)
-        nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener{
+        nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 journeyHistoryViewModel.clearAllStops()
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
@@ -80,6 +96,11 @@ class JourneyHistoryActivity : AppCompatActivity() {
         journey_history_recycler_view.adapter = nAdapter
     }
 
+    /**
+     * Resets the Mapbox Navigation inside the journeyHistoryViewModel
+     * each time the JourneyHistory activity starts
+     */
+
     override fun onStart() {
         super.onStart()
         journey_mapView?.onStart()
@@ -87,11 +108,17 @@ class JourneyHistoryActivity : AppCompatActivity() {
         journeyHistoryViewModel.getMapBoxNavigation()
     }
 
+    /**
+     * Implement the behaviour of the pop out window with alert dialog
+     */
+
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
-        builder.setMessage("You currently have a planned journey. " +
-                "Would you like to return to the current journey or create a new one?")
+        builder.setMessage(
+            "You currently have a planned journey. " +
+                    "Would you like to return to the current journey or create a new one?"
+        )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             journeyHistoryViewModel.continueWithCurrentJourney()
@@ -103,6 +130,30 @@ class JourneyHistoryActivity : AppCompatActivity() {
             journeyHistoryViewModel.setShowAlert(false)
         }
         builder.show()
+    }
+
+    /**
+     * Go to the HomePage when Home button from navigation menu is clicked
+     */
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    /**
+     * Go to the HomePage when back button is clicked
+     */
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
 }

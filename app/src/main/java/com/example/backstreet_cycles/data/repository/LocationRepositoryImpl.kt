@@ -8,14 +8,22 @@ import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import javax.inject.Inject
 
-class LocationRepositoryImpl @Inject constructor(
+open class LocationRepositoryImpl @Inject constructor(
     private val touristAttractionFile: TouristAttractionFile
-): LocationRepository{
+) : LocationRepository {
 
+    /**
+     * Loads all the tourist attractions in the application
+     *
+     * @param application - The Application
+     */
     override fun loadLocations(application: Application) {
         touristAttractionFile.loadLocations(application)
     }
 
+    /**
+     * @return a mutable list of the locations of teh tourist attractions
+     */
     override fun getTouristLocations(): MutableList<Locations> {
         return touristAttractionFile.getTouristLocations()
     }

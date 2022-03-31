@@ -1,7 +1,7 @@
 package com.example.backstreet_cycles.domain.model.dto
 
 data class Dock(
-    val id : String = "",
+    val id: String = "",
     val name: String = "",
     val lat: Double = 0.0,
     val lon: Double = 0.0,

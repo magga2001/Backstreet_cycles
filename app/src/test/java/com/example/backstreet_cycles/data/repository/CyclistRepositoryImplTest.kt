@@ -3,8 +3,11 @@ package com.example.backstreet_cycles.data.repository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import kotlin.properties.Delegates
 
+@RunWith(JUnit4::class)
 class CyclistRepositoryImplTest{
 
     private var numCyclists by Delegates.notNull<Int>()

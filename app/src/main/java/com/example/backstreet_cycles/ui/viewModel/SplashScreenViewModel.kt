@@ -1,9 +1,11 @@
 package com.example.backstreet_cycles.ui.viewModel
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,20 +20,27 @@ class SplashScreenViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    application: Application,
     private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
-) : BaseViewModel(tflRepository, mapboxRepository, cyclistRepository, userRepository,applicationContext){
+) : BaseViewModel(
+    tflRepository,
+    mapboxRepository,
+    cyclistRepository,
+    userRepository,
+    application,
+    applicationContext
+) {
 
     private val isReadyMutableLiveData = MutableLiveData<Boolean>()
 
-    suspend fun loadData()
-    {
+    suspend fun loadData() {
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("Splash screen dock", result.data?.size.toString())
 
-                    if(result.data != null && result.data.isNotEmpty()){
+                    if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data!!)
                     }
                     loadTouristAttractions()
@@ -48,15 +57,13 @@ class SplashScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadTouristAttractions()
-    {
+    private fun loadTouristAttractions() {
         locationRepository.loadLocations(application = mApplication)
         isReadyMutableLiveData.postValue(true)
     }
 
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean>
-    {
+    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 

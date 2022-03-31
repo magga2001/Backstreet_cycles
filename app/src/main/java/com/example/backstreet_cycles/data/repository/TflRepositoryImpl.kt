@@ -1,9 +1,7 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.util.Log
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.TflApi
-import com.example.backstreet_cycles.data.remote.dto.DockDto
 import com.example.backstreet_cycles.data.remote.dto.toDock
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
@@ -13,12 +11,15 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class TflRepositoryImpl @Inject constructor(
+open class TflRepositoryImpl @Inject constructor(
     private val tflApi: TflApi
-): TflRepository {
+) : TflRepository {
 
     var docks = mutableListOf<Dock>()
 
+    /**
+     * Receive the dock from the TFL API and maps them to the dataclass
+     */
     override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = flow {
         try {
             emit(Resource.Loading())
@@ -27,17 +28,25 @@ class TflRepositoryImpl @Inject constructor(
                 .filter { (it.nbDocks - (it.nbBikes + it.nbSpaces) == 0) }
                 .toMutableList()
             emit(Resource.Success(docks))
-        } catch(e: HttpException) {
+        } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
-        } catch(e: IOException) {
+        } catch (e: IOException) {
             emit(Resource.Error("Couldn't reach server. Check your internet connection."))
         }
     }
 
+    /**
+     * Sets the dock to be live
+     *
+     * @param docks - a list of docks
+     */
     override fun setCurrentDocks(docks: MutableList<Dock>) {
         this.docks = docks
     }
 
+    /**
+     * @return the list of docks
+     */
     override fun getCurrentDocks(): MutableList<Dock> {
         return docks
     }
