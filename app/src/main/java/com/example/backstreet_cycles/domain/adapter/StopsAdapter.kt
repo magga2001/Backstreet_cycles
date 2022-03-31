@@ -70,7 +70,7 @@ class StopsAdapter(private val stops: MutableList<Locations>) :
         val newList = stops[position]
         val addressName = ConvertHelper.shortenName(newList.name)
         holder.name.text = addressName.first()
-        collapseBottomSheet.postValue(true)
+        collapseBottomSheet.value = true
     }
 
     /**

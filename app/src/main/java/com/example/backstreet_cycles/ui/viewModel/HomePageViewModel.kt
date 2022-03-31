@@ -130,7 +130,8 @@ class HomePageViewModel @Inject constructor(
     }
 
     fun setShowAlert(bool: Boolean) {
-        showAlert.postValue(bool)
+//        showAlert.postValue(bool)
+        showAlert.value = bool
     }
 
     fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
@@ -184,7 +185,8 @@ class HomePageViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(true)
+//                    isReadyMutableLiveData.postValue(true)
+                    isReadyMutableLiveData.value = true
                 }
 
                 is Resource.Error -> {
@@ -240,7 +242,8 @@ class HomePageViewModel @Inject constructor(
 
     fun checkCurrentLocation() {
         val stop = stops.map { it.name }.contains("Current Location")
-        hasCurrentLocation.postValue(stop)
+//        hasCurrentLocation.postValue(stop)
+        hasCurrentLocation.value = stop
     }
 
     fun updateCurrentLocation(locationComponent: LocationComponent) {
@@ -286,7 +289,8 @@ class HomePageViewModel @Inject constructor(
         if (!checkIfAlreadyInStops(location)) {
             updateStops(mapboxMap, selectedCarmenFeature, style)
         } else {
-            hasDuplicationLocation.postValue(true)
+//            hasDuplicationLocation.postValue(true)
+            hasDuplicationLocation.value = true
         }
     }
 
@@ -315,10 +319,12 @@ class HomePageViewModel @Inject constructor(
 
     private fun postUpdateInfo() {
         if (getUpdateInfo()) {
-            updateMutableLiveData.postValue(updateInfo)
+//            updateMutableLiveData.postValue(updateInfo)
+            updateMutableLiveData.value = updateInfo
             setUpdateInfo(false)
         } else {
-            updateMutableLiveData.postValue(updateInfo)
+//            updateMutableLiveData.postValue(updateInfo)
+            updateMutableLiveData.value = updateInfo
         }
     }
 
@@ -337,7 +343,8 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
-            showAlert.postValue(true)
+//            showAlert.postValue(true)
+            showAlert.value = true
         } else {
             fetchRoute(mContext, getJourneyLocations())
         }
@@ -350,7 +357,8 @@ class HomePageViewModel @Inject constructor(
             mapboxRepository.setJourneyLocations(listOfLocations)
             fetchRoute(mContext, listOfLocations)
         } else {
-            hasCurrentJourneyMutableLiveData.postValue(false)
+//            hasCurrentJourneyMutableLiveData.postValue(false)
+            hasCurrentJourneyMutableLiveData.value = false
         }
     }
 
@@ -386,7 +394,8 @@ class HomePageViewModel @Inject constructor(
 
     fun logOut() {
         userRepository.logOut()
-        logout.postValue(true)
+//        logout.postValue(true)
+        logout.value = true
     }
 
     fun getMapBoxNavigation(): MapboxNavigation {

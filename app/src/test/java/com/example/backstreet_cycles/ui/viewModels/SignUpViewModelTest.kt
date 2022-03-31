@@ -12,6 +12,7 @@ import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.domain.model.dto.Users
+import com.example.backstreet_cycles.ui.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts
@@ -50,10 +51,10 @@ class SignUpViewModelTest {
         fakeUserRepoImpl = FakeUserRepoImpl()
 
         signUpViewModel = SignUpViewModel(
-            FakeTflRepoImpl(),
-            FakeMapboxRepoImpl(),
-            FakeCyclistRepoImpl(),
-            FakeUserRepoImpl(),
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
             application,
             context
         )
@@ -78,16 +79,8 @@ class SignUpViewModelTest {
 
     @Test
     fun tests() = runBlocking{
-
         val size= fakeUserRepoImpl.getUsersDb().size
-
         signUpViewModel.register("John","Doe","johndoee@example.com","123456")
-
-
-//        fakeUserRepoImpl.register("John","Doe","johndoe@example.com","123456").onEach { Log.i("Flow..", it.toString()) }.test {
-//            assert(awaitItem() is Resource.Success)
-//            assert(fakeUserRepoImpl.getUsersDb().size == size + 1)
-//            awaitComplete()
-//        }
+        assertEquals(signUpViewModel.getMessage().getOrAwaitValue(),"Registration Successful")
     }
 }

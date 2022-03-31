@@ -125,7 +125,7 @@ class PlanJourneyAdapter(
                     journeyPoints["pickUpPoint"]!!
                 ), JourneyState.START_WALKING
             )
-            collapseBottomSheet.postValue(true)
+            collapseBottomSheet.value = true
             disableOrEnableNavigationButtons(holder, holder.setNav1)
         }
 
@@ -144,7 +144,7 @@ class PlanJourneyAdapter(
                     journeyPoints["dropOffPoint"]!!
                 ), JourneyState.BIKING
             )
-            collapseBottomSheet.postValue(true)
+            collapseBottomSheet.value = true
             disableOrEnableNavigationButtons(holder, holder.setNav2)
         }
 
@@ -163,7 +163,7 @@ class PlanJourneyAdapter(
                     journeyPoints["destination"]!!
                 ), JourneyState.END_WALKING
             )
-            collapseBottomSheet.postValue(true)
+            collapseBottomSheet.value = true
             disableOrEnableNavigationButtons(holder, holder.setNav3)
         }
     }

@@ -50,7 +50,8 @@ class SignUpViewModel @Inject constructor(
         userRepository.register(firstName, lastName, email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    message.postValue(result.data!!)
+//                    message.postValue(result.data!!)
+                    getMessage().value = result.data!!
                     emailVerification(firstName, lastName, email)
                 }
 
@@ -66,7 +67,7 @@ class SignUpViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun emailVerification(
+    private fun emailVerification(
         firstName: String,
         lastName: String,
         email: String
@@ -74,10 +75,10 @@ class SignUpViewModel @Inject constructor(
         userRepository.emailVerification(firstName, lastName, email).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    message.postValue(result.data!!)
+                    message.value = result.data!!
                 }
                 is Resource.Error -> {
-                    message.postValue(result.message!!)
+                    message.value = result.message!!
                 }
                 is Resource.Loading -> {
                 }
@@ -85,7 +86,7 @@ class SignUpViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getMessage(): LiveData<String>
+    fun getMessage(): MutableLiveData<String>
     {
         return message
     }

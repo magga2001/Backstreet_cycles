@@ -186,12 +186,14 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(status)
+//                    isReadyMutableLiveData.postValue(status)
+                    isReadyMutableLiveData.value = status
                 }
 
                 is Resource.Error -> {
                     //Fail
-                    message.postValue(result.message!!)
+//                    message.postValue(result.message!!)
+                    message.value = result.message!!
                 }
                 is Resource.Loading -> {
                 }
@@ -203,7 +205,8 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(status)
+//                    isReadyMutableLiveData.postValue(status)
+                    isReadyMutableLiveData.value = status
                     calcJourneyInfo()
                 }
 
@@ -217,12 +220,12 @@ class JourneyViewModel @Inject constructor(
     }
 
     private fun calcJourneyInfo() {
-        distanceMutableLiveData.postValue(
+        distanceMutableLiveData.value =
             ConvertHelper.convertMToKm(mapboxRepository.getJourneyDistances()).toString()
-        )
-        durationMutableLiveData.postValue(
+
+        durationMutableLiveData.value =
             ConvertHelper.convertMsToS(mapboxRepository.getJourneyDurations()).toString()
-        )
+
         displayPrice()
     }
 

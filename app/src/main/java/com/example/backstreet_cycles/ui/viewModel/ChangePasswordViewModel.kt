@@ -43,7 +43,8 @@ class ChangePasswordViewModel @Inject constructor(
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    updatePassword.postValue(result.data!!)
+//                    updatePassword.postValue(result.data!!)
+                    updatePassword.value = result.data!!
                 }
 
                 is Resource.Error -> {

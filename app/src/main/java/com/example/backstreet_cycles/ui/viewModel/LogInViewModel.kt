@@ -45,14 +45,16 @@ class LogInViewModel @Inject constructor(
         userRepository.login(email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    firebaseUserMutableLiveData.postValue(result.data!!)
+//                    firebaseUserMutableLiveData.postValue(result.data!!)
+                    firebaseUserMutableLiveData.value = result.data!!
                     WorkHelper.setPeriodicallySendingLogs(mApplication)
                 }
 
                 is Resource.Error -> {
-                    errorMessageMutableLiveData.postValue(
-                        mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
-                    )
+//                    errorMessageMutableLiveData.postValue(
+//                        mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
+//                    )
+                    errorMessageMutableLiveData.value = mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
                 }
                 is Resource.Loading -> {
 
