@@ -7,10 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.common.EspressoIdlingResource
-import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.common.*
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -38,10 +35,11 @@ open class BaseViewModel @Inject constructor(
     protected val mapboxRepository: MapboxRepository,
     protected val cyclistRepository: CyclistRepository,
     protected val userRepository: UserRepository,
-    @ApplicationContext applicationContext: Context
+    protected val application: Application,
+    @ApplicationContext applicationContext: Context,
 ) : ViewModel() {
 
-    protected val mApplication: Application = getApplication(applicationContext)
+    protected val mApplication: Application = application
     protected val mContext = applicationContext
     private val userDetail: MutableLiveData<Users> = MutableLiveData()
 

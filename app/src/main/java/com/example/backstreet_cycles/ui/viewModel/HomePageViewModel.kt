@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,6 +12,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
@@ -55,6 +57,7 @@ class HomePageViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
+    application: Application,
     private val locationRepository: LocationRepository,
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(
@@ -62,6 +65,7 @@ class HomePageViewModel @Inject constructor(
     mapboxRepository,
     cyclistRepository,
     userRepository,
+    application,
     applicationContext
 ) {
 
@@ -240,15 +244,19 @@ class HomePageViewModel @Inject constructor(
     }
 
     fun updateCurrentLocation(locationComponent: LocationComponent) {
-        for (stop in stops) {
-            if (stop.name == "Current Location") {
+        try {
+            for (stop in stops) {
+                if (stop.name == "Current Location") {
 
-                val longitude = getCurrentLocation(locationComponent)!!.longitude
-                val latitude = getCurrentLocation(locationComponent)!!.latitude
+                    val longitude = getCurrentLocation(locationComponent)!!.longitude
+                    val latitude = getCurrentLocation(locationComponent)!!.latitude
 
-                stop.lat = latitude
-                stop.lon = longitude
+                    stop.lat = latitude
+                    stop.lon = longitude
+                }
             }
+        } catch(e: NullPointerException){
+
         }
     }
 

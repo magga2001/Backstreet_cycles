@@ -16,6 +16,7 @@ import timber.log.Timber
 
 
 class UserRepositoryImpl() : UserRepository {
+
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val dataBase = FirebaseFirestore.getInstance()
 
@@ -203,12 +204,6 @@ class UserRepositoryImpl() : UserRepository {
         firebaseAuth.signOut()
         EspressoIdlingResource.decrement()
     }
-
-    override fun getFirebaseAuth(): FirebaseAuth {
-        return firebaseAuth
-    }
-
-
 }
 
 
