@@ -34,6 +34,4 @@ interface UserRepository {
     fun resetPassword(email: String): Flow<Resource<String>>
 
     fun logOut()
-
-    fun getFirebaseAuth(): FirebaseAuth
 }
