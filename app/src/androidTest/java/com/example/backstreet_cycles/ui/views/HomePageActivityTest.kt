@@ -36,6 +36,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -162,6 +163,7 @@ class HomePageActivityTest {
             )).check(matches(isDisplayed()))
    }
 
+
     @Test
     fun test_stop_added(){
         onView(isRoot()).perform(waitFor(1000))
@@ -226,9 +228,10 @@ class HomePageActivityTest {
         }
     }
 
+    //failing
     @Test
     fun test_cardView_is_swipeable() {
-        onView(isRoot()).perform(waitFor(1000))
+       //onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
         add_stop("Buckingham Palace")
         add_stop("Westminister")
@@ -269,7 +272,7 @@ class HomePageActivityTest {
             .check(matches(hasDescendant(withText("Stamford Bridge"))))
     }
 
-//failing
+
     @Test
     fun test_first_item_in_recycler_view_is_current_location(){
         onView(isRoot()).perform(waitFor(1000))
@@ -279,13 +282,22 @@ class HomePageActivityTest {
             .check(matches(hasDescendant(withText("Current Location"))))
     }
 
-    //failing
+
     @Test
     fun test_next_page_button_disabled_when_one_item_in_recyclerView(){
         onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(1))))
         onView(withId(R.id.nextPageButton)).check(matches(isNotEnabled()))
     }
+
+
+    @Test
+    fun test_next_page_button_enabled_when_more_than_one_item_in_recyclerView(){
+        add_stop("Covent Garden")
+        onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(2))))
+        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+    }
+
 
 
     @Test
@@ -454,10 +466,11 @@ class HomePageActivityTest {
     }
 
 
+
     @Test
     fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
         onView(withId(R.id.addingBtn)).perform(click())
-        onView(isRoot()).perform(waitFor(1000))
+//        onView(isRoot()).perform(waitFor(1000))
 //        sleep(1500)
         onView(
             allOf(
@@ -476,22 +489,41 @@ class HomePageActivityTest {
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
-        onView(isRoot()).perform(waitFor(1000))
+       // onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
     }
 
+//    @Test
+//    fun test_fail_to_add_same_stop() {
+//        //onView(isRoot()).perform(waitFor(1000))
+//        add_stop("covent garden")
+//        //onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+//
+//        //onView(isRoot()).perform(waitFor(1000))
+//        add_stop("covent garden")
+//        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+//    }
+
+
+   @Test
+   fun test_Snackbar_location_already_in_list(){
+       add_stop("Covent Garden")
+       add_stop("Covent Garden")
+       onView(withId(com.google.android.material.R.id.snackbar_text))
+           .check(matches(withText("Location already in list")))
+   }
+
     @Test
-    fun test_fail_to_add_same_stop() {
-        onView(isRoot()).perform(waitFor(1000))
-        add_stop("covent garden")
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+    fun test_Snackbar_cannot_have_more_than_four_users(){
+        for(i in 1..5){
+            onView(withId(R.id.incrementButton)).perform(click())
+        }
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("Cannot have more than 4 users")))
 
-        onView(isRoot()).perform(waitFor(1000))
-        add_stop("covent garden")
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+
     }
-
     @After
     fun tearDown(){
         userRepoImpl.logOut()
