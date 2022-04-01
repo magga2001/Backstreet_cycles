@@ -13,6 +13,7 @@ class FakeUserRepoImpl : UserRepository{
     private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
     private var verifiedUser: HashMap<String, Boolean> = hashMapOf()
     private var currentUser: Users? = null
+    private val validEmail: String = "@example.com"
 
     override fun register(
         firstName: String,
@@ -65,7 +66,7 @@ class FakeUserRepoImpl : UserRepository{
             {
                 val user = users[email]
 
-                if(user?.get(currentUser!!) == password && newPassword.length < PASSWORD_MINIMUM_LENGTH){
+                if(user?.get(currentUser!!) == password && newPassword.length > PASSWORD_MINIMUM_LENGTH){
                     user[currentUser!!] = newPassword
                     emit(Resource.Success("Password updated Successfully"))
                 }else{
@@ -113,7 +114,9 @@ class FakeUserRepoImpl : UserRepository{
         lastName: String,
         email: String
     ): Flow<Resource<String>> = flow {
-
+        if(!email.contains(validEmail)){
+            emit(Resource.Error("Invalid email, cannot send email"))
+        }
     }
 
     override fun resetPassword(email: String): Flow<Resource<String>> = flow{
@@ -145,5 +148,4 @@ class FakeUserRepoImpl : UserRepository{
     {
         return users
     }
-
 }

@@ -31,20 +31,14 @@ class MapboxRepositoryImplTest{
         mapboxRepositoryImpl = MapboxRepositoryImpl(MapboxApi)
     }
 
-//    @Test
-//    fun `test whether a route can be requested`(){
-//        mapboxRepositoryImpl.requestRoute()
-//    }
-
     @Test
     fun `test if the journey current route is being returned`(){
 
-        val route = DirectionsRoute.builder()
-            .distance(100.0)
-            .duration(20.0)
-            .build()
         for (i in 0 until 10){
-            currentRoute.add(route)
+            currentRoute.add(DirectionsRoute.builder()
+                .distance(100.0)
+                .duration(20.0)
+                .build())
             mapboxRepositoryImpl.setJourneyCurrentRoute(currentRoute[i])
         }
         assert(mapboxRepositoryImpl.getJourneyCurrentRoute() == currentRoute)
