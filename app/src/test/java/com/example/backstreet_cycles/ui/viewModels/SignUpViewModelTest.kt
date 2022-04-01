@@ -1,26 +1,16 @@
 package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
-import android.util.Log
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import app.cash.turbine.test
 import com.example.backstreet_cycles.common.BackstreetApplication
-import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
-import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.ui.LiveDataObserver.getOrAwaitValue
-import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
-import dagger.hilt.android.internal.Contexts
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

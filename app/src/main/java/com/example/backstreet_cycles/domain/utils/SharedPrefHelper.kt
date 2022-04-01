@@ -29,7 +29,6 @@ class SharedPrefHelper {
          */
         fun checkIfSharedPrefEmpty(key: String): Boolean {
             val serializedObject: String? = sharedPref.getString(key, null)
-            sharedPref.contains(key)
             if (serializedObject == null) {
                 return true
             }

@@ -80,7 +80,7 @@ class JourneyViewModel @Inject constructor(
                     Log.i("New dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
-                        tflRepository.setCurrentDocks(result.data!!)
+                        tflRepository.setCurrentDocks(result.data)
                     }
                     status = "REFRESH"
                     fetchRoute(
@@ -100,10 +100,6 @@ class JourneyViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    fun clearCurrentSession() {
-        mapboxRepository.clearJourneyLocations()
     }
 
     fun registerObservers(
@@ -316,8 +312,7 @@ class JourneyViewModel @Inject constructor(
         return priceMutableLiveData
     }
 
-    fun getMessage(): MutableLiveData<String>
-    {
+    fun getMessage(): MutableLiveData<String> {
         return message
     }
 }

@@ -122,6 +122,10 @@ open class BaseViewModel @Inject constructor(
         mapboxRepository.setJourneyWayPointsLocations(locations)
     }
 
+    open fun clearJourneyLocations(){
+        mapboxRepository.clearJourneyLocations()
+    }
+
     open fun clearView() {
         mapboxRepository.clearJourneyWayPointsLocations()
         mapboxRepository.clearJourneyCurrentRoute()
@@ -204,15 +208,27 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
+    open fun initSharedPrefLocation(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+    }
+
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        mapboxRepository.clearJourneyLocations()
-        mapboxRepository.setJourneyLocations(listOfLocations)
+        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+        if(!noCurrentJourney){
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            clearJourneyLocations()
+            mapboxRepository.setJourneyLocations(listOfLocations)
+        }
     }
 
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+    }
+
+    open fun clearSaveLocations(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.clearListLocations()
     }
 }

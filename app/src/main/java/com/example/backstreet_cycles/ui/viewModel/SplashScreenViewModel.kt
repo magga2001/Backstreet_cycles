@@ -20,8 +20,8 @@ class SplashScreenViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
-    application: Application,
     private val locationRepository: LocationRepository,
+    application: Application,
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(
     tflRepository,
@@ -48,6 +48,7 @@ class SplashScreenViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     Log.i("New dock", result.toString())
+                    isReadyMutableLiveData.value = true
 
                 }
                 is Resource.Loading -> {

@@ -1,22 +1,29 @@
 package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.ui.viewModel.SplashScreenViewModel
 import dagger.hilt.android.internal.Contexts
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class JourneyViewModelTest {
+class SplashScreenViewModelTest {
 
-    private lateinit var journeyViewModel: JourneyViewModel
-    private lateinit var homePageViewModel: HomePageViewModel
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var splashScreenViewModel: SplashScreenViewModel
     lateinit var instrumentationContext: Context
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
@@ -43,16 +50,7 @@ class JourneyViewModelTest {
         fakeUserRepoImpl = FakeUserRepoImpl()
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
-        journeyViewModel = JourneyViewModel(
-            FakeTflRepoImpl(),
-            FakeMapboxRepoImpl(),
-            FakeCyclistRepoImpl(),
-            FakeUserRepoImpl(),
-            application,
-            instrumentationContext
-        )
-
-        homePageViewModel = HomePageViewModel(
+        splashScreenViewModel = SplashScreenViewModel(
             fakeTflRepoImpl,
             fakeMapboxRepoImpl,
             fakeCyclistRepoImpl,
@@ -64,13 +62,15 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_get_journey_overview(){
-        //Don't forget to load dock
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        homePageViewModel.saveJourney()
-        journeyViewModel.calcBicycleRental()
+    fun test_load_data(){
+        runBlocking {splashScreenViewModel.loadData()}
+        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_load_data_with_no_connection(){
+        fakeTflRepoImpl.setConnection(false)
+        runBlocking {splashScreenViewModel.loadData()}
+        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
     }
 }

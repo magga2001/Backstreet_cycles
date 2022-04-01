@@ -57,8 +57,8 @@ class HomePageViewModel @Inject constructor(
     mapboxRepository: MapboxRepository,
     cyclistRepository: CyclistRepository,
     userRepository: UserRepository,
-    application: Application,
     private val locationRepository: LocationRepository,
+    application: Application,
     @ApplicationContext applicationContext: Context
 ) : BaseViewModel(
     tflRepository,
