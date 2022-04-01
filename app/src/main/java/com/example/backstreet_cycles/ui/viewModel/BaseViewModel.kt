@@ -229,6 +229,6 @@ open class BaseViewModel @Inject constructor(
 
     open fun clearSaveLocations(){
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.clearListLocations()
+        SharedPrefHelper.clearSharedPreferences()
     }
 }

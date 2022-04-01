@@ -8,6 +8,7 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import dagger.hilt.android.internal.Contexts
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -65,7 +66,7 @@ class JourneyViewModelTest {
 
     @Test
     fun test_get_journey_overview(){
-        //Don't forget to load dock
+        runBlocking {homePageViewModel.getDock()}
         for(location in locations){
             homePageViewModel.addStop(location)
         }
