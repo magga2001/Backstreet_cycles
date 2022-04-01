@@ -20,7 +20,6 @@ import org.junit.runners.Suite
     FAQActivityTest::class,
     ForgotPasswordActivityTest::class,
     // NavigationActivityTest::class,
-//    CurrentJourneyTest::class
 )
 
 class ActivitiesTestSuite
