@@ -54,7 +54,7 @@ class LogInViewModel @Inject constructor(
 //                    errorMessageMutableLiveData.postValue(
 //                        mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
 //                    )
-                    errorMessageMutableLiveData.value = mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
+                    errorMessageMutableLiveData.value = mApplication.getString(R.string.LOG_IN_FAILED) + result.message!!
                 }
                 is Resource.Loading -> {
 
