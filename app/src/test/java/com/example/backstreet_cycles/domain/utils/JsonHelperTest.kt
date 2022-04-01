@@ -1,17 +1,11 @@
 package com.example.backstreet_cycles.domain.utils
 
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-//
-//import com.example.backstreet_cycles.domain.model.dto.Locations
-//import org.junit.Assert.*
-//import org.junit.Test
-//import org.junit.runner.RunWith
-//import org.junit.runners.JUnit4
-//
-//@RunWith(JUnit4::class)
-//class JsonHelperTest{
+
+class JsonHelperTest{
 //
 //    @Test
 //    fun test_string_to_object(){
@@ -39,4 +33,4 @@ import org.junit.Test
 ////        val result = JsonHelper.getJsonFromResources(application, R.raw.touristattraction)
 ////        assertEquals(result, R.raw.touristattraction.toString())
 ////    }
-//}
+}

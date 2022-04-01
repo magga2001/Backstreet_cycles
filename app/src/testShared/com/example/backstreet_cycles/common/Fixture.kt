@@ -1,6 +1,8 @@
 package com.example.backstreet_cycles.common
 
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.geojson.Point
 
 object Fixture {
 
@@ -12,4 +14,18 @@ object Fixture {
 
     val endWalk = DirectionsRoute.fromJson("""routeIndex=0, distance=553.0, duration=399.338, durationTypical=null, geometry=eo{faBrirCcBga@?[?mD?aDXmNbB}HxN}QbBUvAPlK~ArABToDtCZdHRrNlBtL`Bta@zEdOzBvHv@hArBpC`@tD|@tBAtEnB~J`Gdf@vYbHnEjDpBtQrK, weight=498.899, weightName=pedestrian, legs=[RouteLeg{distance=553.0, duration=399.338, durationTypical=null, summary=A100, admins=[Admin{countryCode=GB, countryCodeAlpha3=GBR}], steps=[LegStep{distance=153.0, duration=119.479, durationTypical=null, speedLimitUnit=null, speedLimitSign=null, geometry=eo{faBrirCcBga@?[?mD?aDXmNbB}HxN}QbBUvAPlK~ArAB, name=, ref=null, destinations=null, mode=walking, pronunciation=null, rotaryName=null, rotaryPronunciation=null, maneuver=StepManeuver{rawLocation=[-0.075434, 51.509507], bearingBefore=0.0, bearingAfter=82.0, instruction=Walk east on the walkway., type=depart, modifier=null, exit=null}, voiceInstructions=[VoiceInstructions{distanceAlongGeometry=153.0, announcement=Walk east on the walkway for 500 feet., ssmlAnnouncement=<speak><amazon:effect name="drc"><prosody rate="1.08">Walk east on the walkway for 500 feet.</prosody></amazon:effect></speak>}, VoiceInstructions{distanceAlongGeometry=91.44, announcement=In 300 feet, Turn left onto the walkway., ssmlAnnouncement=<speak><amazon:effect name="drc"><prosody rate="1.08">In 300 feet, Turn left onto the walkway.</prosody></amazon:effect></speak>}, VoiceInstructions{distanceAlongGeometry=9.917, announcement=Turn left onto the walkway. Then Turn right onto A100., ssmlAnnouncement=<speak><amazon:effect name="drc"><prosody rate="1.08">Turn left onto the walkway. Then Turn right onto <say-as interpret-as="address">A100</say-as>.</prosody></amazon:effect></speak>}], bannerInstructions=[BannerInstructions{distanceAlongGeometry=153.0, primary=BannerText{text=Turn left onto the walkway, components=[BannerComponents{text=Turn left onto the walkway, type=text, subType=null, abbreviation=null, abbreviationPriority=null, imageBaseUrl=null, mapboxShield=null, imageUrl=null, directions=null, active=null, activeDirection=null}], type=turn, modifier=left, degrees=null, drivingSide=null}, secondary=null, sub=null, view=null}, BannerInstructions{distanceAlongGeometry=91.44, primary=BannerText{text=Turn left onto the walkway, components=[BannerComponents{text=Turn left onto the walkway, type=text, subType=null, abbreviation=null, abbreviationPriority=null, imageBaseUrl=null, mapboxShield=null, imageUrl=null, directions=null, active=null, activeDirection=null}], type=turn, modifier=left, degrees=null, drivingSide=null}, secondary=null, sub=BannerText{text=A100 / Tower Bridge Approach, components=[BannerComponents{text=A100, type=icon, subType=null, abbreviation=null, abbreviationPriority=null, imageBaseUrl=null, mapboxShield=MapboxShield{baseUrl=https://api.mapbox.com/styles/v1, name=rectangle-green, textColor=yellow, displayRef=A100}, imageUrl=null, directions=null, active=null, activeDirection=null}, BannerComponents{text=/, type=delimiter, subType=null, abbreviation=null, abbreviationPriority=null, imageBaseUrl=null, mapboxShield=null, imageUrl=null, directions=null, active=null, activeDirection=null}, BannerComponents{text=Tower Bridge Approach, type=text, subType=null, abbreviation=null, abbreviationPriority=null, imageBaseUrl=null, mapboxShield=null, imageUrl=null, directions=null, active=null, activeDirection=null}], type=turn, modifier=right, degrees=null, drivingSide=null}, view=null}], drivingSide=left, weight=172.086, intersections=[StepIntersection{rawLocation=[-0.075434, 51.509507], bearings=[82], classes=null, entry=[true], in=null, out=0, lanes=null, geometryIndex=0, isUrban=true, adminIndex=0, restStop=null, tollCollection=null, mapboxStreetsV8=MapboxStreetsV8{roadClass=service}, tunnelName=null}, StepIntersection{rawLocation=[-0.074872, 51.509557], bearings=[28, 90, 263], classes=null, entry=[true, true, false], in=2, out=1, lanes=null, geometryIndex=2, isUrban=true, adminIndex=0, restStop=null, tollCollection=null, mapboxStreetsV8=MapboxStreetsV8{roadClass=service}, tunnelName=nu""")
 
+    val docks = mutableListOf(Dock("BikePoints_85", "Tanner Street, Bermondsey", 51.500647, -0.0786, 38, 3,41),
+        Dock("BikePoints_86", "Tanner Street_2, Bermondsey_2", 89.0, -1.90, 40, 2,42),
+        Dock("BikePoints_87", "Tanner Street_3, Bermondsey_3", 21.90, -0.90, 39, 4,43))
+
+    val startingPoint = Point.fromLngLat(88.00,0.78)
+
+    val destinationPoint = Point.fromLngLat(22.00,0.78)
+
+    fun buildDirectionRoute(): DirectionsRoute {
+        return DirectionsRoute.builder()
+            .distance(100.0)
+            .duration(20.0)
+            .build()
+    }
 }

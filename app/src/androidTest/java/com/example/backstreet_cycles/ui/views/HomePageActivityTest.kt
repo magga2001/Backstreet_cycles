@@ -72,7 +72,7 @@ class HomePageActivityTest {
         ActivityScenario.launch(HomePageActivity::class.java)
     }
 
-    fun waitFor(delay: Long): ViewAction {
+    private fun waitFor(delay: Long): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> = isRoot()
             override fun getDescription(): String = "wait for $delay milliseconds"
