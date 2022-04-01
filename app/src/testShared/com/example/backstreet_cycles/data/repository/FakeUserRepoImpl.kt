@@ -65,7 +65,7 @@ class FakeUserRepoImpl : UserRepository{
             {
                 val user = users[email]
 
-                if(user?.get(currentUser!!) == password && newPassword.length < PASSWORD_MINIMUM_LENGTH){
+                if(user?.get(currentUser!!) == password && newPassword.length > PASSWORD_MINIMUM_LENGTH){
                     user[currentUser!!] = newPassword
                     emit(Resource.Success("Password updated Successfully"))
                 }else{
