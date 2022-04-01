@@ -139,7 +139,7 @@ class JourneyViewModel @Inject constructor(
             context = mContext,
             getJourneyWayPointsLocations(),
             annotationApi,
-            journeyState
+            getJourneyState()
         )
     }
 
@@ -293,7 +293,11 @@ class JourneyViewModel @Inject constructor(
 
     private fun displayPrice() {
         val price = MapInfoHelper.getRental(getJourneyDurations())
-        priceMutableLiveData.postValue((price * getNumCyclists()).toString())
+        priceMutableLiveData.value = (price * getNumCyclists()).toString()
+    }
+
+    fun getJourneyState(): JourneyState{
+        return journeyState
     }
 
     fun getIsReadyMutableLiveData(): MutableLiveData<String> {

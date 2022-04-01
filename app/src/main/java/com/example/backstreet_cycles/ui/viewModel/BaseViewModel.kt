@@ -114,7 +114,7 @@ open class BaseViewModel @Inject constructor(
         return mapboxRepository.getJourneyWayPointsLocations()
     }
 
-    open fun setCurrentJourney(stops: MutableList<Locations>) {
+    open fun setJourneyLocations(stops: MutableList<Locations>) {
         mapboxRepository.setJourneyLocations(stops)
     }
 
@@ -190,7 +190,7 @@ open class BaseViewModel @Inject constructor(
                     Log.i("New dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
-                        tflRepository.setCurrentDocks(result.data!!)
+                        tflRepository.setCurrentDocks(result.data)
                     }
                     getRoute()
                 }
