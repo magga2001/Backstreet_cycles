@@ -259,7 +259,7 @@ class JourneyViewModel @Inject constructor(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
-        SharedPrefHelper.clearListLocations()
+        SharedPrefHelper.clearSharedPreferences()
     }
 
     private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =

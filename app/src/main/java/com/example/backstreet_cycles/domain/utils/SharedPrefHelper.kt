@@ -5,24 +5,23 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
-class SharedPrefHelper {
+object SharedPrefHelper {
 
     /**
      *
      */
-    companion object {
-        private lateinit var sharedPref: SharedPreferences
-        private lateinit var key: String
-        private lateinit var application: Application
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var key: String
+    private lateinit var application: Application
 
-        fun initialiseSharedPref(application: Application, key: String) {
-            this.application = application
-            this.key = key
+    fun initialiseSharedPref(application: Application, key: String) {
+        this.application = application
+        this.key = key
 
-            sharedPref = application.getSharedPreferences(
-                key, Context.MODE_PRIVATE
-            )
-        }
+        sharedPref = application.getSharedPreferences(
+            key, Context.MODE_PRIVATE
+        )
+    }
 
         /**
          *
@@ -35,49 +34,49 @@ class SharedPrefHelper {
             return false
         }
 
-        /**
-         *
-         */
-        fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
-            val json = JsonHelper.objectToString(values, type)
-            with(sharedPref.edit()) {
-                putString(key, json)
-                apply()
-            }
-        }
-
-        /**
-         *
-         */
-        fun clearListLocations() {
-            with(sharedPref.edit()) {
-                clear()
-                apply()
-            }
-        }
-
-        /**
-         *
-         */
-        fun <T> getSharedPref(type: Class<T>): MutableList<T> {
-            val serializedObject: String? =
-                sharedPref.getString(key, null)
-            Log.i("serializedObject", serializedObject.toString())
-            return if (serializedObject != null) {
-                JsonHelper.stringToObject(serializedObject, type)!!.toMutableList()
-            } else {
-                emptyList<T>().toMutableList()
-            }
-        }
-
-        /**
-         *
-         */
-        fun changeSharedPref(key: String) {
-            this.key = key
-            sharedPref = application.getSharedPreferences(
-                key, Context.MODE_PRIVATE
-            )
+    /**
+     *
+     */
+    fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
+        val json = JsonHelper.objectToString(values, type)
+        with(sharedPref.edit()) {
+            putString(key, json)
+            apply()
         }
     }
+
+    /**
+     *
+     */
+    fun clearSharedPreferences() {
+        with(sharedPref.edit()) {
+            clear()
+            apply()
+        }
+    }
+
+    /**
+     *
+     */
+    fun <T> getSharedPref(type: Class<T>): MutableList<T> {
+        val serializedObject: String? =
+            sharedPref.getString(key, null)
+        Log.i("serializedObject", serializedObject.toString())
+        return if (serializedObject != null) {
+            JsonHelper.stringToObject(serializedObject, type)!!.toMutableList()
+        } else {
+            emptyList<T>().toMutableList()
+        }
+    }
+
+    /**
+     *
+     */
+    fun changeSharedPref(key: String) {
+        this.key = key
+        sharedPref = application.getSharedPreferences(
+            key, Context.MODE_PRIVATE
+        )
+    }
+
 }
