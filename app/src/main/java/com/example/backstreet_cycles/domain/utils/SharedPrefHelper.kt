@@ -50,7 +50,7 @@ class SharedPrefHelper {
         /**
          *
          */
-        fun clearListLocations() {
+        fun clearSharedPref() {
             with(sharedPref.edit()) {
                 clear()
                 apply()

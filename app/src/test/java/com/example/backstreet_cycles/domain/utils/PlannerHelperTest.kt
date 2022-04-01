@@ -1,15 +1,15 @@
 package com.example.backstreet_cycles.domain.utils
 
-import android.graphics.Point
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class PlannerHelperTest {
+
 
 
     @Test

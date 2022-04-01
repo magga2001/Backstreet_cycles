@@ -15,6 +15,7 @@ object Constants {
     //    Rental
     const val MAX_TIME_TO_USE_THE_BIKE_FOR_FREE = 30
     const val MINUTE_RATE = 30
+    const val BIKE_RENTING_PRICE = 2
 
     //    Permission
     const val TAG_CODE_PERMISSION_LOCATION = 0
