@@ -88,6 +88,15 @@ class ChangePasswordViewModelTest {
     }
 
     @Test
+    fun test_password_not_updated_if_currentPassword_is_wrong_and_newPassword_less_than_6()= runBlocking{
+        signUpViewModel.register("Test", "User","testuser@random.com",password)
+        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+        logInViewModel.login("testuser@random.com", password)
+        changePasswordViewModel.updatePassword(wrongCurrentPassword, wrongNewPassword)
+        assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
+    }
+
+    @Test
     fun test_password_not_updated_if_wrong_currentPassword()= runBlocking{
         signUpViewModel.register("Test", "User","testuser@random.com",password)
         fakeUserRepoImpl.verifyEmail("testuser@random.com")
@@ -102,6 +111,23 @@ class ChangePasswordViewModelTest {
         fakeUserRepoImpl.verifyEmail("testuser@random.com")
         logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(password, wrongNewPassword)
+        assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
+    }
+    @Test
+    fun test_password_not_updated_if_currentPassword_is_empty()= runBlocking{
+        signUpViewModel.register("Test", "User","testuser@random.com",password)
+        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+        logInViewModel.login("testuser@random.com", password)
+        changePasswordViewModel.updatePassword("", wrongNewPassword)
+        assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_password_not_updated_if_newPassword_is_empty()= runBlocking{
+        signUpViewModel.register("Test", "User","testuser@random.com",password)
+        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+        logInViewModel.login("testuser@random.com", password)
+        changePasswordViewModel.updatePassword(password, "")
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }
 
