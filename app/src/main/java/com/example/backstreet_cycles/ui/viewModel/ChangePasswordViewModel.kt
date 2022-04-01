@@ -39,17 +39,16 @@ class ChangePasswordViewModel @Inject constructor(
 
     private val updatePassword : MutableLiveData<String> = MutableLiveData()
 
-    suspend fun updatePassword(password: String, newPassword: String) {
+    fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    updatePassword.postValue(result.data!!)
+//                    updatePassword.postValue(result.data!!)
+                    getUpdateDetail().value = result.data!!
                 }
 
                 is Resource.Error -> {
-                    updatePassword.postValue(
-                        "Update password " + result.message!!
-                    )
+                    updatePassword.value=result.message!!
                 }
                 is Resource.Loading -> {
 

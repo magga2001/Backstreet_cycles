@@ -43,6 +43,7 @@ class EditUserProfileViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     updatedProfile.postValue(result.data!!)
+                    updatedProfile.value = result.data!!
                 }
                 is Resource.Error -> {
 

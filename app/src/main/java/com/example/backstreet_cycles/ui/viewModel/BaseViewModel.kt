@@ -67,7 +67,8 @@ open class BaseViewModel @Inject constructor(
         userRepository.getUserDetails().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    userDetail.postValue(result.data!!)
+//                    userDetail.postValue(result.data!!)
+                    userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
 

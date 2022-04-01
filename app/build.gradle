@@ -161,7 +161,7 @@ dependencies {
     implementation 'com.mapbox.navigation:android:2.2.2'
     implementation 'com.mapbox.navigation:ui:1.5.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
-    //Dont delete this yet... potential fix location update
+    //Don't delete this yet... potential fix location update
 //    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:6.2.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6') {
         transitive(true)
@@ -276,6 +276,9 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation "com.android.support.test:rules:1.0.2"
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Turbines
+    testImplementation 'app.cash.turbine:turbine:0.7.0'
 }
 
 //tasks.test {

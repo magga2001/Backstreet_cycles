@@ -10,9 +10,10 @@ class FakeUserRepoImpl : UserRepository{
 
     private val PASSWORD_MINIMUM_LENGTH = 6
 
-    private lateinit var users: HashMap<String, HashMap<Users, String>>
+    private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
+    private var verifiedUser: HashMap<String, Boolean> = hashMapOf()
     private var currentUser: Users? = null
-    private var isVerified = false
+    private val validEmail: String = "@example.com"
 
     override fun register(
         firstName: String,
@@ -26,10 +27,16 @@ class FakeUserRepoImpl : UserRepository{
         }else{
             if(!users.containsKey(email)){
                 val user = Users(firstName,lastName, email)
+
                 users[email] = hashMapOf(
                     user to password
                 )
-                emit(Resource.Success("Registration Successful"))
+
+                verifiedUser[email] = false
+
+                emit(Resource.Success("Email verification sent"))
+            }else{
+                emit(Resource.Error("Email already existed"))
             }
         }
     }
@@ -59,7 +66,7 @@ class FakeUserRepoImpl : UserRepository{
             {
                 val user = users[email]
 
-                if(user?.get(currentUser!!) == password && newPassword.length < PASSWORD_MINIMUM_LENGTH){
+                if(user?.get(currentUser!!) == password && newPassword.length > PASSWORD_MINIMUM_LENGTH){
                     user[currentUser!!] = newPassword
                     emit(Resource.Success("Password updated Successfully"))
                 }else{
@@ -90,11 +97,13 @@ class FakeUserRepoImpl : UserRepository{
             val user = users[email]
             val existedUser = user?.keys?.first()
 
-            if(user?.get(existedUser) == password){
+            if(verifiedUser[email] == true && user?.get(existedUser) == password){
                 currentUser = existedUser
-                //Probably doesn't work
                 emit(Resource.Success(true))
+            }else{
+                emit(Resource.Error("Please verify your email"))
             }
+
         }else{
             emit(Resource.Error("No user"))
         }
@@ -105,7 +114,9 @@ class FakeUserRepoImpl : UserRepository{
         lastName: String,
         email: String
     ): Flow<Resource<String>> = flow {
-        emit(Resource.Success("Email sent"))
+        if(!email.contains(validEmail)){
+            emit(Resource.Error("Invalid email, cannot send email"))
+        }
     }
 
     override fun resetPassword(email: String): Flow<Resource<String>> = flow{
@@ -126,9 +137,15 @@ class FakeUserRepoImpl : UserRepository{
         return currentUser
     }
 
-    fun verifyEmail()
+    fun verifyEmail(email: String)
     {
-        isVerified = true
+        if(users.containsKey(email)){
+            verifiedUser[email] = true
+        }
     }
 
+    fun getUsersDb(): HashMap<String, HashMap<Users, String>>
+    {
+        return users
+    }
 }

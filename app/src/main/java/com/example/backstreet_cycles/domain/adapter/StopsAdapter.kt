@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 
@@ -67,10 +68,12 @@ class StopsAdapter(private val stops: MutableList<Locations>) :
      * @param position - an integer referring to the position of the element in the list
      */
     override fun onBindViewHolder(holder: StopViewHolder, position: Int) {
+        EspressoIdlingResource.increment()
         val newList = stops[position]
         val addressName = ConvertHelper.shortenName(newList.name)
         holder.name.text = addressName.first()
-        collapseBottomSheet.postValue(true)
+        collapseBottomSheet.value = true
+        EspressoIdlingResource.decrement()
     }
 
     /**

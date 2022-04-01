@@ -59,7 +59,7 @@ class SplashScreenViewModel @Inject constructor(
 
     private fun loadTouristAttractions() {
         locationRepository.loadLocations(application = mApplication)
-        isReadyMutableLiveData.postValue(true)
+        isReadyMutableLiveData.value = true
     }
 
 

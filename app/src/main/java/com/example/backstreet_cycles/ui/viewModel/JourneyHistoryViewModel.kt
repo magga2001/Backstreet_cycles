@@ -73,12 +73,14 @@ class JourneyHistoryViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.postValue(true)
+//                    isReadyMutableLiveData.postValue(true)
+                    isReadyMutableLiveData.value = true
                 }
 
                 is Resource.Error -> {
                     //Fail
-                    message.postValue(result.message!!)
+//                    message.postValue(result.message!!)
+                    message.value = result.message!!
                 }
                 is Resource.Loading -> {
                 }
@@ -105,7 +107,8 @@ class JourneyHistoryViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
-            showAlert.postValue(true)
+//            showAlert.postValue(true)
+            showAlert.value = true
         } else {
             fetchRoute(mContext, getJourneyLocations())
         }
@@ -154,7 +157,8 @@ class JourneyHistoryViewModel @Inject constructor(
     }
 
     fun setShowAlert(bool: Boolean) {
-        showAlert.postValue(bool)
+//        showAlert.postValue(bool)
+        showAlert.value = bool
     }
 
     fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
