@@ -60,6 +60,7 @@ class EditUserProfileViewModelTest {
                 application,
                 context
         )
+
         signUpViewModel = SignUpViewModel(
                 fakeTflRepoImpl,
                 fakeMapboxRepoImpl,
