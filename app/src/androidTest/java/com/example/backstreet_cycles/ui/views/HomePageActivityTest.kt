@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
@@ -22,9 +23,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -32,6 +35,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf.allOf
+import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -125,6 +129,29 @@ class HomePageActivityTest {
 //    }
 
     @Test
+    fun navigation_drawer_shows_current_Journey_button() {
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.currentJourney)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun navigation_drawer_shows_logout_button() {
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.logout)).check(matches(isDisplayed()))
+    }
+
+
+    @Test
+    fun test_clicking_current_Journey_button(){
+        SharedPrefHelper.initialiseSharedPref(ApplicationProvider.getApplicationContext(),Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        onView(withContentDescription(R.string.open)).perform(click())
+        onView(withId(R.id.currentJourney)).perform(click())
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("There is no current journey")))
+    }
+
+    @Test
     fun test_add_stop_button_is_enabled(){
         onView(withId(R.id.addingBtn)).check(matches(isEnabled()))
     }
@@ -146,6 +173,15 @@ class HomePageActivityTest {
     }
 
     @Test
+    fun test_nextPage_is_enabled(){
+        onView(isRoot()).perform(waitFor(1000))
+        add_stop("Covent Garden")
+        //onView(isRoot()).perform(waitFor(1000))
+        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+    }
+
+
+    @Test
     fun test_recyclerView_is_displayed(){
         onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches(isDisplayed()))
@@ -165,10 +201,11 @@ class HomePageActivityTest {
 
     @Test
     fun test_stop_added(){
-        onView(isRoot()).perform(waitFor(1000))
+        //onView(isRoot()).perform(waitFor(1000))
         add_stop("covent garden")
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
-        //onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(3)))
+        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
        }
 
     private fun add_stop(name: String) {
@@ -206,6 +243,7 @@ class HomePageActivityTest {
         )
         onView(isRoot()).perform(waitFor(1000))
         location.perform(replaceText(name))
+        onView(isRoot()).perform(waitFor(1000))
         location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
 
     }
@@ -227,6 +265,17 @@ class HomePageActivityTest {
         }
     }
 
+    @Test
+    fun test_go_to_next_page_from_home_page()
+    {
+        add_stop("Covent Garden")
+        onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
+        onView(withId(R.id.nextPageButton)).perform(click())
+
+        Intents.init()
+        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        Intents.release()
+    }
     //failing
 //    @Test
 //    fun test_cardView_is_swipeable() {
@@ -309,9 +358,11 @@ class HomePageActivityTest {
     }
 
 
+    //failing
     @Test
     fun test_next_page_button_enabled_when_more_than_one_item_in_recyclerView(){
         add_stop("Covent Garden")
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(2))))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
     }
@@ -418,8 +469,9 @@ class HomePageActivityTest {
 
 
 
+    //failing
     @Test
-    fun test_stop_is_changed_when_stop_is_clicked(){
+    fun test_location_is_changed_when_stop_is_clicked(){
         onView(isRoot()).perform(waitFor(1000))
         onView(
             Matchers.allOf(
@@ -484,11 +536,11 @@ class HomePageActivityTest {
     }
 
 
-
+    //failing
     @Test
     fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
         onView(withId(R.id.addingBtn)).perform(click())
-//        onView(isRoot()).perform(waitFor(1000))
+        onView(isRoot()).perform(waitFor(1000))
 //        sleep(1500)
         onView(
             allOf(
@@ -504,10 +556,11 @@ class HomePageActivityTest {
                 isDisplayed()
             )
         ).perform(click())
+        onView(isRoot()).perform(waitFor(1000))
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
-       // onView(isRoot()).perform(waitFor(1000))
+        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
     }
@@ -527,6 +580,7 @@ class HomePageActivityTest {
    @Test
    fun test_Snackbar_location_already_in_list(){
        add_stop("Covent Garden")
+       //onView(isRoot()).perform(waitFor(1000))
        add_stop("Covent Garden")
 
        onView(withId(com.google.android.material.R.id.snackbar_text))
@@ -541,8 +595,31 @@ class HomePageActivityTest {
         onView(withId(com.google.android.material.R.id.snackbar_text))
             .check(matches(withText("Cannot have more than 4 users")))
 
-
     }
+
+    @Test
+    fun  test_Snackbar_cannot_have_less_than_one_user(){
+        onView(withId(R.id.decrementButton)).perform(click())
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("Cannot have less than one user")))
+    }
+
+    @Test
+    fun test_Snackbar_adding_stop(){
+        add_stop("Covent Garden")
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("Adding Stop")))
+    }
+
+    @Test
+    fun test_Snackbar_changing_location_of_stop(){
+        test_location_is_changed_when_stop_is_clicked()
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("Changing Location Of Stop")))
+    }
+
+
+
     @After
     fun tearDown(){
         userRepoImpl.logOut()
