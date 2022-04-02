@@ -63,15 +63,16 @@ class JourneyActivityTest {
             android.Manifest.permission.INTERNET
         )
 
+
     @Before
     fun setUp() {
         userRepoImpl.logOut()
+        userRepoImpl.login(email,password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
 
         ActivityScenario.launch(HomePageActivity::class.java)
         add_stop("covent gardens")
-        add_stop("Buckingham Palace")
         onView(withId(R.id.nextPageButton)).perform(click())
         sleep(1000)
     }
@@ -135,11 +136,11 @@ class JourneyActivityTest {
         onView(withId(R.id.overview_journey)).check(matches(isClickable()))
     }
 
-    @Test
-    fun test_expand_button_visible(){
-        onView(withId(android.R.id.button2)).perform(click())
-        onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
+//    @Test
+//    fun test_expand_button_visible(){
+//        onView(withId(android.R.id.button2)).perform(click())
+//        onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//    }
 
     @Test
     fun test_hire_button_visible() {

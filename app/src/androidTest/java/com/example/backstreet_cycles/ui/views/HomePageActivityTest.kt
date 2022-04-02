@@ -3,7 +3,6 @@ package com.example.backstreet_cycles.ui.views
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -35,14 +34,11 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf.allOf
-import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
-
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -534,7 +530,6 @@ class HomePageActivityTest {
             )
         ).check(matches(isDisplayed()))
     }
-
 
     //failing
     @Test

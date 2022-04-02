@@ -347,6 +347,7 @@ class HomePageViewModel @Inject constructor(
                 }
             }
         } catch(e: NullPointerException){
+
         }
     }
 
