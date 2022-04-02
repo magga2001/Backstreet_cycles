@@ -37,6 +37,9 @@ class SplashScreenViewModel @Inject constructor(
 
     private val isReadyMutableLiveData = MutableLiveData<Boolean>()
 
+    /**
+     * Retrieving necessary data for the application
+     */
     suspend fun loadData() {
         tflRepository.getDocks().onEach { result ->
             when (result) {
@@ -58,6 +61,7 @@ class SplashScreenViewModel @Inject constructor(
                     isReadyMutableLiveData.value = true
 
                 }
+
                 is Resource.Loading -> {
                     Log.i("New dock", "Loading...")
                 }
@@ -65,11 +69,18 @@ class SplashScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Setting up tourist attraction data for the map
+     */
     private fun loadTouristAttractions() {
         locationRepository.loadLocations(application = mApplication)
         isReadyMutableLiveData.value = true
     }
 
+    /**
+     * Getter function to check status of data set up
+     * @return MutableLiveData in the form of a boolean to confirm status
+     */
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }

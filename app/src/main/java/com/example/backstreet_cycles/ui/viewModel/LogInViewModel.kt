@@ -68,8 +68,8 @@ class LogInViewModel @Inject constructor(
     }
 
     /**
-     * Getter function for ...
-     * @return MutableLiveData containing ...
+     * Getter function for checking the status of validation
+     * @return MutableLiveData in the form of a boolean to confirm status
      */
     fun getFirebaseUserMutableLiveData(): MutableLiveData<Boolean> {
         return firebaseUserMutableLiveData
