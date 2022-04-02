@@ -391,8 +391,17 @@ class HomePageViewModel @Inject constructor(
 
     fun logOut() {
         userRepository.logOut()
-//        logout.postValue(true)
+        clearSharedPref()
         logout.value = true
+    }
+
+    fun clearSharedPref(){
+        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(application,Constants.DOCKS_LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
     }
 
     fun getMapBoxNavigation(): MapboxNavigation {
