@@ -41,6 +41,13 @@ class SignUpViewModel @Inject constructor(
 
     private val message: MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * Validating the data entered by the user for setting up an account
+     * @param firstName of the user
+     * @param lastName of the user
+     * @param email of the user
+     * @param password of the user
+     */
     fun register(
         firstName: String,
         lastName: String,
@@ -57,15 +64,19 @@ class SignUpViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     message.value = mApplication.getString(R.string.REGISTRATION_FAILED) + result.message!!
-
                 }
                 is Resource.Loading -> {
-
                 }
             }
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Checking whether the email is verified
+     * @param firstName of the user
+     * @param lastName of the user
+     * @param email of the user
+     */
     private fun emailVerification(
         firstName: String,
         lastName: String,
@@ -76,17 +87,22 @@ class SignUpViewModel @Inject constructor(
                 is Resource.Success -> {
                     message.value = result.data!!
                 }
+
                 is Resource.Error -> {
                     message.value = result.message!!
                 }
+
                 is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getMessage(): MutableLiveData<String>
-    {
+    /**
+     * Getter function for the message
+     * @return MutableLiveData containing the message
+     */
+    fun getMessage(): MutableLiveData<String> {
         return message
     }
 }
