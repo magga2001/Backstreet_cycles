@@ -43,7 +43,7 @@ class ForgotPasswordViewModel @Inject constructor(
                     resetPassword.value = result.data!!
                 }
                 is Resource.Error -> {
-
+                    resetPassword.value = result.message!!
                 }
                 is Resource.Loading -> {
 

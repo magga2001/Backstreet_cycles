@@ -2,35 +2,39 @@ package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
 import com.example.backstreet_cycles.common.BackstreetApplication
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
-import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
+import com.example.backstreet_cycles.ui.viewModel.ForgotPasswordViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
+import junit.framework.Assert
+import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
+
 @RunWith(RobolectricTestRunner::class)
 @Config(application = BackstreetApplication::class, manifest = Config.NONE)
 @ExperimentalCoroutinesApi
-class LogInViewModelTest {
-
-    private lateinit var logInViewModel: LogInViewModel
+class ForgotPasswordViewModelTest {
+    private lateinit var changePasswordViewModel: ChangePasswordViewModel
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var forgotPasswordViewModel: ForgotPasswordViewModel
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
     private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
     private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
+    val password = "123456"
 
     @Before
     fun setUp() {
@@ -42,7 +46,7 @@ class LogInViewModelTest {
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
         fakeUserRepoImpl = FakeUserRepoImpl()
 
-        logInViewModel = LogInViewModel(
+        changePasswordViewModel = ChangePasswordViewModel(
             fakeTflRepoImpl,
             fakeMapboxRepoImpl,
             fakeCyclistRepoImpl,
@@ -50,7 +54,6 @@ class LogInViewModelTest {
             application,
             context
         )
-
         signUpViewModel = SignUpViewModel(
             fakeTflRepoImpl,
             fakeMapboxRepoImpl,
@@ -59,38 +62,38 @@ class LogInViewModelTest {
             application,
             context
         )
+        forgotPasswordViewModel = ForgotPasswordViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            application,
+            context
+        )
     }
 
-    @Test
-    fun test_log_in_with_verified_email() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
-        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
-        logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
-    }
+        @Test
+        fun test_email_verification_sent_with_correct_email(){
+            signUpViewModel.register("Test", "User","testuser@random.com",password)
+            fakeUserRepoImpl.verifyEmail("testuser@random.com")
+
+            forgotPasswordViewModel.resetPassword("testuser@random.com")
+            Assert.assertEquals(
+                "Reset password sent",
+                forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
+            )
+        }
 
     @Test
-    fun test_log_in_with_unverified_email() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
-        logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("Please verify your email", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+    fun test_email_verification_not_sent_with_correct_email(){
+        signUpViewModel.register("Test", "User","testuser@random.com",password)
+        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+
+        forgotPasswordViewModel.resetPassword("testuser@random.com")
+        Assert.assertEquals(
+            "No user",
+            forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
+        )
     }
 
-    @Test
-    fun test_log_in_with_unregistered_email() = runBlocking {
-        logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("No user", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
-    }
-
-    @Test
-    fun test_check_if_the_user_has_logged_in() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
-        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
-        logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
-        assert(fakeUserRepoImpl.getCurrentUser() != null)
-    }
 }

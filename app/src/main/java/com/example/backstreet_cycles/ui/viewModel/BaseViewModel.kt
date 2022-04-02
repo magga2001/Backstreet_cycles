@@ -114,12 +114,16 @@ open class BaseViewModel @Inject constructor(
         return mapboxRepository.getJourneyWayPointsLocations()
     }
 
-    open fun setCurrentJourney(stops: MutableList<Locations>) {
+    open fun setJourneyLocations(stops: MutableList<Locations>) {
         mapboxRepository.setJourneyLocations(stops)
     }
 
     open fun setCurrentWayPoint(locations: MutableList<Locations>) {
         mapboxRepository.setJourneyWayPointsLocations(locations)
+    }
+
+    open fun clearJourneyLocations(){
+        mapboxRepository.clearJourneyLocations()
     }
 
     open fun clearView() {
@@ -186,7 +190,7 @@ open class BaseViewModel @Inject constructor(
                     Log.i("New dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
-                        tflRepository.setCurrentDocks(result.data!!)
+                        tflRepository.setCurrentDocks(result.data)
                     }
                     getRoute()
                 }
@@ -204,15 +208,27 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
+    open fun initSharedPrefLocation(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+    }
+
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        mapboxRepository.clearJourneyLocations()
-        mapboxRepository.setJourneyLocations(listOfLocations)
+        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+        if(!noCurrentJourney){
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            clearJourneyLocations()
+            mapboxRepository.setJourneyLocations(listOfLocations)
+        }
     }
 
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+    }
+
+    open fun clearSaveLocations(){
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
     }
 }

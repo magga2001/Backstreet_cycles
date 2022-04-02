@@ -24,16 +24,16 @@ class FakeTflRepoImpl : TflRepository {
     private val dock9 = Dock("Dock9", "Dock9",51.534408,-0.109025,7,13,20)
     private val dock10 = Dock("Dock10", "Dock10",51.495061,-0.085814,6,14,20)
 
-
-    private val docks: MutableList<Dock> = mutableListOf()
-    var testDocks = mutableListOf<Dock>()
+    private var isConnect = true
+    private var docks: MutableList<Dock> = mutableListOf()
 
     override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = flow{
-        if(docks.isEmpty()){
-            emit(Resource.Error("Error in Empty Docks"))
+        if(isConnect){
+            loadDocks()
+            emit(Resource.Success(docks))
         }
         else {
-            emit(Resource.Success(docks))
+            emit(Resource.Error("Couldn't connect to server"))
         }
     }
 
@@ -51,11 +51,15 @@ class FakeTflRepoImpl : TflRepository {
     }
 
     override fun getCurrentDocks(): MutableList<Dock> {
-        return testDocks
+        return docks
     }
 
     override fun setCurrentDocks(docks: MutableList<Dock>) {
-        this.testDocks = docks
+        this.docks = docks
+    }
+
+    fun setConnection(connection : Boolean){
+        isConnect = connection
     }
 
 }
