@@ -317,7 +317,7 @@ class JourneyActivity : AppCompatActivity() {
         finish_journey.setOnClickListener {
 
             journeyViewModel.getUserDetails()
-            journeyViewModel.getUserDetailsData().observe(this) { userDetails ->
+            journeyViewModel.getUserInfo().observe(this) { userDetails ->
 
                 if (userDetails != null) {
                     journeyViewModel.clearView()

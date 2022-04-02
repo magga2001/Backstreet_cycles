@@ -26,13 +26,10 @@ import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,7 +73,6 @@ class JourneyViewModel @Inject constructor(
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Log.i("hi dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
@@ -254,41 +250,17 @@ class JourneyViewModel @Inject constructor(
 
     fun finishJourney(userDetails: Users) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-//        addJourneyToJourneyHistory(
-//            SharedPrefHelper.getSharedPref(Locations::class.java),
-//            userDetails
-//        )
+        addJourneyToJourneyHistory(
+            SharedPrefHelper.getSharedPref(Locations::class.java),
+            userDetails
+        )
         SharedPrefHelper.clearSharedPreferences()
     }
 
-//    private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
-//        CoroutineScope(Dispatchers.IO).launch {
-//
-//            val user = fireStore
-//                .collection("users")
-//                .whereEqualTo("email", userDetails.email)
-//                .get()
-//                .await()
-//            val gson = Gson()
-//            val jsonObject = gson.toJson(locations)
-//            if (jsonObject.isNotEmpty()) {
-//                userDetails.journeyHistory.add(jsonObject)
-//                if (user.documents.isNotEmpty()) {
-//                    for (document in user) {
-//
-//                        try {
-//                            fireStore.collection("users")
-//                                .document(document.id)
-//                                .update("journeyHistory", userDetails.journeyHistory)
-//                        } catch (e: Exception) {
-//                            withContext(Dispatchers.Main) {
-//                                ToastMessageHelper.createToastMessage(mApplication, e.message)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+    private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users){
+
+        userRepository.addJourneyToJourneyHistory(locations, user)
+    }
 
     private fun displayPrice() {
         val price = MapInfoHelper.getRental(getJourneyDurations())

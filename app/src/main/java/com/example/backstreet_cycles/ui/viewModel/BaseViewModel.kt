@@ -79,7 +79,8 @@ open class BaseViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getUserDetailsData(): MutableLiveData<Users> {
+    fun getUserInfo(): MutableLiveData<Users>
+    {
         return userDetail
     }
 
@@ -203,10 +204,6 @@ open class BaseViewModel @Inject constructor(
     }
 
     //SHARED PREF
-
-    open fun initSharedPrefLocation() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-    }
 
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
