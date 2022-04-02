@@ -40,8 +40,12 @@ class LogInViewModel @Inject constructor(
     private val firebaseUserMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val errorMessageMutableLiveData: MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * Validating data entered for log in
+     * @param email entered by the user
+     * @param password entered by the user
+     */
     fun login(email: String, password: String) {
-
         userRepository.login(email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -56,17 +60,25 @@ class LogInViewModel @Inject constructor(
 //                    )
                     errorMessageMutableLiveData.value = mApplication.getString(R.string.LOG_IN_FAILED) + result.message!!
                 }
-                is Resource.Loading -> {
 
+                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Getter function for ...
+     * @return MutableLiveData containing ...
+     */
     fun getFirebaseUserMutableLiveData(): MutableLiveData<Boolean> {
         return firebaseUserMutableLiveData
     }
 
+    /**
+     * Getter function for the error message
+     * @return MutableLiveData containing the error message
+     */
     fun getErrorMessageMutableLiveData(): MutableLiveData<String> {
         return errorMessageMutableLiveData
     }
