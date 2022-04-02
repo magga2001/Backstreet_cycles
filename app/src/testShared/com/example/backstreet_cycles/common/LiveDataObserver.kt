@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.ui
+package com.example.backstreet_cycles.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

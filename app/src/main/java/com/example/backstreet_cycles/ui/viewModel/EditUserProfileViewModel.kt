@@ -38,23 +38,33 @@ class EditUserProfileViewModel @Inject constructor(
 
     private val updatedProfile: MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * Updating the user's first and last name in the database
+     * @param firstName records the updated first name
+     * @param lastName records the updated last name
+     */
     fun updateUserDetails(firstName: String, lastName: String) {
         userRepository.updateUserDetails(firstName, lastName).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    updatedProfile.postValue(result.data!!)
+//                    updatedProfile.postValue(result.data!!)
                     updatedProfile.value = result.data!!
                 }
+
                 is Resource.Error -> {
-
+                    updatedProfile.value = result.message!!
                 }
-                is Resource.Loading -> {
 
+                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Getter function for the updated profile of the user
+     * @return MutableLiveData containing the updated profile
+     */
     fun getUpdatedProfile(): MutableLiveData<String> {
         return updatedProfile
     }

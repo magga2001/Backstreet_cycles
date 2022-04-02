@@ -202,8 +202,8 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
-            if (ready == "UPDATE") {
+        journeyViewModel.getUpdateMap().observe(this) { update ->
+            if (update) {
                 updateUI()
             } else {
                 finish()
@@ -291,7 +291,7 @@ class JourneyActivity : AppCompatActivity() {
 
         overview_journey.setOnClickListener {
             planJourneyAdapter.getCollapseBottomSheet()
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
             start_navigation.isEnabled = false
@@ -321,7 +321,7 @@ class JourneyActivity : AppCompatActivity() {
 
                 if (userDetails != null) {
                     journeyViewModel.clearView()
-                    journeyViewModel.clearCurrentSession()
+                    journeyViewModel.clearJourneyLocations()
                     journeyViewModel.finishJourney(userDetails)
                     journeyViewModel.resetNumCyclists()
                     val intent = Intent(this, HomePageActivity::class.java)
@@ -491,7 +491,7 @@ class JourneyActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         journeyViewModel.clearView()
-        journeyViewModel.clearCurrentSession()
+        journeyViewModel.clearJourneyLocations()
         finish()
     }
 

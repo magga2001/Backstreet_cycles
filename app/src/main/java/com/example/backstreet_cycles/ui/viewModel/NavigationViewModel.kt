@@ -69,8 +69,10 @@ class NavigationViewModel @Inject constructor(
      */
     private val replayProgressObserver = ReplayProgressObserver(mapboxReplayer)
 
+    /**
+     * Initialising the navigation
+     */
     fun setRouteAndStartNavigation() {
-
         val routes = getJourneyCurrentRoute()
 
         // set routes, where the first route in the list is the primary route that
@@ -81,6 +83,9 @@ class NavigationViewModel @Inject constructor(
         startSimulation(routes.first())
     }
 
+    /**
+     * Resetting the state of the navigation
+     */
     fun clearRouteAndStopNavigation() {
         // clear
         mapboxNavigation.setRoutes(listOf())
@@ -89,6 +94,10 @@ class NavigationViewModel @Inject constructor(
         mapboxReplayer.stop()
     }
 
+    /**
+     * Simulation of the journey
+     * @param route representing the user's journey
+     */
     private fun startSimulation(route: DirectionsRoute) {
         mapboxReplayer.run {
             stop()
@@ -130,10 +139,17 @@ class NavigationViewModel @Inject constructor(
         mapboxReplayer.finish()
     }
 
+    /**
+     * Getter function for the navigation
+     * @return MapboxNavigation
+     */
     fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
+    /**
+     * Terminating the Mapbox Navigation
+     */
     fun destroyMapboxNavigation() {
         mapboxNavigation.onDestroy()
     }

@@ -6,6 +6,7 @@ import com.example.backstreet_cycles.data.remote.dto.toDock
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
@@ -20,18 +21,18 @@ open class TflRepositoryImpl @Inject constructor(
     /**
      * Receive the dock from the TFL API and maps them to the dataclass
      */
-    override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = flow {
+    override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = channelFlow {
         try {
-            emit(Resource.Loading())
+            send(Resource.Loading())
             val docks = tflApi.getDocks()
                 .map { it.toDock() }
                 .filter { (it.nbDocks - (it.nbBikes + it.nbSpaces) == 0) }
                 .toMutableList()
-            emit(Resource.Success(docks))
+            send(Resource.Success(docks))
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            send(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         } catch (e: IOException) {
-            emit(Resource.Error("Couldn't reach server. Check your internet connection."))
+            send(Resource.Error("Couldn't reach server. Check your internet connection."))
         }
     }
 
