@@ -413,6 +413,8 @@ class JourneyActivity : AppCompatActivity() {
             journeyViewModel.getJourneyLocations(),
             planner = journeyViewModel.getPlannerInterface()
         )
+        val tvFrom = journeyViewModel.getTheCheckedBoxes()
+        planJourneyAdapter.checkCheckedBoxesInSharePref(tvFrom)
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
         finish_journey.isEnabled = false
@@ -492,6 +494,8 @@ class JourneyActivity : AppCompatActivity() {
         super.onBackPressed()
         journeyViewModel.clearView()
         journeyViewModel.clearJourneyLocations()
+        val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
+        journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)
         finish()
     }
 

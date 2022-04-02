@@ -37,5 +37,6 @@ object Constants {
     const val LOCATIONS = "LOCATIONS"
     const val DOCKS_LOCATIONS = "DOCKS_LOCATIONS"
     const val NUM_USERS = "NUM_USERS"
+    const val CHECKED_BOXES = "CHECKED_BOXES"
 
 }

@@ -3,6 +3,7 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -11,12 +12,12 @@ import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.domain.repositoryInt.*
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.*
 import com.example.backstreet_cycles.interfaces.Planner
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -26,13 +27,8 @@ import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -317,5 +313,15 @@ class JourneyViewModel @Inject constructor(
 
     fun getMessage(): MutableLiveData<String> {
         return message
+    }
+
+    fun getTheCheckedBoxes(): List<TextView> {
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
+        return SharedPrefHelper.getSharedPref(TextView::class.java)
+    }
+
+    fun storeCheckedBoxesSharedPref(checkedBoxes: List<TextView>) {
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
+        SharedPrefHelper.overrideSharedPref(checkedBoxes.toMutableList(),TextView::class.java)
     }
 }
