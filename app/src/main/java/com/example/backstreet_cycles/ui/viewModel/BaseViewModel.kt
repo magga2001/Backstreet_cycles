@@ -15,6 +15,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
+import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
