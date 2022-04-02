@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider {
+
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 

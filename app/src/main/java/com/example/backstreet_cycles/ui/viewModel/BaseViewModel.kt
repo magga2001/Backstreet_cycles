@@ -15,6 +15,7 @@ import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
+import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsRoute
@@ -71,17 +72,14 @@ open class BaseViewModel @Inject constructor(
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
-
                 }
                 is Resource.Loading -> {
-
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getUserDetailsData(): MutableLiveData<Users>
-    {
+    fun getUserDetailsData(): MutableLiveData<Users> {
         return userDetail
     }
 
@@ -90,7 +88,6 @@ open class BaseViewModel @Inject constructor(
     open fun getCurrentDocks(): MutableList<Dock> {
         return tflRepository.getCurrentDocks()
     }
-
 
     //MAPBOX
 
@@ -114,12 +111,16 @@ open class BaseViewModel @Inject constructor(
         return mapboxRepository.getJourneyWayPointsLocations()
     }
 
-    open fun setCurrentJourney(stops: MutableList<Locations>) {
+    open fun setJourneyLocations(stops: MutableList<Locations>) {
         mapboxRepository.setJourneyLocations(stops)
     }
 
     open fun setCurrentWayPoint(locations: MutableList<Locations>) {
         mapboxRepository.setJourneyWayPointsLocations(locations)
+    }
+
+    open fun clearJourneyLocations() {
+        mapboxRepository.clearJourneyLocations()
     }
 
     open fun clearView() {
@@ -179,14 +180,13 @@ open class BaseViewModel @Inject constructor(
     }
 
     open suspend fun getDock() {
-
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     Log.i("New dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
-                        tflRepository.setCurrentDocks(result.data!!)
+                        tflRepository.setCurrentDocks(result.data)
                     }
                     getRoute()
                 }
@@ -204,15 +204,27 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
+    open fun initSharedPrefLocation() {
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+    }
+
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
-        mapboxRepository.clearJourneyLocations()
-        mapboxRepository.setJourneyLocations(listOfLocations)
+        val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
+        if(!noCurrentJourney){
+            val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
+            clearJourneyLocations()
+            mapboxRepository.setJourneyLocations(listOfLocations)
+        }
     }
 
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+    }
+
+    open fun clearSaveLocations() {
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
     }
 }

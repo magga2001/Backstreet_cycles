@@ -35,6 +35,11 @@ class ForgotPasswordViewModel @Inject constructor(
 
     private val resetPassword: MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * Acknowledging the need to reset the user's password. Link sent via email
+     * Stores the new password entered by the user
+     * @param email of the registered user
+     */
     fun resetPassword(email: String) {
         userRepository.resetPassword(email).onEach { result ->
             when (result) {
@@ -42,18 +47,22 @@ class ForgotPasswordViewModel @Inject constructor(
 //                    resetPassword.postValue(result.data!!)
                     resetPassword.value = result.data!!
                 }
+
                 is Resource.Error -> {
-
+                    resetPassword.value = result.message!!
                 }
-                is Resource.Loading -> {
 
+                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getResetPassword(): MutableLiveData<String>
-    {
+    /**
+     * Getter function for the updated password
+     * @return MutableLiveData containing the updated password
+     */
+    fun getResetPassword(): MutableLiveData<String> {
         return resetPassword
     }
 }

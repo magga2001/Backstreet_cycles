@@ -13,7 +13,7 @@ import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.ui.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel

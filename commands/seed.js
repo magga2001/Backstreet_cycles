@@ -29,8 +29,9 @@ const firebaseAdmin = admin.initializeApp({
 
 async function seedUsers() {
     // THERE IS A LIMIT OF 500 users only add at a time.
-    const numberOfUser = 10
+    const numberOfUser = 1
     const userList = [];
+    const journeyHistoryList = [];
     const batch = writeBatch(db);
     for (let i = 0; i < numberOfUser; i++) {
         const firstName = Faker.name.firstName();
@@ -38,10 +39,17 @@ async function seedUsers() {
         const email = Faker.internet.email();
         const password = Faker.internet.password();
 
+        const size = 5;
+        const numberOfJourneyHistory = Math.floor(Math.random() * (size + 1) + 1);
+        for (let i = 0; i < numberOfJourneyHistory; i++){
+            const journeyHistory = JSON.stringify(createFakeJourneyHistory());
+            journeyHistoryList.push(journeyHistory);
+        }
+
         const docRef = doc(collection(db, "users"));
 
         const uid = docRef.id;
-        const user = { firstName, lastName, email, uid };
+        const user = { firstName, lastName, email, journeyHistoryList };
         userList.push({ email, password, uid });
         batch.set(docRef, user);
     }
@@ -113,14 +121,35 @@ function checkValidity(value) {
     }
 }
 
+function createFakeJourneyHistory(){
+
+    var locations = [
+        { lat: '51.5081', lon: '-0.0759', name: 'Tower of London' },
+        { lat: '51.5138', lon: '-0.0984', name: 'St Paul’s Cathedral' },
+        { lat: '51.5076', lon: '-0.0994', name: 'Tate Modern' },
+        { lat: '51.5055', lon: '-0.0754', name: 'Tower Bridge' },
+        { lat: '51.5080', lon: '-0.1281', name: 'Trafalgar Square' }
+    ];
+
+    const size = 5;
+    const numberOfStops = Math.floor(Math.random() * (size - 1) + 1);
+    const journeyHistoryList = [];
+    for (let i = 0; i < numberOfStops; i++){
+        const location = locations[Math.floor(Math.random() * (locations.length))];
+        journeyHistoryList.push(location);
+    }
+
+    return journeyHistoryList;
+}
+
 
 
 async function seed() {
     try {
 
         const res = await Promise.all([
-            seedUsers(),
-            seedDocks(),
+            seedUsers()
+//            seedDocks(),
         ])
         process.exit()
     } catch (err) {

@@ -115,6 +115,7 @@ class FakeUserRepoImpl : UserRepository{
         email: String
     ): Flow<Resource<String>> = flow {
         if(!email.contains(validEmail)){
+            users.remove(email)
             emit(Resource.Error("Invalid email, cannot send email"))
         }
     }
@@ -144,8 +145,19 @@ class FakeUserRepoImpl : UserRepository{
         }
     }
 
-    fun getUsersDb(): HashMap<String, HashMap<Users, String>>
-    {
-        return users
+    fun addMockUser(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ){
+        val user = Users(firstName,lastName, email)
+
+        users[email] = hashMapOf(
+            user to password
+        )
+        verifiedUser[email] = true
+        currentUser = user
+
     }
 }

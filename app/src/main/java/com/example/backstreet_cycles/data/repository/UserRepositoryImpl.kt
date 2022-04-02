@@ -7,7 +7,6 @@ import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +16,16 @@ import timber.log.Timber
 
 class UserRepositoryImpl : UserRepository {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val dataBase = FirebaseFirestore.getInstance()
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var dataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    fun setFirebaseAuth(firebaseAuth: FirebaseAuth){
+        this.firebaseAuth = firebaseAuth
+    }
+
+    fun setFirebaseFirestore(dataBase: FirebaseFirestore){
+        this.dataBase = dataBase
+    }
 
     override fun register(
         firstName: String,

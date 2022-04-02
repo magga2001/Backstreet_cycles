@@ -39,6 +39,11 @@ class ChangePasswordViewModel @Inject constructor(
 
     private val updatePassword : MutableLiveData<String> = MutableLiveData()
 
+    /**
+     * Updating the user's password in the database
+     * @param password records current password
+     * @param newPassword records the updated password
+     */
     fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
@@ -48,17 +53,20 @@ class ChangePasswordViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    updatePassword.value=result.message!!
+                    updatePassword.value = result.message!!
                 }
-                is Resource.Loading -> {
 
+                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getUpdateDetail(): MutableLiveData<String>
-    {
+    /**
+     * Getter function for the updated password
+     * @return MutableLiveData containing the updated password
+     */
+    fun getUpdateDetail(): MutableLiveData<String> {
         return updatePassword
     }
 }
