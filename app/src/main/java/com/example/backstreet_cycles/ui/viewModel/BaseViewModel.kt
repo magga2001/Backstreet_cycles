@@ -72,17 +72,14 @@ open class BaseViewModel @Inject constructor(
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
-
                 }
                 is Resource.Loading -> {
-
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getUserDetailsData(): MutableLiveData<Users>
-    {
+    fun getUserDetailsData(): MutableLiveData<Users> {
         return userDetail
     }
 
@@ -91,7 +88,6 @@ open class BaseViewModel @Inject constructor(
     open fun getCurrentDocks(): MutableList<Dock> {
         return tflRepository.getCurrentDocks()
     }
-
 
     //MAPBOX
 
@@ -123,7 +119,7 @@ open class BaseViewModel @Inject constructor(
         mapboxRepository.setJourneyWayPointsLocations(locations)
     }
 
-    open fun clearJourneyLocations(){
+    open fun clearJourneyLocations() {
         mapboxRepository.clearJourneyLocations()
     }
 
@@ -184,7 +180,6 @@ open class BaseViewModel @Inject constructor(
     }
 
     open suspend fun getDock() {
-
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
@@ -209,7 +204,7 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
-    open fun initSharedPrefLocation(){
+    open fun initSharedPrefLocation() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
     }
 
@@ -228,7 +223,7 @@ open class BaseViewModel @Inject constructor(
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
     }
 
-    open fun clearSaveLocations(){
+    open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
     }
