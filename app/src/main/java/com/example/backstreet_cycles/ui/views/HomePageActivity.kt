@@ -120,7 +120,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         // Greets the user in the nav menu
         EspressoIdlingResource.increment()
-        homePageViewModel.getUserDetailsData().observe(this) { firebaseUser ->
+        homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email

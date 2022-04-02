@@ -81,7 +81,7 @@ open class BaseViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getUserDetailsData(): MutableLiveData<Users>
+    fun getUserInfo(): MutableLiveData<Users>
     {
         return userDetail
     }

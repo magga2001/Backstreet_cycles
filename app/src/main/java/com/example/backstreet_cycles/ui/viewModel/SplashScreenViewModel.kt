@@ -48,7 +48,7 @@ class SplashScreenViewModel @Inject constructor(
 
                         val json = JsonHelper.objectToString(result.data, Dock::class.java)
                         JsonHelper.getJsonFromResources(mApplication, R.raw.localdocks)
-                        JsonHelper.writeJsonToResources(mApplication, json, R.raw.localdocks)
+//                        JsonHelper.writeJsonToResources(mApplication, json, R.raw.localdocks)
                     }
                     loadTouristAttractions()
                 }

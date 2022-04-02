@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
@@ -36,7 +35,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         changePasswordViewModel.getUserDetails()
 
         // Display email of the logged in user
-        changePasswordViewModel.getUserDetailsData().observe(this) { firebaseUser ->
+        changePasswordViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 change_password_email.text = firebaseUser.email
             }
