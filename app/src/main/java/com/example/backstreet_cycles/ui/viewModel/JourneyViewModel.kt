@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
@@ -65,24 +64,24 @@ class JourneyViewModel @Inject constructor(
         }
     }
     private var journeyState = JourneyState.START_WALKING
-    private var status: String = "UPDATE"
-    private val isReadyMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    private var isUpdateMap: Boolean = true
+    private val updateMap: MutableLiveData<Boolean> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
-    private val fireStore = Firebase.firestore
+//    private val fireStore = Firebase.firestore
 
     override suspend fun getDock() {
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Log.i("New dock", result.data?.size.toString())
+                    Log.i("hi dock", result.data?.size.toString())
 
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
                     }
-                    status = "REFRESH"
+                    isUpdateMap = false
                     fetchRoute(
                         context = mContext,
                         getJourneyLocations(),
@@ -149,7 +148,7 @@ class JourneyViewModel @Inject constructor(
         profile: String,
         info: Boolean
     ) {
-        status = "UPDATE"
+        isUpdateMap = true
         fetchRoute(context = context, locations, profile, info)
     }
 
@@ -183,7 +182,7 @@ class JourneyViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
 //                    isReadyMutableLiveData.postValue(status)
-                    isReadyMutableLiveData.value = status
+                    updateMap.value = isUpdateMap
                 }
 
                 is Resource.Error -> {
@@ -202,7 +201,7 @@ class JourneyViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
 //                    isReadyMutableLiveData.postValue(status)
-                    isReadyMutableLiveData.value = status
+                    updateMap.value = isUpdateMap
                     calcJourneyInfo()
                 }
 
@@ -255,41 +254,41 @@ class JourneyViewModel @Inject constructor(
 
     fun finishJourney(userDetails: Users) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        addJourneyToJourneyHistory(
-            SharedPrefHelper.getSharedPref(Locations::class.java),
-            userDetails
-        )
+//        addJourneyToJourneyHistory(
+//            SharedPrefHelper.getSharedPref(Locations::class.java),
+//            userDetails
+//        )
         SharedPrefHelper.clearSharedPreferences()
     }
 
-    private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val user = fireStore
-                .collection("users")
-                .whereEqualTo("email", userDetails.email)
-                .get()
-                .await()
-            val gson = Gson()
-            val jsonObject = gson.toJson(locations)
-            if (jsonObject.isNotEmpty()) {
-                userDetails.journeyHistory.add(jsonObject)
-                if (user.documents.isNotEmpty()) {
-                    for (document in user) {
-
-                        try {
-                            fireStore.collection("users")
-                                .document(document.id)
-                                .update("journeyHistory", userDetails.journeyHistory)
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                ToastMessageHelper.createToastMessage(mApplication, e.message)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//    private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, userDetails: Users) =
+//        CoroutineScope(Dispatchers.IO).launch {
+//
+//            val user = fireStore
+//                .collection("users")
+//                .whereEqualTo("email", userDetails.email)
+//                .get()
+//                .await()
+//            val gson = Gson()
+//            val jsonObject = gson.toJson(locations)
+//            if (jsonObject.isNotEmpty()) {
+//                userDetails.journeyHistory.add(jsonObject)
+//                if (user.documents.isNotEmpty()) {
+//                    for (document in user) {
+//
+//                        try {
+//                            fireStore.collection("users")
+//                                .document(document.id)
+//                                .update("journeyHistory", userDetails.journeyHistory)
+//                        } catch (e: Exception) {
+//                            withContext(Dispatchers.Main) {
+//                                ToastMessageHelper.createToastMessage(mApplication, e.message)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     private fun displayPrice() {
         val price = MapInfoHelper.getRental(getJourneyDurations())
@@ -300,8 +299,8 @@ class JourneyViewModel @Inject constructor(
         return journeyState
     }
 
-    fun getIsReadyMutableLiveData(): MutableLiveData<String> {
-        return isReadyMutableLiveData
+    fun getUpdateMap(): MutableLiveData<Boolean> {
+        return updateMap
     }
 
     fun getDistanceMutableLiveData(): MutableLiveData<String> {

@@ -1,25 +1,30 @@
 package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
+import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts
+import junit.framework.Assert
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.roundToInt
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class JourneyViewModelTest {
@@ -29,6 +34,8 @@ class JourneyViewModelTest {
 
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var homePageViewModel: HomePageViewModel
+    private lateinit var logInViewModel: LogInViewModel
+    private lateinit var signUpViewModel: SignUpViewModel
     lateinit var instrumentationContext: Context
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
@@ -73,6 +80,24 @@ class JourneyViewModelTest {
             application,
             instrumentationContext
         )
+
+        logInViewModel = LogInViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            application,
+            instrumentationContext
+        )
+
+        signUpViewModel = SignUpViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            application,
+            instrumentationContext
+        )
     }
 
     @Test
@@ -84,7 +109,7 @@ class JourneyViewModelTest {
         homePageViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
-        assert(journeyViewModel.getIsReadyMutableLiveData().getOrAwaitValue().equals("UPDATE"))
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
         val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
         assert(journeyViewModel.getDistanceMutableLiveData().getOrAwaitValue()
             .equals(distances))
@@ -95,4 +120,83 @@ class JourneyViewModelTest {
         assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
     }
 
+    @Test
+    fun test_get_journey_overview(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        journeyViewModel.calcBicycleRental()
+        assert(journeyViewModel.getJourneyLocations().size == locations.size)
+        journeyViewModel.getJourneyOverview()
+        assert(journeyViewModel.getJourneyState() == JourneyState.OVERVIEW)
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
+    }
+
+    @Test
+    fun test_get_journey_start_walk(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.START_WALKING)
+        assert(journeyViewModel.getJourneyState() == JourneyState.START_WALKING)
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
+
+    }
+
+    @Test
+    fun test_get_journey_cycling(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.BIKING)
+        assert(journeyViewModel.getJourneyState() == JourneyState.BIKING)
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
+
+    }
+
+    @Test
+    fun test_get_journey_end_walk(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.END_WALKING)
+        assert(journeyViewModel.getJourneyState() == JourneyState.END_WALKING)
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
+
+    }
+
+    //Hard coded...
+    @Test
+    fun test_finish_journey() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        journeyViewModel.getUserDetails()
+        assert(journeyViewModel.getUserDetailsData().getOrAwaitValue()
+            .equals(Users("John","Doe","johndoe@example.com")))
+//        journeyViewModel.finishJourney(journeyViewModel.getUserDetailsData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_refresh_journey(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        runBlocking {homePageViewModel.getDock()}
+        homePageViewModel.saveJourney()
+        runBlocking { journeyViewModel.getDock() }
+        assert(journeyViewModel.getJourneyLocations().size == locations.size)
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == false)
+    }
 }

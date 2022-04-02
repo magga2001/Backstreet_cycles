@@ -145,8 +145,19 @@ class FakeUserRepoImpl : UserRepository{
         }
     }
 
-    fun getUsersDb(): HashMap<String, HashMap<Users, String>>
-    {
-        return users
+    fun addMockUser(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ){
+        val user = Users(firstName,lastName, email)
+
+        users[email] = hashMapOf(
+            user to password
+        )
+        verifiedUser[email] = true
+        currentUser = user
+
     }
 }

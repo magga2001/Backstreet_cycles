@@ -202,8 +202,8 @@ class JourneyActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        journeyViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
-            if (ready == "UPDATE") {
+        journeyViewModel.getUpdateMap().observe(this) { update ->
+            if (update) {
                 updateUI()
             } else {
                 finish()
