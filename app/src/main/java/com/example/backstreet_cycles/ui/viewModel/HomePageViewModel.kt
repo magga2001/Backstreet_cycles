@@ -67,7 +67,6 @@ class HomePageViewModel @Inject constructor(
 ) {
 
     private val mapboxNavigation by lazy {
-
         if (MapboxNavigationProvider.isCreated()) {
             MapboxNavigationProvider.retrieve()
         } else {
@@ -78,6 +77,7 @@ class HomePageViewModel @Inject constructor(
             )
         }
     }
+
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
@@ -90,10 +90,20 @@ class HomePageViewModel @Inject constructor(
     private val message: MutableLiveData<String> = MutableLiveData()
     private val logout: MutableLiveData<Boolean> = MutableLiveData()
 
+    /**
+     * Returns the location component for the map
+     * @param mapboxMap
+     * @return LocationComponent
+     */
     fun initLocationComponent(mapboxMap: MapboxMap): LocationComponent {
         return mapboxMap.locationComponent
     }
 
+    /**
+     * Initialisation of current location of user
+     * @param loadedMapStyle styling of map
+     * @param locationComponent for map
+     */
     @SuppressLint("MissingPermission")
     fun initCurrentLocation(loadedMapStyle: Style, locationComponent: LocationComponent) {
         val customLocationComponentOptions = customiseLocationPuck()
@@ -107,6 +117,12 @@ class HomePageViewModel @Inject constructor(
             .build()
     }
 
+    /**
+     * Enable location component for application
+     * @param locationComponent for map
+     * @param loadedMapStyle styling of map
+     * @param customLocationComponentOptions
+     */
     private fun activateLocationComponent(
         locationComponent: LocationComponent,
         loadedMapStyle: Style,
@@ -119,6 +135,10 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Display location component on map
+     * @param locationComponent for map
+     */
     @SuppressLint("MissingPermission")
     private fun showLocationComponent(locationComponent: LocationComponent) {
         locationComponent.isLocationComponentEnabled = true
@@ -126,60 +146,112 @@ class HomePageViewModel @Inject constructor(
         locationComponent.renderMode = RenderMode.COMPASS
     }
 
+    /**
+     * Setting state of showing an alert
+     * @param bool state of alert
+     */
     fun setShowAlert(bool: Boolean) {
 //        showAlert.postValue(bool)
         showAlert.value = bool
     }
 
+    /**
+     * Getter function for the ShowAlertMutableLiveData
+     * @return MutableLiveData containing the alert
+     */
     fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
         return showAlert
     }
 
+    /**
+     * Adding a searched location
+     * @param stop
+     */
     fun addStop(stop: Locations) {
         stops.add(stop)
     }
 
+    /**
+     * Adding a searched location by index
+     * @param index
+     * @param stop
+     */
     fun addStop(index: Int, stop: Locations) {
         stops.add(index, stop)
     }
 
+    /**
+     * Removing a searched location
+     * @param stop
+     */
     fun removeStop(stop: Locations) {
         stops.remove(stop)
     }
 
+    /**
+     * Removing a searched location by index
+     * @param index
+     * @param stop
+     */
     fun removeStopAt(index: Int) {
         stops.removeAt(index)
     }
 
+    /**
+     * Getter function for the list of searched stops
+     * @return MutableList<Locations> of searched locations
+     */
     fun getStops(): MutableList<Locations> {
         return stops
     }
 
+    /**
+     * Checks for duplicate stops
+     * @param location represent searched location
+     * @return Boolean true or false to indicate a duplicate stop
+     */
     fun checkIfAlreadyInStops(location: Locations): Boolean {
         return stops.contains(location)
     }
 
+    /**
+     * Getter function for the list of tourist attractions
+     * @return MutableList<Locations> of tourist attractions
+     */
     fun getTouristAttractions(): List<Locations> {
         return locationRepository.getTouristLocations()
     }
 
+    /**
+     * Record information
+     * @param info
+     */
     fun setUpdateInfo(info: Boolean) {
         updateInfo = info
     }
 
+    /**
+     * Check if info received
+     * @return Boolean
+     */
     private fun getUpdateInfo(): Boolean {
         return updateInfo
     }
 
+    /**
+     * Getter function for the route of the journey
+     */
     override fun getRoute() {
         super.getRoute()
         setJourneyLocations(stops)
         checkCurrentJourney()
     }
 
+    /**
+     * Getter function for the representation of the route of the journey
+     */
     private fun getMapBoxRoute(routeOptions: RouteOptions) {
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
-
             when (result) {
                 is Resource.Success -> {
 //                    isReadyMutableLiveData.postValue(true)
@@ -190,12 +262,18 @@ class HomePageViewModel @Inject constructor(
                     //Fail
                     message.postValue(result.message!!)
                 }
+
                 is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Receive the route of the journey
+     * @param context
+     * @param locations
+     */
     private fun fetchRoute(
         context: Context,
         locations: MutableList<Locations>
@@ -209,6 +287,12 @@ class HomePageViewModel @Inject constructor(
         getMapBoxRoute(routeOptions)
     }
 
+    /**
+     * Display tourist attractions on the map for the user
+     * @param symbolManager
+     * @param loadedMapStyle styling of map
+     * @param data tourist attraction locations
+     */
     fun displayingAttractions(
         symbolManager: SymbolManager,
         loadedMapStyle: Style,
@@ -237,12 +321,19 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Check whether one of the added locations is the current location itself
+     */
     fun checkCurrentLocation() {
         val stop = stops.map { it.name }.contains("Current Location")
 //        hasCurrentLocation.postValue(stop)
         hasCurrentLocation.value = stop
     }
 
+    /**
+     * Update the current location of user in the map
+     * @param locationComponent of map
+     */
     fun updateCurrentLocation(locationComponent: LocationComponent) {
         try {
             for (stop in stops) {
@@ -256,14 +347,23 @@ class HomePageViewModel @Inject constructor(
                 }
             }
         } catch(e: NullPointerException){
-
         }
     }
 
+    /**
+     * Getter function to return recent location of user
+     * @param locationComponent of map
+     * @return Location
+     */
     fun getCurrentLocation(locationComponent: LocationComponent): Location? {
         return locationComponent.lastKnownLocation
     }
 
+    /**
+     * Initialise the search bar with an autocomplete feature for search locations
+     * @param activity
+     * @return Intent
+     */
     fun initPlaceAutoComplete(activity: Activity): Intent {
         return PlaceAutocomplete.IntentBuilder()
             .accessToken(mApplication.getString(R.string.mapbox_access_token)).placeOptions(
@@ -277,6 +377,12 @@ class HomePageViewModel @Inject constructor(
             .build(activity)
     }
 
+    /**
+     * Obtain necessary attributes of search location such as latitude and longitude
+     * @param mapboxMap
+     * @param selectedCarmenFeature
+     * @param style of map
+     */
     fun searchLocation(mapboxMap: MapboxMap, selectedCarmenFeature: CarmenFeature, style: Style) {
         val location = Locations(
             selectedCarmenFeature.placeName().toString(),
@@ -291,6 +397,12 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Update the added stops in the map
+     * @param mapboxMap
+     * @param selectedCarmenFeature
+     * @param style of map
+     */
     private fun updateStops(
         mapboxMap: MapboxMap,
         selectedCarmenFeature: CarmenFeature,
@@ -311,7 +423,6 @@ class HomePageViewModel @Inject constructor(
         )
         updateCamera(mapboxMap, latitude, longitude)
         postUpdateInfo()
-
     }
 
     private fun postUpdateInfo() {
@@ -325,6 +436,12 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Update the camera of the map
+     * @param mapboxMap
+     * @param latitude
+     * @param longitude
+     */
     private fun updateCamera(mapboxMap: MapboxMap, latitude: Double, longitude: Double) {
         mapboxMap.animateCamera(
             CameraUpdateFactory.newCameraPosition(
@@ -336,6 +453,9 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Check whether a current journey exists
+     */
     private fun checkCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
@@ -347,6 +467,9 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Getter function to return the current journey
+     */
     fun getCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)) {
@@ -359,6 +482,9 @@ class HomePageViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Obtain necessary data of current journey
+     */
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
         fetchRoute(
@@ -367,6 +493,10 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Obtain necessary data for the newly calculated journey
+     * @param newStops added recently by the user
+     */
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
         fetchRoute(
@@ -375,6 +505,9 @@ class HomePageViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Obtain necessary data to save the journey
+     */
     fun saveJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
         SharedPrefHelper.overrideSharedPref(
@@ -389,6 +522,9 @@ class HomePageViewModel @Inject constructor(
         WorkHelper.cancelWork(mContext)
     }
 
+    /**
+     * Attempt to log out user out of the application
+     */
     fun logOut() {
         userRepository.logOut()
         clearSharedPref()
@@ -404,42 +540,75 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    /**
+     * Getter function to return the Mapbox navigation
+     * @return MapboxNavigation
+     */
     fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
+    /**
+     * Terminate the Mapbox navigation
+     */
     fun destroyMapboxNavigation() {
         MapboxNavigationProvider.destroy()
         mapboxNavigation.onDestroy()
     }
 
+    /**
+     * Getter function to return the isReadyMutableLiveData
+     * @return MutableLiveData
+     */
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 
+    /**
+     * Getter function to determine whether there is a current location
+     * @return MutableLiveData
+     */
     fun hasCurrentLocation(): MutableLiveData<Boolean> {
         return hasCurrentLocation
     }
 
+    /**
+     * Getter function to determine whether there current journey mutable live data
+     * @return MutableLiveData
+     */
     fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean> {
         return hasCurrentJourneyMutableLiveData
     }
 
+    /**
+     * Getter function to determine whether there is a duplicate location
+     * @return MutableLiveData
+     */
     fun getHasDuplicationLocation(): MutableLiveData<Boolean> {
         return hasDuplicationLocation
     }
 
+    /**
+     * Getter function to return updated mutable live data
+     * @return MutableLiveData
+     */
     fun getUpdateMutableLiveData(): MutableLiveData<Boolean> {
         return updateMutableLiveData
     }
 
-    fun getLogout(): MutableLiveData<Boolean>
-    {
+    /**
+     * Getter function to determine whether the user is logged out
+     * @return MutableLiveData<Boolean> true or false to determine state
+     */
+    fun getLogout(): MutableLiveData<Boolean> {
         return logout
     }
 
-    fun getMessage(): MutableLiveData<String>
-    {
+    /**
+     * Getter function to return a message
+     * @return MutableLiveData<String> representing the message
+     */
+    fun getMessage(): MutableLiveData<String> {
         return message
     }
 }
