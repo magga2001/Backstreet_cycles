@@ -109,26 +109,24 @@ class HomePageActivityTest {
                 withParent(withId(R.id.homepage_locationDataCardView))
             )
         ).check(matches(withText("Current Location")))
-
         onView(withId(R.id.homepage_LocationDataCardName)).check(matches(withText("Current Location")))
     }
 
-    @Test
-    fun navigation_drawer_shows_about_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.about)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun navigation_drawer_shows_faq_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.faq)).check(matches(isDisplayed()))
-    }
+//    @Test
+//    fun navigation_drawer_shows_about_button() {
+//        onView(withContentDescription(R.string.open)).perform(click())
+//        onView(withId(R.id.about)).check(matches(isDisplayed()))
+//    }
+//
+//    @Test
+//    fun navigation_drawer_shows_faq_button() {
+//        onView(withContentDescription(R.string.open)).perform(click())
+//        onView(withId(R.id.faq)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun test_add_stop_button_is_enabled(){
         onView(withId(R.id.addingBtn)).check(matches(isEnabled()))
-
     }
 
     @Test
