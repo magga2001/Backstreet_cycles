@@ -39,14 +39,16 @@ class EditUserProfileViewModel @Inject constructor(
     private val updatedProfile: MutableLiveData<String> = MutableLiveData()
 
     fun updateUserDetails(firstName: String, lastName: String) {
+
         userRepository.updateUserDetails(firstName, lastName).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    updatedProfile.postValue(result.data!!)
+//                    updatedProfile.postValue(result.data!!)
                     updatedProfile.value = result.data!!
                 }
                 is Resource.Error -> {
 
+                    updatedProfile.value = result.message!!
                 }
                 is Resource.Loading -> {
 
