@@ -205,10 +205,6 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
-    open fun initSharedPrefLocation() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-    }
-
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
