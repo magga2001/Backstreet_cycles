@@ -73,7 +73,7 @@ class ForgotPasswordViewModelTest {
     }
 
         @Test
-        fun test_email_verifcation_sent_with_correct_email(){
+        fun test_email_verification_sent_with_correct_email(){
             signUpViewModel.register("Test", "User","testuser@random.com",password)
             fakeUserRepoImpl.verifyEmail("testuser@random.com")
 
@@ -84,17 +84,16 @@ class ForgotPasswordViewModelTest {
             )
         }
 
-    //check why it doesnt work, ask magga
-//    @Test
-//    fun test_email_verifcation_not_sent_with_correct_email(){
-//        signUpViewModel.register("Test", "User","testuser@random.com",password)
-//        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-//
-//        forgotPasswordViewModel.resetPassword("testuser@random.com")
-//        Assert.assertEquals(
-//            "No user",
-//            forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
-//        )
-//    }
+    @Test
+    fun test_email_verification_not_sent_with_correct_email(){
+        signUpViewModel.register("Test", "User","testuser@random.com",password)
+        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+
+        forgotPasswordViewModel.resetPassword("testuser@random.com")
+        Assert.assertEquals(
+            "No user",
+            forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
+        )
+    }
 
 }

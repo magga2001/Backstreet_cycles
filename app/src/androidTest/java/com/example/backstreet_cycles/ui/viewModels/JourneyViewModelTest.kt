@@ -1,20 +1,31 @@
 package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
+import android.util.Log
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.ConvertHelper
+import com.example.backstreet_cycles.domain.utils.MapInfoHelper
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import dagger.hilt.android.internal.Contexts
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.math.roundToInt
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class JourneyViewModelTest {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var homePageViewModel: HomePageViewModel
@@ -45,10 +56,10 @@ class JourneyViewModelTest {
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         journeyViewModel = JourneyViewModel(
-            FakeTflRepoImpl(),
-            FakeMapboxRepoImpl(),
-            FakeCyclistRepoImpl(),
-            FakeUserRepoImpl(),
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
             application,
             instrumentationContext
         )
@@ -65,13 +76,23 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_get_journey_overview(){
-        runBlocking {homePageViewModel.getDock()}
+    fun test_get_journey_info(){
         for(location in locations){
             homePageViewModel.addStop(location)
         }
-        homePageViewModel.getRoute()
+        runBlocking {homePageViewModel.getDock()}
         homePageViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
+        assert(journeyViewModel.getJourneyLocations().size == locations.size)
+        assert(journeyViewModel.getIsReadyMutableLiveData().getOrAwaitValue().equals("UPDATE"))
+        val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
+        assert(journeyViewModel.getDistanceMutableLiveData().getOrAwaitValue()
+            .equals(distances))
+        val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
+        assert(journeyViewModel.getDurationMutableLiveData().getOrAwaitValue()
+            .equals(durations))
+        val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
+        assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
     }
+
 }

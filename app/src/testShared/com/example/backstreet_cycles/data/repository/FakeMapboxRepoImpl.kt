@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
+import android.util.Log
 import com.example.backstreet_cycles.common.Fixture
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
@@ -36,10 +37,12 @@ class FakeMapboxRepoImpl: MapboxRepository{
 
             val route = hardCodedRoute
 
-            if(!info){
+            if(info){
 
                 val distance = MapInfoHelper.retrieveJourneyDistances(route)
                 val duration = MapInfoHelper.retrieveJourneyDurations(route)
+
+                Log.i("distance", distance.toString())
 
                 addJourneyDistances(distance)
                 addJourneyDuration(duration)
