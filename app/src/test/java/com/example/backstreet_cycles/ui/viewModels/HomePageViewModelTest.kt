@@ -283,13 +283,13 @@ class HomePageViewModelTest{
     }
 
 
-    @Test
-    fun test_logOut_value_before_logging_out(){
-        assertEquals(
-            false,
-            homepageViewModel.getLogout().getOrAwaitValue()
-        )
-    }
+//    @Test
+//    fun test_logOut_value_before_logging_out(){
+//        assertEquals(
+//            false,
+//            homepageViewModel.getLogout().getOrAwaitValue()
+//        )
+//    }
 
     @Test
     fun test_logOut_value_after_logging_out(){
@@ -297,14 +297,6 @@ class HomePageViewModelTest{
         assertEquals(
             true,
             homepageViewModel.getLogout().getOrAwaitValue()
-        )
-    }
-
-    @Test
-    fun test_get_message_before_get_mapbox_route(){
-        assertEquals(
-            false,
-            homepageViewModel.getMessage().getOrAwaitValue()
         )
     }
 
