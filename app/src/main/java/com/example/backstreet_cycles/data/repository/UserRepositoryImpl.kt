@@ -1,13 +1,16 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.content.ContentValues.TAG
+import android.util.Log
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -205,6 +208,37 @@ class UserRepositoryImpl : UserRepository {
                 trySend(Resource.Error<String>(task.exception!!.message.toString()))
             }
         }
+
+        awaitClose { channel.close() }
+
+    }
+
+    override fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users): Flow<Resource<String>> = callbackFlow  {
+
+        dataBase
+            .collection("users")
+            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+            .get()
+            .addOnSuccessListener { result ->
+                val gson = Gson()
+                val jsonObject = gson.toJson(locations)
+                    if (jsonObject.isNotEmpty()) {
+                        user.journeyHistory.add(jsonObject)
+                        for (document in result) {
+                            try {
+                                dataBase.collection("users")
+                                    .document(document.id)
+                                    .update("journeyHistory", user.journeyHistory)
+                                Log.i("running", "history")
+                                trySend(Resource.Success("Added journey to the record"))
+                            } catch (e: Exception) {
+                                trySend(Resource.Error("Fail to add journey at this moment"))
+                            }
+                        }
+                    }
+                }.addOnFailureListener {
+                    trySend(Resource.Error<String>("No user"))
+                }
 
         awaitClose { channel.close() }
 

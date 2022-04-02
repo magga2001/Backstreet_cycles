@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.*
@@ -18,9 +17,7 @@ import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts
-import junit.framework.Assert
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -183,7 +180,7 @@ class JourneyViewModelTest {
         runBlocking {homePageViewModel.getDock()}
         homePageViewModel.saveJourney()
         journeyViewModel.getUserDetails()
-        assert(journeyViewModel.getUserDetailsData().getOrAwaitValue()
+        assert(journeyViewModel.getUserInfo().getOrAwaitValue()
             .equals(Users("John","Doe","johndoe@example.com")))
 //        journeyViewModel.finishJourney(journeyViewModel.getUserDetailsData().getOrAwaitValue())
     }

@@ -120,7 +120,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         // Greets the user in the nav menu
         EspressoIdlingResource.increment()
-        homePageViewModel.getUserDetailsData().observe(this) { firebaseUser ->
+        homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
@@ -131,14 +131,9 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Leads to the journey page with the searched locations
         homePageViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                homePageViewModel.saveJourney()
-                homePageViewModel.getIsReadyMutableLiveData().value = false
-                val intent = Intent(this, JourneyActivity::class.java)
+                val intent = Intent(this, LoadingActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-            } else {
-                nextPageButton.isEnabled = true
-                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot find route")
             }
         }
 
@@ -151,6 +146,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
+            }else{
+                val intent = Intent(this, LoadingActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
@@ -311,7 +310,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 }
 
                 R.id.logout -> {
-                    Log.i("Clicked", "logout")
                     homePageViewModel.logOut()
                     homePageViewModel.cancelWork()
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -369,7 +367,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         nextPageButton.setOnClickListener {
             homePageViewModel.updateCurrentLocation(locationComponent)
-            lifecycleScope.launch { homePageViewModel.getDock() }
+            homePageViewModel.getRoute()
         }
 
         stopsAdapter.getCollapseBottomSheet()
@@ -528,14 +526,12 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            nextPageButton.isEnabled = false
             SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            nextPageButton.isEnabled = false
             SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
@@ -617,8 +613,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onStart()
         homepage_mapView?.onStart()
         homePageViewModel.getUserDetails()
-        homePageViewModel.destroyMapboxNavigation()
-        homePageViewModel.getMapBoxNavigation()
+//        homePageViewModel.destroyMapboxNavigation()
+//        homePageViewModel.getMapBoxNavigation()
     }
 
     /**
