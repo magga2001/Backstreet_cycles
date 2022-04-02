@@ -115,6 +115,7 @@ class FakeUserRepoImpl : UserRepository{
         email: String
     ): Flow<Resource<String>> = flow {
         if(!email.contains(validEmail)){
+            users.remove(email)
             emit(Resource.Error("Invalid email, cannot send email"))
         }
     }
