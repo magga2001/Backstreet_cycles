@@ -155,7 +155,7 @@ class HomePageViewModel @Inject constructor(
         return stops
     }
 
-    private fun checkIfAlreadyInStops(location: Locations): Boolean {
+    fun checkIfAlreadyInStops(location: Locations): Boolean {
         return stops.contains(location)
     }
 
