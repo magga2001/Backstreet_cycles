@@ -67,39 +67,39 @@ class JourneyHistoryViewModel @Inject constructor(
         checkCurrentJourney()
     }
 
-    private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-//                    isReadyMutableLiveData.postValue(true)
-                    isReadyMutableLiveData.value = true
-                }
+//    private fun getMapBoxRoute(routeOptions: RouteOptions) {
+//        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
+//            when (result) {
+//                is Resource.Success -> {
+////                    isReadyMutableLiveData.postValue(true)
+//                    isReadyMutableLiveData.value = true
+//                }
+//
+//                is Resource.Error -> {
+//                    //Fail
+////                    message.postValue(result.message!!)
+//                    message.value = result.message!!
+//                }
+//                is Resource.Loading -> {
+//                }
+//            }
+//        }.launchIn(viewModelScope)
+//    }
 
-                is Resource.Error -> {
-                    //Fail
-//                    message.postValue(result.message!!)
-                    message.value = result.message!!
-                }
-                is Resource.Loading -> {
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun fetchRoute(
-        context: Context,
-        locations: MutableList<Locations>
-    ) {
-
-        resetNumCyclists()
-        clearDuplication(locations)
-        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
-
-        clearInfo()
-        setCurrentWayPoint(locations)
-        val routeOptions = setCustomiseRoute(context, points)
-        getMapBoxRoute(routeOptions)
-    }
+//    private fun fetchRoute(
+//        context: Context,
+//        locations: MutableList<Locations>
+//    ) {
+//
+//        resetNumCyclists()
+//        clearDuplication(locations)
+//        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
+//
+//        clearInfo()
+//        setCurrentWayPoint(locations)
+//        val routeOptions = setCustomiseRoute(context, points)
+//        getMapBoxRoute(routeOptions)
+//    }
 
     private fun checkCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
@@ -108,7 +108,7 @@ class JourneyHistoryViewModel @Inject constructor(
 //            showAlert.postValue(true)
             setShowAlert(true)
         } else {
-            fetchRoute(mContext, getJourneyLocations())
+            isReadyMutableLiveData.value = true
         }
     }
 
@@ -128,18 +128,12 @@ class JourneyHistoryViewModel @Inject constructor(
 
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
-        fetchRoute(
-            mContext,
-            getJourneyLocations()
-        )
+        isReadyMutableLiveData.value = true
     }
 
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
-        fetchRoute(
-            mContext,
-            newStops
-        )
+        isReadyMutableLiveData.value = true
     }
 
     fun getJourneyHistory(userDetails: Users): MutableList<List<Locations>> {

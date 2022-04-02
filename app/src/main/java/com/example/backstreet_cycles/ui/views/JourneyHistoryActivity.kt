@@ -45,7 +45,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                startActivity(Intent(this, JourneyActivity::class.java))
+                journeyHistoryViewModel.resetNumCyclists()
+                startActivity(Intent(this, LoadingActivity::class.java))
                 journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }

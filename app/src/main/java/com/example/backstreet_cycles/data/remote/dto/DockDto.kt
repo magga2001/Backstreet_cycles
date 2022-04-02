@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.data.remote.dto
 
+import android.util.Log
 import com.example.backstreet_cycles.domain.model.dto.Dock
 
 data class DockDto(
@@ -22,12 +23,12 @@ fun DockDto.toDock(): Dock {
         name = commonName,
         lat = lat,
         lon = lon,
-        nbBikes = checkValidity(additionalProperties.filter { it.category == "nbBikes" }
-            .map { it.value }.toString()),
-        nbDocks = checkValidity(additionalProperties.filter { it.category == "nbDocks" }
-            .map { it.value }.toString()),
-        nbSpaces = checkValidity(additionalProperties.filter { it.category == "nbSpaces" }
-            .map { it.value }.toString())
+        nbBikes = checkValidity(additionalProperties.filter { it.key == "NbBikes" }
+            .map { it.value }.first().toString()),
+        nbDocks = checkValidity(additionalProperties.filter { it.key == "NbDocks" }
+            .map { it.value }.first().toString()),
+        nbSpaces = checkValidity(additionalProperties.filter { it.key == "NbEmptyDocks" }
+            .map { it.value }.first().toString())
     )
 }
 
