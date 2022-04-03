@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
@@ -49,7 +48,6 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
@@ -500,6 +498,10 @@ class JourneyActivity : AppCompatActivity() {
     }
 
 
+    override fun onPause() {
+        super.onPause()
+        updateCheckBoxSharedPref()
+    }
 
     // Termination of JourneyPage
     override fun onDestroy() {

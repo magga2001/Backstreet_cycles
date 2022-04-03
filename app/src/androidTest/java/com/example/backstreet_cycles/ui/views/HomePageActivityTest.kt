@@ -3,7 +3,6 @@ package com.example.backstreet_cycles.ui.views
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -30,6 +29,8 @@ import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -37,22 +38,20 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf.allOf
-import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
 class HomePageActivityTest {
 
-    private val email = "vafai.vandad@gmail.com"
+    private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
