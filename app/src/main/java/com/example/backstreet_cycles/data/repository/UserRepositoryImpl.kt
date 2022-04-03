@@ -17,10 +17,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl(
+    fireAuth: FirebaseAuth,
+    fireStore: FirebaseFirestore,
+): UserRepository {
 
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var dataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var firebaseAuth: FirebaseAuth = fireAuth
+    private var dataBase: FirebaseFirestore = fireStore
 
     fun setFirebaseAuth(firebaseAuth: FirebaseAuth){
         this.firebaseAuth = firebaseAuth
@@ -36,7 +39,7 @@ class UserRepositoryImpl : UserRepository {
         email: String,
         password: String
     ): Flow<Resource<String>> = callbackFlow {
-        trySend(Resource.Loading())
+//        trySend(Resource.Loading())
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -174,7 +177,6 @@ class UserRepositoryImpl : UserRepository {
 
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = callbackFlow {
         EspressoIdlingResource.increment()
-        trySend(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
