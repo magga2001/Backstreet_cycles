@@ -157,7 +157,7 @@ class WorkerService @AssistedInject constructor(
         val notificationBuilder = NotificationCompat.Builder(context, "1337")
             .setSmallIcon(R.drawable.dock_station)
             .setContentTitle("Journey update!")
-            .setContentText("One or more of docking stations in your journey has been changed due to spaces available")
+            .setContentText("open the app to see the new changes in your journey")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
