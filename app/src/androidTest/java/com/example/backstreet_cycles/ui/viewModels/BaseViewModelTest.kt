@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.common.TestAppModule
 //import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
@@ -15,7 +16,6 @@ import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts.getApplication
-import junit.framework.Assert
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -47,13 +47,14 @@ class BaseViewModelTest {
 
     @Before
     fun setUp() {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
         fakeUserRepoImpl = FakeUserRepoImpl()
+
         baseViewModel = BaseViewModel(
             fakeTflRepoImpl,
             fakeMapboxRepoImpl,
