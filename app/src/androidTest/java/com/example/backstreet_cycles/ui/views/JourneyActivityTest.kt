@@ -522,6 +522,35 @@ private fun add_stop(name: String) {
 
 }
 
+    @Test
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+        sleep(1500)
+        onView(
+            Matchers.allOf(
+                ViewMatchers.withContentDescription("Navigate up"),
+                childAtPosition(
+                    Matchers.allOf(
+                        withId(R.id.action_bar),
+                        childAtPosition(
+                            withId(R.id.action_bar_container),
+                            0
+                        )
+                    ),
+                    1
+                ),
+                isDisplayed()
+            )
+        ).perform(ViewActions.click())
+
+
+        Intents.init()
+        intending(hasComponent(HomePageActivity::class.qualifiedName))
+        Intents.release()
+    }
+
+
+
+
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int
     ): Matcher<View> {
