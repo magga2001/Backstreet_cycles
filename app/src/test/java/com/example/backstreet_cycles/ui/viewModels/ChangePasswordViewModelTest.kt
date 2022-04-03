@@ -85,57 +85,46 @@ class ChangePasswordViewModelTest {
             application,
             context
         )
+        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
+        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
+        logInViewModel.login("johndoe@example.com", "123456")
+        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assert(fakeUserRepoImpl.getCurrentUser() != null)
     }
 
     @Test
     fun test_password_not_updated_if_currentPassword_is_wrong_and_newPassword_less_than_6()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(wrongCurrentPassword, wrongNewPassword)
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }
 
     @Test
     fun test_password_not_updated_if_wrong_currentPassword()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(wrongCurrentPassword, newPassword)
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
  }
 
     @Test
     fun test_password_not_updated_if_newPassword_less_than_6()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(password, wrongNewPassword)
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }
+
     @Test
     fun test_password_not_updated_if_currentPassword_is_empty()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword("", wrongNewPassword)
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }
 
     @Test
     fun test_password_not_updated_if_newPassword_is_empty()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(password, "")
         assertEquals("Fail to update password", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }
 
     @Test
     fun test_password_updated_if_newPassword_is_correct()= runBlocking{
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
-        logInViewModel.login("testuser@random.com", password)
         changePasswordViewModel.updatePassword(password, "1213123213213123")
         assertEquals("Password updated Successfully", changePasswordViewModel.getUpdateDetail().getOrAwaitValue())
     }

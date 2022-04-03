@@ -63,8 +63,7 @@ class LogInViewModelTest {
 
     @Test
     fun test_log_in_with_verified_email() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        register()
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
         assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
@@ -72,8 +71,7 @@ class LogInViewModelTest {
 
     @Test
     fun test_log_in_with_unverified_email() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        register()
         logInViewModel.login("johndoe@example.com", "123456")
         assertEquals("Please verify your email", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
     }
@@ -81,16 +79,20 @@ class LogInViewModelTest {
     @Test
     fun test_log_in_with_unregistered_email() = runBlocking {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("No user", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+        assertEquals("No User", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
     }
 
     @Test
     fun test_check_if_the_user_has_logged_in() = runBlocking {
-        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        register()
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
         assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
+    }
+
+    fun register(){
+        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
+        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
     }
 }

@@ -208,7 +208,7 @@ class HomePageViewModel @Inject constructor(
      * Check if info received
      * @return Boolean
      */
-    private fun getUpdateInfo(): Boolean {
+    fun getUpdateInfo(): Boolean {
         return updateInfo
     }
 
@@ -319,6 +319,7 @@ class HomePageViewModel @Inject constructor(
                 }
             }
         } catch(e: NullPointerException){
+
         }
     }
 
