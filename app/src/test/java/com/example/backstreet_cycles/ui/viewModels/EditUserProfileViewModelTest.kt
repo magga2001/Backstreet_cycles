@@ -9,10 +9,7 @@ import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
-import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
-import com.example.backstreet_cycles.ui.viewModel.EditUserProfileViewModel
-import com.example.backstreet_cycles.ui.viewModel.ForgotPasswordViewModel
-import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
+import com.example.backstreet_cycles.ui.viewModel.*
 import dagger.hilt.android.internal.Contexts
 import io.mockk.mockk
 import junit.framework.Assert
@@ -36,6 +33,7 @@ class EditUserProfileViewModelTest {
     private lateinit var editUserProfileViewModel: EditUserProfileViewModel
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var forgotPasswordViewModel: ForgotPasswordViewModel
+    private lateinit var logInViewModel: LogInViewModel
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
     private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
@@ -78,36 +76,43 @@ class EditUserProfileViewModelTest {
                 application,
                 context
         )
+        logInViewModel = LogInViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            application,
+            context
+        )
+        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
+        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
     }
 
-    //ask magga why it's failing
-//    @Test
-//    fun test_update_lastName_unsuccessful_without_loggin_in() {
-//        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
-//        fakeUserRepoImpl.logOut()
-//        editUserProfileViewModel.updateUserDetails("test","testLastName")
-//        Assert.assertEquals(
-//                "No User",
-//                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-//        )
-//    }
+    @Test
+    fun test_update_lastName_unsuccessful_without_loggin_in() {
+        editUserProfileViewModel.updateUserDetails("test","testLastName")
+        assertEquals(
+                "No User",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
 
-    //ask magga why failing
-//    @Test
-//    fun test_update_firstName_unsuccessful_without_loggin_in() {
-//        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
-//        fakeUserRepoImpl.logOut()
-//        editUserProfileViewModel.updateUserDetails("testFirstName","user")
-//        Assert.assertEquals(
-//                "No User",
-//                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-//        )
-//    }
+    @Test
+    fun test_update_firstName_unsuccessful_without_loggin_in() {
+        editUserProfileViewModel.updateUserDetails("testFirstName","user")
+        assertEquals(
+                "No User",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
 
     @Test
     fun test_update_firstName_successfully()
     {
-        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        logInViewModel.login("johndoe@example.com", "123456")
+        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
         assertEquals(
                 "Success",
@@ -120,9 +125,11 @@ class EditUserProfileViewModelTest {
     }
 
     @Test
-    fun test_update_lasName_successfully()
+    fun test_update_lastName_successfully()
     {
-        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        logInViewModel.login("johndoe@example.com", "123456")
+        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("test","testLastName")
         assertEquals(
                 "Success",
@@ -137,7 +144,9 @@ class EditUserProfileViewModelTest {
     @Test
     fun test_update_lastName_and_first_name_successfully()
     {
-        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        logInViewModel.login("johndoe@example.com", "123456")
+        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("testFirstName","testLastName")
         assertEquals(
                 "Success",
