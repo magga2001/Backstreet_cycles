@@ -9,19 +9,14 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
-import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -40,13 +35,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.navigation.base.options.NavigationOptions
-import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -522,6 +512,8 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(application,Constants.DOCKS_LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 
