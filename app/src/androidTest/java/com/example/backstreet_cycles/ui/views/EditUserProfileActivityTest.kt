@@ -48,6 +48,7 @@ class EditUserProfileActivityTest {
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET
         )
