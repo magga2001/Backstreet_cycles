@@ -12,12 +12,12 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
-import com.example.backstreet_cycles.domain.repositoryInt.*
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.*
 import com.example.backstreet_cycles.interfaces.Planner
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.maps.plugin.annotation.AnnotationPlugin
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -27,10 +27,8 @@ import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,6 +62,7 @@ class JourneyViewModel @Inject constructor(
     private var journeyState = JourneyState.START_WALKING
     private var isUpdateMap: Boolean = true
     private val updateMap: MutableLiveData<Boolean> = MutableLiveData()
+    private val isReady: MutableLiveData<Boolean> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
@@ -253,17 +252,40 @@ class JourneyViewModel @Inject constructor(
     }
 
     fun finishJourney(userDetails: Users) {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
         addJourneyToJourneyHistory(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
+
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 
     private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users){
 
-        userRepository.addJourneyToJourneyHistory(locations, user)
+        userRepository.addJourneyToJourneyHistory(locations, user).onEach { result ->
+
+            when (result) {
+                is Resource.Success -> {
+                    message.value = result.data!!
+                    isReady.value = true
+                    SharedPrefHelper.clearSharedPreferences()
+                }
+
+                is Resource.Error -> {
+                    message.value = result.message!!
+                    isReady.value = false
+                }
+                is Resource.Loading -> {
+                }
+            }
+
+        }.launchIn(viewModelScope)
     }
 
     private fun displayPrice() {
@@ -277,6 +299,10 @@ class JourneyViewModel @Inject constructor(
 
     fun getUpdateMap(): MutableLiveData<Boolean> {
         return updateMap
+    }
+
+    fun getIsReady(): MutableLiveData<Boolean>{
+        return isReady
     }
 
     fun getDistanceMutableLiveData(): MutableLiveData<String> {
@@ -293,5 +319,15 @@ class JourneyViewModel @Inject constructor(
 
     fun getMessage(): MutableLiveData<String> {
         return message
+    }
+
+    fun getTheCheckedBoxes(): List<String> {
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
+        return SharedPrefHelper.getSharedPref(String::class.java)
+    }
+
+    fun storeCheckedBoxesSharedPref(checkedBoxes: List<String>) {
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
+        SharedPrefHelper.overrideSharedPref(checkedBoxes.toMutableList(),String::class.java)
     }
 }

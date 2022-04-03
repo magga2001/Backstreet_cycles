@@ -472,7 +472,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun initViewListener() {
         // initialize view interactions
         stop.setOnClickListener {
-            val intent = Intent(this, JourneyActivity::class.java)
+            val intent = Intent(this, LoadingActivity::class.java)
             startActivity(intent)
             clearRouteAndStopNavigation()
             finish()

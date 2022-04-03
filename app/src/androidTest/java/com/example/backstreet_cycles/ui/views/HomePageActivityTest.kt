@@ -271,7 +271,7 @@ class HomePageActivityTest {
         onView(withId(R.id.nextPageButton)).perform(click())
 
         Intents.init()
-        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        intending(hasComponent(LoadingActivity::class.qualifiedName))
         Intents.release()
     }
     //failing
@@ -536,7 +536,6 @@ class HomePageActivityTest {
     fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
         onView(withId(R.id.addingBtn)).perform(click())
         onView(isRoot()).perform(waitFor(1000))
-//        sleep(1500)
         onView(
             allOf(
                 withId(R.id.button_search_back),

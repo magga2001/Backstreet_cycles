@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -45,7 +47,6 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 import kotlinx.coroutines.launch
@@ -229,8 +230,12 @@ class JourneyActivity : AppCompatActivity() {
             }
         }
 
+        journeyViewModel.getIsReady().observe(this){
+            onFinishJourney()
+        }
+
         journeyViewModel.getMessage().observe(this){
-            SnackBarHelper.displaySnackBar(homePageActivity, it)
+            SnackBarHelper.displaySnackBar(journeyActivity, it)
         }
 
         planJourneyAdapter.getAllBoxesCheckedMutableLiveData()
@@ -240,6 +245,7 @@ class JourneyActivity : AppCompatActivity() {
 
         planJourneyAdapter.getCollapseBottomSheet()
             .observe(this) {
+                updateCheckBoxSharedPref()
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
     }
@@ -284,6 +290,7 @@ class JourneyActivity : AppCompatActivity() {
     private fun initListeners() {
         start_navigation.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            updateCheckBoxSharedPref()
             startActivity(intent)
             finish()
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -324,10 +331,6 @@ class JourneyActivity : AppCompatActivity() {
                     journeyViewModel.clearJourneyLocations()
                     journeyViewModel.finishJourney(userDetails)
                     journeyViewModel.resetNumCyclists()
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 }
             }
         }
@@ -407,11 +410,13 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
+        val tvFrom = journeyViewModel.getTheCheckedBoxes()
         planJourneyAdapter = PlanJourneyAdapter(
             this,
             journeyViewModel.getCurrentDocks(),
             journeyViewModel.getJourneyLocations(),
-            planner = journeyViewModel.getPlannerInterface()
+            planner = journeyViewModel.getPlannerInterface(),
+            tvFrom
         )
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
@@ -431,6 +436,11 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateCheckBoxSharedPref(){
+        val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
+        journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)
+    }
+
     /**
      * UI is updated as journey progresses
      */
@@ -438,6 +448,18 @@ class JourneyActivity : AppCompatActivity() {
         journeyViewModel.setRoute()
         navigationCamera.requestNavigationCameraToOverview()
         journeyViewModel.updateMapMarkerAnnotation(annotationApi)
+    }
+
+    private fun onFinishJourney(){
+
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            val intent = Intent(this, HomePageActivity::class.java)
+            startActivity(intent)
+            finish()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
+        }, Constants.INFORM_SPLASH_TIME)
     }
 
     /**
@@ -461,9 +483,12 @@ class JourneyActivity : AppCompatActivity() {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.refresh_button -> {
+                updateCheckBoxSharedPref()
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
-                lifecycleScope.launch { journeyViewModel.getDock() }
+                val intent = Intent(this, LoadingActivity::class.java)
+                startActivity(intent)
+                finish()
                 true
             }
             android.R.id.home -> {
@@ -474,10 +499,11 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+
+
     // Termination of JourneyPage
     override fun onDestroy() {
         super.onDestroy()
-
         journeyViewModel.unregisterObservers(
             routesObserver,
             routeProgressObserver
@@ -490,6 +516,7 @@ class JourneyActivity : AppCompatActivity() {
     // Terminate JourneyPage when back button is clicked
     override fun onBackPressed() {
         super.onBackPressed()
+        updateCheckBoxSharedPref()
         journeyViewModel.clearView()
         journeyViewModel.clearJourneyLocations()
         finish()

@@ -6,8 +6,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.*
+import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.common.MapboxConstants
+import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -23,7 +24,6 @@ import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.geojson.Point
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.base.extensions.applyLanguageAndVoiceUnitOptions
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
@@ -199,8 +199,9 @@ open class BaseViewModel @Inject constructor(
 
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
-                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
+//                        JsonHelper.deleteFile(mContext,"localDocks.json")
+//                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
+//                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
                     }
                     getRoute()
                 }
@@ -233,6 +234,8 @@ open class BaseViewModel @Inject constructor(
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
+        SharedPrefHelper.clearSharedPreferences()
     }
 
     open fun clearSaveLocations() {

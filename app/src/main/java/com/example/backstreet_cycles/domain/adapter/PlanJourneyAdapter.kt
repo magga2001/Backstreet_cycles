@@ -17,9 +17,9 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.PlannerHelper
-import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
+import com.example.backstreet_cycles.domain.utils.JourneyState
+import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.views.JourneyActivity
 
@@ -28,9 +28,11 @@ class PlanJourneyAdapter(
     private val context: Context,
     private val docks: MutableList<Dock>,
     private var locations: List<Locations>,
-    private val planner: Planner
+    private val planner: Planner,
+    private val tvFrom: List<String>
 ) : RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
+//    private val checkedBoxesLiveData: MutableLiveData<List<TextView>> = MutableLiveData()
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
@@ -102,13 +104,19 @@ class PlanJourneyAdapter(
         buttonList.add(holder.setNav2)
         buttonList.add(holder.setNav3)
 
-        holder.checkBoxButton.setOnClickListener {
-            enableExpandButton(holder)
-        }
-
         holder.tvFrom.text = "From: ${ConvertHelper.shortenName(location.name).first()} "
 
         holder.tvTo.text = "To: ${ConvertHelper.shortenName(locations[position + 1].name).first()}"
+
+        if (checkCheckedBoxInSharePref(holder.tvFrom.text.toString())){
+            holder.checkBoxButton.isChecked = true
+            enableExpandButton(holder)
+        }
+
+        holder.checkBoxButton.setOnClickListener {
+
+            enableExpandButton(holder)
+        }
 
         holder.setNav1.setOnClickListener {
 
@@ -256,4 +264,15 @@ class PlanJourneyAdapter(
             allBoxesCheckedMutableLiveData.postValue(false)
         }
     }
+
+    fun getCheckedBoxesToStoreInSharedPref(): List<String> {
+        val checkedBoxes = viewHolders.filter { it.checkBoxButton.isChecked }
+        return checkedBoxes.map { it.tvFrom.text.toString() }
+    }
+
+    fun checkCheckedBoxInSharePref(from: String): Boolean {
+        return from in tvFrom
+    }
+
+
 }

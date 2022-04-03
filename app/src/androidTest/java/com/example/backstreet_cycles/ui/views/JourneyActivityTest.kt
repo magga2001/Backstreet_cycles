@@ -1,8 +1,11 @@
 package com.example.backstreet_cycles.ui.views
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.IdlingRegistry
@@ -14,6 +17,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -21,9 +25,10 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
-import com.example.backstreet_cycles.domain.adapter.StopsAdapter
+import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
+import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runBlockingTest
@@ -48,6 +53,14 @@ class JourneyActivityTest {
     private val password = "123456"
 
     private val userRepoImpl = UserRepositoryImpl()
+    private lateinit var homePageViewModel: HomePageViewModel
+    lateinit var instrumentationContext: Context
+
+    private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
+    private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
+    private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
+    private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
+    private lateinit var fakeLocationRepoImpl: FakeLocationRepoImpl
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -65,8 +78,29 @@ class JourneyActivityTest {
         )
 
 
+
+
     @Before
     fun setUp() {
+
+        instrumentationContext = ApplicationProvider.getApplicationContext();
+        val application = Contexts.getApplication(instrumentationContext)
+
+        fakeTflRepoImpl = FakeTflRepoImpl()
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+        fakeCyclistRepoImpl = FakeCyclistRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeLocationRepoImpl = FakeLocationRepoImpl()
+
+        homePageViewModel = HomePageViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            fakeLocationRepoImpl,
+            application,
+            instrumentationContext
+        )
         userRepoImpl.logOut()
         userRepoImpl.login(email,password)
         hiltRule.inject()
@@ -74,15 +108,25 @@ class JourneyActivityTest {
 
         ActivityScenario.launch(HomePageActivity::class.java)
         add_stop("covent gardens")
+        add_stop("Buckingham Palace")
+        //sleep(1200)
         onView(withId(R.id.nextPageButton)).perform(click())
         sleep(1000)
         ActivityScenario.launch(LoadingActivity::class.java)
         sleep(3000)
         ActivityScenario.launch(JourneyActivity::class.java)
+
+        if(homePageViewModel.getShowAlertMutableLiveData().value==true)
+        {
+            onView(withText("Create New Journey")).inRoot(isDialog()).check(matches(
+                isDisplayed())).perform(click())
+        }
+
     }
 
     @Test
     fun test_journey_activity_is_visible() {
+        //ActivityScenario.launch(JourneyActivity::class.java)
         Intents.init()
         intending(hasComponent(JourneyActivity::class.qualifiedName))
         Intents.release()

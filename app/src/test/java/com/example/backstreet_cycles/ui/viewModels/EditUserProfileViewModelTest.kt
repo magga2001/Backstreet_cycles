@@ -15,17 +15,13 @@ import io.mockk.mockk
 import junit.framework.Assert
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-//import org.robolectric.RobolectricTestRunner
-//import org.robolectric.annotation.Config
-
-//@RunWith(RobolectricTestRunner::class)
-//@Config(application = BackstreetApplication::class, manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 @Config(application = BackstreetApplication::class, manifest = Config.NONE)
 @ExperimentalCoroutinesApi
@@ -89,6 +85,29 @@ class EditUserProfileViewModelTest {
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
     }
 
+//    ask magga why it's failing
+    @Test
+    fun test_update_lastName_unsuccessful_without_logging_in() {
+        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        fakeUserRepoImpl.logOut()
+        editUserProfileViewModel.updateUserDetails("test","testLastName")
+        assertEquals(
+                "No user",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
+
+//    ask magga why failing
+    @Test
+    fun test_update_firstName_unsuccessful_without_logging_in() {
+        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        fakeUserRepoImpl.logOut()
+        editUserProfileViewModel.updateUserDetails("testFirstName","user")
+        assertEquals(
+                "No user",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
     @Test
     fun test_update_lastName_unsuccessful_without_loggin_in() {
         editUserProfileViewModel.updateUserDetails("test","testLastName")
@@ -135,7 +154,7 @@ class EditUserProfileViewModelTest {
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        assertEquals(
+        Assert.assertEquals(
                 "testLastName",
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )

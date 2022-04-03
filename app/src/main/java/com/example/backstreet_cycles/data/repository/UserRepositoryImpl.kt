@@ -17,10 +17,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl(
+    fireAuth: FirebaseAuth,
+    fireStore: FirebaseFirestore,
+): UserRepository {
 
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var dataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var firebaseAuth: FirebaseAuth = fireAuth
+    private var dataBase: FirebaseFirestore = fireStore
 
     fun setFirebaseAuth(firebaseAuth: FirebaseAuth){
         this.firebaseAuth = firebaseAuth
@@ -36,7 +39,7 @@ class UserRepositoryImpl : UserRepository {
         email: String,
         password: String
     ): Flow<Resource<String>> = callbackFlow {
-        trySend(Resource.Loading())
+//        trySend(Resource.Loading())
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -105,7 +108,7 @@ class UserRepositoryImpl : UserRepository {
                     trySend(Resource.Success("Profile updated successfully"))
                 }
             }.addOnFailureListener {
-                trySend(Resource.Success("Profile not updated."))
+                trySend(Resource.Error<String>("Profile not updated."))
             }
         }catch(e: Exception) {
             trySend(Resource.Error<String>("No user"))
@@ -174,7 +177,6 @@ class UserRepositoryImpl : UserRepository {
 
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = callbackFlow {
         EspressoIdlingResource.increment()
-        trySend(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -217,7 +219,7 @@ class UserRepositoryImpl : UserRepository {
 
         dataBase
             .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+            .whereEqualTo("email", user.email)
             .get()
             .addOnSuccessListener { result ->
                 val gson = Gson()
@@ -229,10 +231,9 @@ class UserRepositoryImpl : UserRepository {
                                 dataBase.collection("users")
                                     .document(document.id)
                                     .update("journeyHistory", user.journeyHistory)
-                                Log.i("running", "history")
                                 trySend(Resource.Success("Added journey to the record"))
                             } catch (e: Exception) {
-                                trySend(Resource.Error("Fail to add journey at this moment"))
+                                trySend(Resource.Error<String>("Fail to add journey at this moment"))
                             }
                         }
                     }

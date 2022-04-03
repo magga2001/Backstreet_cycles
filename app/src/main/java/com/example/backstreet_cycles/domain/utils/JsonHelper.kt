@@ -7,6 +7,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.*
+import java.nio.charset.Charset
+import java.util.concurrent.CopyOnWriteArrayList
 
 object JsonHelper {
 
@@ -61,6 +63,10 @@ object JsonHelper {
         } catch (ioException: IOException) {
             null
         }
+    }
+
+    fun deleteFile(context: Context, fileName: String){
+        context.deleteFile(fileName)
     }
 
     fun isFilePresent(context: Context, fileName: String): Boolean {

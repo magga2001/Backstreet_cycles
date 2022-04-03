@@ -93,8 +93,7 @@ class LoadingViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    //Fail
-                    message.postValue(result.message!!)
+                    message.value = result.message!!
                     isReadyMutableLiveData.value = false
                 }
 

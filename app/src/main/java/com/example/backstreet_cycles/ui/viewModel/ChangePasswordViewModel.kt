@@ -44,11 +44,10 @@ class ChangePasswordViewModel @Inject constructor(
      * @param password records current password
      * @param newPassword records the updated password
      */
-    fun updatePassword(password: String, newPassword: String) {
+     fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    updatePassword.postValue(result.data!!)
                     updatePassword.value = result.data!!
                 }
 

@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
+import android.util.Log
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -56,6 +57,8 @@ class FakeUserRepoImpl : UserRepository{
             }else{
                 emit(Resource.Error("No user"))
             }
+        }else{
+            emit(Resource.Error("No user"))
         }
     }
 
@@ -136,7 +139,6 @@ class FakeUserRepoImpl : UserRepository{
         locations: MutableList<Locations>,
         user: Users
     ): Flow<Resource<String>> = flow {
-
 
         if(currentUser != null){
 
