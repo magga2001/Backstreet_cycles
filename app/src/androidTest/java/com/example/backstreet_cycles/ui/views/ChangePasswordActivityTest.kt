@@ -123,6 +123,13 @@ class ChangePasswordActivityTest {
         )
     }
 
+    @Test
+    fun test_trims_fullname(){
+        onView(withId(R.id.change_password_currentPassword)).perform(ViewActions.replaceText("123456   "))
+        onView(withId(R.id.change_password_NewPassword)).perform(ViewActions.replaceText("   696969"))
+        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+    }
+
 //    //    Test will work later
 //    @Test
 //    fun test_snack_bar_appears_on_change_password() {

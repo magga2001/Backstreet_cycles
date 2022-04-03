@@ -177,6 +177,16 @@ class SignUpActivityTest {
         Intents.release()
     }
 
+    @Test
+    fun test_trims_details(){
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test    "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText("test@gmail.com   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(typeText("test12   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(typeText("test12    "), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+    }
+
     @After
     fun tearDown(){
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)

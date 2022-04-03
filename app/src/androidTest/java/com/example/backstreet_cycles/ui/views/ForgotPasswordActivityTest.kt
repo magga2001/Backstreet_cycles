@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
@@ -32,7 +31,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -93,35 +91,35 @@ class ForgotPasswordActivityTest{
     }
 
 
-    @Test
-    fun test_Snackbar_clicking_button_after_entering_email(){
-        onView(withId(R.id.forgot_password_email)).perform(typeText(email), closeSoftKeyboard())
-        //sleep(1500)
-        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
-        sleep(1000)
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText("Password reset link sent to email.")))
-    }
+//    @Test
+//    fun test_Snackbar_clicking_button_after_entering_email(){
+//        onView(withId(R.id.forgot_password_email)).perform(typeText(email), closeSoftKeyboard())
+//        //sleep(1500)
+//        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
+//        onView(isRoot()).perform(waitFor(1000))
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(withText("Password reset link sent to email.")))
+//    }
 
-    @Test
-    fun test_Snackbar_entered_email_is_badly_formatted(){
-        onView(withId(R.id.forgot_password_email)).perform(typeText("wrongEmail"), closeSoftKeyboard())
-        sleep(1000)
-        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
-        sleep(1000)
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText("The email address is badly formatted.")))
-    }
+//    @Test
+//    fun test_Snackbar_entered_email_is_badly_formatted(){
+//        onView(withId(R.id.forgot_password_email)).perform(typeText("wrongEmail"), closeSoftKeyboard())
+//        onView(isRoot()).perform(waitFor(1000))
+//        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
+//        onView(isRoot()).perform(waitFor(1000))
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(withText("The email address is badly formatted.")))
+//    }
 
-    @Test
-    fun test_Snackbar_no_such_user(){
-        onView(withId(R.id.forgot_password_email)).perform(typeText("wrongEmail@gmail.com"), closeSoftKeyboard())
-        sleep(1000)
-        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
-        sleep(1000)
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText("There is no user record corresponding to this identifier. The user may have been deleted.")))
-    }
+//    @Test
+//    fun test_Snackbar_no_such_user(){
+//        onView(withId(R.id.forgot_password_email)).perform(typeText("wrongEmail@gmail.com"), closeSoftKeyboard())
+//        onView(isRoot()).perform(waitFor(1000))
+//        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
+//        onView(isRoot()).perform(waitFor(1000))
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(withText("There is no user record corresponding to this identifier. The user may have been deleted.")))
+//    }
 
 
     @Test
@@ -231,5 +229,15 @@ class ForgotPasswordActivityTest{
     fun tearDown(){
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         userRepoImpl.logOut()
+    }
+
+    private fun waitFor(delay: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        }
     }
 }

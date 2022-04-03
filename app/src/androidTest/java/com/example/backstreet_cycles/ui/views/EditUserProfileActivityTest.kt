@@ -155,14 +155,12 @@ class EditUserProfileActivityTest {
         onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
     }
 
-//    @Test
-//    fun test_trims_fullname(){
-//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(" John   "))
-//        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("   Doe "))
-//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        onView(withId(R.id.edit_user_details_firstName)).check(matches(withText("John")))
-//        onView(withId(R.id.edit_user_details_lastName)).check(matches(withText("Doe")))
-//    }
+    @Test
+    fun test_trims_passwords(){
+        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(" John   "))
+        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("   Doe "))
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+    }
 
     @Test
     fun test_on_clickUpdateProfile_save() {
