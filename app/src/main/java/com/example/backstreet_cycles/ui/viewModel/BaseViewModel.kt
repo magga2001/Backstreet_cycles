@@ -75,7 +75,6 @@ open class BaseViewModel @Inject constructor(
     }
 
     //FIREBASE
-
     open fun getUserDetails() {
         userRepository.getUserDetails().onEach { result ->
             when (result) {

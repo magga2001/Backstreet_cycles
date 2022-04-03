@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-//import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
@@ -26,8 +25,7 @@ class BaseViewModelTest {
     lateinit var instrumentationContext: Context
 
     @Before
-    fun setUp()
-    {
+    fun setUp() {
         instrumentationContext = ApplicationProvider.getApplicationContext();
         val application = getApplication(instrumentationContext)
         baseViewModel = BaseViewModel(
@@ -41,16 +39,27 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_increment_cyclists()
-    {
+    fun test_increment_cyclists() {
         baseViewModel.resetNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 1)
         baseViewModel.incrementNumCyclists()
         assert(baseViewModel.getNumCyclists() == 2)
     }
 
     @Test
-    fun test_decrement_cyclists()
-    {
+    fun test_cyclist_number_donot_increase_if_already_4(){
+        baseViewModel.resetNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 4)
+        baseViewModel.incrementNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 4)
+    }
+
+    @Test
+    fun test_decrement_cyclists() {
         baseViewModel.resetNumCyclists()
         baseViewModel.incrementNumCyclists()
         baseViewModel.decrementNumCyclists()
@@ -58,11 +67,22 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_reset_number_of_cyclists()
-    {
+    fun test_cannot_have_less_than_cyclists_1() {
+        baseViewModel.resetNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.decrementNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 1)
+        baseViewModel.decrementNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 1)
+    }
+
+    @Test
+    fun test_reset_number_of_cyclists() {
         baseViewModel.incrementNumCyclists()
         assert(baseViewModel.getNumCyclists() == 2)
         baseViewModel.resetNumCyclists()
         assert(baseViewModel.getNumCyclists() == 1)
     }
+
+
 }

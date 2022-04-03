@@ -16,6 +16,7 @@ import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts
 import io.mockk.mockk
 import junit.framework.Assert
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -108,11 +109,11 @@ class EditUserProfileViewModelTest {
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testFirstName",
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
@@ -123,11 +124,11 @@ class EditUserProfileViewModelTest {
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("test","testLastName")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testLastName",
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )
@@ -138,15 +139,15 @@ class EditUserProfileViewModelTest {
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("testFirstName","testLastName")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testFirstName",
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testLastName",
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )

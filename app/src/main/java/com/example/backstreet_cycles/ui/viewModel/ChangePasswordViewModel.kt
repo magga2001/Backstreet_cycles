@@ -49,7 +49,7 @@ class ChangePasswordViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
 //                    updatePassword.postValue(result.data!!)
-                    getUpdateDetail().value = result.data!!
+                    updatePassword.value = result.data!!
                 }
 
                 is Resource.Error -> {
