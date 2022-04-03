@@ -1,5 +1,6 @@
 package com.example.backstreet_cycles.ui.viewModels
 
+import android.app.Application
 import android.content.Context
 import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
@@ -9,6 +10,7 @@ import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
+import com.mapbox.mapboxsdk.location.LocationComponent
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import junit.framework.TestCase
@@ -209,17 +211,6 @@ class HomePageViewModelTest{
 //    }
 
     @Test
-    fun test_user_is_logged_out_after_logout(){
-        homepageViewModel.logOut()
-        assertEquals(
-            true,
-            homepageViewModel.getLogout().value
-        )
-    }
-
-
-
-    @Test
     fun test_check_if_current_location_exists_without_adding_it(){
         val currentLocation = Locations("Current Location", 0.0,0.0)
         assertEquals(
@@ -254,4 +245,77 @@ class HomePageViewModelTest{
             homepageViewModel.getShowAlertMutableLiveData().value
         )
     }
+
+    @Test
+    fun test_get_tourist_locations_without_loading(){
+        //homepageViewModel.getTouristAttractions()
+        val emptyList: MutableList<Locations> = mutableListOf()
+        assertEquals(
+            emptyList,
+            homepageViewModel.getTouristAttractions()
+        )
+    }
+
+    @Test
+    fun test_get_tourist_locations_after_loading(){
+        fakeLocationRepoImpl.loadLocations(Application())
+        assertEquals(
+            10,
+            homepageViewModel.getTouristAttractions().size
+        )
+    }
+
+    @Test
+    fun test_update_info_status_before_posting_it(){
+        assertEquals(
+            false,
+            homepageViewModel.getUpdateInfo()
+        )
+    }
+
+    @Test
+    fun test_update_info_status_after_posting_it(){
+        homepageViewModel.setUpdateInfo(true)
+        assertEquals(
+            true,
+            homepageViewModel.getUpdateInfo()
+        )
+    }
+
+
+//    @Test
+//    fun test_logOut_value_before_logging_out(){
+//        assertEquals(
+//            false,
+//            homepageViewModel.getLogout().getOrAwaitValue()
+//        )
+//    }
+
+    @Test
+    fun test_logOut_value_after_logging_out(){
+        homepageViewModel.logOut()
+        assertEquals(
+            true,
+            homepageViewModel.getLogout().getOrAwaitValue()
+        )
+    }
+
+//    @Test
+//    fun test_get_message_after_get_mapbox_route(){
+//
+//    }
+
+
+
+
+//    @Test
+//    fun test_get_route(){
+//        homepageViewModel.getCurrentJourney()
+//        assertEquals(
+//            false,
+//            homepageViewModel.getHasCurrentJourneyMutableLiveData().getOrAwaitValue()
+//        )
+//    }
+
+
 }

@@ -85,9 +85,9 @@ class ForgotPasswordViewModelTest {
         }
 
     @Test
-    fun test_email_verification_not_sent_with_correct_email(){
+    fun test_email_verification_not_sent_with_incorrect_email(){
         signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+        fakeUserRepoImpl.verifyEmail("testuserk@random.com")
 
         forgotPasswordViewModel.resetPassword("testuser@random.com")
         Assert.assertEquals(
