@@ -1,24 +1,21 @@
 package com.example.backstreet_cycles.ui.views
 
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.*
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -26,18 +23,17 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.*
-import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.IsNot.not
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -52,7 +48,7 @@ class JourneyActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
     private lateinit var homePageViewModel: HomePageViewModel
     lateinit var instrumentationContext: Context
 
@@ -377,64 +373,62 @@ class JourneyActivityTest {
 //
 //    }
 
-        fun add_stop(name: String) {
+    fun add_stop(name: String) {
 
-            val addStopButton = onView(
-                Matchers.allOf(
-                    withId(R.id.addingBtn), withText("Add Stop"),
-                    childAtPosition(
-                        Matchers.allOf(
-                            withId(R.id.homepage_bottom_sheet_constraintLayout),
-                            childAtPosition(
-                                withId(R.id.homepage_bottom_sheet_linearLayout),
-                                0
-                            )
-                        ),
-                        0
-                    ),
-                    isDisplayed()
-                )
-            )
-            addStopButton.perform(click())
-
-            val location = onView(
-                Matchers.allOf(
-                    withId(R.id.edittext_search),
-                    childAtPosition(
+        val addStopButton = onView(
+            Matchers.allOf(
+                withId(R.id.addingBtn), withText("Add Stop"),
+                childAtPosition(
+                    Matchers.allOf(
+                        withId(R.id.homepage_bottom_sheet_constraintLayout),
                         childAtPosition(
-                            withId(R.id.searchView),
+                            withId(R.id.homepage_bottom_sheet_linearLayout),
                             0
-                        ),
+                        )
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        addStopButton.perform(click())
+
+        val location = onView(
+            Matchers.allOf(
+                withId(R.id.edittext_search),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.searchView),
                         0
                     ),
-                    isDisplayed()
-                )
+                    0
+                ),
+                isDisplayed()
             )
-            location.perform(ViewActions.replaceText(name))
-            location.perform(
-                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
-                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
-            )
+        )
+        location.perform(ViewActions.replaceText(name))
+        location.perform(
+            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
+            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+        )
 
-        }
+    }
 
-        private fun childAtPosition(
-            parentMatcher: Matcher<View>, position: Int
-        ): Matcher<View> {
+    private fun childAtPosition(
+        parentMatcher: Matcher<View>, position: Int
+    ): Matcher<View> {
 
-            return object : TypeSafeMatcher<View>() {
-                override fun describeTo(description: Description) {
-                    description.appendText("Child at position $position in parent ")
-                    parentMatcher.describeTo(description)
-                }
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Child at position $position in parent ")
+                parentMatcher.describeTo(description)
+            }
 
-                public override fun matchesSafely(view: View): Boolean {
-                    val parent = view.parent
-                    return parent is ViewGroup && parentMatcher.matches(parent)
-                            && view == parent.getChildAt(position)
-                }
+            public override fun matchesSafely(view: View): Boolean {
+                val parent = view.parent
+                return parent is ViewGroup && parentMatcher.matches(parent)
+                        && view == parent.getChildAt(position)
             }
         }
     }
-
-
+}

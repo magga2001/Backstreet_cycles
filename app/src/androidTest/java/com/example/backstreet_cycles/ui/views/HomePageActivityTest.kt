@@ -29,6 +29,9 @@ import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -42,13 +45,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
 class HomePageActivityTest {
 
-    private val email = "vafai.vandad@gmail.com"
+    private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -152,6 +156,7 @@ class HomePageActivityTest {
     @Test
     fun test_add_stop_button_is_enabled(){
         onView(withId(R.id.addingBtn)).check(matches(isEnabled()))
+
     }
 
     @Test
