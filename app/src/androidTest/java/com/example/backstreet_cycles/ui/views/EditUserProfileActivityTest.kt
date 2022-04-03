@@ -2,6 +2,7 @@ package com.example.backstreet_cycles.ui.views
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -39,10 +40,13 @@ class EditUserProfileActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
+//    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -54,8 +58,8 @@ class EditUserProfileActivityTest{
 
     @Before
     fun setUp() {
-        userRepoImpl.logOut()
-        userRepoImpl.login(email, password)
+//        userRepoImpl.logOut()
+//        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
@@ -195,7 +199,7 @@ class EditUserProfileActivityTest{
     @After
     fun tearDown(){
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-        userRepoImpl.logOut()
+//        userRepoImpl.logOut()
 
     }
 

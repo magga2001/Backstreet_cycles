@@ -7,6 +7,7 @@ import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.common.TestAppModule
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
@@ -38,9 +39,9 @@ class LogInViewModelTest {
         val application = mockk<BackstreetApplication>(relaxed = true)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl(TestAppModule.provideFirstName(), TestAppModule.provideLastName(), TestAppModule.provideEmail(), TestAppModule.providePassword())
 
         logInViewModel = LogInViewModel(
             fakeTflRepoImpl,

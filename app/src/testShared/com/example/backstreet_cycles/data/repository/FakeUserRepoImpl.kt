@@ -1,6 +1,7 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.util.Log
+import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -8,10 +9,18 @@ import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import javax.inject.Named
 
-class FakeUserRepoImpl @Inject constructor() : UserRepository{
+class FakeUserRepoImpl @Inject constructor(
+    @Named("firstName") firstName: String,
+    @Named("lastName") lastName: String,
+    @Named("email") email: String,
+    @Named("password") password: String
+)
+    : UserRepository{
 
     private val PASSWORD_MINIMUM_LENGTH = 6
 
@@ -20,15 +29,27 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
     private var currentUser: Users? = null
     private val validEmail: String = "@example.com"
 
+    init {
+        Log.i("user", firstName)
+        EspressoIdlingResource.increment()
+        addMockUser(firstName, lastName, email, password)
+//        register(firstName, lastName, email, password)
+//        verifyEmail(email)
+//        login(email, password)
+        Log.i("users", currentUser.toString())
+        EspressoIdlingResource.decrement()
+    }
+
     override fun register(
         firstName: String,
         lastName: String,
         email: String,
         password: String
-    ): Flow<Resource<String>> = flow{
-
+    ): Flow<Resource<String>> = channelFlow{
+        EspressoIdlingResource.increment()
         if(password.length < PASSWORD_MINIMUM_LENGTH){
-            emit(Resource.Error("Password is too short"))
+            send(Resource.Error("Password is too short"))
+            EspressoIdlingResource.decrement()
         }else{
             if(!users.containsKey(email)){
                 val user = Users(firstName,lastName, email)
@@ -39,15 +60,17 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
 
                 verifiedUser[email] = false
 
-                emit(Resource.Success("Email verification sent"))
+                send(Resource.Success("Email verification sent"))
+                EspressoIdlingResource.decrement()
             }else{
-                emit(Resource.Error("Email already existed"))
+                send(Resource.Error("Email already existed"))
+                EspressoIdlingResource.decrement()
             }
         }
     }
 
     override fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = flow {
-
+        EspressoIdlingResource.increment()
         if(currentUser != null) {
             val email = currentUser?.email
 
@@ -55,11 +78,14 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
                 currentUser?.firstName = firstName
                 currentUser?.lastName = lastName
                 emit(Resource.Success("Success"))
+                EspressoIdlingResource.decrement()
             }else{
                 emit(Resource.Error("No User"))
+                EspressoIdlingResource.decrement()
             }
         }else{
             emit(Resource.Error("No User"))
+            EspressoIdlingResource.decrement()
         }
     }
 
@@ -85,19 +111,22 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
 
     override fun getUserDetails(): Flow<Resource<Users>> = flow{
 
+        EspressoIdlingResource.increment()
         if(currentUser != null){
 
             val email = currentUser?.email
 
             if(users.containsKey(email)){
+                Log.i("usersss", currentUser!!.email.toString())
                 emit(Resource.Success(currentUser!!))
+                EspressoIdlingResource.decrement()
             }else{
                 emit(Resource.Error("No User"))
             }
         }
     }
 
-    override fun login(email: String, password: String): Flow<Resource<Boolean>> = flow {
+    override fun login(email: String, password: String): Flow<Resource<Boolean>> = channelFlow {
 
         if(users.containsKey(email))
         {
@@ -106,13 +135,13 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
 
             if(verifiedUser[email] == true && user?.get(existedUser) == password){
                 currentUser = existedUser
-                emit(Resource.Success(true))
+                send(Resource.Success(true))
             }else{
-                emit(Resource.Error("Please verify your email"))
+                send(Resource.Error("Please verify your email"))
             }
 
         }else{
-            emit(Resource.Error("No User"))
+            send(Resource.Error("No User"))
         }
     }
 
@@ -170,9 +199,11 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
 
     fun verifyEmail(email: String)
     {
+        EspressoIdlingResource.increment()
         if(users.containsKey(email)){
             verifiedUser[email] = true
         }
+        EspressoIdlingResource.decrement()
     }
 
     fun addMockUser(
@@ -181,6 +212,7 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
         email: String,
         password: String
     ){
+        EspressoIdlingResource.increment()
         val user = Users(firstName,lastName, email)
 
         users[email] = hashMapOf(
@@ -188,6 +220,9 @@ class FakeUserRepoImpl @Inject constructor() : UserRepository{
         )
         verifiedUser[email] = true
         currentUser = user
+
+        Log.i("userss",users[email].toString())
+        EspressoIdlingResource.decrement()
 
     }
 }

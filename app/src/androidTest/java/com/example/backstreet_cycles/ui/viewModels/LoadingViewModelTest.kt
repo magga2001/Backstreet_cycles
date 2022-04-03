@@ -62,7 +62,12 @@ class LoadingViewModelTest {
         fakeTflRepoImpl = FakeTflRepoImpl()
         fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl(
+            TestAppModule.provideFirstName(),
+            TestAppModule.provideLastName(),
+            TestAppModule.provideEmail(),
+            TestAppModule.providePassword()
+        )
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         journeyHistoryViewModel = JourneyHistoryViewModel(

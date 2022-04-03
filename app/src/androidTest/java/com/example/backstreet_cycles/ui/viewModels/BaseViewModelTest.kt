@@ -53,7 +53,12 @@ class BaseViewModelTest {
         fakeTflRepoImpl = FakeTflRepoImpl()
         fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl(
+            TestAppModule.provideFirstName(),
+            TestAppModule.provideLastName(),
+            TestAppModule.provideEmail(),
+            TestAppModule.providePassword()
+        )
 
         baseViewModel = BaseViewModel(
             fakeTflRepoImpl,
