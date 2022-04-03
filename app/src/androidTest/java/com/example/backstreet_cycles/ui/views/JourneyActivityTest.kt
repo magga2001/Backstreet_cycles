@@ -372,66 +372,164 @@ class JourneyActivityTest {
     }
 
 //    @Test
-//    fun test_journey_nav_not_clickable_if_not_set(){
+//    fun test_not_checked_finish_not_clickable(){
+//        onView(withId(android.R.id.button2)).perform(click())
+//        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+//        onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
+//    }
+//    //    @Test
+////    fun test_button_expand() {
+//    //onView(withId(R.id.bottom_sheet_view_journey)).perform(ViewActions.swipeUp())
+////       // onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
+////       // onView(withId(R.id.plan_journey_recycling_view)).check(matches(isDisplayed()))
+////        onView(withId(R.id.plan_journey_recycling_view)).perform(
+////            RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(
+////                0
+////            )
+////        )
+////
+////        onView(withId(R.id.plan_journey_recycling_view))
+////            // scrollTo will fail the test if no item matches.
+////            .perform(
+////                RecyclerViewActions.actionOnItemAtPosition<PlanJourneyAdapter.ViewHolder>(
+////                    0,
+////                    click()
+////                )
+////            )
+////        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
+////        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
+////        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
+////
+////
+////        //
+////        //        onView(withId(R.id.bottom_sheet_journey)).perform(ViewActions.swipeUp())
+////        //        onView(withId(R.id.button_expand)).check(matches(isDisplayed()))
+////    }
+//
+//
+////    @Test
+////    fun test_stop_clicked_set_navigation_displayed(){
+////        //onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
+////        //onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
+////        //onView(withId(R.id.button_expand)).perform(ViewActions.)
+////        onView(withId(android.R.id.button2)).perform(click())
+////        onView(withId(R.id.planJourney_button_expand)).perform(click())
+////        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
+////        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
+////        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
+////
+////    }
+//
+////    @Test
+////    fun test_stop_clicked_images_displayed(){
+////
+////        onView(withId(android.R.id.button2)).perform(click())
+////        //onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
+////        //onView(withId(R.id.planJourney_button_expand)).perform(scrollTo(), click());
+////        onView(withId(R.id.planJourney_button_expand)).perform(click())
+////        onView(withId(R.id.walk_from_dock)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+////        onView(withId(R.id.dock_to_cycle)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+////        onView(withId(R.id.planJourney_log_in_image_view)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+////
+////    }
+//
+////        @Test
+////        fun test_set_navigation_displayed() {
+////
+////            onView(withId(R.id.journeyActivity)).check(matches(isDisplayed()))
+////        }
+//
+////
+////    @Test
+////    fun test_checked_stop_not_clickable(){
+////        onView(withId(android.R.id.button1)).perform(click())
+////        //onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked())).perform(click()).check(matches(isChecked()));
+////        //onView(withId(R.id.checkBoxFinishJourney)).perform(click())
+////        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
+////        onView(withId(R.id.planJourney_button_expand)).check(matches(not(isEnabled())));
+////    }
+////
+////    @Test
+////    fun test_checked_finish_clickable(){
+////        onView(withId(android.R.id.button1)).perform(click())
+////        onView(withId(R.id.checkBoxFinishJourney)).perform(click())
+////        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isChecked()))
+////        onView(withId(R.id.finish_journey)).check(matches(isClickable()));
+////    }
+//
+////    @Test
+////    fun test_journey_overview_is_clicked(){
+////        onView(withId(R.id.overview_journey)).perform(click())
+////        intending(hasComponent(JourneyActivity::class.qualifiedName))
+////    }
+//
+////    @Test
+////    fun test_start_navigation_clicked_goes_to_navigation_activity(){
+////        onView(withId(R.id.start_navigation)).perform(click())
+////        onView(withId(R.id.navigation_layout)).check(matches(isDisplayed()))
+////    }
+//
+////    @Test
+////    fun test_journey_nav_not_clickable_if_not_set(){
+////
+////    }
+//
+//    fun add_stop(name: String) {
+//
+//        val addStopButton = onView(
+//            Matchers.allOf(
+//                withId(R.id.addingBtn), withText("Add Stop"),
+//                childAtPosition(
+//                    Matchers.allOf(
+//                        withId(R.id.homepage_bottom_sheet_constraintLayout),
+//                        childAtPosition(
+//                            withId(R.id.homepage_bottom_sheet_linearLayout),
+//                            0
+//                        )
+//                    ),
+//                    0
+//                ),
+//                isDisplayed()
+//            )
+//        )
+//        addStopButton.perform(click())
+//
+//        val location = onView(
+//            Matchers.allOf(
+//                withId(R.id.edittext_search),
+//                childAtPosition(
+//                    childAtPosition(
+//                        withId(R.id.searchView),
+//                        0
+//                    ),
+//                    0
+//                ),
+//                isDisplayed()
+//            )
+//        )
+//        location.perform(ViewActions.replaceText(name))
+//        location.perform(
+//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
+//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+//        )
 //
 //    }
-
-    fun add_stop(name: String) {
-
-        val addStopButton = onView(
-            Matchers.allOf(
-                withId(R.id.addingBtn), withText("Add Stop"),
-                childAtPosition(
-                    Matchers.allOf(
-                        withId(R.id.homepage_bottom_sheet_constraintLayout),
-                        childAtPosition(
-                            withId(R.id.homepage_bottom_sheet_linearLayout),
-                            0
-                        )
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        addStopButton.perform(click())
-
-        val location = onView(
-            Matchers.allOf(
-                withId(R.id.edittext_search),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.searchView),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        location.perform(ViewActions.replaceText(name))
-        location.perform(
-            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
-            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
-        )
-
-    }
-
-    private fun childAtPosition(
-        parentMatcher: Matcher<View>, position: Int
-    ): Matcher<View> {
-
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Child at position $position in parent ")
-                parentMatcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
-            }
-        }
-    }
-}
+//
+//    private fun childAtPosition(
+//        parentMatcher: Matcher<View>, position: Int
+//    ): Matcher<View> {
+//
+//        return object : TypeSafeMatcher<View>() {
+//            override fun describeTo(description: Description) {
+//                description.appendText("Child at position $position in parent ")
+//                parentMatcher.describeTo(description)
+//            }
+//
+//            public override fun matchesSafely(view: View): Boolean {
+//                val parent = view.parent
+//                return parent is ViewGroup && parentMatcher.matches(parent)
+//                        && view == parent.getChildAt(position)
+//            }
+//        }
+//    }
+//}
