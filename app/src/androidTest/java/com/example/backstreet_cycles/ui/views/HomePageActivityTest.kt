@@ -56,38 +56,23 @@ class HomePageActivityTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @Rule
-    @JvmField
-    var mGrantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION"
-    )
 
     @get:Rule
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {
+        userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
     }
-
-    private fun waitFor(delay: Long): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): Matcher<View> = isRoot()
-            override fun getDescription(): String = "wait for $delay milliseconds"
-            override fun perform(uiController: UiController, v: View?) {
-                uiController.loopMainThreadForAtLeast(delay)
-            }
-        }
-    }
-
 
     @Test
     fun test_map_on_homepage_is_displayed() {
@@ -178,7 +163,7 @@ class HomePageActivityTest {
     @Test
     fun test_nextPage_is_enabled(){
         onView(isRoot()).perform(waitFor(1000))
-        add_stop("Covent Garden")
+        addStop("Covent Garden")
         //onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
     }
@@ -205,73 +190,18 @@ class HomePageActivityTest {
     @Test
     fun test_stop_added(){
         //onView(isRoot()).perform(waitFor(1000))
-        add_stop("covent garden")
+        addStop("covent garden")
         onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
         onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
        }
 
-    private fun add_stop(name: String) {
-        val addStopButton = onView(
-            Matchers.allOf(
-                withId(R.id.addingBtn), withText("Add Stop"),
-                childAtPosition(
-                    Matchers.allOf(
-                        withId(R.id.homepage_bottom_sheet_constraintLayout),
-                        childAtPosition(
-                            withId(R.id.homepage_bottom_sheet_linearLayout),
-                            0
-                        )
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        addStopButton.perform(click())
 
-        onView(isRoot()).perform(waitFor(1000))
-        val location = onView(
-            Matchers.allOf(
-                withId(R.id.edittext_search),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.searchView),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        onView(isRoot()).perform(waitFor(1000))
-        location.perform(replaceText(name))
-        onView(isRoot()).perform(waitFor(1000))
-        location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
-
-    }
-
-    private fun childAtPosition(
-        parentMatcher: Matcher<View>, position: Int): Matcher<View> {
-
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Child at position $position in parent ")
-                parentMatcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
-            }
-        }
-    }
 
     @Test
     fun test_go_to_next_page_from_home_page()
     {
-        add_stop("Covent Garden")
+        addStop("Covent Garden")
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
         onView(withId(R.id.nextPageButton)).perform(click())
 
@@ -364,7 +294,7 @@ class HomePageActivityTest {
     //failing
     @Test
     fun test_next_page_button_enabled_when_more_than_one_item_in_recyclerView(){
-        add_stop("Covent Garden")
+        addStop("Covent Garden")
         onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.homepage_recyclerView)).check(matches((hasChildCount(2))))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
@@ -581,9 +511,9 @@ class HomePageActivityTest {
 
    @Test
    fun test_Snackbar_location_already_in_list(){
-       add_stop("Covent Garden")
+       addStop("Covent Garden")
        //onView(isRoot()).perform(waitFor(1000))
-       add_stop("Covent Garden")
+       addStop("Covent Garden")
 
        onView(withId(com.google.android.material.R.id.snackbar_text))
            .check(matches(withText("Location already in list")))
@@ -608,7 +538,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_Snackbar_adding_stop(){
-        add_stop("Covent Garden")
+        addStop("Covent Garden")
         onView(withId(com.google.android.material.R.id.snackbar_text))
             .check(matches(withText("Adding Stop")))
     }
@@ -635,6 +565,16 @@ class HomePageActivityTest {
 
     }
 
+    private fun waitFor(delay: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        }
+    }
+
     private fun getFriendlyBottomSheetBehaviorStateDescription(state: Int): String = when (state) {
         BottomSheetBehavior.STATE_DRAGGING -> "dragging"
         BottomSheetBehavior.STATE_SETTLING -> "settling"
@@ -645,7 +585,7 @@ class HomePageActivityTest {
         else -> "unknown but the value was $state"
     }
 
-    fun hasBottomSheetBehaviorState(expectedState: Int): Matcher<in View>? {
+    private fun hasBottomSheetBehaviorState(expectedState: Int): Matcher<in View>? {
         return object : BoundedMatcher<View, View>(View::class.java) {
             override fun describeTo(description: Description) {
                 description.appendText("has BottomSheetBehavior state: ${getFriendlyBottomSheetBehaviorStateDescription(expectedState)}")
@@ -657,7 +597,89 @@ class HomePageActivityTest {
             }
         }
     }
+//    private fun setBottomSheetBehaviorState(desiredState: Int): Matcher<in View>? {
+//        return object : BoundedMatcher<View, View>(View::class.java) {
+//            override fun describeTo(description: Description) {
+//                description.appendText("has BottomSheetBehavior state: ${getFriendlyBottomSheetBehaviorStateDescription(desiredState)}")
+//            }
+//
+//            override fun matchesSafely(view: View): Boolean {
+//                val bottomSheetBehavior = BottomSheetBehavior.from(view)
+//                return bottomSheetBehavior.state = desiredState
+//            }
+//        }
+//    }
+//
+//    private fun setBottomSheetStateAction(desiredState: Int) {
+//            fun getConstraints(): Matcher<View> {
+//                return Matchers.any(View::class.java)
+//            }
+//
+//            fun perform(uiController: UiController, view: View) {
+//                val bottomSheetBehavior = BottomSheetBehavior.from(view)
+//                bottomSheetBehavior.state = desiredState
+//            }
+//
+//             fun getDescription(): String = "Set BottomSheet to state: $desiredState"
+//        }
+//    }
 
+    private fun addStop(name: String) {
+        val addStopButton = onView(
+            Matchers.allOf(
+                withId(R.id.addingBtn), withText("Add Stop"),
+                childAtPosition(
+                    Matchers.allOf(
+                        withId(R.id.homepage_bottom_sheet_constraintLayout),
+                        childAtPosition(
+                            withId(R.id.homepage_bottom_sheet_linearLayout),
+                            0
+                        )
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        addStopButton.perform(click())
+
+        onView(isRoot()).perform(waitFor(500))
+        val location = onView(
+            Matchers.allOf(
+                withId(R.id.edittext_search),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.searchView),
+                        0
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        onView(isRoot()).perform(waitFor(500))
+        location.perform(replaceText(name))
+        onView(isRoot()).perform(waitFor(500))
+        location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
+
+    }
+
+    private fun childAtPosition(
+        parentMatcher: Matcher<View>, position: Int): Matcher<View> {
+
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Child at position $position in parent ")
+                parentMatcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                val parent = view.parent
+                return parent is ViewGroup && parentMatcher.matches(parent)
+                        && view == parent.getChildAt(position)
+            }
+        }
+    }
 
     @After
     fun tearDown(){

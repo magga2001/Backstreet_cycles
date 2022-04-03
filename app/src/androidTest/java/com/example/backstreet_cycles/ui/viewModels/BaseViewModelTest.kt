@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.TestAppModule
 //import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
@@ -32,7 +33,7 @@ class BaseViewModelTest {
         val application = getApplication(instrumentationContext)
         baseViewModel = BaseViewModel(
             FakeTflRepoImpl(),
-            FakeMapboxRepoImpl(),
+            FakeMapboxRepoImpl(TestAppModule.provideRoute()),
             FakeCyclistRepoImpl(),
             FakeUserRepoImpl(),
             application,

@@ -43,15 +43,16 @@ class AboutActivityTest {
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
     @Before
     fun setUp() {
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         userRepoImpl.logOut()
         userRepoImpl.login(email, password)
         hiltRule.inject()
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
         onView(ViewMatchers.withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.about)).perform(click())
