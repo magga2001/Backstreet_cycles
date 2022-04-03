@@ -114,7 +114,7 @@ class JourneyHistoryViewModelTest {
     fun test_get_a_journey_without_any_current_journey(){
         journeyHistoryViewModel.addAllStops(locations)
         journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(journeyHistoryViewModel.getIsReady().getOrAwaitValue())
     }
 
     @Test
@@ -132,7 +132,7 @@ class JourneyHistoryViewModelTest {
         journeyHistoryViewModel.getRoute()
         assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
         journeyHistoryViewModel.continueWithCurrentJourney()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(journeyHistoryViewModel.getIsReady().getOrAwaitValue())
         assert(journeyHistoryViewModel.getJourneyLocations() == locations)
     }
 
@@ -144,7 +144,7 @@ class JourneyHistoryViewModelTest {
         journeyHistoryViewModel.getRoute()
         assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
         journeyHistoryViewModel.continueWithNewJourney(newLocations)
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(journeyHistoryViewModel.getIsReady().getOrAwaitValue())
         assert(journeyHistoryViewModel.getJourneyLocations() == newLocations)
     }
 

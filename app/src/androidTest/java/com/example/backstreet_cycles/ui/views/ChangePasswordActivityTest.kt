@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
@@ -36,12 +37,13 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
-class ChangePasswordActivityTest{
+class ChangePasswordActivityTest {
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
+    private val userRepoImpl =
+        UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -52,13 +54,15 @@ class ChangePasswordActivityTest{
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
-            android.Manifest.permission.INTERNET)
+            android.Manifest.permission.INTERNET
+        )
 
     @Before
     fun setUp() {
-        userRepoImpl.logOut()
-        userRepoImpl.login(email, password)
-        userRepoImpl.getUserDetails()
+        runBlocking { userRepoImpl.logOut() }
+        runBlocking { userRepoImpl.login(email, password) }
+        runBlocking { userRepoImpl.getUserDetails() }
+//        userRepoImpl.getUserDetails()
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
@@ -71,24 +75,23 @@ class ChangePasswordActivityTest{
         onView(withId(R.id.change_password_title)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_activity_launched_user_email_displayed() {
-//        val email = FirebaseAuth.getInstance().currentUser?.email
-//        onView(withId(R.id.change_password_email)).check(matches(ViewMatchers.withText(email)))
-//    }
+    @Test
+    fun test_activity_launched_user_email_displayed() {
+        onView(withId(R.id.change_password_email)).check(matches(isDisplayed()))
+    }
 
     @Test
-    fun test_current_password_field_is_displayed(){
+    fun test_current_password_field_is_displayed() {
         onView(withId(R.id.change_password_currentPassword)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_new_password_field_is_displayed(){
+    fun test_new_password_field_is_displayed() {
         onView(withId(R.id.change_password_NewPassword)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_save_button_is_displayed(){
+    fun test_save_button_is_displayed() {
         onView(withId(R.id.change_password_SaveButton)).check(matches(isDisplayed()))
     }
 
@@ -97,7 +100,13 @@ class ChangePasswordActivityTest{
         onView(withId(R.id.change_password_currentPassword)).check(matches(isDisplayed()))
         val testInput = "password"
         onView(withId(R.id.change_password_currentPassword)).perform(typeText(testInput))
-        onView(withId(R.id.change_password_currentPassword)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.change_password_currentPassword)).check(
+            matches(
+                ViewMatchers.withText(
+                    testInput
+                )
+            )
+        )
     }
 
     @Test
@@ -105,20 +114,112 @@ class ChangePasswordActivityTest{
         onView(withId(R.id.change_password_NewPassword)).check(matches(isDisplayed()))
         val testInput = "password"
         onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput))
-        onView(withId(R.id.change_password_NewPassword)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.change_password_NewPassword)).check(
+            matches(
+                ViewMatchers.withText(
+                    testInput
+                )
+            )
+        )
     }
 
-    // will work in refactored branch
+    @Test
+    fun test_trims_fullname(){
+        onView(withId(R.id.change_password_currentPassword)).perform(ViewActions.replaceText("123456   "))
+        onView(withId(R.id.change_password_NewPassword)).perform(ViewActions.replaceText("   696969"))
+        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+    }
+
+//    //    Test will work later
+//    @Test
+//    fun test_snack_bar_appears_on_change_password() {
+//        val testInput = "123456"
+//        onView(withId(R.id.change_password_currentPassword)).perform(
+//            typeText(testInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_currentPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    testInput
+//                )
+//            )
+//        )
+//        val newPassInput = "newPassword"
+//        onView(withId(R.id.change_password_NewPassword)).perform(
+//            typeText(newPassInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_NewPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    newPassInput
+//                )
+//            )
+//        )
+//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(ViewMatchers.withText("Password successfully updated")))
+//    }
+//
+//    //Test will work later
 //    @Test
 //    fun test_saves_new_password() {
-//        onView(withId(R.id.change_password_currentPassword)).perform(typeText(password))
-//        val testInput = "password"
-//        onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput), closeSoftKeyboard())
-//
+//        val testInput = "123456"
+//        onView(withId(R.id.change_password_currentPassword)).perform(
+//            typeText(testInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_currentPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    testInput
+//                )
+//            )
+//        )
+//        val newPassInput = "newPassword"
+//        onView(withId(R.id.change_password_NewPassword)).perform(
+//            typeText(newPassInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_NewPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    newPassInput
+//                )
+//            )
+//        )
+//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(ViewMatchers.withText("Password successfully updated")))
 //        Intents.init()
 //        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //        Intents.release()
 //    }
+
+    @Test
+    fun test_old_password_not_entered() {
+        val newPassInput = "newPassword"
+        onView(withId(R.id.change_password_NewPassword)).perform(
+            typeText(newPassInput),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.change_password_NewPassword)).check(
+            matches(
+                ViewMatchers.withText(
+                    newPassInput
+                )
+            )
+        )
+        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.change_password_currentPassword)).check(
+            matches(
+                ViewMatchers.hasErrorText(
+                    "In order for use to change your email or password you need to enter your old password"
+                )
+            )
+        )
+    }
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
@@ -129,7 +230,7 @@ class ChangePasswordActivityTest{
     }
 
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
 
         onView(
             Matchers.allOf(
@@ -172,9 +273,8 @@ class ChangePasswordActivityTest{
         }
     }
 
-
     @After
-    fun tearDown(){
+    fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         userRepoImpl.logOut()
     }

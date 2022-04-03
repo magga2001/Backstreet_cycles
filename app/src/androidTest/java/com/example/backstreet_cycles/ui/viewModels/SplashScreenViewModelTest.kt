@@ -70,13 +70,13 @@ class SplashScreenViewModelTest {
     @Test
     fun test_load_data(){
         runBlocking {splashScreenViewModel.loadData()}
-        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(splashScreenViewModel.getIsReady().getOrAwaitValue())
     }
 
     @Test
     fun test_load_data_with_no_connection(){
         fakeTflRepoImpl.setConnection(false)
         runBlocking {splashScreenViewModel.loadData()}
-        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(splashScreenViewModel.getIsReady().getOrAwaitValue())
     }
 }
