@@ -34,7 +34,6 @@ class ForgotPasswordViewModelTest {
     private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
     private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
-    val password = "123456"
 
     @Before
     fun setUp() {
@@ -70,14 +69,18 @@ class ForgotPasswordViewModelTest {
             application,
             context
         )
+
+        signUpViewModel.register("John","Doe","johndoe@example.com","123456")
+        Assert.assertEquals(
+            "Email verification sent",
+            signUpViewModel.getMessage().getOrAwaitValue()
+        )
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
     }
 
         @Test
         fun test_email_verification_sent_with_correct_email(){
-            signUpViewModel.register("Test", "User","testuser@random.com",password)
-            fakeUserRepoImpl.verifyEmail("testuser@random.com")
-
-            forgotPasswordViewModel.resetPassword("testuser@random.com")
+            forgotPasswordViewModel.resetPassword("johndoe@example.com")
             Assert.assertEquals(
                 "Reset password sent",
                 forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
@@ -85,13 +88,11 @@ class ForgotPasswordViewModelTest {
         }
 
     @Test
-    fun test_email_verification_not_sent_with_correct_email(){
-        signUpViewModel.register("Test", "User","testuser@random.com",password)
-        fakeUserRepoImpl.verifyEmail("testuser@random.com")
+    fun test_email_verification_not_sent_with_incorrect_email(){
 
         forgotPasswordViewModel.resetPassword("testuser@random.com")
         Assert.assertEquals(
-            "No user",
+            "No User",
             forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
         )
     }

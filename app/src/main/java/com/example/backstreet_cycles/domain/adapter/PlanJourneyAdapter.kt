@@ -110,11 +110,12 @@ class PlanJourneyAdapter(
 
         if (checkCheckedBoxInSharePref(holder.tvFrom.text.toString())){
             holder.checkBoxButton.isChecked = true
-            enableExpandButton(holder)
+//            holder.expandButton.isEnabled = !holder.checkBoxButton.isChecked
+//            checkCurrentCheckBox(holder)
         }
+        enableExpandButton(holder)
 
         holder.checkBoxButton.setOnClickListener {
-
             enableExpandButton(holder)
         }
 
@@ -221,6 +222,10 @@ class PlanJourneyAdapter(
         return allBoxesCheckedMutableLiveData
     }
 
+    fun getViewHolders(): List<ViewHolder>{
+        return viewHolders
+    }
+
     /**
      * @return a list of booleans that allow functionality if they are true or false
      */
@@ -256,7 +261,7 @@ class PlanJourneyAdapter(
      *
      * @param holder - An object of ViewHolder
      */
-    private fun checkAllBoxes() {
+    fun checkAllBoxes() {
         if (viewHolders.all { it.checkBoxButton.isChecked }) {
             allBoxesCheckedMutableLiveData.postValue(true)
 
