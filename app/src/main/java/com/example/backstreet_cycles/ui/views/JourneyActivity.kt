@@ -416,9 +416,11 @@ class JourneyActivity : AppCompatActivity() {
             planner = journeyViewModel.getPlannerInterface(),
             tvFrom
         )
+
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
-        finish_journey.isEnabled = false
+//        finish_journey.isEnabled = false
+//        val check = planJourneyAdapter.getViewHolders()
     }
 
     /**
