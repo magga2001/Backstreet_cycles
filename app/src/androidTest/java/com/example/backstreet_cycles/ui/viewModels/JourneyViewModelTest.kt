@@ -13,7 +13,9 @@ import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
 import com.example.backstreet_cycles.ui.viewModel.*
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import dagger.hilt.android.internal.Contexts
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -50,9 +52,10 @@ class JourneyViewModelTest {
     {
         instrumentationContext = ApplicationProvider.getApplicationContext();
         val application = Contexts.getApplication(instrumentationContext)
+        val route = mockk<DirectionsRoute>(relaxed = true)
 
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(route)
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
         fakeUserRepoImpl = FakeUserRepoImpl()
         fakeLocationRepoImpl = FakeLocationRepoImpl()
