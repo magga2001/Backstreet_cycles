@@ -23,6 +23,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
+import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runBlockingTest
@@ -222,7 +223,9 @@ class JourneyActivityTest {
         onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
         onView(withId(R.id.finish_journey)).check(matches(not(isEnabled())));
     }
-        @Test
+
+    //*****
+    @Test
     fun test_button_expand() {
     onView(withId(R.id.bottom_sheet_journey)).perform(ViewActions.swipeUp())
        // onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
@@ -252,19 +255,27 @@ class JourneyActivityTest {
     }
 
 
+    //************
     @Test
     fun test_stop_clicked_set_navigation_displayed(){
         //onView(withId(R.id.journey_bottom_sheet_view)).check(matches(isDisplayed()))
-        //onView(withId(R.id.journey_bottom_sheet_view)).perform(scrollTo())
+        onView(withId(R.id.journey_bottom_sheet_view)).perform(ViewActions.swipeUp())
         //onView(withId(R.id.button_expand)).perform(ViewActions.)
-        onView(withId(android.R.id.button2)).perform(click())
-        onView(withId(R.id.planJourney_button_expand)).perform(click())
-        onView(withId(R.id.setNav1)).check(matches(isDisplayed()))
-        onView(withId(R.id.setNav2)).check(matches(isDisplayed()))
-        onView(withId(R.id.setNav3)).check(matches(isDisplayed()))
+//        onView(withId(android.R.id.button2)).perform(click())
+//        onView(withId(R.id.planJourney_button_expand)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+
+        onView(withId(R.id.planJourney_button_expand))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+//        onView(withId(R.id.plan_journey_recycling_view))
+//            .perform(RecyclerViewActions.scrollToPosition<PlanJourneyAdapter.ViewHolder>(0))
+//            .perform(click())
+//        onView(withId(R.id.setNav1)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+//        onView(withId(R.id.setNav2)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+//        onView(withId(R.id.setNav3)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
     }
 
+    //*******
     @Test
     fun test_stop_clicked_images_displayed(){
 
@@ -285,6 +296,7 @@ class JourneyActivityTest {
         }
 
 
+    //******
     @Test
     fun test_checked_stop_not_clickable(){
         onView(withId(android.R.id.button1)).perform(click())
@@ -294,6 +306,7 @@ class JourneyActivityTest {
         onView(withId(R.id.planJourney_button_expand)).check(matches(not(isEnabled())));
     }
 
+    //*****
     @Test
     fun test_checked_finish_clickable(){
         onView(withId(android.R.id.button1)).perform(click())
@@ -308,6 +321,7 @@ class JourneyActivityTest {
         intending(hasComponent(JourneyActivity::class.qualifiedName))
     }
 
+    //******
     @Test
     fun test_start_navigation_clicked_goes_to_navigation_activity(){
         onView(withId(R.id.start_navigation)).perform(click())
