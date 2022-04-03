@@ -28,7 +28,8 @@ class PlanJourneyAdapter(
     private val context: Context,
     private val docks: MutableList<Dock>,
     private var locations: List<Locations>,
-    private val planner: Planner
+    private val planner: Planner,
+    private val tvFrom: List<String>
 ) : RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
 //    private val checkedBoxesLiveData: MutableLiveData<List<TextView>> = MutableLiveData()
@@ -103,14 +104,19 @@ class PlanJourneyAdapter(
         buttonList.add(holder.setNav2)
         buttonList.add(holder.setNav3)
 
+        holder.tvFrom.text = "From: ${ConvertHelper.shortenName(location.name).first()} "
+
+        holder.tvTo.text = "To: ${ConvertHelper.shortenName(locations[position + 1].name).first()}"
+
+        if (checkCheckedBoxInSharePref(holder.tvFrom.text.toString())){
+            holder.checkBoxButton.isChecked = true
+            enableExpandButton(holder)
+        }
+
         holder.checkBoxButton.setOnClickListener {
 
             enableExpandButton(holder)
         }
-
-        holder.tvFrom.text = "From: ${ConvertHelper.shortenName(location.name).first()} "
-
-        holder.tvTo.text = "To: ${ConvertHelper.shortenName(locations[position + 1].name).first()}"
 
         holder.setNav1.setOnClickListener {
 
@@ -259,14 +265,13 @@ class PlanJourneyAdapter(
         }
     }
 
-    fun getCheckedBoxesToStoreInSharedPref(): List<TextView> {
+    fun getCheckedBoxesToStoreInSharedPref(): List<String> {
         val checkedBoxes = viewHolders.filter { it.checkBoxButton.isChecked }
-        return checkedBoxes.map { it.tvFrom }
+        return checkedBoxes.map { it.tvFrom.text.toString() }
     }
 
-    fun checkCheckedBoxesInSharePref(tvFrom: List<TextView>) {
-        viewHolders.filter { it.tvFrom in tvFrom}
-            .forEach { it.checkBoxButton.isChecked = true }
+    fun checkCheckedBoxInSharePref(from: String): Boolean {
+        return from in tvFrom
     }
 
 

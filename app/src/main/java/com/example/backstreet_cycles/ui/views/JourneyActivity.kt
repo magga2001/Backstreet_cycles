@@ -240,6 +240,7 @@ class JourneyActivity : AppCompatActivity() {
 
         planJourneyAdapter.getCollapseBottomSheet()
             .observe(this) {
+                updateCheckBoxSharedPref()
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
     }
@@ -284,6 +285,7 @@ class JourneyActivity : AppCompatActivity() {
     private fun initListeners() {
         start_navigation.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            updateCheckBoxSharedPref()
             startActivity(intent)
             finish()
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -407,14 +409,14 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
+        val tvFrom = journeyViewModel.getTheCheckedBoxes()
         planJourneyAdapter = PlanJourneyAdapter(
             this,
             journeyViewModel.getCurrentDocks(),
             journeyViewModel.getJourneyLocations(),
-            planner = journeyViewModel.getPlannerInterface()
+            planner = journeyViewModel.getPlannerInterface(),
+            tvFrom
         )
-        val tvFrom = journeyViewModel.getTheCheckedBoxes()
-        planJourneyAdapter.checkCheckedBoxesInSharePref(tvFrom)
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
         finish_journey.isEnabled = false
@@ -431,6 +433,11 @@ class JourneyActivity : AppCompatActivity() {
         } else {
             santander_link.text = "Hire ${numCyclists} bikes"
         }
+    }
+
+    private fun updateCheckBoxSharedPref(){
+        val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
+        journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)
     }
 
     /**
@@ -463,6 +470,7 @@ class JourneyActivity : AppCompatActivity() {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.refresh_button -> {
+                updateCheckBoxSharedPref()
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
                 lifecycleScope.launch { journeyViewModel.getDock() }
@@ -476,10 +484,11 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+
+
     // Termination of JourneyPage
     override fun onDestroy() {
         super.onDestroy()
-
         journeyViewModel.unregisterObservers(
             routesObserver,
             routeProgressObserver
@@ -492,10 +501,9 @@ class JourneyActivity : AppCompatActivity() {
     // Terminate JourneyPage when back button is clicked
     override fun onBackPressed() {
         super.onBackPressed()
+        updateCheckBoxSharedPref()
         journeyViewModel.clearView()
         journeyViewModel.clearJourneyLocations()
-        val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
-        journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)
         finish()
     }
 

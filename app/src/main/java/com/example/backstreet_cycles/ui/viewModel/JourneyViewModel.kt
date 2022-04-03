@@ -3,7 +3,6 @@ package com.example.backstreet_cycles.ui.viewModel
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -250,10 +249,12 @@ class JourneyViewModel @Inject constructor(
 
     fun finishJourney(userDetails: Users) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-//        addJourneyToJourneyHistory(
-//            SharedPrefHelper.getSharedPref(Locations::class.java),
-//            userDetails
-//        )
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 
@@ -315,13 +316,13 @@ class JourneyViewModel @Inject constructor(
         return message
     }
 
-    fun getTheCheckedBoxes(): List<TextView> {
+    fun getTheCheckedBoxes(): List<String> {
         SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
-        return SharedPrefHelper.getSharedPref(TextView::class.java)
+        return SharedPrefHelper.getSharedPref(String::class.java)
     }
 
-    fun storeCheckedBoxesSharedPref(checkedBoxes: List<TextView>) {
+    fun storeCheckedBoxesSharedPref(checkedBoxes: List<String>) {
         SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
-        SharedPrefHelper.overrideSharedPref(checkedBoxes.toMutableList(),TextView::class.java)
+        SharedPrefHelper.overrideSharedPref(checkedBoxes.toMutableList(),String::class.java)
     }
 }
