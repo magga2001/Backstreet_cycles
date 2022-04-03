@@ -1,7 +1,5 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.app.Application
-import android.os.SystemClock.sleep
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -9,17 +7,16 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.init
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
-import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
@@ -35,7 +32,7 @@ class FAQActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

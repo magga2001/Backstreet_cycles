@@ -61,6 +61,9 @@ class JourneyHistoryViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Getter function to obtain the route of journey
+     */
     override fun getRoute() {
         super.getRoute()
         setJourneyLocations(getStops())
@@ -101,6 +104,9 @@ class JourneyHistoryViewModel @Inject constructor(
 //        getMapBoxRoute(routeOptions)
 //    }
 
+    /**
+     * Checks for a current journey, if not found alert message given
+     */
     private fun checkCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
@@ -112,7 +118,10 @@ class JourneyHistoryViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Updates the current location of the user
+     * @param currentLocation of user
+     */
     fun updateCurrentLocation(currentLocation: Location) {
         for (stop in getStops()) {
             if (stop.name == "Current Location") {
@@ -126,16 +135,28 @@ class JourneyHistoryViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Attempts to continue the current journey
+     */
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
         isReadyMutableLiveData.value = true
     }
 
+    /**
+     * Attempts to set up a new journey
+     * @param newStops containing the new searched locations
+     */
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
         isReadyMutableLiveData.value = true
     }
 
+    /**
+     * Getter function to return the past journeys
+     * @param userDetails
+     * @return MutableList containing the list of journeys with their locations
+     */
     fun getJourneyHistory(userDetails: Users): MutableList<List<Locations>> {
         val listLocations = emptyList<List<Locations>>().toMutableList()
         for (journey in userDetails.journeyHistory) {
@@ -146,42 +167,74 @@ class JourneyHistoryViewModel @Inject constructor(
         return listLocations
     }
 
+    /**
+     * Adding locations for the journey
+     * @param checkpoints
+     */
     fun addAllStops(checkpoints: MutableList<Locations>) {
         stops.addAll(checkpoints)
     }
 
+    /**
+     * Clearing all locations searched and added by the user
+     */
     fun clearAllStops() {
         stops.clear()
     }
 
-    fun getStops(): MutableList<Locations>
-    {
+    /**
+     * Getter function to obtain the list of stops of the journey
+     * @return MutableList<Locations> containing the locations of the journey
+     */
+    fun getStops(): MutableList<Locations> {
         return stops
     }
 
+    /**
+     * Getter function to obtain the MapBox Navigation
+     * @return MapboxNavigation
+     */
     fun getMapBoxNavigation(): MapboxNavigation {
         return mapboxNavigation
     }
 
+    /**
+     * Terminate the Mapbox navigation
+     */
     fun destroyMapboxNavigation() {
         MapboxNavigationProvider.destroy()
     }
 
+    /**
+     * Setting up the show alert
+     * @param bool to indicate state
+     */
     fun setShowAlert(bool: Boolean) {
 //        showAlert.postValue(bool)
         showAlert.value = bool
     }
 
+    /**
+     * Getter function to obtain the show alert
+     * @return MutableLiveData
+     */
     fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
         return showAlert
     }
 
+    /**
+     * Getter function to obtain the isReadyMutableLiveData
+     * @return isReadyMutableLiveData
+     */
     fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
         return isReadyMutableLiveData
     }
 
+    /**
+     * Getter function to obtain the message
+     * @return message
+     */
     fun getMessage(): MutableLiveData<String> {
         return message
     }
-
 }
