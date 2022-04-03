@@ -73,6 +73,7 @@
             android:name="com.example.backstreet_cycles.ui.views.JourneyActivity"
             android:parentActivityName="com.example.backstreet_cycles.ui.views.HomePageActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.views.LoadingActivity" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

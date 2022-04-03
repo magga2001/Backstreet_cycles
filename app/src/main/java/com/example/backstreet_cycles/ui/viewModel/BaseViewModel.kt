@@ -42,15 +42,27 @@ open class BaseViewModel @Inject constructor(
     protected val mApplication: Application = application
     protected val mContext = applicationContext
     private val userDetail: MutableLiveData<Users> = MutableLiveData()
+    private val increaseCyclist: MutableLiveData<Boolean> = MutableLiveData()
+    private val decreaseCyclist: MutableLiveData<Boolean> = MutableLiveData()
 
     //GENERIC
 
     open fun incrementNumCyclists() {
-        cyclistRepository.incrementNumCyclists()
+        if(getNumCyclists() < 4){
+            cyclistRepository.incrementNumCyclists()
+            increaseCyclist.value = true
+        }else{
+            increaseCyclist.value = false
+        }
     }
 
     open fun decrementNumCyclists() {
-        cyclistRepository.decrementNumCyclists()
+        if(getNumCyclists() >= 2){
+            cyclistRepository.decrementNumCyclists()
+            decreaseCyclist.value = true
+        }else{
+            decreaseCyclist.value = false
+        }
     }
 
     open fun resetNumCyclists() {
@@ -78,7 +90,8 @@ open class BaseViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getUserDetailsData(): MutableLiveData<Users> {
+    fun getUserInfo(): MutableLiveData<Users>
+    {
         return userDetail
     }
 
@@ -186,12 +199,17 @@ open class BaseViewModel @Inject constructor(
 
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
+//                        JsonHelper.deleteFile(mContext,"localDocks.json")
+//                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
+//                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
                     }
                     getRoute()
                 }
 
                 is Resource.Error -> {
-                    Log.i("New dock", "Error")
+                    val docksJson = JsonHelper.readJsonFile(mContext, "localDocks.json").toString()
+                    val docks = JsonHelper.stringToObject(docksJson, Dock::class.java)
+                    tflRepository.setCurrentDocks(docks!!.toMutableList())
 
                 }
                 is Resource.Loading -> {
@@ -202,10 +220,6 @@ open class BaseViewModel @Inject constructor(
     }
 
     //SHARED PREF
-
-    open fun initSharedPrefLocation() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-    }
 
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
@@ -227,5 +241,13 @@ open class BaseViewModel @Inject constructor(
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
+    }
+
+    fun getIncreaseCyclist(): MutableLiveData<Boolean>{
+        return increaseCyclist
+    }
+
+    fun getDecreaseCyclist(): MutableLiveData<Boolean>{
+        return decreaseCyclist
     }
 }

@@ -47,20 +47,19 @@ class SplashScreenViewModel @Inject constructor(
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
                         val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-                        JsonHelper.writeJsonFile(mContext, "localdocks.json", dockJSON)
-                        Log.i("Splash screen dock", JsonHelper.readJsonFile(mContext, "localdocks.json").toString())
+                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
                     }
                     loadTouristAttractions()
                 }
 
                 is Resource.Error -> {
-                    Log.i("New dock", result.toString())
+                    val docksJson = JsonHelper.readJsonFile(mContext, "localDocks.json").toString()
+                    val docks = JsonHelper.stringToObject(docksJson, Dock::class.java)
+                    tflRepository.setCurrentDocks(docks!!.toMutableList())
                     isReadyMutableLiveData.value = true
-
                 }
 
                 is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
                 }
             }
         }.launchIn(viewModelScope)

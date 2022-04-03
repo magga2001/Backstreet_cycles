@@ -7,7 +7,6 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
@@ -25,11 +24,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @ExperimentalCoroutinesApi
-class JourneyHistoryViewModelTest {
+class LoadingViewModelTest {
 
     private lateinit var journeyHistoryViewModel: JourneyHistoryViewModel
     private lateinit var homePageViewModel: HomePageViewModel
-    private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var loadingViewModel: LoadingViewModel
     lateinit var instrumentationContext: Context
 
@@ -85,15 +83,6 @@ class JourneyHistoryViewModelTest {
             instrumentationContext
         )
 
-        journeyViewModel = JourneyViewModel(
-            fakeTflRepoImpl,
-            fakeMapboxRepoImpl,
-            fakeCyclistRepoImpl,
-            fakeUserRepoImpl,
-            application,
-            instrumentationContext
-        )
-
         loadingViewModel = LoadingViewModel(
             fakeTflRepoImpl,
             fakeMapboxRepoImpl,
@@ -105,70 +94,25 @@ class JourneyHistoryViewModelTest {
     }
 
     @Test
-    fun test_get_a_journey_without_any_current_journey(){
-        journeyHistoryViewModel.addAllStops(locations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-    }
-
-    @Test
-    fun test_check_alert_if_there_is_current_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-    }
-
-    @Test
-    fun test_continue_with_current_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithCurrentJourney()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-        assert(journeyHistoryViewModel.getJourneyLocations() == locations)
-    }
-
-    @Test
-    fun test_continue_with_new_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
-        journeyHistoryViewModel.clearJourneyLocations()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithNewJourney(newLocations)
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-        assert(journeyHistoryViewModel.getJourneyLocations() == newLocations)
-    }
-
-    @Test
-    fun test_get_journey_history(){
-        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+    fun test_get_journey_route(){
         for(location in locations){
             homePageViewModel.addStop(location)
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
-        loadingViewModel.saveJourney()
-        journeyViewModel.getUserDetails()
-        val user = journeyViewModel.getUserInfo().getOrAwaitValue()
-        assert(user.equals(Users("John","Doe","johndoe@example.com")))
-        journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
-        assert(journeyViewModel.getMessage().getOrAwaitValue() == "Record added")
-        assert(journeyHistoryViewModel.getJourneyHistory(user).size == 1)
+        assert(loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_get_journey_route_with_no_connection(){
+        fakeMapboxRepoImpl.setConnection(false)
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(!loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
     }
 
     @After

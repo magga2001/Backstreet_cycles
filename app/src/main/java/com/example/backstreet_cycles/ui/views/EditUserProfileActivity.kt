@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
@@ -37,7 +36,7 @@ class EditUserProfileActivity : AppCompatActivity() {
         editUserProfileViewModel.getUserDetails()
 
         // Display the first and last name of the user if they exist
-        editUserProfileViewModel.getUserDetailsData().observe(this) { details ->
+        editUserProfileViewModel.getUserInfo().observe(this) { details ->
             if (details != null) {
                 edit_user_details_firstName.setText(details.firstName)
                 edit_user_details_lastName.setText(details.lastName)

@@ -19,6 +19,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
@@ -28,6 +29,7 @@ import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -275,7 +277,7 @@ class HomePageActivityTest {
         onView(withId(R.id.nextPageButton)).perform(click())
 
         Intents.init()
-        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        intending(hasComponent(LoadingActivity::class.qualifiedName))
         Intents.release()
     }
     //failing
@@ -543,7 +545,6 @@ class HomePageActivityTest {
     fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
         onView(withId(R.id.addingBtn)).perform(click())
         onView(isRoot()).perform(waitFor(1000))
-//        sleep(1500)
         onView(
             allOf(
                 withId(R.id.button_search_back),
@@ -620,6 +621,43 @@ class HomePageActivityTest {
             .check(matches(withText("Changing Location Of Stop")))
     }
 
+
+    @Test
+    fun test_bottom_sheet_collapse(){
+        test_location_is_changed_when_stop_is_clicked()
+        onView(withId(R.id.myLocationButton)).perform(click())
+        Matchers.allOf(
+            withId(R.id.homepage_bottom_sheet_constraintLayout),
+            childAtPosition(
+                withId(R.id.homepage_bottom_sheet_linearLayout),
+                0
+            )
+        ).matches(hasBottomSheetBehaviorState(BottomSheetBehavior.STATE_COLLAPSED))
+
+    }
+
+    private fun getFriendlyBottomSheetBehaviorStateDescription(state: Int): String = when (state) {
+        BottomSheetBehavior.STATE_DRAGGING -> "dragging"
+        BottomSheetBehavior.STATE_SETTLING -> "settling"
+        BottomSheetBehavior.STATE_EXPANDED -> "expanded"
+        BottomSheetBehavior.STATE_COLLAPSED -> "collapsed"
+        BottomSheetBehavior.STATE_HIDDEN -> "hidden"
+        BottomSheetBehavior.STATE_HALF_EXPANDED -> "half-expanded"
+        else -> "unknown but the value was $state"
+    }
+
+    fun hasBottomSheetBehaviorState(expectedState: Int): Matcher<in View>? {
+        return object : BoundedMatcher<View, View>(View::class.java) {
+            override fun describeTo(description: Description) {
+                description.appendText("has BottomSheetBehavior state: ${getFriendlyBottomSheetBehaviorStateDescription(expectedState)}")
+            }
+
+            override fun matchesSafely(view: View): Boolean {
+                val bottomSheetBehavior = BottomSheetBehavior.from(view)
+                return expectedState == bottomSheetBehavior.state
+            }
+        }
+    }
 
 
     @After

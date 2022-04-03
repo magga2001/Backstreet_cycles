@@ -17,17 +17,13 @@ import dagger.hilt.android.internal.Contexts
 import io.mockk.mockk
 import junit.framework.Assert
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-//import org.robolectric.RobolectricTestRunner
-//import org.robolectric.annotation.Config
-
-//@RunWith(RobolectricTestRunner::class)
-//@Config(application = BackstreetApplication::class, manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 @Config(application = BackstreetApplication::class, manifest = Config.NONE)
 @ExperimentalCoroutinesApi
@@ -79,40 +75,40 @@ class EditUserProfileViewModelTest {
         )
     }
 
-    //ask magga why it's failing
-//    @Test
-//    fun test_update_lastName_unsuccessful_without_loggin_in() {
-//        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
-//        fakeUserRepoImpl.logOut()
-//        editUserProfileViewModel.updateUserDetails("test","testLastName")
-//        Assert.assertEquals(
-//                "No User",
-//                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-//        )
-//    }
+//    ask magga why it's failing
+    @Test
+    fun test_update_lastName_unsuccessful_without_logging_in() {
+        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        fakeUserRepoImpl.logOut()
+        editUserProfileViewModel.updateUserDetails("test","testLastName")
+        assertEquals(
+                "No user",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
 
-    //ask magga why failing
-//    @Test
-//    fun test_update_firstName_unsuccessful_without_loggin_in() {
-//        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
-//        fakeUserRepoImpl.logOut()
-//        editUserProfileViewModel.updateUserDetails("testFirstName","user")
-//        Assert.assertEquals(
-//                "No User",
-//                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-//        )
-//    }
+//    ask magga why failing
+    @Test
+    fun test_update_firstName_unsuccessful_without_logging_in() {
+        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
+        fakeUserRepoImpl.logOut()
+        editUserProfileViewModel.updateUserDetails("testFirstName","user")
+        assertEquals(
+                "No user",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
 
     @Test
     fun test_update_firstName_successfully()
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testFirstName",
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
@@ -123,11 +119,11 @@ class EditUserProfileViewModelTest {
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("test","testLastName")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testLastName",
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )
@@ -138,15 +134,15 @@ class EditUserProfileViewModelTest {
     {
         fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         editUserProfileViewModel.updateUserDetails("testFirstName","testLastName")
-        Assert.assertEquals(
+        assertEquals(
                 "Success",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testFirstName",
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
-        Assert.assertEquals(
+        assertEquals(
                 "testLastName",
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )

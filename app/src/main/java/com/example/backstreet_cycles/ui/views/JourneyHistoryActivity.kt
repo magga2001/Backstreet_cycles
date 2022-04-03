@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.adapter.JourneyHistoryAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -46,7 +45,8 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
         journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
-                startActivity(Intent(this, JourneyActivity::class.java))
+                journeyHistoryViewModel.resetNumCyclists()
+                startActivity(Intent(this, LoadingActivity::class.java))
                 journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
@@ -63,7 +63,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
         }
 
         journeyHistoryViewModel.getUserDetails()
-        journeyHistoryViewModel.getUserDetailsData().observe(this) { userDetails ->
+        journeyHistoryViewModel.getUserInfo().observe(this) { userDetails ->
             if (userDetails != null) {
                 journeys = journeyHistoryViewModel.getJourneyHistory(userDetails).reversed().toMutableList()
                 userCredentials = userDetails

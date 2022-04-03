@@ -1,8 +1,12 @@
 package com.example.backstreet_cycles.data.repository
 
+import android.util.Log
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
+import com.example.backstreet_cycles.domain.utils.JsonHelper
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -53,6 +57,8 @@ class FakeUserRepoImpl : UserRepository{
             }else{
                 emit(Resource.Error("No user"))
             }
+        }else{
+            emit(Resource.Error("No user"))
         }
     }
 
@@ -126,6 +132,29 @@ class FakeUserRepoImpl : UserRepository{
             emit(Resource.Success("Reset password sent"))
         }else{
             emit(Resource.Error("No user"))
+        }
+    }
+
+    override fun addJourneyToJourneyHistory(
+        locations: MutableList<Locations>,
+        user: Users
+    ): Flow<Resource<String>> = flow {
+
+        if(currentUser != null){
+
+            val email = user.email
+
+            if(users.containsKey(email)){
+                val user = users[email]
+                val existedUser = user?.keys?.first()
+
+                val gson = Gson()
+                val jsonObject = gson.toJson(locations)
+
+                existedUser!!.journeyHistory = mutableListOf(jsonObject)
+
+                emit(Resource.Success("Record added"))
+            }
         }
     }
 

@@ -14,6 +14,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
@@ -66,17 +67,17 @@ class HomePageViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val mapboxNavigation by lazy {
-        if (MapboxNavigationProvider.isCreated()) {
-            MapboxNavigationProvider.retrieve()
-        } else {
-            MapboxNavigationProvider.create(
-                NavigationOptions.Builder(mApplication)
-                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
-                    .build()
-            )
-        }
-    }
+//    private val mapboxNavigation by lazy {
+//        if (MapboxNavigationProvider.isCreated()) {
+//            MapboxNavigationProvider.retrieve()
+//        } else {
+//            MapboxNavigationProvider.create(
+//                NavigationOptions.Builder(mApplication)
+//                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
+//                    .build()
+//            )
+//        }
+//    }
 
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
@@ -144,23 +145,6 @@ class HomePageViewModel @Inject constructor(
         locationComponent.isLocationComponentEnabled = true
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
-    }
-
-    /**
-     * Setting state of showing an alert
-     * @param bool state of alert
-     */
-    fun setShowAlert(bool: Boolean) {
-//        showAlert.postValue(bool)
-        showAlert.value = bool
-    }
-
-    /**
-     * Getter function for the ShowAlertMutableLiveData
-     * @return MutableLiveData containing the alert
-     */
-    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
-        return showAlert
     }
 
     /**
@@ -247,45 +231,44 @@ class HomePageViewModel @Inject constructor(
         checkCurrentJourney()
     }
 
-    /**
-     * Getter function for the representation of the route of the journey
-     */
-    private fun getMapBoxRoute(routeOptions: RouteOptions) {
-        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-//                    isReadyMutableLiveData.postValue(true)
-                    isReadyMutableLiveData.value = true
-                }
+//    /**
+//     * Getter function for the representation of the route of the journey
+//     */
+//    private fun getMapBoxRoute(routeOptions: RouteOptions) {
+//        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
+//            when (result) {
+//                is Resource.Success -> {
+//                    isReadyMutableLiveData.value = true
+//                }
+//
+//                is Resource.Error -> {
+//                    //Fail
+//                    message.postValue(result.message!!)
+//                }
+//
+//                is Resource.Loading -> {
+//                }
+//            }
+//        }.launchIn(viewModelScope)
+//    }
 
-                is Resource.Error -> {
-                    //Fail
-                    message.postValue(result.message!!)
-                }
-
-                is Resource.Loading -> {
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    /**
-     * Receive the route of the journey
-     * @param context
-     * @param locations
-     */
-    private fun fetchRoute(
-        context: Context,
-        locations: MutableList<Locations>
-    ) {
-        clearDuplication(locations)
-        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
-
-        clearInfo()
-        setCurrentWayPoint(locations)
-        val routeOptions = setCustomiseRoute(context, points)
-        getMapBoxRoute(routeOptions)
-    }
+//    /**
+//     * Receive the route of the journey
+//     * @param context
+//     * @param locations
+//     */
+//    private fun fetchRoute(
+//        context: Context,
+//        locations: MutableList<Locations>
+//    ) {
+//        clearDuplication(locations)
+//        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
+//
+//        clearInfo()
+//        setCurrentWayPoint(locations)
+//        val routeOptions = setCustomiseRoute(context, points)
+//        getMapBoxRoute(routeOptions)
+//    }
 
     /**
      * Display tourist attractions on the map for the user
@@ -326,7 +309,6 @@ class HomePageViewModel @Inject constructor(
      */
     fun checkCurrentLocation() {
         val stop = stops.map { it.name }.contains("Current Location")
-//        hasCurrentLocation.postValue(stop)
         hasCurrentLocation.value = stop
     }
 
@@ -392,7 +374,6 @@ class HomePageViewModel @Inject constructor(
         if (!checkIfAlreadyInStops(location)) {
             updateStops(mapboxMap, selectedCarmenFeature, style)
         } else {
-//            hasDuplicationLocation.postValue(true)
             hasDuplicationLocation.value = true
         }
     }
@@ -462,8 +443,9 @@ class HomePageViewModel @Inject constructor(
         if (!noCurrentJourney) {
 //            showAlert.postValue(true)
             showAlert.value = true
-        } else {
-            fetchRoute(mContext, getJourneyLocations())
+        }
+        else {
+            isReadyMutableLiveData.value = true
         }
     }
 
@@ -475,9 +457,9 @@ class HomePageViewModel @Inject constructor(
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)) {
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
-            fetchRoute(mContext, listOfLocations)
+            isReadyMutableLiveData.value = true
+//            fetchRoute(mContext, listOfLocations)
         } else {
-//            hasCurrentJourneyMutableLiveData.postValue(false)
             hasCurrentJourneyMutableLiveData.value = false
         }
     }
@@ -487,10 +469,11 @@ class HomePageViewModel @Inject constructor(
      */
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
-        fetchRoute(
-            mContext,
-            getJourneyLocations(),
-        )
+//        fetchRoute(
+//            mContext,
+//            getJourneyLocations(),
+//        )
+        isReadyMutableLiveData.value = true
     }
 
     /**
@@ -499,24 +482,25 @@ class HomePageViewModel @Inject constructor(
      */
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
-        fetchRoute(
-            mContext,
-            newStops,
-        )
+//        fetchRoute(
+//            mContext,
+//            newStops,
+//        )
+        isReadyMutableLiveData.value = true
     }
 
-    /**
-     * Obtain necessary data to save the journey
-     */
-    fun saveJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
-        SharedPrefHelper.overrideSharedPref(
-            mutableListOf(getNumCyclists().toString()),
-            String::class.java
-        )
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
-    }
+//    /**
+//     * Obtain necessary data to save the journey
+//     */
+//    fun saveJourney() {
+//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+//        SharedPrefHelper.overrideSharedPref(
+//            mutableListOf(getNumCyclists().toString()),
+//            String::class.java
+//        )
+//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+//        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
+//    }
 
     fun cancelWork() {
         WorkHelper.cancelWork(mContext)
@@ -540,20 +524,36 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
     }
 
+//    /**
+//     * Getter function to return the Mapbox navigation
+//     * @return MapboxNavigation
+//     */
+//    fun getMapBoxNavigation(): MapboxNavigation {
+//        return mapboxNavigation
+//    }
+//
+//    /**
+//     * Terminate the Mapbox navigation
+//     */
+//    fun destroyMapboxNavigation() {
+//        MapboxNavigationProvider.destroy()
+//        mapboxNavigation.onDestroy()
+//    }
+
     /**
-     * Getter function to return the Mapbox navigation
-     * @return MapboxNavigation
+     * Setting state of showing an alert
+     * @param bool state of alert
      */
-    fun getMapBoxNavigation(): MapboxNavigation {
-        return mapboxNavigation
+    fun setShowAlert(bool: Boolean) {
+        showAlert.value = bool
     }
 
     /**
-     * Terminate the Mapbox navigation
+     * Getter function for the ShowAlertMutableLiveData
+     * @return MutableLiveData containing the alert
      */
-    fun destroyMapboxNavigation() {
-        MapboxNavigationProvider.destroy()
-        mapboxNavigation.onDestroy()
+    fun getShowAlertMutableLiveData(): MutableLiveData<Boolean> {
+        return showAlert
     }
 
     /**

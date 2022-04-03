@@ -4,6 +4,7 @@ import android.content.ContentValues
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.ToastMessageHelper
 import com.example.backstreet_cycles.service.WorkHelper
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -32,6 +34,8 @@ interface UserRepository {
     fun emailVerification(firstName: String, lastName: String, email: String): Flow<Resource<String>>
 
     fun resetPassword(email: String): Flow<Resource<String>>
+
+    fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users): Flow<Resource<String>>
 
     fun logOut()
 }
