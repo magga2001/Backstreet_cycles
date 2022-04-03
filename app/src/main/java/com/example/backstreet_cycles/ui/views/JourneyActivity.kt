@@ -476,7 +476,9 @@ class JourneyActivity : AppCompatActivity() {
             R.id.refresh_button -> {
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
-                lifecycleScope.launch { journeyViewModel.getDock() }
+                val intent = Intent(this, LoadingActivity::class.java)
+                startActivity(intent)
+                finish()
                 true
             }
             android.R.id.home -> {
