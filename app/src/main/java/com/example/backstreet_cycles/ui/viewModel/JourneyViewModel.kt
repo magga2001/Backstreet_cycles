@@ -27,10 +27,8 @@ import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -254,13 +252,12 @@ class JourneyViewModel @Inject constructor(
     }
 
     fun finishJourney(userDetails: Users) {
+        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
         addJourneyToJourneyHistory(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
 
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
