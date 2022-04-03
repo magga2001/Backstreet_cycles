@@ -4,27 +4,21 @@ import android.app.Application
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.options.NavigationOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +39,7 @@ class JourneyHistoryViewModel @Inject constructor(
 ) {
 
     private var stops: MutableList<Locations> = mutableListOf()
-    private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val isReady: MutableLiveData<Boolean> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private val mapboxNavigation by lazy {
@@ -74,8 +68,8 @@ class JourneyHistoryViewModel @Inject constructor(
 //        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
 //            when (result) {
 //                is Resource.Success -> {
-////                    isReadyMutableLiveData.postValue(true)
-//                    isReadyMutableLiveData.value = true
+////                    isReady.postValue(true)
+//                    isReady.value = true
 //                }
 //
 //                is Resource.Error -> {
@@ -114,7 +108,7 @@ class JourneyHistoryViewModel @Inject constructor(
 //            showAlert.postValue(true)
             setShowAlert(true)
         } else {
-            isReadyMutableLiveData.value = true
+            isReady.value = true
         }
     }
 
@@ -140,7 +134,7 @@ class JourneyHistoryViewModel @Inject constructor(
      */
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
-        isReadyMutableLiveData.value = true
+        isReady.value = true
     }
 
     /**
@@ -149,7 +143,7 @@ class JourneyHistoryViewModel @Inject constructor(
      */
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
-        isReadyMutableLiveData.value = true
+        isReady.value = true
     }
 
     /**
@@ -223,11 +217,11 @@ class JourneyHistoryViewModel @Inject constructor(
     }
 
     /**
-     * Getter function to obtain the isReadyMutableLiveData
-     * @return isReadyMutableLiveData
+     * Getter function to obtain the isReady
+     * @return isReady
      */
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<Boolean> {
+        return isReady
     }
 
     /**

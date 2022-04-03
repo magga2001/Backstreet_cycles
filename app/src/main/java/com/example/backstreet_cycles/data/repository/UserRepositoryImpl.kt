@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.content.ContentValues.TAG
-import android.util.Log
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
@@ -250,6 +249,7 @@ class UserRepositoryImpl(
         firebaseAuth.signOut()
         EspressoIdlingResource.decrement()
     }
+
 }
 
 

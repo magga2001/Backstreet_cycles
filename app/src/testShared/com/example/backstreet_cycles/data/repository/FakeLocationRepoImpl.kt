@@ -5,8 +5,9 @@ import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
+import javax.inject.Inject
 
-class FakeLocationRepoImpl : LocationRepository{
+class FakeLocationRepoImpl @Inject constructor() : LocationRepository{
 
     private val locations: MutableList<Locations> = mutableListOf()
     private val location1: Locations = Locations("Tower of London",51.5081,-0.0759)

@@ -11,7 +11,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
@@ -34,12 +33,13 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
-class EditUserProfileActivityTest{
+class EditUserProfileActivityTest {
 
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
+    private val userRepoImpl =
+        UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -48,8 +48,10 @@ class EditUserProfileActivityTest{
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
-            android.Manifest.permission.INTERNET)
+            android.Manifest.permission.INTERNET
+        )
 
     @Before
     fun setUp() {
@@ -58,7 +60,7 @@ class EditUserProfileActivityTest{
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         ActivityScenario.launch(HomePageActivity::class.java)
-        onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
         onView(withId(R.id.profile)).perform(ViewActions.click())
     }
 
@@ -90,23 +92,24 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_check_if_first_name_is_inputted(){
+    fun test_check_if_first_name_is_inputted() {
         onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
         val testInput = "Test"
         onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(testInput))
-        onView(withId(R.id.edit_user_details_firstName)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(withText(testInput)))
     }
+
     @Test
-    fun test_check_if_last_name_is_inputted(){
+    fun test_check_if_last_name_is_inputted() {
         onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
         val testInput = "User"
         onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(testInput))
-        onView(withId(R.id.edit_user_details_lastName)).check(matches(ViewMatchers.withText(testInput)))
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(withText(testInput)))
 
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity(){
+    fun test_on_pressBack_go_to_HomePageActivity() {
         pressBack()
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
@@ -114,29 +117,55 @@ class EditUserProfileActivityTest{
     }
 
 
-//    @Test
-//    fun test_on_clickUpdateProfile_Empty_firstName(){
-//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(""),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
-//    }
-
     @Test
-    fun test_on_clickUpdateProfile_Empty_lastName(){
-        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Test"),
+    fun test_on_clickUpdateProfile_Empty_textboxes() {
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.replaceText(""),
             ViewActions.closeSoftKeyboard()
         )
-
-        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(""), ViewActions.closeSoftKeyboard())
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
-//        sleep(1000)
-        onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
     }
 
     @Test
-    fun test_on_clickUpdateProfile_save(){
+    fun test_on_clickUpdateProfile_Empty_firstName() {
+        onView(withId(R.id.edit_user_details_lastName)).perform(
+            ViewActions.replaceText("Test"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.replaceText(""),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
+    }
+
+    @Test
+    fun test_on_clickUpdateProfile_Empty_lastName() {
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.replaceText("Test"),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.edit_user_details_lastName)).perform(
+            ViewActions.replaceText(""),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
+    }
+
+//    @Test
+//    fun test_trims_fullname(){
+//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(" John   "))
+//        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("   Doe "))
+//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+//        onView(withId(R.id.edit_user_details_firstName)).check(matches(withText("John")))
+//        onView(withId(R.id.edit_user_details_lastName)).check(matches(withText("Doe")))
+//    }
+
+    @Test
+    fun test_on_clickUpdateProfile_save() {
         onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
         onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
@@ -145,12 +174,21 @@ class EditUserProfileActivityTest{
         Intents.release()
     }
 
+    // Test can work later
+//    @Test
+//    fun test_snack_bar_shown_after_saved() {
+//        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
+//        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
+//        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+//        onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("profile updated successfully")))
+//    }
+
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
 
         onView(
             Matchers.allOf(
-                ViewMatchers.withContentDescription("Navigate up"),
+                withContentDescription("Navigate up"),
                 childAtPosition(
                     Matchers.allOf(
                         withId(R.id.action_bar),
@@ -190,15 +228,12 @@ class EditUserProfileActivityTest{
     }
 
 
-
     @After
-    fun tearDown(){
+    fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         userRepoImpl.logOut()
 
     }
-
-
 
 
 }

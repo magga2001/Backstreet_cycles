@@ -26,7 +26,6 @@ import com.mapbox.navigation.utils.internal.NOTIFICATION_ID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.internal.Contexts.getApplication
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
@@ -47,13 +46,11 @@ class WorkerService @AssistedInject constructor(
 
     private suspend fun attemptNotification() {
 
-        Log.i("Starting attempt", "Success")
 
         runBlocking {
             tflRepository.getDocks().onEach { result ->
                 when (result) {
                     is Resource.Success -> {
-                        Log.i("Notification dock", result.data?.size.toString())
 
                         if (checkUpdate(result.data)) {
                             createNotificationChannel(context = applicationContext)
@@ -157,7 +154,7 @@ class WorkerService @AssistedInject constructor(
         val notificationBuilder = NotificationCompat.Builder(context, "1337")
             .setSmallIcon(R.drawable.dock_station)
             .setContentTitle("Journey update!")
-            .setContentText("One or more of docking stations in your journey has been changed due to spaces available")
+            .setContentText("Open the app to see the new changes in your journey.")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
@@ -170,7 +167,6 @@ class WorkerService @AssistedInject constructor(
         context: Context,
         notificationBuilder: NotificationCompat.Builder
     ) {
-        Log.i("Sending notification", "Successful")
 
         with(NotificationManagerCompat.from(context)) {
             // notificationId is a unique int for each notification that you must define

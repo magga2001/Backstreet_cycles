@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.common.TestAppModule
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
@@ -59,7 +60,7 @@ class LoadingViewModelTest {
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
         fakeUserRepoImpl = FakeUserRepoImpl()
         fakeLocationRepoImpl = FakeLocationRepoImpl()
@@ -100,7 +101,7 @@ class LoadingViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
-        assert(loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
     }
 
     @Test
@@ -111,7 +112,7 @@ class LoadingViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
-        assert(!loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(!loadingViewModel.getIsReady().getOrAwaitValue())
         assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
     }
 

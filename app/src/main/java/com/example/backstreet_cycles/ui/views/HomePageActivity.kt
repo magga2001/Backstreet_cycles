@@ -125,7 +125,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         EspressoIdlingResource.decrement()
 
         // Leads to the journey page with the searched locations
-        homePageViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        homePageViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 val intent = Intent(this, LoadingActivity::class.java)
                 startActivity(intent)
@@ -139,7 +139,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Checks whether a current journey exists
-        homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this) { hasCurrentJourney ->
+        homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
             }else{

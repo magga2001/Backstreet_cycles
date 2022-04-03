@@ -210,19 +210,19 @@ class JourneyActivity : AppCompatActivity() {
             }
         }
 
-        journeyViewModel.getDistanceMutableLiveData().observe(this) { distance ->
+        journeyViewModel.getDistanceData().observe(this) { distance ->
             if (distance != null) {
                 distances.text = getString(R.string.journey_distances, distance)
             }
         }
 
-        journeyViewModel.getDurationMutableLiveData().observe(this) { duration ->
+        journeyViewModel.getDurationData().observe(this) { duration ->
             if (duration != null) {
                 durations.text = getString(R.string.journey_durations, duration)
             }
         }
 
-        journeyViewModel.getPriceMutableLiveData().observe(this) { price ->
+        journeyViewModel.getPriceData().observe(this) { price ->
             if (price != null) {
                 prices.text = getString(R.string.journey_prices, price)
             }

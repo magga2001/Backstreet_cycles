@@ -43,11 +43,11 @@ class JourneyHistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        journeyHistoryViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        journeyHistoryViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 journeyHistoryViewModel.resetNumCyclists()
                 startActivity(Intent(this, LoadingActivity::class.java))
-                journeyHistoryViewModel.getIsReadyMutableLiveData().value = false
+                journeyHistoryViewModel.getIsReady().value = false
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }

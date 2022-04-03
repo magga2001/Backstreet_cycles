@@ -102,66 +102,39 @@ class JourneyViewModelTest {
             application,
             instrumentationContext
         )
+    }
+
+    @Test
+    fun test_get_journey_info(){
         for(location in locations){
             homePageViewModel.addStop(location)
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
-    }
-
-    @Test
-    fun test_get_journey_locations(){
-        journeyViewModel.calcBicycleRental()
-        assert(journeyViewModel.getJourneyLocations().size == locations.size)
-    }
-
-    @Test
-    fun test_update_map(){
-        journeyViewModel.calcBicycleRental()
-        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-    }
-
-    @Test
-    fun test_get_journey_distance(){
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
         val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-        assert(journeyViewModel.getDistanceMutableLiveData().getOrAwaitValue()
+        assert(journeyViewModel.getDistanceData().getOrAwaitValue()
             .equals(distances))
         val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
-        assert(journeyViewModel.getDurationMutableLiveData().getOrAwaitValue()
+        assert(journeyViewModel.getDurationData().getOrAwaitValue()
             .equals(durations))
         val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
-        assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
-    }
-
-    @Test
-    fun test_get_journey_duration() {
-        journeyViewModel.calcBicycleRental()
-        assert(journeyViewModel.getJourneyLocations().size == locations.size)
-        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-        val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-        val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
-        assert(journeyViewModel.getDurationMutableLiveData().getOrAwaitValue()
-            .equals(durations))
-    }
-
-    @Test
-    fun test_get_journey_price() {
-        journeyViewModel.calcBicycleRental()
-        journeyViewModel.calcBicycleRental()
-        assert(journeyViewModel.getJourneyLocations().size == locations.size)
-        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-        val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-        val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
-        val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
-        assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
+        assert(journeyViewModel.getPriceData().getOrAwaitValue().equals(price.toString()))
     }
 
     @Test
     fun test_get_journey_overview(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         journeyViewModel.getJourneyOverview()
@@ -171,6 +144,13 @@ class JourneyViewModelTest {
 
     @Test
     fun test_get_journey_start_walk(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.START_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.START_WALKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -179,6 +159,13 @@ class JourneyViewModelTest {
 
     @Test
     fun test_get_journey_cycling(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.BIKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.BIKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -187,6 +174,13 @@ class JourneyViewModelTest {
 
     @Test
     fun test_get_journey_end_walk(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.END_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.END_WALKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -196,6 +190,13 @@ class JourneyViewModelTest {
     @Test
     fun test_finish_journey() = runBlocking {
         fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         journeyViewModel.getUserDetails()
         assert(journeyViewModel.getUserInfo().getOrAwaitValue()
             .equals(Users("John","Doe","johndoe@example.com")))
@@ -204,6 +205,13 @@ class JourneyViewModelTest {
 
     @Test
     fun test_refresh_journey(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
+        loadingViewModel.saveJourney()
         runBlocking { journeyViewModel.getDock() }
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == false)

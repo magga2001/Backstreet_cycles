@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class FakeTflRepoImpl : TflRepository {
+class FakeTflRepoImpl @Inject constructor() : TflRepository {
 
     private val dock1 = Dock("Dock1", "Dock1",51.500647,-0.0786,10,10,20)
     private val dock2 = Dock("Dock2", "Dock2",51.489479,-0.115156,8,12,20)
