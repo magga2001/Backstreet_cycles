@@ -103,7 +103,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -123,7 +123,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         journeyViewModel.getJourneyOverview()
@@ -137,7 +137,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.START_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.START_WALKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -150,7 +150,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.BIKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.BIKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -163,7 +163,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.END_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.END_WALKING)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
@@ -178,7 +178,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         journeyViewModel.getUserDetails()
         assert(journeyViewModel.getUserInfo().getOrAwaitValue()
             .equals(Users("John","Doe","johndoe@example.com")))
@@ -191,7 +191,7 @@ class JourneyViewModelTest {
             homePageViewModel.addStop(location)
         }
         runBlocking {homePageViewModel.getDock()}
-        homePageViewModel.saveJourney()
+//        homePageViewModel.saveJourney()
         runBlocking { journeyViewModel.getDock() }
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == false)

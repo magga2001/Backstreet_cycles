@@ -67,10 +67,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var selectedCarmenFeature: CarmenFeature
     private var positionOfStop: Int = 0
 
-    private lateinit var textOfNumberOfUsers: TextView
-    private lateinit var plusBtn: Button
-    private lateinit var minusBtn: Button
-
     private val homePageViewModel: HomePageViewModel by viewModels()
     /**
      * Initialise the contents within the display of the HomePage
@@ -180,6 +176,23 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getMessage().observe(this){
             SnackBarHelper.displaySnackBar(homePageActivity, it)
         }
+
+        homePageViewModel.getIncreaseCyclist().observe(this){ increase ->
+            if(increase){
+                UserNumber.text = "${homePageViewModel.getNumCyclists()}"
+            }else{
+                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have more than 4 users")
+            }
+        }
+
+        homePageViewModel.getDecreaseCyclist().observe(this){ increase ->
+            if(increase){
+                UserNumber.text = "${homePageViewModel.getNumCyclists()}"
+            }else{
+                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have less than one user")
+            }
+        }
+
     }
 
     /**
@@ -187,27 +200,14 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      * Ensures the count remains in the range 1-4
      */
     private fun initIncrementAndDecrementUsersFunc() {
-        textOfNumberOfUsers = findViewById(R.id.UserNumber)
-        plusBtn = findViewById(R.id.incrementButton)
-        minusBtn = findViewById(R.id.decrementButton)
-        textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
 
-        plusBtn.setOnClickListener {
-            if (homePageViewModel.getNumCyclists() > 3) {
-                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have more than 4 users")
-            } else {
-                homePageViewModel.incrementNumCyclists()
-                textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
-            }
+        UserNumber.text = "${homePageViewModel.getNumCyclists()}"
+        incrementButton.setOnClickListener {
+            homePageViewModel.incrementNumCyclists()
         }
 
-        minusBtn.setOnClickListener {
-            if (homePageViewModel.getNumCyclists() >= 2) {
-                homePageViewModel.decrementNumCyclists()
-                textOfNumberOfUsers.text = "${homePageViewModel.getNumCyclists()}"
-            } else {
-                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have less than one user")
-            }
+        decrementButton.setOnClickListener {
+            homePageViewModel.decrementNumCyclists()
         }
     }
 

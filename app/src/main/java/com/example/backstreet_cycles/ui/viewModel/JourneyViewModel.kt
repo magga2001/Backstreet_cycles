@@ -68,7 +68,6 @@ class JourneyViewModel @Inject constructor(
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
-//    private val fireStore = Firebase.firestore
 
     override suspend fun getDock() {
         tflRepository.getDocks().onEach { result ->
