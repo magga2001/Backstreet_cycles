@@ -10,4 +10,5 @@
     <item name="rv_search_results" type="id" />
     <item name="button_1" type="id" />
     <item name="button_search_back" type="id" />
+    <item name="loadingActivity_text" type="id" />
 </resources>
