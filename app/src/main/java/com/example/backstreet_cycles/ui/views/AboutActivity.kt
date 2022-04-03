@@ -25,7 +25,6 @@ class AboutActivity : AppCompatActivity() {
     }
 
     fun openBrowser(view: View) {
-
         val url = view.tag as String
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW

@@ -208,7 +208,7 @@ class HomePageViewModel @Inject constructor(
      * Check if info received
      * @return Boolean
      */
-    private fun getUpdateInfo(): Boolean {
+    fun getUpdateInfo(): Boolean {
         return updateInfo
     }
 
@@ -319,6 +319,7 @@ class HomePageViewModel @Inject constructor(
                 }
             }
         } catch(e: NullPointerException){
+
         }
     }
 
@@ -511,6 +512,8 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(application,Constants.DOCKS_LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 

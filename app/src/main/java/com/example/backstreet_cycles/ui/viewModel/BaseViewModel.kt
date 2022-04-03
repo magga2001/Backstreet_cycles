@@ -75,7 +75,6 @@ open class BaseViewModel @Inject constructor(
     }
 
     //FIREBASE
-
     open fun getUserDetails() {
         userRepository.getUserDetails().onEach { result ->
             when (result) {
@@ -84,6 +83,7 @@ open class BaseViewModel @Inject constructor(
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
+
                 }
                 is Resource.Loading -> {
                 }
