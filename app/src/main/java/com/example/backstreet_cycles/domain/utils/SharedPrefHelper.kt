@@ -8,7 +8,7 @@ import android.util.Log
 object SharedPrefHelper {
 
     /**
-     *
+     * Initialise shared preferences
      */
     private lateinit var sharedPref: SharedPreferences
     private lateinit var key: String
@@ -24,7 +24,9 @@ object SharedPrefHelper {
     }
 
         /**
-         *
+         * Checks if shared preference is empty
+         * @param key shared preference key
+         * @return Boolean
          */
         fun checkIfSharedPrefEmpty(key: String): Boolean {
             val serializedObject: String? = sharedPref.getString(key, null)
@@ -35,7 +37,9 @@ object SharedPrefHelper {
         }
 
     /**
-     *
+     * Edit share preferences
+     * @param values
+     * @param type
      */
     fun <T> overrideSharedPref(values: MutableList<T>, type: Class<T>) {
         val json = JsonHelper.objectToString(values, type)
@@ -46,7 +50,7 @@ object SharedPrefHelper {
     }
 
     /**
-     *
+     * Clear shared preferences
      */
     fun clearSharedPreferences() {
         with(sharedPref.edit()) {
@@ -56,7 +60,7 @@ object SharedPrefHelper {
     }
 
     /**
-     *
+     * Get shared preferences
      */
     fun <T> getSharedPref(type: Class<T>): MutableList<T> {
         val serializedObject: String? =
@@ -70,7 +74,7 @@ object SharedPrefHelper {
     }
 
     /**
-     *
+     * Change key for shared preferences
      */
     fun changeSharedPref(key: String) {
         this.key = key

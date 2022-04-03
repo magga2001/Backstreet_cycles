@@ -332,10 +332,16 @@ open class BaseViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    /**
+     * Get number of cyclist incremented by 1
+     */
     fun getIncreaseCyclist(): MutableLiveData<Boolean>{
         return increaseCyclist
     }
 
+    /**
+     * Get number of cyclist decremented by 1
+     */
     fun getDecreaseCyclist(): MutableLiveData<Boolean>{
         return decreaseCyclist
     }
