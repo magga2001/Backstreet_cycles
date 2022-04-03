@@ -24,7 +24,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @ExperimentalCoroutinesApi
-class JourneyHistoryViewModelTest {
+class LoadingViewModelTest {
 
     private lateinit var journeyHistoryViewModel: JourneyHistoryViewModel
     private lateinit var homePageViewModel: HomePageViewModel

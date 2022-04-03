@@ -43,15 +43,27 @@ open class BaseViewModel @Inject constructor(
     protected val mApplication: Application = application
     protected val mContext = applicationContext
     private val userDetail: MutableLiveData<Users> = MutableLiveData()
+    private val increaseCyclist: MutableLiveData<Boolean> = MutableLiveData()
+    private val decreaseCyclist: MutableLiveData<Boolean> = MutableLiveData()
 
     //GENERIC
 
     open fun incrementNumCyclists() {
-        cyclistRepository.incrementNumCyclists()
+        if(getNumCyclists() < 4){
+            cyclistRepository.incrementNumCyclists()
+            increaseCyclist.value = true
+        }else{
+            increaseCyclist.value = false
+        }
     }
 
     open fun decrementNumCyclists() {
-        cyclistRepository.decrementNumCyclists()
+        if(getNumCyclists() >= 2){
+            cyclistRepository.decrementNumCyclists()
+            decreaseCyclist.value = true
+        }else{
+            decreaseCyclist.value = false
+        }
     }
 
     open fun resetNumCyclists() {
@@ -227,5 +239,13 @@ open class BaseViewModel @Inject constructor(
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
+    }
+
+    fun getIncreaseCyclist(): MutableLiveData<Boolean>{
+        return increaseCyclist
+    }
+
+    fun getDecreaseCyclist(): MutableLiveData<Boolean>{
+        return decreaseCyclist
     }
 }

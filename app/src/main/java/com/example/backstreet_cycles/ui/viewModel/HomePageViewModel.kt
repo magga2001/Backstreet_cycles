@@ -14,6 +14,7 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.common.Resource
+import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
@@ -488,18 +489,18 @@ class HomePageViewModel @Inject constructor(
         isReadyMutableLiveData.value = true
     }
 
-    /**
-     * Obtain necessary data to save the journey
-     */
-    fun saveJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
-        SharedPrefHelper.overrideSharedPref(
-            mutableListOf(getNumCyclists().toString()),
-            String::class.java
-        )
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
-    }
+//    /**
+//     * Obtain necessary data to save the journey
+//     */
+//    fun saveJourney() {
+//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+//        SharedPrefHelper.overrideSharedPref(
+//            mutableListOf(getNumCyclists().toString()),
+//            String::class.java
+//        )
+//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+//        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
+//    }
 
     fun cancelWork() {
         WorkHelper.cancelWork(mContext)
