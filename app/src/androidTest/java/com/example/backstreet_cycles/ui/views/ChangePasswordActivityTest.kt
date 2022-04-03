@@ -58,9 +58,9 @@ class ChangePasswordActivityTest {
 
     @Before
     fun setUp() {
-        runBlocking {userRepoImpl.logOut()}
-        runBlocking {userRepoImpl.login(email, password)}
-        runBlocking {userRepoImpl.getUserDetails()}
+        runBlocking { userRepoImpl.logOut() }
+        runBlocking { userRepoImpl.login(email, password) }
+        runBlocking { userRepoImpl.getUserDetails() }
 //        userRepoImpl.getUserDetails()
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
@@ -122,10 +122,12 @@ class ChangePasswordActivityTest {
         )
     }
 
+//    //    Test will work later
 //    @Test
 //    fun test_snack_bar_appears_on_change_password() {
 //        val testInput = "123456"
-//        onView(withId(R.id.change_password_currentPassword)).perform(typeText(testInput),
+//        onView(withId(R.id.change_password_currentPassword)).perform(
+//            typeText(testInput),
 //            ViewActions.closeSoftKeyboard()
 //        )
 //        onView(withId(R.id.change_password_currentPassword)).check(
@@ -136,7 +138,8 @@ class ChangePasswordActivityTest {
 //            )
 //        )
 //        val newPassInput = "newPassword"
-//        onView(withId(R.id.change_password_NewPassword)).perform(typeText(newPassInput),
+//        onView(withId(R.id.change_password_NewPassword)).perform(
+//            typeText(newPassInput),
 //            ViewActions.closeSoftKeyboard()
 //        )
 //        onView(withId(R.id.change_password_NewPassword)).check(
@@ -150,18 +153,65 @@ class ChangePasswordActivityTest {
 //        onView(withId(com.google.android.material.R.id.snackbar_text))
 //            .check(matches(ViewMatchers.withText("Password successfully updated")))
 //    }
-
-    // will work in refactored branch
+//
+//    //Test will work later
 //    @Test
 //    fun test_saves_new_password() {
-//        onView(withId(R.id.change_password_currentPassword)).perform(typeText(password))
-//        val testInput = "password"
-//        onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput), closeSoftKeyboard())
-//
+//        val testInput = "123456"
+//        onView(withId(R.id.change_password_currentPassword)).perform(
+//            typeText(testInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_currentPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    testInput
+//                )
+//            )
+//        )
+//        val newPassInput = "newPassword"
+//        onView(withId(R.id.change_password_NewPassword)).perform(
+//            typeText(newPassInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_NewPassword)).check(
+//            matches(
+//                ViewMatchers.withText(
+//                    newPassInput
+//                )
+//            )
+//        )
+//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+//        onView(withId(com.google.android.material.R.id.snackbar_text))
+//            .check(matches(ViewMatchers.withText("Password successfully updated")))
 //        Intents.init()
 //        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //        Intents.release()
 //    }
+
+    @Test
+    fun test_old_password_not_entered() {
+        val newPassInput = "newPassword"
+        onView(withId(R.id.change_password_NewPassword)).perform(
+            typeText(newPassInput),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.change_password_NewPassword)).check(
+            matches(
+                ViewMatchers.withText(
+                    newPassInput
+                )
+            )
+        )
+        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+        onView(withId(R.id.change_password_currentPassword)).check(
+            matches(
+                ViewMatchers.hasErrorText(
+                    "In order for use to change your email or password you need to enter your old password"
+                )
+            )
+        )
+    }
 
     @Test
     fun test_on_pressBack_go_to_HomePageActivity() {
@@ -172,7 +222,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
 
         onView(
             Matchers.allOf(
@@ -214,7 +264,6 @@ class ChangePasswordActivityTest {
             }
         }
     }
-
 
     @After
     fun tearDown() {
