@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import dagger.hilt.android.internal.Contexts.getApplication
+import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,6 +46,7 @@ class BaseViewModelTest {
         baseViewModel.resetNumCyclists()
         assert(baseViewModel.getNumCyclists() == 1)
         baseViewModel.incrementNumCyclists()
+        baseViewModel.getIncreaseCyclist()
         assert(baseViewModel.getNumCyclists() == 2)
     }
 
@@ -83,6 +87,41 @@ class BaseViewModelTest {
         baseViewModel.resetNumCyclists()
         assert(baseViewModel.getNumCyclists() == 1)
     }
+
+    @Test
+    fun check_increase_cyclist_boolean_value(){
+        baseViewModel.incrementNumCyclists()
+        assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
+    }
+
+    @Test
+    fun check_increase_cyclist_boolean_value_with_max_cyclists(){
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        assertEquals(false, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
+    }
+
+    @Test
+    fun check_decrease_cyclist_boolean_value(){
+        baseViewModel.resetNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.decrementNumCyclists()
+        assertEquals(true, baseViewModel.getDecreaseCyclist().getOrAwaitValue())
+    }
+
+    @Test
+    fun check_decrease_cyclist_boolean_value_with_min_cyclists(){
+        baseViewModel.resetNumCyclists()
+        baseViewModel.decrementNumCyclists()
+        assertEquals(false, baseViewModel.getDecreaseCyclist().getOrAwaitValue())
+    }
+
+//    @Test
+//    fun abc() = runBlocking{
+//        assertEquals(false, baseViewModel.getDock())
+//    }
 
 
 }
