@@ -200,8 +200,9 @@ open class BaseViewModel @Inject constructor(
 
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
-                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
+//                        JsonHelper.deleteFile(mContext,"localDocks.json")
+//                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
+//                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
                     }
                     getRoute()
                 }

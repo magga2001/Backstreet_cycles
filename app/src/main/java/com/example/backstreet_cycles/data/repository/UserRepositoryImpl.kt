@@ -105,7 +105,7 @@ class UserRepositoryImpl : UserRepository {
                     trySend(Resource.Success("Profile updated successfully"))
                 }
             }.addOnFailureListener {
-                trySend(Resource.Success("Profile not updated."))
+                trySend(Resource.Error<String>("Profile not updated."))
             }
         }catch(e: Exception) {
             trySend(Resource.Error<String>("No user"))
@@ -217,7 +217,7 @@ class UserRepositoryImpl : UserRepository {
 
         dataBase
             .collection("users")
-            .whereEqualTo("email", firebaseAuth.currentUser!!.email)
+            .whereEqualTo("email", user.email)
             .get()
             .addOnSuccessListener { result ->
                 val gson = Gson()
@@ -229,10 +229,9 @@ class UserRepositoryImpl : UserRepository {
                                 dataBase.collection("users")
                                     .document(document.id)
                                     .update("journeyHistory", user.journeyHistory)
-                                Log.i("running", "history")
                                 trySend(Resource.Success("Added journey to the record"))
                             } catch (e: Exception) {
-                                trySend(Resource.Error("Fail to add journey at this moment"))
+                                trySend(Resource.Error<String>("Fail to add journey at this moment"))
                             }
                         }
                     }

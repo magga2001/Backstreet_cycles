@@ -4,7 +4,7 @@ object Constants {
 
     //    Splash screen
     const val SPLASH_TIME: Long = 2000
-    const val FAIL_SPLASH_TIME: Long = 1000
+    const val INFORM_SPLASH_TIME: Long = 1000
 
     //    WorkManager Tag
     const val TAG_NOTIFICATION = "BackStreet"

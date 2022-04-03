@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -11,14 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoadingViewModel
-import com.example.backstreet_cycles.ui.viewModel.SplashScreenViewModel
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_loading.*
 import kotlinx.coroutines.launch
 
@@ -53,7 +47,6 @@ class LoadingActivity() : AppCompatActivity() {
         loadingViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
             if (ready) {
                 loadingViewModel.saveJourney()
-                loadingViewModel.getIsReadyMutableLiveData().value = false
                 val intent = Intent(this, JourneyActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -73,7 +66,7 @@ class LoadingActivity() : AppCompatActivity() {
 
             finish()
 
-        }, Constants.FAIL_SPLASH_TIME)
+        }, Constants.INFORM_SPLASH_TIME)
     }
 
     override fun onStart() {

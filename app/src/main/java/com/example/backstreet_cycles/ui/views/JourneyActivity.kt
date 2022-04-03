@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -45,7 +47,6 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 import kotlinx.coroutines.launch
@@ -229,8 +230,12 @@ class JourneyActivity : AppCompatActivity() {
             }
         }
 
+        journeyViewModel.getIsReady().observe(this){
+            onFinishJourney()
+        }
+
         journeyViewModel.getMessage().observe(this){
-            SnackBarHelper.displaySnackBar(homePageActivity, it)
+            SnackBarHelper.displaySnackBar(journeyActivity, it)
         }
 
         planJourneyAdapter.getAllBoxesCheckedMutableLiveData()
@@ -324,10 +329,6 @@ class JourneyActivity : AppCompatActivity() {
                     journeyViewModel.clearJourneyLocations()
                     journeyViewModel.finishJourney(userDetails)
                     journeyViewModel.resetNumCyclists()
-                    val intent = Intent(this, HomePageActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 }
             }
         }
@@ -438,6 +439,18 @@ class JourneyActivity : AppCompatActivity() {
         journeyViewModel.setRoute()
         navigationCamera.requestNavigationCameraToOverview()
         journeyViewModel.updateMapMarkerAnnotation(annotationApi)
+    }
+
+    private fun onFinishJourney(){
+
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            val intent = Intent(this, HomePageActivity::class.java)
+            startActivity(intent)
+            finish()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
+        }, Constants.INFORM_SPLASH_TIME)
     }
 
     /**

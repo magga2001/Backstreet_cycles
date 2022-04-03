@@ -47,7 +47,6 @@ class EditUserProfileViewModel @Inject constructor(
         userRepository.updateUserDetails(firstName, lastName).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    updatedProfile.postValue(result.data!!)
                     updatedProfile.value = result.data!!
                 }
 

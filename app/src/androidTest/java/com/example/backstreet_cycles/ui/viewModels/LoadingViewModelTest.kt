@@ -94,95 +94,25 @@ class LoadingViewModelTest {
     }
 
     @Test
-    fun test_get_a_journey_without_any_current_journey() = runBlocking {
-        journeyHistoryViewModel.addAllStops(locations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-    }
-
-    @Test
-    fun test_get_a_journey_with_no_connection() = runBlocking {
-        fakeMapboxRepoImpl.setConnection(false)
-        journeyHistoryViewModel.clearSaveLocations()
-        journeyHistoryViewModel.addAllStops(locations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
-    }
-
-    @Test
-    fun test_check_alert_if_there_is_current_journey(){
+    fun test_get_journey_route(){
         for(location in locations){
             homePageViewModel.addStop(location)
         }
         homePageViewModel.getRoute()
-//        homePageViewModel.saveJourney()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
+        runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
     }
 
     @Test
-    fun test_continue_with_current_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-//        homePageViewModel.saveJourney()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithCurrentJourney()
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-        assert(journeyHistoryViewModel.getJourneyLocations() == locations)
-    }
-
-    @Test
-    fun test_continue_with_current_journey_with_no_connection(){
+    fun test_get_journey_route_with_no_connection(){
         fakeMapboxRepoImpl.setConnection(false)
         for(location in locations){
             homePageViewModel.addStop(location)
         }
         homePageViewModel.getRoute()
-//        homePageViewModel.saveJourney()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithCurrentJourney()
-        assert(journeyHistoryViewModel.getJourneyLocations() == locations)
-        assert(journeyHistoryViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
-    }
-
-    @Test
-    fun test_continue_with_new_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-//        homePageViewModel.saveJourney()
-        journeyHistoryViewModel.clearJourneyLocations()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithNewJourney(newLocations)
-        assert(journeyHistoryViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
-        assert(journeyHistoryViewModel.getJourneyLocations() == newLocations)
-    }
-
-    @Test
-    fun test_continue_with_new_journey_with_no_connection(){
-        fakeMapboxRepoImpl.setConnection(false)
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-//        homePageViewModel.saveJourney()
-        journeyHistoryViewModel.clearJourneyLocations()
-        journeyHistoryViewModel.addAllStops(newLocations)
-        journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
-        journeyHistoryViewModel.continueWithNewJourney(newLocations)
-        assert(journeyHistoryViewModel.getJourneyLocations() == newLocations)
-        assert(journeyHistoryViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
+        runBlocking {loadingViewModel.getDock()}
+        assert(!loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
     }
 
     @After

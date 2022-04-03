@@ -64,6 +64,7 @@ class JourneyViewModel @Inject constructor(
     private var journeyState = JourneyState.START_WALKING
     private var isUpdateMap: Boolean = true
     private val updateMap: MutableLiveData<Boolean> = MutableLiveData()
+    private val isReady: MutableLiveData<Boolean> = MutableLiveData()
     private val distanceMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val durationMutableLiveData: MutableLiveData<String> = MutableLiveData()
     private val priceMutableLiveData: MutableLiveData<String> = MutableLiveData()
@@ -258,12 +259,28 @@ class JourneyViewModel @Inject constructor(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
-        SharedPrefHelper.clearSharedPreferences()
     }
 
     private fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users){
 
-        userRepository.addJourneyToJourneyHistory(locations, user)
+        userRepository.addJourneyToJourneyHistory(locations, user).onEach { result ->
+
+            when (result) {
+                is Resource.Success -> {
+                    message.value = result.data!!
+                    isReady.value = true
+                    SharedPrefHelper.clearSharedPreferences()
+                }
+
+                is Resource.Error -> {
+                    message.value = result.message!!
+                    isReady.value = false
+                }
+                is Resource.Loading -> {
+                }
+            }
+
+        }.launchIn(viewModelScope)
     }
 
     private fun displayPrice() {
@@ -277,6 +294,10 @@ class JourneyViewModel @Inject constructor(
 
     fun getUpdateMap(): MutableLiveData<Boolean> {
         return updateMap
+    }
+
+    fun getIsReady(): MutableLiveData<Boolean>{
+        return isReady
     }
 
     fun getDistanceMutableLiveData(): MutableLiveData<String> {
