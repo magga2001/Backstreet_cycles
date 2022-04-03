@@ -103,7 +103,6 @@ class SignUpActivityTest {
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
 
-    //Fix!!
     @Test
     fun test_firstname_is_empty() {
         onView(withId(R.id.buttonSignUp)).perform(click())

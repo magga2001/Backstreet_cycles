@@ -90,6 +90,11 @@ class ForgotPasswordActivityTest{
         onView(withText(email)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun test_email_is_empty() {
+        onView(withId(R.id.forgot_password_SendPasswordReset_button)).perform(click())
+        onView(withId(R.id.forgot_password_email)).check(matches(hasErrorText("Please enter your email")))
+    }
 
 //    @Test
 //    fun test_Snackbar_clicking_button_after_entering_email(){
