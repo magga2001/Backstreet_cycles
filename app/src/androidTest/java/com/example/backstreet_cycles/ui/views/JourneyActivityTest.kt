@@ -9,8 +9,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBackUnconditionally
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
@@ -82,24 +84,24 @@ class JourneyActivityTest {
     @Before
     fun setUp() {
 
-        instrumentationContext = ApplicationProvider.getApplicationContext();
-        val application = Contexts.getApplication(instrumentationContext)
+//        instrumentationContext = ApplicationProvider.getApplicationContext();
+//        val application = Contexts.getApplication(instrumentationContext)
 
-        fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
-        fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
-        fakeLocationRepoImpl = FakeLocationRepoImpl()
-
-        homePageViewModel = HomePageViewModel(
-            fakeTflRepoImpl,
-            fakeMapboxRepoImpl,
-            fakeCyclistRepoImpl,
-            fakeUserRepoImpl,
-            fakeLocationRepoImpl,
-            application,
-            instrumentationContext
-        )
+//        fakeTflRepoImpl = FakeTflRepoImpl()
+//        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+//        fakeCyclistRepoImpl = FakeCyclistRepoImpl()
+//        fakeUserRepoImpl = FakeUserRepoImpl()
+//        fakeLocationRepoImpl = FakeLocationRepoImpl()
+//
+//        homePageViewModel = HomePageViewModel(
+//            fakeTflRepoImpl,
+//            fakeMapboxRepoImpl,
+//            fakeCyclistRepoImpl,
+//            fakeUserRepoImpl,
+//            fakeLocationRepoImpl,
+//            application,
+//            instrumentationContext
+//        )
         userRepoImpl.logOut()
         userRepoImpl.login(email,password)
         hiltRule.inject()
@@ -115,11 +117,17 @@ class JourneyActivityTest {
         sleep(3000)
         ActivityScenario.launch(JourneyActivity::class.java)
 
-        if(homePageViewModel.getShowAlertMutableLiveData().value==true)
-        {
-            onView(withText("Create New Journey")).inRoot(isDialog()).check(matches(
-                isDisplayed())).perform(click())
-        }
+//        if(homePageViewModel.getShowAlertMutableLiveData().value==true)
+//        {
+////            onView(withText("Create New Journey")).inRoot(isDialog()).check(matches(
+////                isDisplayed())).perform(click())
+//            onView(withText("Create New Journey")).perform(click());
+//
+//        }
+
+//        ActivityScenario.launch(JourneyActivity::class.java)
+//
+//        sleep(1000)
 
     }
 
@@ -474,62 +482,70 @@ class JourneyActivityTest {
 ////
 ////    }
 //
-//    fun add_stop(name: String) {
-//
-//        val addStopButton = onView(
-//            Matchers.allOf(
-//                withId(R.id.addingBtn), withText("Add Stop"),
-//                childAtPosition(
-//                    Matchers.allOf(
-//                        withId(R.id.homepage_bottom_sheet_constraintLayout),
-//                        childAtPosition(
-//                            withId(R.id.homepage_bottom_sheet_linearLayout),
-//                            0
-//                        )
-//                    ),
-//                    0
-//                ),
-//                isDisplayed()
-//            )
-//        )
-//        addStopButton.perform(click())
-//
-//        val location = onView(
-//            Matchers.allOf(
-//                withId(R.id.edittext_search),
-//                childAtPosition(
-//                    childAtPosition(
-//                        withId(R.id.searchView),
-//                        0
-//                    ),
-//                    0
-//                ),
-//                isDisplayed()
-//            )
-//        )
-//        location.perform(ViewActions.replaceText(name))
-//        location.perform(
-//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER),
-//            ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
-//        )
-//
-//    }
-//
-//    private fun childAtPosition(
-//        parentMatcher: Matcher<View>, position: Int
-//    ): Matcher<View> {
-//
-//        return object : TypeSafeMatcher<View>() {
-//            override fun describeTo(description: Description) {
-//                description.appendText("Child at position $position in parent ")
-//                parentMatcher.describeTo(description)
-//            }
-//
-//            public override fun matchesSafely(view: View): Boolean {
-//                val parent = view.parent
-//                return parent is ViewGroup && parentMatcher.matches(parent)
-//                        && view == parent.getChildAt(position)
-//            }
-//        }
-//    }
-//}
+private fun add_stop(name: String) {
+    val addStopButton = onView(
+        Matchers.allOf(
+            withId(R.id.addingBtn), withText("Add Stop"),
+            childAtPosition(
+                Matchers.allOf(
+                    withId(R.id.homepage_bottom_sheet_constraintLayout),
+                    childAtPosition(
+                        withId(R.id.homepage_bottom_sheet_linearLayout),
+                        0
+                    )
+                ),
+                0
+            ),
+            isDisplayed()
+        )
+    )
+    addStopButton.perform(click())
+
+    onView(isRoot()).perform(waitFor(1000))
+    val location = onView(
+        Matchers.allOf(
+            withId(R.id.edittext_search),
+            childAtPosition(
+                childAtPosition(
+                    withId(R.id.searchView),
+                    0
+                ),
+                0
+            ),
+            isDisplayed()
+        )
+    )
+    onView(isRoot()).perform(waitFor(1000))
+    location.perform(replaceText(name))
+    onView(isRoot()).perform(waitFor(1000))
+    location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
+
+}
+
+    private fun childAtPosition(
+        parentMatcher: Matcher<View>, position: Int
+    ): Matcher<View> {
+
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Child at position $position in parent ")
+                parentMatcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                val parent = view.parent
+                return parent is ViewGroup && parentMatcher.matches(parent)
+                        && view == parent.getChildAt(position)
+            }
+        }
+    }
+    private fun waitFor(delay: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        }
+    }
+}
