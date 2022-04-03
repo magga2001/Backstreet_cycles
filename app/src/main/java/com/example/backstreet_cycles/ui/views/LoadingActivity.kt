@@ -44,7 +44,7 @@ class LoadingActivity() : AppCompatActivity() {
     private fun initObservers() {
 
         // Leads to the journey page with the searched locations
-        loadingViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        loadingViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 loadingViewModel.saveJourney()
                 val intent = Intent(this, JourneyActivity::class.java)

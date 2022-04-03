@@ -9,19 +9,14 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
-import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.example.backstreet_cycles.domain.utils.BitmapHelper
-import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -40,13 +35,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.navigation.base.options.NavigationOptions
-import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.MapboxNavigationProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,9 +73,9 @@ class HomePageViewModel @Inject constructor(
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
 
-    private val isReadyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val isReady: MutableLiveData<Boolean> = MutableLiveData()
     private val hasCurrentLocation: MutableLiveData<Boolean> = MutableLiveData()
-    private val hasCurrentJourneyMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val hasCurrentJourney: MutableLiveData<Boolean> = MutableLiveData()
     private val hasDuplicationLocation: MutableLiveData<Boolean> = MutableLiveData()
     private val updateMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val message: MutableLiveData<String> = MutableLiveData()
@@ -238,7 +228,7 @@ class HomePageViewModel @Inject constructor(
 //        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
 //            when (result) {
 //                is Resource.Success -> {
-//                    isReadyMutableLiveData.value = true
+//                    isReady.value = true
 //                }
 //
 //                is Resource.Error -> {
@@ -445,7 +435,7 @@ class HomePageViewModel @Inject constructor(
             showAlert.value = true
         }
         else {
-            isReadyMutableLiveData.value = true
+            isReady.value = true
         }
     }
 
@@ -457,10 +447,10 @@ class HomePageViewModel @Inject constructor(
         if (!SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)) {
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
-            isReadyMutableLiveData.value = true
+            isReady.value = true
 //            fetchRoute(mContext, listOfLocations)
         } else {
-            hasCurrentJourneyMutableLiveData.value = false
+            hasCurrentJourney.value = false
         }
     }
 
@@ -473,7 +463,7 @@ class HomePageViewModel @Inject constructor(
 //            mContext,
 //            getJourneyLocations(),
 //        )
-        isReadyMutableLiveData.value = true
+        isReady.value = true
     }
 
     /**
@@ -486,7 +476,7 @@ class HomePageViewModel @Inject constructor(
 //            mContext,
 //            newStops,
 //        )
-        isReadyMutableLiveData.value = true
+        isReady.value = true
     }
 
 //    /**
@@ -557,11 +547,11 @@ class HomePageViewModel @Inject constructor(
     }
 
     /**
-     * Getter function to return the isReadyMutableLiveData
+     * Getter function to return the isReady
      * @return MutableLiveData
      */
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<Boolean> {
+        return isReady
     }
 
     /**
@@ -576,8 +566,8 @@ class HomePageViewModel @Inject constructor(
      * Getter function to determine whether there current journey mutable live data
      * @return MutableLiveData
      */
-    fun getHasCurrentJourneyMutableLiveData(): MutableLiveData<Boolean> {
-        return hasCurrentJourneyMutableLiveData
+    fun gethasCurrentJourney(): MutableLiveData<Boolean> {
+        return hasCurrentJourney
     }
 
     /**

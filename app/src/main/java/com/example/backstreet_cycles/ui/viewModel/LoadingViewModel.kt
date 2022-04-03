@@ -2,17 +2,17 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.repositoryInt.*
+import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
+import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
+import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
+import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
-import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.options.NavigationOptions
@@ -54,7 +54,7 @@ class LoadingViewModel @Inject constructor(
     }
 
     private val message: MutableLiveData<String> = MutableLiveData()
-    private val isReadyMutableLiveData = MutableLiveData<Boolean>()
+    private val isReady = MutableLiveData<Boolean>()
 
     /**
      * Getter function for the route of the journey
@@ -89,12 +89,12 @@ class LoadingViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    isReadyMutableLiveData.value = true
+                    isReady.value = true
                 }
 
                 is Resource.Error -> {
                     message.value = result.message!!
-                    isReadyMutableLiveData.value = false
+                    isReady.value = false
                 }
 
                 is Resource.Loading -> {
@@ -120,8 +120,8 @@ class LoadingViewModel @Inject constructor(
      * Getter function to check status of data set up
      * @return MutableLiveData in the form of a boolean to confirm status
      */
-    fun getIsReadyMutableLiveData(): MutableLiveData<Boolean> {
-        return isReadyMutableLiveData
+    fun getIsReady(): MutableLiveData<Boolean> {
+        return isReady
     }
 
     /**

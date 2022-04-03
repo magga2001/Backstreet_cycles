@@ -67,7 +67,7 @@ class LogInViewModelTest {
         assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
     }
 
     @Test
@@ -75,13 +75,13 @@ class LogInViewModelTest {
         signUpViewModel.register("John","Doe","johndoe@example.com","123456")
         assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("Please verify your email", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+        assertEquals("Please verify your email", logInViewModel.getErrorMessageData().getOrAwaitValue())
     }
 
     @Test
     fun test_log_in_with_unregistered_email() = runBlocking {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("No user", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+        assertEquals("No user", logInViewModel.getErrorMessageData().getOrAwaitValue())
     }
 
     @Test
@@ -90,7 +90,7 @@ class LogInViewModelTest {
         assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
     }
 }

@@ -100,7 +100,7 @@ class LoadingViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
-        assert(loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
     }
 
     @Test
@@ -111,7 +111,7 @@ class LoadingViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
-        assert(!loadingViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(!loadingViewModel.getIsReady().getOrAwaitValue())
         assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
     }
 

@@ -116,13 +116,13 @@ package com.example.backstreet_cycles.ui.viewModels
 //        assert(journeyViewModel.getJourneyLocations().size == locations.size)
 //        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
 //        val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-//        assert(journeyViewModel.getDistanceMutableLiveData().getOrAwaitValue()
+//        assert(journeyViewModel.getDistanceData().getOrAwaitValue()
 //            .equals(distances))
 //        val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
-//        assert(journeyViewModel.getDurationMutableLiveData().getOrAwaitValue()
+//        assert(journeyViewModel.getDurationData().getOrAwaitValue()
 //            .equals(durations))
 //        val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
-//        assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
+//        assert(journeyViewModel.getPriceData().getOrAwaitValue().equals(price.toString()))
 //    }
 //
 ////    @Test
