@@ -113,11 +113,7 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_check_alert_if_there_is_current_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
+        get_and_save_journey()
         journeyHistoryViewModel.addAllStops(newLocations)
         journeyHistoryViewModel.getRoute()
         assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
@@ -125,11 +121,7 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_continue_with_current_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
+        get_and_save_journey()
         journeyHistoryViewModel.addAllStops(newLocations)
         journeyHistoryViewModel.getRoute()
         assert(journeyHistoryViewModel.getShowAlertMutableLiveData().getOrAwaitValue())
@@ -140,11 +132,7 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_continue_with_new_journey(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        loadingViewModel.saveJourney()
+        get_and_save_journey()
         journeyHistoryViewModel.clearJourneyLocations()
         journeyHistoryViewModel.addAllStops(newLocations)
         journeyHistoryViewModel.getRoute()
@@ -157,18 +145,22 @@ class JourneyHistoryViewModelTest {
     @Test
     fun test_get_journey_history(){
         fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
-        homePageViewModel.getRoute()
-        runBlocking {loadingViewModel.getDock()}
-        loadingViewModel.saveJourney()
+        get_and_save_journey()
         journeyViewModel.getUserDetails()
         val user = journeyViewModel.getUserInfo().getOrAwaitValue()
         assert(user.equals(Users("John","Doe","johndoe@example.com")))
         journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
         assert(journeyViewModel.getMessage().getOrAwaitValue() == "Record added")
         assert(journeyHistoryViewModel.getJourneyHistory(user).size == 1)
+    }
+
+    fun get_and_save_journey(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
+        homePageViewModel.getRoute()
+        runBlocking {loadingViewModel.getDock()}
+        loadingViewModel.saveJourney()
     }
 
     @After

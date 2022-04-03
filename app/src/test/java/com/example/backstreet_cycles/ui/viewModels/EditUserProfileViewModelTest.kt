@@ -35,7 +35,6 @@ class EditUserProfileViewModelTest {
     private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
     private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
-    val password = "123456"
 
     @Before
     fun setUp() {
@@ -85,31 +84,9 @@ class EditUserProfileViewModelTest {
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
     }
 
-//    ask magga why it's failing
     @Test
     fun test_update_lastName_unsuccessful_without_logging_in() {
-        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
         fakeUserRepoImpl.logOut()
-        editUserProfileViewModel.updateUserDetails("test","testLastName")
-        assertEquals(
-                "No user",
-                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-        )
-    }
-
-//    ask magga why failing
-    @Test
-    fun test_update_firstName_unsuccessful_without_logging_in() {
-        fakeUserRepoImpl.addMockUser("test", "user", "testuesr@example.com","123456")
-        fakeUserRepoImpl.logOut()
-        editUserProfileViewModel.updateUserDetails("testFirstName","user")
-        assertEquals(
-                "No user",
-                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
-        )
-    }
-    @Test
-    fun test_update_lastName_unsuccessful_without_loggin_in() {
         editUserProfileViewModel.updateUserDetails("test","testLastName")
         assertEquals(
                 "No User",
@@ -118,8 +95,18 @@ class EditUserProfileViewModelTest {
     }
 
     @Test
-    fun test_update_firstName_unsuccessful_without_loggin_in() {
+    fun test_update_firstName_unsuccessful_without_logging_in() {
+        fakeUserRepoImpl.logOut()
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
+        assertEquals(
+                "No User",
+                editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
+        )
+    }
+    @Test
+    fun test_update_lastName_unsuccessful_without_loggin_in() {
+        fakeUserRepoImpl.logOut()
+        editUserProfileViewModel.updateUserDetails("test","testLastName")
         assertEquals(
                 "No User",
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()

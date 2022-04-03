@@ -39,6 +39,11 @@ class BaseViewModelTest {
     private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
 
+    val firstname = "Test"
+    val lastname = "User"
+    val email = "testuser@gmail.com"
+    val password = "123456"
+
     @Before
     fun setUp() {
         instrumentationContext = ApplicationProvider.getApplicationContext();
@@ -86,14 +91,14 @@ class BaseViewModelTest {
     @Test
     fun test_cyclist_number_donot_increase_if_already_4(){
         baseViewModel.resetNumCyclists()
-        baseViewModel.incrementNumCyclists()
-        baseViewModel.incrementNumCyclists()
-        baseViewModel.incrementNumCyclists()
+        add_3_cyclists()
         baseViewModel.incrementNumCyclists()
         assert(baseViewModel.getNumCyclists() == 4)
         baseViewModel.incrementNumCyclists()
         assert(baseViewModel.getNumCyclists() == 4)
     }
+
+
 
     @Test
     fun test_decrement_cyclists() {
@@ -129,9 +134,8 @@ class BaseViewModelTest {
 
     @Test
     fun check_increase_cyclist_boolean_value_with_max_cyclists(){
-        baseViewModel.incrementNumCyclists()
-        baseViewModel.incrementNumCyclists()
-        baseViewModel.incrementNumCyclists()
+        add_3_cyclists()
+        assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
         baseViewModel.incrementNumCyclists()
         assertEquals(false, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
     }
@@ -179,40 +183,34 @@ class BaseViewModelTest {
         assertEquals(docks,fakeTflRepoImpl.getCurrentDocks())
     }
 
+
+
     @Test
     fun test_getting_user_info_first_name(){
-        val firstname = "Test"
-        val lastname = "User"
-        val email = "testuser@gmail.com"
-        val password = "123456"
-
-        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
-        baseViewModel.getUserDetails()
+        register_user()
         assertEquals(firstname, baseViewModel.getUserInfo().getOrAwaitValue().firstName)
     }
     @Test
     fun test_getting_user_info_last_name(){
-        val firstname = "Test"
-        val lastname = "User"
-        val email = "testuser@gmail.com"
-        val password = "123456"
-
-        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
-        baseViewModel.getUserDetails()
+        register_user()
         assertEquals(lastname, baseViewModel.getUserInfo().getOrAwaitValue().lastName)
     }
 
     @Test
     fun test_getting_user_info_email(){
-        val firstname = "Test"
-        val lastname = "User"
-        val email = "testuser@gmail.com"
-        val password = "123456"
-
-        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
-        baseViewModel.getUserDetails()
+        register_user()
         assertEquals(email, baseViewModel.getUserInfo().getOrAwaitValue().email)
     }
 
+    fun add_3_cyclists(){
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+        baseViewModel.incrementNumCyclists()
+    }
+
+    fun register_user(){
+        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
+        baseViewModel.getUserDetails()
+    }
 
 }

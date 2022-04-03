@@ -55,10 +55,10 @@ class FakeUserRepoImpl : UserRepository{
                 currentUser?.lastName = lastName
                 emit(Resource.Success("Success"))
             }else{
-                emit(Resource.Error("No user"))
+                emit(Resource.Error("No User"))
             }
         }else{
-            emit(Resource.Error("No user"))
+            emit(Resource.Error("No User"))
         }
     }
 
@@ -91,7 +91,7 @@ class FakeUserRepoImpl : UserRepository{
             if(users.containsKey(email)){
                 emit(Resource.Success(currentUser!!))
             }else{
-                emit(Resource.Error("No user"))
+                emit(Resource.Error("No User"))
             }
         }
     }
@@ -111,7 +111,7 @@ class FakeUserRepoImpl : UserRepository{
             }
 
         }else{
-            emit(Resource.Error("No user"))
+            emit(Resource.Error("No User"))
         }
     }
 
@@ -131,7 +131,7 @@ class FakeUserRepoImpl : UserRepository{
         {
             emit(Resource.Success("Reset password sent"))
         }else{
-            emit(Resource.Error("No user"))
+            emit(Resource.Error("No User"))
         }
     }
 
