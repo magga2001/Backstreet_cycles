@@ -48,6 +48,9 @@ open class BaseViewModel @Inject constructor(
 
     //GENERIC
 
+    /**
+     * Increment the number of cyclists
+     */
     open fun incrementNumCyclists() {
         if(getNumCyclists() < 4){
             cyclistRepository.incrementNumCyclists()
@@ -57,6 +60,9 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Decrement the number of cyclists
+     */
     open fun decrementNumCyclists() {
         if(getNumCyclists() >= 2){
             cyclistRepository.decrementNumCyclists()
@@ -66,15 +72,25 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Reset the number of cyclists
+     */
     open fun resetNumCyclists() {
         cyclistRepository.resetNumCyclist()
     }
 
+    /**
+     * Get the number of cyclists
+     */
     open fun getNumCyclists(): Int {
         return cyclistRepository.getNumCyclists()
     }
 
     //FIREBASE
+
+    /**
+     * Get user's details from Firebase
+     */
     open fun getUserDetails() {
         userRepository.getUserDetails().onEach { result ->
             when (result) {
@@ -91,6 +107,9 @@ open class BaseViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    /**
+     * Get user's details in MutableLiveData format
+     */
     fun getUserInfo(): MutableLiveData<Users>
     {
         return userDetail
@@ -98,59 +117,104 @@ open class BaseViewModel @Inject constructor(
 
     //TFL
 
+    /**
+     * Get the list of current docks from TFL repository
+     */
     open fun getCurrentDocks(): MutableList<Dock> {
         return tflRepository.getCurrentDocks()
     }
 
     //MAPBOX
 
+    /**
+     * Get current journey route from Mapbox repository
+     */
     open fun getJourneyCurrentRoute(): MutableList<DirectionsRoute> {
         return mapboxRepository.getJourneyCurrentRoute()
     }
 
+    /**
+     * Get current journey's distance from Mapbox repository
+     */
     open fun getJourneyDistances(): MutableList<Double> {
         return mapboxRepository.getJourneyDistances()
     }
 
+    /**
+     * Get current journey's duration from Mapbox repository
+     */
     open fun getJourneyDurations(): MutableList<Double> {
         return mapboxRepository.getJourneyDurations()
     }
 
+    /**
+     * Get current journey's stops from Mapbox repository
+     */
     open fun getJourneyLocations(): MutableList<Locations> {
         return mapboxRepository.getJourneyLocations()
     }
 
+    /**
+     * Get current journey's locations from Mapbox repository
+     */
     open fun getJourneyWayPointsLocations(): MutableList<Locations> {
         return mapboxRepository.getJourneyWayPointsLocations()
     }
 
+    /**
+     * Set journey's stops
+     * @param stops list of stops
+     */
     open fun setJourneyLocations(stops: MutableList<Locations>) {
         mapboxRepository.setJourneyLocations(stops)
     }
 
+    /**
+     * Set journey's locations
+     * @param locations list of locations
+     */
     open fun setCurrentWayPoint(locations: MutableList<Locations>) {
         mapboxRepository.setJourneyWayPointsLocations(locations)
     }
 
+    /**
+     * Clear journey's stops
+     */
     open fun clearJourneyLocations() {
         mapboxRepository.clearJourneyLocations()
     }
 
+    /**
+     * Clear journey's locations and current route
+     */
     open fun clearView() {
         mapboxRepository.clearJourneyWayPointsLocations()
         mapboxRepository.clearJourneyCurrentRoute()
     }
 
+    /**
+     * Clear journey's distance and duration
+     */
     open fun clearInfo() {
         mapboxRepository.clearJourneyDistances()
         mapboxRepository.clearJourneyDurations()
     }
 
+    /**
+     * Clear journey's duplicate locations
+     * @param locations list of locations
+     */
     open fun clearDuplication(locations: MutableList<Locations>) {
         mapboxRepository.distinctJourneyLocations()
         locations.distinct()
     }
 
+    /**
+     * Set route
+     * @param context
+     * @param points list of points
+     * @param profile type of route
+     */
     open fun setCustomiseRoute(
         context: Context,
         points: List<Point>,
@@ -166,10 +230,21 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set route overview
+     * @param context
+     * @param points list of points
+     */
     open fun setOverviewRoute(context: Context, points: List<Point>): RouteOptions {
         return customiseRouteOptions(context, points, DirectionsCriteria.PROFILE_CYCLING)
     }
 
+    /**
+     * Setting a custom route
+     * @param context
+     * @param points list of points
+     * @param criteria type of route
+     */
     open fun customiseRouteOptions(
         context: Context,
         points: List<Point>,
@@ -192,6 +267,9 @@ open class BaseViewModel @Inject constructor(
         clearView()
     }
 
+    /**
+     * Get dock from TFL repository
+     */
     open suspend fun getDock() {
         tflRepository.getDocks().onEach { result ->
             when (result) {
@@ -222,6 +300,9 @@ open class BaseViewModel @Inject constructor(
 
     //SHARED PREF
 
+    /**
+     * Get user's current journey
+     */
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
@@ -232,6 +313,10 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set new journey for a user
+     * @param newStops list of stops
+     */
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
@@ -239,6 +324,9 @@ open class BaseViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    /**
+     * Clear shared preferences
+     */
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
