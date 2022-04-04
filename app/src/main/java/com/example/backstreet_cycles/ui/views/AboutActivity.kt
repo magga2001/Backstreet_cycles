@@ -24,15 +24,6 @@ class AboutActivity : AppCompatActivity() {
 
     }
 
-    fun openBrowser(view: View) {
-        val url = view.tag as String
-        val intent = Intent()
-        intent.action = Intent.ACTION_VIEW
-        intent.addCategory(Intent.CATEGORY_BROWSABLE)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
-    }
-
     /**
      * Return to the HomePage if the back button is clicked
      * @param item from the nav_header
