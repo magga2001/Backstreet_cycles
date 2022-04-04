@@ -137,29 +137,29 @@ class ChangePasswordActivityTest {
             .check(matches(withText("Password update fail")))
     }
 
-    @Test
-    fun test_old_password_not_entered() {
-        val newPassInput = "newPassword"
-        onView(withId(R.id.change_password_NewPassword)).perform(
-            typeText(newPassInput),
-            ViewActions.closeSoftKeyboard()
-        )
-        onView(withId(R.id.change_password_NewPassword)).check(
-            matches(
-                withText(
-                    newPassInput
-                )
-            )
-        )
-        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
-        onView(withId(R.id.change_password_currentPassword)).check(
-            matches(
-                hasErrorText(
-                    "In order for use to change your email or password you need to enter your old password"
-                )
-            )
-        )
-    }
+//    @Test
+//    fun test_old_password_not_entered() {
+//        val newPassInput = "newPassword"
+//        onView(withId(R.id.change_password_NewPassword)).perform(
+//            typeText(newPassInput),
+//            ViewActions.closeSoftKeyboard()
+//        )
+//        onView(withId(R.id.change_password_NewPassword)).check(
+//            matches(
+//                withText(
+//                    newPassInput
+//                )
+//            )
+//        )
+//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+//        onView(withId(R.id.change_password_currentPassword)).check(
+//            matches(
+//                hasErrorText(
+//                    "In order for use to change your email or password you need to enter your old password"
+//                )
+//            )
+//        )
+//    }
 
     @Test
     fun test_on_press_back_go_to_HomePageActivity() {

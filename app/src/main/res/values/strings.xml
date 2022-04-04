@@ -41,7 +41,7 @@
     <string name="cant_remove_location">Cannot remove location</string>
     <string name="alert_planner">Planner Alert</string>
     <string name="alert_message_1">There is already a planned journey that you are currently using.</string>
-    <string name="alert_message_2">\" Do you want to continue with the current journey or with the newly created one?\"</string>
+    <string name="alert_message_2"> Would you like to continue with the current journey or with the newly created one?</string>
     <string name="hello_user">"Hello, %1$s"</string>
 
     <!-- Journey Strings  -->
@@ -66,6 +66,7 @@
     <string name="set_nav_to_start_journey">Make sure to set your journey to start your navigation!</string>
     <string name="road_label">road-label</string>
     <string name="hire_bike">Hire a bike</string>
+    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
     <string name="hire_bikes">"Hire %1$s bikes"</string>
 
     <!-- Strings for the menu items -->
@@ -148,7 +149,6 @@
     <string name="destination">destination</string>
     <string name="from">"From: %1$s "</string>
     <string name="to">"To: %1$s "</string>
-    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
     <string name="no_connection">No connection. Please connect to internet</string>
 
 

@@ -92,7 +92,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
                 val currentLocation: Location = intent.getParcelableExtra(getString(R.string.user_location))!!
                 journeyHistoryViewModel.updateCurrentLocation(currentLocation)
-                lifecycleScope.launch { journeyHistoryViewModel.getDock() }
+                journeyHistoryViewModel.getRoute()
             }
         })
         journey_history_recycler_view.layoutManager = LinearLayoutManager(this)
@@ -117,11 +117,12 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.user_location))
+        builder.setTitle(getString(R.string.alert_planner))
         builder.setMessage(
             getString(R.string.alert_message_1) +
                     getString(R.string.alert_message_2)
         )
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
             journeyHistoryViewModel.continueWithCurrentJourney()

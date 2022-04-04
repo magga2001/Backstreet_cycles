@@ -384,7 +384,6 @@ class HomePageViewModel @Inject constructor(
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
             showAlert.value = true
-            setShowAlert(true)
         }
         else {
             clearAllSharedPreferences()
