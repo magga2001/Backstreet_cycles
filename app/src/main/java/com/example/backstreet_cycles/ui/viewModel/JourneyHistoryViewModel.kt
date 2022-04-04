@@ -63,6 +63,7 @@ class JourneyHistoryViewModel @Inject constructor(
      */
     override fun getRoute() {
         super.getRoute()
+        clearJourneyLocations()
         setJourneyLocations(getStops())
         checkCurrentJourney()
     }

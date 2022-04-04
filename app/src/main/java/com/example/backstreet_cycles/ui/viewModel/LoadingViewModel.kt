@@ -110,7 +110,7 @@ class LoadingViewModel @Inject constructor(
      * Obtain necessary data to save the journey
      */
     fun saveJourney() {
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_CYCLISTS)
         SharedPrefHelper.overrideSharedPref(
             mutableListOf(getNumCyclists().toString()),
             String::class.java

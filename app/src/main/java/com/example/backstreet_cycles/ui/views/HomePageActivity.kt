@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -21,7 +22,6 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -144,7 +144,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Checks whether a current journey exists
-        homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
+        homePageViewModel.getHasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.no_current_journey))
             }else{
@@ -534,16 +534,18 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             getString(R.string.alert_message_1) +
                     getString(R.string.alert_message_2)
         )
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
 
-        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, _ ->
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
-        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, _ ->
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }
+
         builder.show()
     }
 

@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.content.ContentValues.TAG
-import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
@@ -24,7 +23,7 @@ class UserRepositoryImpl(
 ): UserRepository {
 
     private var firebaseAuth: FirebaseAuth = fireAuth
-    private var dataBase: FirebaseFirestore = fireStore
+    private var firebaseStore: FirebaseFirestore = fireStore
 
     /**
      * Register user in the Firebase
@@ -46,7 +45,7 @@ class UserRepositoryImpl(
                     trySend(Resource.Success("EMAIL VERIFICATION BEING SENT TO:  $email"))
 
                 } else {
-                    trySend(Resource.Error<String>(" The email is badly formatted"))
+                    trySend(Resource.Error<String>("User already exist or email is badly formatted"))
                 }
             }
 
@@ -90,7 +89,7 @@ class UserRepositoryImpl(
         email: String
     ) {
         val user = Users(firstName, lastName, email)
-        dataBase.collection("users")
+        firebaseStore.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
                 Timber.tag(TAG).d("DocumentSnapshot written with ID: ${documentReference.id}")
@@ -111,27 +110,27 @@ class UserRepositoryImpl(
      */
     override fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = callbackFlow {
         try {
-        dataBase
+        firebaseStore
             .collection("users")
             .whereEqualTo("email", firebaseAuth.currentUser!!.email)
             .get()
             .addOnSuccessListener { result ->
                 for(document in result)
                 {
-                    dataBase.collection("users").document(document.id)
+                    firebaseStore.collection("users").document(document.id)
                         .update("firstName", firstName)
-                    dataBase.collection("users").document(document.id)
+                    firebaseStore.collection("users").document(document.id)
                         .update("lastName", lastName)
-                    dataBase.collection("users").document(document.id)
+                    firebaseStore.collection("users").document(document.id)
                         .update("email", firebaseAuth.currentUser!!.email)
 
                     trySend(Resource.Success("Profile updated successfully"))
                 }
             }.addOnFailureListener {
-                trySend(Resource.Error<String>("Profile not updated."))
+                trySend(Resource.Error<String>("Profile not updated or no internet connection."))
             }
         }catch(e: Exception) {
-            trySend(Resource.Error<String>("No user"))
+            trySend(Resource.Error<String>("No user found or no internet connection"))
         }
         awaitClose { channel.close() }
     }
@@ -155,12 +154,12 @@ class UserRepositoryImpl(
                         if (task.isSuccessful) {
                             trySend(Resource.Success("Password successfully updated."))
                         } else {
-                            trySend(Resource.Error<String>("Password update fail"))
+                            trySend(Resource.Error<String>("Password update fail or no internet connection"))
                         }
                     }
                 }
             } else {
-                trySend(Resource.Error<String>("Password update fail"))
+                trySend(Resource.Error<String>("Password update fail or no internet connection"))
 
             }
         }
@@ -172,7 +171,7 @@ class UserRepositoryImpl(
      */
     override fun getUserDetails(): Flow<Resource<Users>> = callbackFlow {
         try {
-            dataBase
+            firebaseStore
                 .collection("users")
                 .whereEqualTo("email", firebaseAuth.currentUser!!.email)
                 .get()
@@ -185,7 +184,7 @@ class UserRepositoryImpl(
                     }
                 }
         } catch(e: Exception) {
-            trySend(Resource.Error<Users>("No user"))
+            trySend(Resource.Error<Users>("No user found or no connection"))
         }
 
         awaitClose { channel.close() }
@@ -215,7 +214,7 @@ class UserRepositoryImpl(
                 } else {
 
                     trySend(Resource.Error<Boolean>(
-                            " The password is invalid or the user does not have a password")
+                            "Wrong credential or no internet connection")
                     )
                 }
             }
@@ -234,7 +233,7 @@ class UserRepositoryImpl(
                 trySend(Resource.Success("Password reset link sent to email."))
             } else {
                 trySend(Resource.Error<String>(
-                    "There is no user record corresponding to this identifier. The user may have been deleted")
+                    "No user found or no connection")
                 )
             }
         }
@@ -251,7 +250,7 @@ class UserRepositoryImpl(
      */
     override fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users): Flow<Resource<String>> = callbackFlow  {
 
-        dataBase
+        firebaseStore
             .collection("users")
             .whereEqualTo("email", user.email)
             .get()
@@ -262,7 +261,7 @@ class UserRepositoryImpl(
                         user.journeyHistory.add(jsonObject)
                         for (document in result) {
                             try {
-                                dataBase.collection("users")
+                                firebaseStore.collection("users")
                                     .document(document.id)
                                     .update("journeyHistory", user.journeyHistory)
                                 trySend(Resource.Success("Added journey to the record"))
@@ -272,7 +271,7 @@ class UserRepositoryImpl(
                         }
                     }
                 }.addOnFailureListener {
-                    trySend(Resource.Error<String>("No user"))
+                    trySend(Resource.Error<String>("No user found or no internet connection"))
                 }
 
         awaitClose { channel.close() }

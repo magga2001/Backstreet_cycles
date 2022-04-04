@@ -523,7 +523,6 @@ class JourneyActivity : AppCompatActivity() {
         super.onBackPressed()
         updateCheckBoxSharedPref()
         journeyViewModel.clearView()
-        journeyViewModel.clearJourneyLocations()
         finish()
     }
 

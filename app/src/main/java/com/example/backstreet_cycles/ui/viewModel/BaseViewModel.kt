@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,13 +106,6 @@ open class BaseViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    /**
-     * Get user's details in MutableLiveData format
-     */
-    fun getUserInfo(): MutableLiveData<Users> {
-        return userDetail
     }
 
     //TFL
@@ -336,10 +328,17 @@ open class BaseViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_CYCLISTS)
         SharedPrefHelper.clearSharedPreferences()
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
+    }
+
+    /**
+     * Get user's details in MutableLiveData format
+     */
+    fun getUserInfo(): MutableLiveData<Users> {
+        return userDetail
     }
 
     /**

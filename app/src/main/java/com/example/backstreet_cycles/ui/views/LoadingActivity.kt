@@ -1,7 +1,9 @@
 package com.example.backstreet_cycles.ui.views
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,18 +16,16 @@ import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.LoadingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_loading.*
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.launch
 
-/**
- * This activity launches Loading page that allows application to load data between different pages
- */
 @AndroidEntryPoint
 class LoadingActivity() : AppCompatActivity() {
 
     private val loadingViewModel: LoadingViewModel by viewModels()
 
     /**
-     * Initialise the contents within the display of the LoadingActivity
+     * Initialise the contents within the display of the SplashScreenActivity
      * @param savedInstanceState used to restore a saved state so activity can be recreated
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,14 @@ class LoadingActivity() : AppCompatActivity() {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-        lifecycleScope.launch { loadingViewModel.getDock() }
+        if(!hasConnection()){
+
+            SnackBarHelper.displaySnackBar(loadingActivity, getString(R.string.no_connection))
+            onNoConnection()
+
+        }else{
+            lifecycleScope.launch { loadingViewModel.getDock() }
+        }
 
     }
 
@@ -68,7 +75,7 @@ class LoadingActivity() : AppCompatActivity() {
      */
     private fun onBackHomePage(){
         Handler(Looper.getMainLooper()).postDelayed({
-
+            
             finish()
 
         }, Constants.INFORM_SPLASH_TIME)
@@ -82,6 +89,22 @@ class LoadingActivity() : AppCompatActivity() {
         super.onStart()
         loadingViewModel.destroyMapboxNavigation()
         loadingViewModel.getMapBoxNavigation()
+    }
+
+    private fun onNoConnection() {
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            super.onBackPressed()
+
+        }, Constants.SPLASH_TIME)
+    }
+
+    private fun hasConnection(): Boolean{
+
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        return networkInfo?.isConnected ?: false
     }
 
 }
