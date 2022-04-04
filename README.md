@@ -20,6 +20,14 @@ Backstreet Cycles is an android application you could download to plan a cycling
 
 Download the APK file from this website
 
+## Credentials
+
+To access Firebase and MapBox accounts for our application use the following credentials
+
+Email: backstreet.cycles.test.user@gmail.com
+
+Password: iLoveBikes2022;
+
 ## Seeding and unseeding
 
 If node_modules does not exist run the command below:
@@ -61,7 +69,6 @@ For JaCoCo test coverage use the command below:
 ```bash
 gradlew createDebugCoverageReport
 ````
-
 
 ## Authors
 
