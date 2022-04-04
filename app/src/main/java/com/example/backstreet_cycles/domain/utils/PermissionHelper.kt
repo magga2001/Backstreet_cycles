@@ -7,10 +7,11 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.example.backstreet_cycles.common.Constants
 
+
 object PermissionHelper {
 
     /**
-     *
+     * Check Android's permissions for particular activity
      */
     fun checkPermission(context: Context, activity: Activity) {
         if (ActivityCompat.checkSelfPermission(

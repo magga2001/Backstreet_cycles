@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 object JsonHelper {
 
     /**
-     *
+     * Retrieve Json file
      */
     fun getJsonFromResources(application: Application, resourceId: Int): String {
         return application.resources.openRawResource(resourceId).use { it ->
@@ -32,6 +32,9 @@ object JsonHelper {
 //    }
 
 
+    /**
+     * Write to Json file
+     */
      fun writeJsonFile(context: Context, fileName: String, jsonString: String?): Boolean {
         return try {
             val fos: FileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
@@ -47,6 +50,9 @@ object JsonHelper {
         }
     }
 
+    /**
+     * Read from Json file
+     */
      fun readJsonFile(context: Context, fileName: String): String? {
         return try {
             val fis: FileInputStream = context.openFileInput(fileName)
@@ -65,10 +71,16 @@ object JsonHelper {
         }
     }
 
+    /**
+     * Delete Json file
+     */
     fun deleteFile(context: Context, fileName: String){
         context.deleteFile(fileName)
     }
 
+    /**
+     * Check if file exists
+     */
     fun isFilePresent(context: Context, fileName: String): Boolean {
         val path = context.filesDir.absolutePath + "/" + fileName
         val file = File(path)
@@ -76,7 +88,7 @@ object JsonHelper {
     }
 
     /**
-     *
+     * Return list of objects retrieved from Json file
      */
     fun <T> stringToObject(text: String, type: Class<T>): List<T>? {
         val parameterizedType = Types.newParameterizedType(List::class.java, type)
@@ -86,7 +98,7 @@ object JsonHelper {
     }
 
     /**
-     *
+     * Return String obtained from the list of objects
      */
     fun <T> objectToString(values: List<T>, type: Class<T>): String {
         val parameterizedType = Types.newParameterizedType(List::class.java, type)

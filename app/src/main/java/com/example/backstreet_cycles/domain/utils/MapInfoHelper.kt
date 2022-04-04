@@ -11,7 +11,7 @@ import kotlin.math.ceil
 object MapInfoHelper {
 
     /**
-     *
+     * Return closest dock to a start location with enough bikes
      */
     fun getClosestDocksToOrigin(docks: MutableList<Dock>, point: Point, numUser: Int): Dock {
         docks.filter { it.nbBikes >= numUser }
@@ -22,7 +22,7 @@ object MapInfoHelper {
     }
 
     /**
-     *
+     * Return closest dock to a end location with enough spaces
      */
     fun getClosestDocksToDestination(docks: MutableList<Dock>, point: Point, numUser: Int): Dock {
         docks.filter { it.nbSpaces >= numUser }
@@ -33,7 +33,7 @@ object MapInfoHelper {
     }
 
     /**
-     *
+     * Return fastest route directions
      */
     fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute {
         val route = routes.sortedBy { it.duration() }
@@ -41,21 +41,21 @@ object MapInfoHelper {
     }
 
     /**
-     *
+     * @return Double journey's distance
      */
     fun retrieveJourneyDistances(route: DirectionsRoute): Double {
         return route.distance()
     }
 
     /**
-     *
+     * @return Double journey's duration
      */
     fun retrieveJourneyDurations(route: DirectionsRoute): Double {
         return route.duration()
     }
 
     /**
-     *
+     * @return Double rental price
      */
     fun getRental(durations: MutableList<Double>): Double {
         var prices =

@@ -11,7 +11,7 @@ import com.mapbox.geojson.Point
 object PlannerHelper {
 
     /**
-     *
+     * Calculation engine for bike rental price
      */
     fun calcBicycleRental(
         application: Application,
@@ -44,7 +44,7 @@ object PlannerHelper {
     }
 
     /**
-     *
+     * Calculate the most optimal route
      */
     fun calcRoutePlanner(
         docks: MutableList<Dock>,
