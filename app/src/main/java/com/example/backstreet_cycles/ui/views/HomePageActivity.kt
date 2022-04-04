@@ -102,7 +102,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     /**
-     *
+     * Initialise observers for Homepage
      */
     @SuppressLint("SetTextI18n")
     private fun initObservers() {
