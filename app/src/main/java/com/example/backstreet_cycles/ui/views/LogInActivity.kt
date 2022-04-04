@@ -14,6 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Login page allowing user to log into the application
+ */
 @AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
 

@@ -14,7 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_password.*
 import kotlinx.coroutines.launch
 
-
+/**
+ * This activity launches Change Password page that is responsible for enabling user the password change
+ */
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 

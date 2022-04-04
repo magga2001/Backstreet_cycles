@@ -48,6 +48,9 @@ import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
 import java.util.*
 
+/**
+ * This activity launches Home page which is the heart of our application that plans the whole journey
+ */
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
     private lateinit var toggle: ActionBarDrawerToggle

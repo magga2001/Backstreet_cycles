@@ -50,6 +50,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 
+/**
+ * This activity launches Journey page which is responsible for displaying a journey's plan
+ */
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
 

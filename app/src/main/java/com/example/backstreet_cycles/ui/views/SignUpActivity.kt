@@ -12,6 +12,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Sign up page which allows user to create an account
+ */
 @AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 

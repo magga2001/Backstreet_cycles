@@ -13,6 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_edit_user_profile.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Edit User Profile page that is responsible for enabling user the name and surname change
+ */
 @AndroidEntryPoint
 class EditUserProfileActivity : AppCompatActivity() {
 

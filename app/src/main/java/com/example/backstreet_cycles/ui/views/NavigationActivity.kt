@@ -62,6 +62,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import java.util.*
 
+/**
+ * This activity launches Navigation page that is responsible live GPS navigation
+ */
 @AndroidEntryPoint
 class NavigationActivity : AppCompatActivity() {
 

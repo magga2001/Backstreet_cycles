@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+/**
+ * This activity launches Splash Screen page which is responsible for fetching data when the app starts
+ */
 @AndroidEntryPoint
 class SplashScreenActivity() : AppCompatActivity() {
 

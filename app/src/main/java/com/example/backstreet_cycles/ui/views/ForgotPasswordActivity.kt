@@ -11,6 +11,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Forgot Password page which enables user to retrieve access to their account
+ * by sending a verification link to their email
+ */
 @AndroidEntryPoint
 class ForgotPasswordActivity : AppCompatActivity() {
 
