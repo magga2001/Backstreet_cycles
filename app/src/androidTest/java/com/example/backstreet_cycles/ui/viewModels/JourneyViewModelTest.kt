@@ -50,7 +50,7 @@ class JourneyViewModelTest {
     @Before
     fun setUp()
     {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeMapboxRepoImpl = FakeMapboxRepoImpl()
@@ -191,7 +191,7 @@ class JourneyViewModelTest {
 
     @Test
     fun test_finish_journey() = runBlocking {
-        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456", locations)
         for(location in locations){
             homePageViewModel.addStop(location)
         }

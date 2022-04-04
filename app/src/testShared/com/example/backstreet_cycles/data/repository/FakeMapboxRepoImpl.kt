@@ -12,10 +12,11 @@ import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import javax.inject.Named
 
-class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute?): MapboxRepository{
+class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute?, stops: MutableList<Locations>): MapboxRepository{
 
-    constructor() : this(null)
+    constructor() : this(null, mutableListOf())
 
     private var testCurrentRoute = mutableListOf<DirectionsRoute>()
     private val testDistances = mutableListOf<Double>()
@@ -31,8 +32,9 @@ class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute?): MapboxRep
     }
 
     init {
-        if(route != null){
+        if(route != null && stops.isNotEmpty()){
             setJourneyCurrentRoute(route)
+            setJourneyLocations(stops)
         }
     }
 

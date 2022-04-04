@@ -142,7 +142,7 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_get_journey_history(){
-        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456", locations)
         get_and_save_journey()
         journeyViewModel.getUserDetails()
         val user = journeyViewModel.getUserInfo().getOrAwaitValue()
