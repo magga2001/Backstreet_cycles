@@ -429,15 +429,6 @@ class HomePageViewModel @Inject constructor(
     }
 
     /**
-     * Attempt to log out user out of the application
-     */
-    fun logOut() {
-        userRepository.logOut()
-        clearAllSharedPreferences()
-        logout.value = true
-    }
-
-    /**
      * Setting state of showing an alert
      * @param bool state of alert
      */
@@ -491,6 +482,15 @@ class HomePageViewModel @Inject constructor(
      */
     fun getUpdateMutableLiveData(): MutableLiveData<Boolean> {
         return updateMutableLiveData
+    }
+
+    /**
+     * Attempt to log out user out of the application
+     */
+    fun logOut() {
+        userRepository.logOut()
+        clearAllSharedPreferences()
+        logout.value = true
     }
 
     /**

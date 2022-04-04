@@ -142,20 +142,6 @@ class JourneyViewModel @Inject constructor(
     }
 
     /**
-     * Update markers within the map
-     * @param annotationApi
-     */
-    fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin) {
-        MapAnnotationHelper.removeAnnotations()
-        MapAnnotationHelper.addAnnotationToMap(
-            context = mContext,
-            getJourneyWayPointsLocations(),
-            annotationApi,
-            getJourneyState()
-        )
-    }
-
-    /**
      * Getter function to obtain the route of journey
      * @param context
      * @param locations
@@ -170,6 +156,20 @@ class JourneyViewModel @Inject constructor(
     ) {
         isUpdateMap = true
         fetchRoute(context = context, locations, profile, info)
+    }
+
+    /**
+     * Update markers within the map
+     * @param annotationApi
+     */
+    fun updateMapMarkerAnnotation(annotationApi: AnnotationPlugin) {
+        MapAnnotationHelper.removeAnnotations()
+        MapAnnotationHelper.addAnnotationToMap(
+            context = mContext,
+            getJourneyWayPointsLocations(),
+            annotationApi,
+            getJourneyState()
+        )
     }
 
     /**
