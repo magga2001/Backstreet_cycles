@@ -52,8 +52,6 @@ class ForgotPasswordViewModel @Inject constructor(
                 is Resource.Error -> {
                     resetPassword.value = result.message!!
                 }
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }

@@ -52,9 +52,6 @@ class ChangePasswordViewModel @Inject constructor(
                 is Resource.Error -> {
                     updatePassword.value = result.message!!
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }

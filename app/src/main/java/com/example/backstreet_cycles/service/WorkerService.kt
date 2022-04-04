@@ -65,8 +65,6 @@ class WorkerService @AssistedInject constructor(
                     }
                     is Resource.Error -> {
                     }
-                    is Resource.Loading -> {
-                    }
                 }
             }.collect()
         }

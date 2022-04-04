@@ -59,9 +59,6 @@ class SplashScreenViewModel @Inject constructor(
                     tflRepository.setCurrentDocks(docks!!.toMutableList())
                     isReady.value = true
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }
