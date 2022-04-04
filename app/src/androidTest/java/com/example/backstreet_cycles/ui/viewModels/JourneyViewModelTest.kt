@@ -109,6 +109,7 @@ class JourneyViewModelTest {
     @Test
     fun test_get_journey_locations() {
         journeyViewModel.calcBicycleRental()
+        assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
     }
 
