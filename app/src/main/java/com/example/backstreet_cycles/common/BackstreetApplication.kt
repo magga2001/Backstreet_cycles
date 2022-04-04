@@ -20,6 +20,10 @@ import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+
+/**
+ * Custom application for the whole application
+ */
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider {
 
@@ -36,6 +40,7 @@ class BackstreetApplication : Application(), Configuration.Provider {
 
         SharedPrefHelper.initialiseSharedPref(this, Constants.DOCKS_LOCATIONS)
 
+//      check if there is a current user to turn on the notification
         Handler(Looper.myLooper()!!).postDelayed({
             if (FirebaseAuth.getInstance().currentUser != null) {
                 //Move this to appropriate place

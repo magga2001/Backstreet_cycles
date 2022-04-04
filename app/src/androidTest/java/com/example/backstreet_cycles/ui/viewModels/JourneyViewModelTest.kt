@@ -7,12 +7,12 @@ import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
 import com.example.backstreet_cycles.ui.viewModel.*
 import dagger.hilt.android.internal.Contexts
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -210,14 +210,27 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_finish_journey() = runBlocking {
+    fun test_finish_journey_get_firstName() = runBlocking {
         fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
         journeyViewModel.getUserDetails()
-        assert(
-            journeyViewModel.getUserInfo().getOrAwaitValue()
-                .equals(Users("John", "Doe", "johndoe@example.com"))
-        )
         journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assertEquals("John",journeyViewModel.getUserInfo().getOrAwaitValue().firstName)
+    }
+
+    @Test
+    fun test_finish_journey_get_lastName() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
+        journeyViewModel.getUserDetails()
+        journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assertEquals("Doe", journeyViewModel.getUserInfo().getOrAwaitValue().lastName)
+    }
+
+    @Test
+    fun test_finish_journey_get_email() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
+        journeyViewModel.getUserDetails()
+        journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assertEquals("johndoe@example.com",journeyViewModel.getUserInfo().getOrAwaitValue().email)
     }
 
     @Test
