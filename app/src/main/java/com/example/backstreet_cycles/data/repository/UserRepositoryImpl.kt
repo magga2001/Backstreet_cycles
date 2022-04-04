@@ -146,7 +146,6 @@ class UserRepositoryImpl(
         firebaseAuth.currentUser!!.reauthenticate(credential).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
-                Timber.tag("value").w("User re-authenticated.")
                 val user = firebaseAuth.currentUser
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { task ->

@@ -2,9 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
-import android.text.method.TextKeyListener.clear
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -215,6 +212,7 @@ class JourneyViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+                    //Fail
                     message.value = result.message!!
                 }
 

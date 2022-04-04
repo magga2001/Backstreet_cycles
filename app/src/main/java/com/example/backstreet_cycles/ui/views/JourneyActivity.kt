@@ -273,7 +273,6 @@ class JourneyActivity : AppCompatActivity() {
      * Initialise the navigation
      */
     private fun initNavigation() {
-//        mapboxNavigation.setRoutes(currentRoute)
         journeyViewModel.setRoute()
         journeyViewModel.registerObservers(
             routesObserver,

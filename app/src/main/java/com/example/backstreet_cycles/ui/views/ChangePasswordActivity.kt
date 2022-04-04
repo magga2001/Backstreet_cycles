@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
-    //
     private val changePasswordViewModel: ChangePasswordViewModel by viewModels()
 
     /**
