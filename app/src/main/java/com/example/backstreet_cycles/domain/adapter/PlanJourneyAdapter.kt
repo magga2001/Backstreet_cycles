@@ -23,7 +23,9 @@ import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.views.JourneyActivity
 
-
+/**
+ * Class responsible for managing cards inside recycler view for the Journey activity
+ */
 class PlanJourneyAdapter(
     private val context: Context,
     private val docks: MutableList<Dock>,

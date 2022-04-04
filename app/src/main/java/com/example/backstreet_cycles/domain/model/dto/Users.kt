@@ -1,6 +1,8 @@
 package com.example.backstreet_cycles.domain.model.dto
 
-
+/**
+ * Data class for the Users object
+ */
 data class Users(
     var firstName: String? = null,
     var lastName: String? = null,

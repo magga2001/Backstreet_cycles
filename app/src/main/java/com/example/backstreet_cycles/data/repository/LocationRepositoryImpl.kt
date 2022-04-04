@@ -6,6 +6,9 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
 import javax.inject.Inject
 
+/**
+ * Class responsible for implementation of the location repository
+ */
 open class LocationRepositoryImpl @Inject constructor(
     private val touristAttractionFile: TouristAttractionFile
 ) : LocationRepository {

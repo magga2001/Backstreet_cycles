@@ -5,7 +5,7 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
 /**
- * A class created to help us with the implementation of the snackbar
+ * Helper class for managing implementation of the snackbar
  */
 object SnackBarHelper {
 

@@ -2,6 +2,9 @@ package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 
+/**
+ * Class responsible for implementation of the cyclist repository
+ */
 class CyclistRepositoryImpl : CyclistRepository {
 
     private var numCyclists = 1

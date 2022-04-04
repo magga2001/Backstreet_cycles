@@ -7,6 +7,9 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.interfaces.Planner
 import com.mapbox.geojson.Point
 
+/**
+ * Helper class for planning journey
+ */
 object PlannerHelper {
 
     /**
