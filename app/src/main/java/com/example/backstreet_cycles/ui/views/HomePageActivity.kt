@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -533,6 +534,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             getString(R.string.alert_message_1) +
                     getString(R.string.alert_message_2)
         )
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, _ ->
             homePageViewModel.continueWithCurrentJourney()
@@ -543,6 +545,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }
+
         builder.show()
     }
 

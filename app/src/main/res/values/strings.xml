@@ -41,7 +41,7 @@
     <string name="cant_remove_location">Cannot remove location</string>
     <string name="alert_planner">Planner Alert</string>
     <string name="alert_message_1">There is already a planned journey that you are currently using.</string>
-    <string name="alert_message_2">\" Do you want to continue with the current journey or with the newly created one?\"</string>
+    <string name="alert_message_2"> Would you like to continue with the current journey or with the newly created one?</string>
     <string name="hello_user">"Hello, %1$s"</string>
 
     <!-- Journey Strings  -->
