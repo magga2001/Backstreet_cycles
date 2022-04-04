@@ -514,8 +514,9 @@ class JourneyActivity : AppCompatActivity() {
         routeLineView.cancel()
         routeLineApi.cancel()
     }
-
-    // Terminate JourneyPage when back button is clicked
+    /**
+     * Terminate JourneyPage when back button is clicked
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         updateCheckBoxSharedPref()

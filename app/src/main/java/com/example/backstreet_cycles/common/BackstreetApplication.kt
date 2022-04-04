@@ -47,7 +47,7 @@ class BackstreetApplication : Application(), Configuration.Provider {
     }
 
     /**
-     *
+     * Set up configuration for work manager
      */
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()

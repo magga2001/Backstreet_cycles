@@ -16,7 +16,7 @@ object MapAnnotationHelper {
     private var pointAnnotationManager: PointAnnotationManager? = null
 
     /**
-     *
+     * Function to add annotation to Map
      */
     fun addAnnotationToMap(
         context: Context,
@@ -30,7 +30,7 @@ object MapAnnotationHelper {
     }
 
     /**
-     *
+     * Function to remove annotation from Map
      */
     fun removeAnnotations() {
         if (pointAnnotationManager != null) {
@@ -39,7 +39,7 @@ object MapAnnotationHelper {
     }
 
     /**
-     *
+     * Create annotations
      */
     private fun buildAnnotationToMap(
         locations: MutableList<Locations>,
@@ -70,7 +70,7 @@ object MapAnnotationHelper {
     }
 
     /**
-     *
+     * Create marker
      */
     private fun constructMarker(
         context: Context,
@@ -99,7 +99,7 @@ object MapAnnotationHelper {
     }
 
     /**
-     *
+     * Create image of the map
      */
     private fun constructImage(context: Context, drawables: List<Int>): List<Bitmap> {
         val bitmaps = mutableListOf<Bitmap>()
@@ -112,7 +112,7 @@ object MapAnnotationHelper {
     }
 
     /**
-     *
+     * Create Bitmap object
      */
     private fun constructBitmap(context: Context, drawable: Int): Bitmap {
         val rawBitmap = BitmapHelper.bitmapFromDrawableRes(context, drawable) as Bitmap
