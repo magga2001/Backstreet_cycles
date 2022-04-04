@@ -1,7 +1,9 @@
 package com.example.backstreet_cycles.ui.views
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +16,7 @@ import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.LoadingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_loading.*
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,7 +36,14 @@ class LoadingActivity() : AppCompatActivity() {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-        lifecycleScope.launch { loadingViewModel.getDock() }
+        if(!hasConnection()){
+
+            SnackBarHelper.displaySnackBar(loadingActivity, "No connection. Please connect to the internet")
+            onNoConnection()
+
+        }else{
+            lifecycleScope.launch { loadingViewModel.getDock() }
+        }
 
     }
 
@@ -79,6 +89,22 @@ class LoadingActivity() : AppCompatActivity() {
         super.onStart()
         loadingViewModel.destroyMapboxNavigation()
         loadingViewModel.getMapBoxNavigation()
+    }
+
+    private fun onNoConnection() {
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            super.onBackPressed()
+
+        }, Constants.SPLASH_TIME)
+    }
+
+    private fun hasConnection(): Boolean{
+
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        return networkInfo?.isConnected ?: false
     }
 
 }

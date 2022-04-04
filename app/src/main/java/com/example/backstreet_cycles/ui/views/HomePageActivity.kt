@@ -21,7 +21,6 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -140,7 +139,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Checks whether a current journey exists
-        homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
+        homePageViewModel.getHasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
             }else{
@@ -527,16 +526,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Planner Alert")
         builder.setMessage(
-            "There is already a planned journey that you are currently using." +
-                    " Do you want to continue with the current journey or with the newly created one?"
+            "You currently have a planned journey. " +
+                    "Would you like to return to the current journey or create a new one?"
         )
 
-        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
+        builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, _ ->
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
-        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
+        builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, _ ->
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }

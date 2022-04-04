@@ -1,7 +1,9 @@
 package com.example.backstreet_cycles.ui.views
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
+import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.SplashScreenViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.launch
 
 
@@ -30,14 +34,20 @@ class SplashScreenActivity() : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         initObservers()
-
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         supportActionBar?.hide()
-        Handler(Looper.getMainLooper()).postDelayed({
 
-            lifecycleScope.launch { splashScreenViewModel.loadData() }
 
-        }, Constants.SPLASH_TIME)
+        if(!hasConnection()) {
+            SnackBarHelper.displaySnackBar(
+                splashScreenActivity,
+                "No connection. Please connect to internet"
+            )
+        }
+
+        loadData()
+
+
     }
 
     /**
@@ -60,5 +70,20 @@ class SplashScreenActivity() : AppCompatActivity() {
         }
     }
 
+    private fun loadData(){
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            lifecycleScope.launch { splashScreenViewModel.loadData() }
+
+        }, Constants.SPLASH_TIME)
+    }
+
+    private fun hasConnection(): Boolean{
+
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        return networkInfo?.isConnected ?: false
+    }
 
 }

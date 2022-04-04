@@ -57,7 +57,7 @@ class HomePageViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
+    private var showAlert: MutableLiveData<Boolean> = MutableLiveData()
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
 
@@ -205,6 +205,7 @@ class HomePageViewModel @Inject constructor(
      */
     override fun getRoute() {
         super.getRoute()
+        clearJourneyLocations()
         setJourneyLocations(stops)
         checkCurrentJourney()
     }
@@ -469,7 +470,7 @@ class HomePageViewModel @Inject constructor(
      * Getter function to determine whether there current journey mutable live data
      * @return MutableLiveData
      */
-    fun gethasCurrentJourney(): MutableLiveData<Boolean> {
+    fun getHasCurrentJourney(): MutableLiveData<Boolean> {
         return hasCurrentJourney
     }
 

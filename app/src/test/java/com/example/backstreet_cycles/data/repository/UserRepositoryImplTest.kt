@@ -496,7 +496,7 @@ class UserRepositoryImplTest{
         Mockito.`when`(firebaseUser.email).thenReturn("example@gmail.com")
 
         Mockito.`when`(mockFirestore.collection(any())).thenReturn(collectionReference)
-        Mockito.`when`(collectionReference.whereEqualTo(anyString(), any())).thenReturn(query)
+        Mockito.`when`(mockFirestore.collection(any()).whereEqualTo(anyString(), any())).thenReturn(query)
         Mockito.`when`(query.get()).thenReturn(taskQuery)
         Mockito.`when`(taskQuery.isSuccessful).thenReturn(true)
         doNothing().`when`(espressoIdlingResource).increment()

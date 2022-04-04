@@ -299,7 +299,7 @@ class JourneyActivity : AppCompatActivity() {
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
             start_navigation.isEnabled = false
-            SnackBarHelper.displaySnackBar(it, "Make sure to set your journey to start your navigation!")
+            SnackBarHelper.displaySnackBar(it, getString(R.string.ensure_navigation))
         }
 
         santander_link.setOnClickListener {
@@ -520,7 +520,7 @@ class JourneyActivity : AppCompatActivity() {
         super.onBackPressed()
         updateCheckBoxSharedPref()
         journeyViewModel.clearView()
-        journeyViewModel.clearJourneyLocations()
+//        journeyViewModel.clearJourneyLocations()
         finish()
     }
 

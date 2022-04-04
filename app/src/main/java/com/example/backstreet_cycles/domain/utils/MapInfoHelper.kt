@@ -32,7 +32,7 @@ object MapInfoHelper {
     }
 
     /**
-     * Return fastest route directions
+     * @return DirectionsRoute fastest route directions
      */
     fun getFastestRoute(routes: List<DirectionsRoute>): DirectionsRoute {
         val route = routes.sortedBy { it.duration() }

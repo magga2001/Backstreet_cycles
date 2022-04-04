@@ -8,6 +8,7 @@ object Constants {
 
     //    WorkManager Tag
     const val TAG_NOTIFICATION = "BackStreet"
+    const val WAITING_TIME: Long = 900000
 
     //    Mapbox
     const val REQUEST_AUTO_COMPLETE = 7171
@@ -37,7 +38,7 @@ object Constants {
     //    Shared Preference keys
     const val LOCATIONS = "LOCATIONS"
     const val DOCKS_LOCATIONS = "DOCKS_LOCATIONS"
-    const val NUM_USERS = "NUM_USERS"
+    const val NUM_CYCLISTS = "NUM_CYCLISTS"
     const val CHECKED_BOXES = "CHECKED_BOXES"
 
 }

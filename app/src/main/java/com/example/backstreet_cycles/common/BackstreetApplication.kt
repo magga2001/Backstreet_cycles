@@ -1,27 +1,32 @@
 package com.example.backstreet_cycles.common
 
-import android.app.Application
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 //import androidx.hilt.work.HiltWorkerFactory
 //import androidx.work.Configuration
-import com.example.backstreet_cycles.domain.model.dto.Dock
-import com.example.backstreet_cycles.domain.model.dto.Locations
+
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleService
+import androidx.work.Configuration
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
+import com.example.backstreet_cycles.ui.views.LogInActivity
+import com.google.android.gms.common.api.internal.LifecycleActivity
+import com.google.android.gms.common.api.internal.LifecycleCallback
 import com.google.firebase.auth.FirebaseAuth
-import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.geojson.Point
 import dagger.hilt.android.HiltAndroidApp
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+
 @HiltAndroidApp
-class BackstreetApplication : Application(), Configuration.Provider {
+class BackstreetApplication : Application(), Configuration.Provider{
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -38,13 +43,11 @@ class BackstreetApplication : Application(), Configuration.Provider {
 
         Handler(Looper.myLooper()!!).postDelayed({
             if (FirebaseAuth.getInstance().currentUser != null) {
-                //Move this to appropriate place
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)
             } else {
                 WorkHelper.cancelWork(context = applicationContext)
             }
-//            WorkHelper.cancelWork(context = applicationContext)
-        }, 900000)
+        }, Constants.WAITING_TIME)
     }
 
     /**

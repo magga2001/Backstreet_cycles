@@ -212,7 +212,6 @@ class JourneyViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    //Fail
                     message.value = result.message!!
                 }
 
@@ -236,6 +235,7 @@ class JourneyViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+                    message.value = result.message!!
                 }
 
                 is Resource.Loading -> {
@@ -316,7 +316,6 @@ class JourneyViewModel @Inject constructor(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
-        clearAllSharedPreferences()
     }
 
     /**
@@ -331,7 +330,7 @@ class JourneyViewModel @Inject constructor(
                 is Resource.Success -> {
                     message.value = result.data!!
                     isReady.value = true
-                    SharedPrefHelper.clearSharedPreferences()
+                    clearAllSharedPreferences()
                 }
 
                 is Resource.Error -> {

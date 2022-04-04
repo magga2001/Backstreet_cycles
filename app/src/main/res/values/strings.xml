@@ -12,7 +12,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
-    <string name="LOG_IN_FAILED">Log in failed</string>
+    <string name="LOG_IN_FAILED">Log in failed. </string>
     <string name="enter_first_name">Please enter your first name</string>
     <string name="enter_last_name">Please enter your last name</string>
     <string name="enter_email">Please enter your email</string>
@@ -81,7 +81,7 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="PASSWORD_CHANGED">Password Changed</string>
-    <string name="REGISTRATION_FAILED">Registration failed</string>
+    <string name="REGISTRATION_FAILED">Registration failed. </string>
     <string name="enter_password">Please enter a password</string>
     <string name="enter_confirmed_password">Please confirm your password</string>
     <string name="change_password_title">Change Password</string>
@@ -103,5 +103,8 @@
     <string name="previous">Previous</string>
     <string name="NO_PERSON_MATCH">No people matched the query.</string>
     <string name="vintage_cycle_image">backstreet_cycle_logo</string>
+
+
+    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
 
 </resources>

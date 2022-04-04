@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
@@ -18,7 +17,7 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
-import com.example.backstreet_cycles.ui.views.HomePageActivity
+import com.example.backstreet_cycles.ui.views.LoadingActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.geojson.Point
@@ -52,24 +51,18 @@ class WorkerService @AssistedInject constructor(
      */
     private suspend fun attemptNotification() {
 
-
         runBlocking {
             tflRepository.getDocks().onEach { result ->
                 when (result) {
                     is Resource.Success -> {
-
                         if (checkUpdate(result.data)) {
                             createNotificationChannel(context = applicationContext)
                             notificationTapAction(context = applicationContext)
                         }
                     }
-
                     is Resource.Error -> {
-                        Log.i("New dock", "Error")
-
                     }
                     is Resource.Loading -> {
-                        Log.i("New dock", "Loading...")
                     }
                 }
             }.collect()
@@ -80,19 +73,26 @@ class WorkerService @AssistedInject constructor(
      *  Check for a new dock based on the current docks locations and number of users
      */
     private fun checkUpdate(docks: MutableList<Dock>?): Boolean {
+
         SharedPrefHelper.initialiseSharedPref(
             getApplication(applicationContext),
             Constants.DOCKS_LOCATIONS
         )
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
+
         SharedPrefHelper.initialiseSharedPref(
             getApplication(applicationContext),
-            Constants.NUM_USERS
+            Constants.NUM_CYCLISTS
         )
-        val numUser = SharedPrefHelper.getSharedPref(String::class.java)
-        numUser.map { it.toInt() }
+        val numCyclists = SharedPrefHelper.getSharedPref(String::class.java)
+        numCyclists.map { it.toInt() }
 
-        return checkForNewDock(currentDocks, docks, numUser)
+        //If there is no current journey
+        if(currentDocks.isEmpty() && numCyclists.isEmpty()){
+            return false
+        }
+
+        return checkForNewDock(currentDocks, docks, numCyclists)
     }
 
     /**
@@ -101,8 +101,9 @@ class WorkerService @AssistedInject constructor(
     private fun checkForNewDock(
         currentDocks: MutableList<Point>,
         docks: MutableList<Dock>?,
-        numUser: MutableList<String>
+        numCyclists: MutableList<String>
     ): Boolean {
+
         val currentPoint = mutableListOf<Point>()
 
         for (point in currentDocks) {
@@ -117,13 +118,31 @@ class WorkerService @AssistedInject constructor(
             currentPoint.contains(point)
         }
 
+        return checkForNewDocksAvailability(currentPoint, filteredDock!!, numCyclists)
+    }
 
-        for (dock in filteredDock!!)
-            if (dock.nbSpaces >= numUser.first()
-                    .toInt() && filteredDock.size == currentPoint.size
-            ) {
-                return false
+    private fun checkForNewDocksAvailability(
+        currentPoint: MutableList<Point>,
+        filteredDock: List<Dock>,
+        numCyclists: MutableList<String>
+    ): Boolean{
+
+        for (i in filteredDock.indices)
+        {
+            if(i % 2 != 0){
+                if (filteredDock[i].nbBikes >= numCyclists.first()
+                        .toInt() && filteredDock.size == currentPoint.size
+                ) {
+                    return false
+                }
+            }else{
+                if (filteredDock[i].nbSpaces >= numCyclists.first()
+                        .toInt() && filteredDock.size == currentPoint.size
+                ) {
+                    return false
+                }
             }
+        }
 
         return true
     }
@@ -157,7 +176,7 @@ class WorkerService @AssistedInject constructor(
         val intent: Intent
 
         if (FirebaseAuth.getInstance().currentUser != null) {
-            intent = Intent(context, HomePageActivity::class.java).apply {
+            intent = Intent(context, LoadingActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
         } else {
