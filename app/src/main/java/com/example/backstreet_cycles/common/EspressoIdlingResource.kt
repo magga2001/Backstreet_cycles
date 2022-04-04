@@ -1,6 +1,8 @@
 package com.example.backstreet_cycles.common
 
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
+
 
 object EspressoIdlingResource {
 

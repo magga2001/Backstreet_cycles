@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
@@ -49,7 +48,6 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.journey_bottom_sheet.*
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
@@ -212,19 +210,19 @@ class JourneyActivity : AppCompatActivity() {
             }
         }
 
-        journeyViewModel.getDistanceMutableLiveData().observe(this) { distance ->
+        journeyViewModel.getDistanceData().observe(this) { distance ->
             if (distance != null) {
                 distances.text = getString(R.string.journey_distances, distance)
             }
         }
 
-        journeyViewModel.getDurationMutableLiveData().observe(this) { duration ->
+        journeyViewModel.getDurationData().observe(this) { duration ->
             if (duration != null) {
                 durations.text = getString(R.string.journey_durations, duration)
             }
         }
 
-        journeyViewModel.getPriceMutableLiveData().observe(this) { price ->
+        journeyViewModel.getPriceData().observe(this) { price ->
             if (price != null) {
                 prices.text = getString(R.string.journey_prices, price)
             }
@@ -245,6 +243,7 @@ class JourneyActivity : AppCompatActivity() {
 
         planJourneyAdapter.getCollapseBottomSheet()
             .observe(this) {
+                updateCheckBoxSharedPref()
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
     }
@@ -289,6 +288,7 @@ class JourneyActivity : AppCompatActivity() {
     private fun initListeners() {
         start_navigation.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            updateCheckBoxSharedPref()
             startActivity(intent)
             finish()
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -408,15 +408,19 @@ class JourneyActivity : AppCompatActivity() {
     private fun initBottomSheet() {
 
         sheetBehavior = BottomSheetBehavior.from(journey_bottom_sheet_view)
+        val tvFrom = journeyViewModel.getTheCheckedBoxes()
         planJourneyAdapter = PlanJourneyAdapter(
             this,
             journeyViewModel.getCurrentDocks(),
             journeyViewModel.getJourneyLocations(),
-            planner = journeyViewModel.getPlannerInterface()
+            planner = journeyViewModel.getPlannerInterface(),
+            tvFrom
         )
+
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
-        finish_journey.isEnabled = false
+//        finish_journey.isEnabled = false
+//        val check = planJourneyAdapter.getViewHolders()
     }
 
     /**
@@ -430,6 +434,11 @@ class JourneyActivity : AppCompatActivity() {
         } else {
             santander_link.text = "Hire ${numCyclists} bikes"
         }
+    }
+
+    private fun updateCheckBoxSharedPref(){
+        val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
+        journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)
     }
 
     /**
@@ -474,6 +483,7 @@ class JourneyActivity : AppCompatActivity() {
         // Handle presses on the action bar items
         return when (item.itemId) {
             R.id.refresh_button -> {
+                updateCheckBoxSharedPref()
                 journeyViewModel.clearView()
                 journeyViewModel.clearInfo()
                 val intent = Intent(this, LoadingActivity::class.java)
@@ -489,10 +499,15 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        updateCheckBoxSharedPref()
+    }
+
     // Termination of JourneyPage
     override fun onDestroy() {
         super.onDestroy()
-
         journeyViewModel.unregisterObservers(
             routesObserver,
             routeProgressObserver
@@ -505,6 +520,7 @@ class JourneyActivity : AppCompatActivity() {
     // Terminate JourneyPage when back button is clicked
     override fun onBackPressed() {
         super.onBackPressed()
+        updateCheckBoxSharedPref()
         journeyViewModel.clearView()
         journeyViewModel.clearJourneyLocations()
         finish()

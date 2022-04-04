@@ -1,14 +1,12 @@
 package com.example.backstreet_cycles.ui.views
 
+
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
@@ -26,18 +24,13 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
-class SplashScreenActivityTest{
-
+class LoadingActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
     private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var activityRule: ActivityScenarioRule<SplashScreenActivity> =
-        ActivityScenarioRule(SplashScreenActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -49,48 +42,31 @@ class SplashScreenActivityTest{
 
     @Before
     fun setUp() {
+        userRepoImpl.logOut()
+        userRepoImpl.login(email, password)
         hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        ActivityScenario.launch(LoadingActivity::class.java)
     }
 
     @Test
-    fun test_splash_screen_activity_is_in_view() {
-        Intents.init()
-        intending(hasComponent(SplashScreenActivity::class.qualifiedName))
-        Intents.release()
+    fun test_loading_activity_test_is_dsplayed() {
+    onView(withId(R.id.loadingActivity_text)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_image_is_in_view() {
-        onView(withId(R.id.backStreet_cycles_image)).check(matches(isDisplayed()))
+    fun test_loading_gif_displayed() {
+        onView(withId(R.id.loadingActivity_GifImage)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun progress_bar_is_displayed(){
-        onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
-    }
-
-    @Test
-     fun test_if_user_is_loggedin_goes_to_homepage(){
-        test_splash_screen_activity_is_in_view()
-        userRepoImpl.login(email, password)
-        Intents.init()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-        Intents.release()
-        userRepoImpl.logOut()
-    }
-
-    @Test
-    fun test_if_user_is_not_logged_in_goes_to_login(){
-        test_splash_screen_activity_is_in_view()
-        userRepoImpl.logOut()
-        Intents.init()
-        intending(hasComponent(LogInActivity::class.qualifiedName))
-        Intents.release()
+    fun test_loading_dots_gif_is_displayed() {
+        onView(withId(R.id.loadingActivity_dotsLoadingGifImage)).check(matches(isDisplayed()))
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
+        userRepoImpl.logOut()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 }

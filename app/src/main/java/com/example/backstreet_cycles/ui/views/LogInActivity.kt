@@ -33,7 +33,7 @@ class LogInActivity : AppCompatActivity() {
         /**
          * Checks whether user is not null and starts HomePage activity
          **/
-        logInViewModel.getFirebaseUserMutableLiveData()
+        logInViewModel.getFirebaseUserData()
             .observe(this) { firebaseUser ->
                 if (firebaseUser) {
                     val intent = Intent(this@LogInActivity, HomePageActivity::class.java)
@@ -44,7 +44,7 @@ class LogInActivity : AppCompatActivity() {
                 }
             }
 
-        logInViewModel.getErrorMessageMutableLiveData()
+        logInViewModel.getErrorMessageData()
             .observe(this) {
                 SnackBarHelper.displaySnackBar(logInActivity, it)
             }

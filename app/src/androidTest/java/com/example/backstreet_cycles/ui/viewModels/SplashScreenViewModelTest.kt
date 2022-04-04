@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
+import com.example.backstreet_cycles.common.TestAppModule
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -45,9 +46,14 @@ class SplashScreenViewModelTest {
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl(
+            TestAppModule.provideFirstName(),
+            TestAppModule.provideLastName(),
+            TestAppModule.provideEmail(),
+            TestAppModule.providePassword()
+        )
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         splashScreenViewModel = SplashScreenViewModel(
@@ -64,13 +70,13 @@ class SplashScreenViewModelTest {
     @Test
     fun test_load_data(){
         runBlocking {splashScreenViewModel.loadData()}
-        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(splashScreenViewModel.getIsReady().getOrAwaitValue())
     }
 
     @Test
     fun test_load_data_with_no_connection(){
         fakeTflRepoImpl.setConnection(false)
         runBlocking {splashScreenViewModel.loadData()}
-        assert(splashScreenViewModel.getIsReadyMutableLiveData().getOrAwaitValue())
+        assert(splashScreenViewModel.getIsReady().getOrAwaitValue())
     }
 }

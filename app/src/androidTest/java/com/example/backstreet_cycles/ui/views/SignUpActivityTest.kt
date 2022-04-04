@@ -1,26 +1,23 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
-import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -35,7 +32,7 @@ class SignUpActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -44,6 +41,7 @@ class SignUpActivityTest {
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
@@ -105,67 +103,66 @@ class SignUpActivityTest {
         onView(withId(R.id.buttonSignUp)).check(matches(isDisplayed()))
     }
 
-    //Fix!!
-//    @Test
-//    fun test_firstname_is_empty() {
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
-//    }
+    @Test
+    fun test_firstname_is_empty() {
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).check(matches(hasErrorText("Please enter your first name")))
+    }
 
-//    @Test
-//    fun last_name_is_empty() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
-//    }
-//
-//    @Test
-//    fun email_is_empty() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_change_email)).check(matches(hasErrorText("Please enter your email")))
-//    }
-//
-//    @Test
-//    fun password_is_empty() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_password)).check(matches(hasErrorText("Please enter a password")))
-//    }
+    @Test
+    fun last_name_is_empty() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
+    }
 
-//    @Test
-//    fun password_confirmation_is_empty() {
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Please confirm your password")))
-//    }
+    @Test
+    fun email_is_empty() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_change_email)).check(matches(hasErrorText("Please enter your email")))
+    }
 
-//    @Test
-//    fun test_password_do_not_match(){
-//        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("user"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("testuser@gmail.com"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("123456"),closeSoftKeyboard())
-//        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("654321"), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
-//        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Passwords do not match")))
-//    }
+    @Test
+    fun password_is_empty() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText(email), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_password)).check(matches(hasErrorText("Please enter a password")))
+    }
 
-    //Fix!!
+    @Test
+    fun password_confirmation_is_empty() {
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText(email), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(typeText(password), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Please confirm your password")))
+    }
+
+    @Test
+    fun test_password_do_not_match(){
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("user"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText("testuser@gmail.com"),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(typeText(password),closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(typeText("654321"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
+        onView(withId(R.id.sign_up_confirmPassword)).check(matches(hasErrorText("Passwords do not match")))
+    }
+
+
     @Test
     fun details_entered_correctly() {
-        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-        onView(withId(R.id.sign_up_change_email)).perform(ViewActions.typeText("test@gmail.com"), closeSoftKeyboard())
-        onView(withId(R.id.sign_up_password)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-        onView(withId(R.id.sign_up_confirmPassword)).perform(ViewActions.typeText("test12"), closeSoftKeyboard())
-        onView(withId(R.id.buttonSignUp)).perform(ViewActions.click())
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText("test@gmail.com"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(typeText("test12"), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
         Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()
@@ -177,6 +174,16 @@ class SignUpActivityTest {
         Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()
+    }
+
+    @Test
+    fun test_trims_details(){
+        onView(withId(R.id.sign_up_edit_user_details_firstName)).perform(typeText("test    "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_edit_user_details_lastName)).perform(typeText("test   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_change_email)).perform(typeText("test@gmail.com   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_password)).perform(typeText("test12   "), closeSoftKeyboard())
+        onView(withId(R.id.sign_up_confirmPassword)).perform(typeText("test12    "), closeSoftKeyboard())
+        onView(withId(R.id.buttonSignUp)).perform(click())
     }
 
     @After

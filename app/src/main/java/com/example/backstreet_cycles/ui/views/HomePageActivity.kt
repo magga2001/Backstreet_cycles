@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -20,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
-import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
@@ -29,6 +29,7 @@ import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
@@ -64,6 +65,13 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var nextPageButton: FloatingActionButton
     private lateinit var stopsAdapter: StopsAdapter
 
+    private lateinit var navigationView: NavigationView
+    private lateinit var header: View
+
+
+    private lateinit var user_name: TextView
+    private lateinit var nav_header_textView_email: TextView
+
     private lateinit var selectedCarmenFeature: CarmenFeature
     private var positionOfStop: Int = 0
 
@@ -83,14 +91,17 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
 
         homePageViewModel.setUpdateInfo(false)
 
+//        user_name = findViewById(R.id.user_name)
+//        nav_header_textView_email = findViewById(R.id.nav_header_textView_email)
+
         init()
     }
 
     // Initialisation
     private fun init() {
         initIncrementAndDecrementUsersFunc()
-        initObservers()
         initNavigationDrawer()
+        initObservers()
     }
 
     /**
@@ -115,17 +126,16 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             }
 
         // Greets the user in the nav menu
-        EspressoIdlingResource.increment()
         homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
+                Log.i("userssss", firebaseUser.firstName.toString())
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
             }
         }
-        EspressoIdlingResource.decrement()
 
         // Leads to the journey page with the searched locations
-        homePageViewModel.getIsReadyMutableLiveData().observe(this) { ready ->
+        homePageViewModel.getIsReady().observe(this) { ready ->
             if (ready) {
                 val intent = Intent(this, LoadingActivity::class.java)
                 startActivity(intent)
@@ -139,7 +149,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         }
 
         // Checks whether a current journey exists
-        homePageViewModel.getHasCurrentJourneyMutableLiveData().observe(this) { hasCurrentJourney ->
+        homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
             }else{
@@ -261,6 +271,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      * Initialise the navigation menu
      */
     private fun initNavigationDrawer() {
+        navigationView = findViewById(R.id.homepage_nav_view)
+        header= navigationView.getHeaderView(0);
+        user_name = header.findViewById(R.id.user_name)
+        nav_header_textView_email = header.findViewById(R.id.nav_header_textView_email)
+
         toggle = ActionBarDrawerToggle(this, homePageActivity, R.string.open, R.string.close)
         homePageActivity.addDrawerListener(toggle)
         toggle.syncState()

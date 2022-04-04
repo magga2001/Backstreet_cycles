@@ -280,6 +280,8 @@ dependencies {
 
     //Turbines
     testImplementation 'app.cash.turbine:turbine:0.7.0'
+
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
 }
 
 //tasks.test {

@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.views
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
@@ -16,6 +15,8 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
@@ -32,7 +33,7 @@ class LogInActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl()
+    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -41,6 +42,7 @@ class LogInActivityTest{
     val locationRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 

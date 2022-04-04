@@ -13,7 +13,9 @@ import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
 import com.example.backstreet_cycles.ui.viewModel.*
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import dagger.hilt.android.internal.Contexts
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -50,11 +52,17 @@ class JourneyViewModelTest {
     {
         instrumentationContext = ApplicationProvider.getApplicationContext();
         val application = Contexts.getApplication(instrumentationContext)
+        val route = mockk<DirectionsRoute>(relaxed = true)
 
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl(route)
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl()
+        fakeUserRepoImpl = FakeUserRepoImpl(
+            TestAppModule.provideFirstName(),
+            TestAppModule.provideLastName(),
+            TestAppModule.provideEmail(),
+            TestAppModule.providePassword()
+        )
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         journeyViewModel = JourneyViewModel(
@@ -111,18 +119,19 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
         val distances = ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-        assert(journeyViewModel.getDistanceMutableLiveData().getOrAwaitValue()
+        assert(journeyViewModel.getDistanceData().getOrAwaitValue()
             .equals(distances))
         val durations = ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
-        assert(journeyViewModel.getDurationMutableLiveData().getOrAwaitValue()
+        assert(journeyViewModel.getDurationData().getOrAwaitValue()
             .equals(durations))
         val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
-        assert(journeyViewModel.getPriceMutableLiveData().getOrAwaitValue().equals(price.toString()))
+        assert(journeyViewModel.getPriceData().getOrAwaitValue().equals(price.toString()))
     }
 
     @Test
@@ -132,6 +141,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
@@ -147,6 +157,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.START_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.START_WALKING)
@@ -161,6 +172,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.BIKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.BIKING)
@@ -175,6 +187,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.onSelectedJourney(locations[0], MapboxConstants.WALKING, locations, JourneyState.END_WALKING)
         assert(journeyViewModel.getJourneyState() == JourneyState.END_WALKING)
@@ -190,6 +203,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         journeyViewModel.getUserDetails()
         assert(journeyViewModel.getUserInfo().getOrAwaitValue()
@@ -204,6 +218,7 @@ class JourneyViewModelTest {
         }
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
+        assert(loadingViewModel.getIsReady().getOrAwaitValue())
         loadingViewModel.saveJourney()
         runBlocking { journeyViewModel.getDock() }
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
