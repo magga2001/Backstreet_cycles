@@ -471,7 +471,7 @@ class NavigationActivity : AppCompatActivity() {
         val mapboxRouteLineOptions = MapboxRouteLineOptions.Builder(this)
             .withVanishingRouteLineEnabled(true)
             .withRouteLineResources(routeLineResources)
-            .withRouteLineBelowLayerId("road-label")
+            .withRouteLineBelowLayerId(getString(R.string.road_label))
             .build()
         routeLineApi = MapboxRouteLineApi(mapboxRouteLineOptions)
         routeLineView = MapboxRouteLineView(mapboxRouteLineOptions)

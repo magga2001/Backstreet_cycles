@@ -42,7 +42,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         forgot_password_SendPasswordReset_button.setOnClickListener {
             val email = forgot_password_email.text.toString().trim { it <= ' ' }
             if (email.isEmpty()) {
-                forgot_password_email.error = "Please enter your email"
+                forgot_password_email.error = getString(R.string.enter_email_forgot_password)
             } else {
                 lifecycleScope.launch {
                     forgotPasswordViewModel.resetPassword(email)

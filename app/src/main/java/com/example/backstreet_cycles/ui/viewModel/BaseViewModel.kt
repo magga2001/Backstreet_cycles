@@ -264,9 +264,6 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
-    /**
-     *
-     */
     open fun getRoute() {
         clearView()
     }
