@@ -15,7 +15,7 @@
         android:text="@string/profile_details"
         android:textAlignment="center"
         android:textColor="@color/indigo"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/edit_user_details_LinearLayout"
         app:layout_constraintEnd_toEndOf="parent"

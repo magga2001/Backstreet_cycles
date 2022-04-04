@@ -1,5 +1,8 @@
 package com.example.backstreet_cycles.domain.model.dto
 
+/**
+ * Data class for the Dock object
+ */
 data class Dock(
     val id: String = "",
     val name: String = "",

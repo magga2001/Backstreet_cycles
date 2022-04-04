@@ -3,6 +3,9 @@ package com.example.backstreet_cycles.domain.utils
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * Class for managing cards in recycler view
+ */
 abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
 
     /**

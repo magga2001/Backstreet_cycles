@@ -15,6 +15,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
+/**
+ * Class responsible for implementation of the MapBox repository
+ */
 class MapboxRepositoryImpl: MapboxRepository {
 
     // The current route of the journey

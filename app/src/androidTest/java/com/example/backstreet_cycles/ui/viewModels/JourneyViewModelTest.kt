@@ -45,7 +45,7 @@ class JourneyViewModelTest {
 
     @Before
     fun setUp() {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()

@@ -16,8 +16,8 @@
         android:layout_marginStart="6dp"
         android:padding="15dp"
         android:text="@string/title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/indigo"
-        android:textSize="22sp"
         android:textStyle="bold" />
 
 

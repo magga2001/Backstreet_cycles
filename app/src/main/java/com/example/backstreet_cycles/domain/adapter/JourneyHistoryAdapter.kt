@@ -9,6 +9,9 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 
+/**
+ * Class responsible for managing cards inside recycler view for the Journey History activity
+ */
 class JourneyHistoryAdapter(
     private var locations: MutableList<List<Locations>>
 ) : RecyclerView.Adapter<JourneyHistoryAdapter.JourneyViewHolder>() {

@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 
+/**
+ * Helper class for managing user's shared preferences
+ */
 object SharedPrefHelper {
 
     /**

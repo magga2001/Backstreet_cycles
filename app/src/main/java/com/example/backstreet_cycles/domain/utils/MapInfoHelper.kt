@@ -7,6 +7,9 @@ import com.mapbox.geojson.Point
 import kotlin.math.abs
 import kotlin.math.ceil
 
+/**
+ * Helper class for managing journey's docks, stats and price
+ */
 object MapInfoHelper {
 
     /**
