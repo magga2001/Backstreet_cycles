@@ -11,7 +11,6 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import com.mapbox.navigation.core.MapboxNavigation
 import io.mockk.mockk
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -62,16 +61,16 @@ class JourneyHistoryViewModelUnitTest {
     fun test_add_stop() = runBlocking {
         val size = journeyHistoryViewModel.getStops().size
         journeyHistoryViewModel.addAllStops(locations)
-        assertEquals(journeyHistoryViewModel.getStops().size, size + locations.size)
+        assert(journeyHistoryViewModel.getStops().size== size + locations.size)
     }
 
     @Test
     fun test_clear_stop() = runBlocking {
         val size = journeyHistoryViewModel.getStops().size
         journeyHistoryViewModel.addAllStops(locations)
-        assertEquals(journeyHistoryViewModel.getStops().size, size + locations.size)
+        assert(journeyHistoryViewModel.getStops().size== size + locations.size)
         journeyHistoryViewModel.clearAllStops()
-        assertEquals(0, journeyHistoryViewModel.getStops().size)
+        assert(0== journeyHistoryViewModel.getStops().size)
     }
 
 }

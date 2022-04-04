@@ -12,7 +12,6 @@ import com.example.backstreet_cycles.ui.viewModel.ForgotPasswordViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
-import junit.framework.Assert
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -71,8 +70,8 @@ class ForgotPasswordViewModelTest {
         )
 
         signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        Assert.assertEquals(
-            "Email verification sent",
+        assert(
+            "Email verification sent"==
             signUpViewModel.getMessage().getOrAwaitValue()
         )
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
@@ -81,8 +80,8 @@ class ForgotPasswordViewModelTest {
     @Test
     fun test_email_verification_sent_with_correct_email(){
         forgotPasswordViewModel.resetPassword("johndoe@example.com")
-        Assert.assertEquals(
-            "Password reset link sent to email.",
+        assert(
+            "Password reset link sent to email."==
             forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
         )
     }
@@ -90,8 +89,8 @@ class ForgotPasswordViewModelTest {
     @Test
     fun test_email_verification_not_sent_with_incorrect_email(){
         forgotPasswordViewModel.resetPassword("testuser@random.com")
-        Assert.assertEquals(
-            "There is no user record corresponding to this identifier. The user may have been deleted.",
+        assert(
+            "There is no user record corresponding to this identifier. The user may have been deleted."==
             forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
         )
     }

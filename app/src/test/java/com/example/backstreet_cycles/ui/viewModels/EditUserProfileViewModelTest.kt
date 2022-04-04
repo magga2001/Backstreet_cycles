@@ -12,10 +12,7 @@ import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.ui.viewModel.*
 import dagger.hilt.android.internal.Contexts
 import io.mockk.mockk
-import junit.framework.Assert
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -80,7 +77,7 @@ class EditUserProfileViewModelTest {
             context
         )
         signUpViewModel.register("John","Doe","johndoe@example.com","123456")
-        assertEquals("Email verification sent", signUpViewModel.getMessage().getOrAwaitValue())
+        assert("Email verification sent"== signUpViewModel.getMessage().getOrAwaitValue())
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
     }
 
@@ -88,8 +85,8 @@ class EditUserProfileViewModelTest {
     fun test_update_lastName_unsuccessful_without_logging_in() {
         fakeUserRepoImpl.logOut()
         editUserProfileViewModel.updateUserDetails("test","testLastName")
-        assertEquals(
-                "No User",
+        assert(
+                "No User"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
     }
@@ -98,8 +95,8 @@ class EditUserProfileViewModelTest {
     fun test_update_firstName_unsuccessful_without_logging_in() {
         fakeUserRepoImpl.logOut()
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
-        assertEquals(
-                "No User",
+        assert(
+                "No User"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
     }
@@ -107,8 +104,8 @@ class EditUserProfileViewModelTest {
     fun test_update_lastName_unsuccessful_without_loggin_in() {
         fakeUserRepoImpl.logOut()
         editUserProfileViewModel.updateUserDetails("test","testLastName")
-        assertEquals(
-                "No User",
+        assert(
+                "No User"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
     }
@@ -117,15 +114,15 @@ class EditUserProfileViewModelTest {
     fun test_update_firstName_successfully()
     {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
+        assert(logInViewModel.getFirebaseUserData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("testFirstName","user")
-        assertEquals(
-                "Success",
+        assert(
+                "Success"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        assertEquals(
-                "testFirstName",
+        assert(
+                "testFirstName"==
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
     }
@@ -134,15 +131,15 @@ class EditUserProfileViewModelTest {
     fun test_update_lastName_successfully()
     {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
+        assert(logInViewModel.getFirebaseUserData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("test","testLastName")
-        assertEquals(
-                "Success",
+        assert(
+                "Success"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        Assert.assertEquals(
-                "testLastName",
+        assert(
+                "testLastName"==
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )
     }
@@ -151,19 +148,19 @@ class EditUserProfileViewModelTest {
     fun test_update_lastName_and_first_name_successfully()
     {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
+        assert(logInViewModel.getFirebaseUserData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
         editUserProfileViewModel.updateUserDetails("testFirstName","testLastName")
-        assertEquals(
-                "Success",
+        assert(
+                "Success"==
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
-        assertEquals(
-                "testFirstName",
+        assert(
+                "testFirstName"==
                 fakeUserRepoImpl.getCurrentUser()?.firstName
         )
-        assertEquals(
-                "testLastName",
+        assert(
+                "testLastName"==
                 fakeUserRepoImpl.getCurrentUser()?.lastName
         )
     }

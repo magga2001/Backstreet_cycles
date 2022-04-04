@@ -268,7 +268,7 @@ dependencies {
     androidTestImplementation "io.mockk:mockk-android:1.12.3"
     testImplementation "io.mockk:mockk:1.12.3"
 
-    //Roboelectric
+    //Robolectric
     testImplementation "org.robolectric:robolectric:4.7.3"
 
     //Instrumentation

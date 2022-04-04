@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
-//import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
@@ -16,7 +15,6 @@ import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.internal.Contexts.getApplication
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -141,15 +139,15 @@ class BaseViewModelTest {
     @Test
     fun check_increase_cyclist_boolean_value(){
         baseViewModel.incrementNumCyclists()
-        assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
+        assert( baseViewModel.getIncreaseCyclist().getOrAwaitValue())
     }
 
     @Test
     fun test_increase_cyclist_boolean_value_is_false_when_incremented_with_max_cyclists(){
         add_3_cyclists()
-        assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
+        assert(baseViewModel.getIncreaseCyclist().getOrAwaitValue())
         baseViewModel.incrementNumCyclists()
-        assertEquals(false, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
+        assert(!baseViewModel.getIncreaseCyclist().getOrAwaitValue())
     }
 
     @Test
@@ -157,26 +155,26 @@ class BaseViewModelTest {
         baseViewModel.resetNumCyclists()
         baseViewModel.incrementNumCyclists()
         baseViewModel.decrementNumCyclists()
-        assertEquals(true, baseViewModel.getDecreaseCyclist().getOrAwaitValue())
+        assert(baseViewModel.getDecreaseCyclist().getOrAwaitValue())
     }
 
     @Test
     fun test_check_decrease_cyclist_boolean_value_with_min_cyclists(){
         baseViewModel.resetNumCyclists()
         baseViewModel.decrementNumCyclists()
-        assertEquals(false, baseViewModel.getDecreaseCyclist().getOrAwaitValue())
+        assert(!baseViewModel.getDecreaseCyclist().getOrAwaitValue())
     }
 
     @Test
     fun test_get_current_docks_is_full_after_loading_it() = runBlocking{
         fakeTflRepoImpl.loadDocks()
-        assertEquals(fakeTflRepoImpl.getCurrentDocks(), baseViewModel.getCurrentDocks())
+        assert(fakeTflRepoImpl.getCurrentDocks()== baseViewModel.getCurrentDocks())
     }
 
     @Test
     fun test_current_docks_is_empty_before_loading_it()= runBlocking{
         val emptyList:MutableList<Dock> = mutableListOf()
-        assertEquals(emptyList,fakeTflRepoImpl.getCurrentDocks())
+        assert(emptyList==fakeTflRepoImpl.getCurrentDocks())
     }
 
     @Test
@@ -184,7 +182,7 @@ class BaseViewModelTest {
         val emptyList:MutableList<Dock> = mutableListOf()
         fakeTflRepoImpl.setConnection(false)
         fakeTflRepoImpl.getDocks()
-        assertEquals(emptyList,fakeTflRepoImpl.getCurrentDocks())
+        assert(emptyList==fakeTflRepoImpl.getCurrentDocks())
     }
 
     @Test
@@ -192,24 +190,24 @@ class BaseViewModelTest {
         val docks:MutableList<Dock> = fakeTflRepoImpl.getCurrentDocks()
         fakeTflRepoImpl.setConnection(true)
         fakeTflRepoImpl.getDocks()
-        assertEquals(docks,fakeTflRepoImpl.getCurrentDocks())
+        assert(docks==fakeTflRepoImpl.getCurrentDocks())
     }
 
     @Test
     fun test_get_user_info_first_name(){
         register_user()
-        assertEquals(firstname, baseViewModel.getUserInfo().getOrAwaitValue().firstName)
+        assert(firstname== baseViewModel.getUserInfo().getOrAwaitValue().firstName)
     }
     @Test
     fun test_get_user_info_last_name(){
         register_user()
-        assertEquals(lastname, baseViewModel.getUserInfo().getOrAwaitValue().lastName)
+        assert(lastname== baseViewModel.getUserInfo().getOrAwaitValue().lastName)
     }
 
     @Test
     fun test_get_user_info_email(){
         register_user()
-        assertEquals(email, baseViewModel.getUserInfo().getOrAwaitValue().email)
+        assert(email== baseViewModel.getUserInfo().getOrAwaitValue().email)
     }
 
     private fun add_3_cyclists(){
