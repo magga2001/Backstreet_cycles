@@ -1,4 +1,4 @@
-package com.example.backstreet_cycles.common
+package com.example.backstreet_cycles
 
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.dependencyInjection.AppModule
@@ -6,8 +6,10 @@ import com.example.backstreet_cycles.domain.repositoryInt.*
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import javax.annotation.Nullable
 import javax.inject.Named
 import javax.inject.Singleton
 

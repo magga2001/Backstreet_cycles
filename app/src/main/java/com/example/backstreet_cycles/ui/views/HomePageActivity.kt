@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -90,10 +91,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homepage_mapView?.getMapAsync(this)
 
         homePageViewModel.setUpdateInfo(false)
-
-//        user_name = findViewById(R.id.user_name)
-//        nav_header_textView_email = findViewById(R.id.nav_header_textView_email)
-
         init()
     }
 

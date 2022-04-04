@@ -52,17 +52,11 @@ class JourneyViewModelTest {
     {
         instrumentationContext = ApplicationProvider.getApplicationContext();
         val application = Contexts.getApplication(instrumentationContext)
-        val route = mockk<DirectionsRoute>(relaxed = true)
 
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl(route)
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeTflRepoImpl = FakeTflRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl(
-            TestAppModule.provideFirstName(),
-            TestAppModule.provideLastName(),
-            TestAppModule.provideEmail(),
-            TestAppModule.providePassword()
-        )
+        fakeUserRepoImpl = FakeUserRepoImpl()
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         journeyViewModel = JourneyViewModel(

@@ -20,8 +20,6 @@ plugins {
 
 //project.tasks["sonarqube"].dependsOn "koverReport"
 
-
-
 jacoco {
     toolVersion = '0.8.7'
 }
@@ -321,4 +319,8 @@ configurations.all{
             }
         }
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }

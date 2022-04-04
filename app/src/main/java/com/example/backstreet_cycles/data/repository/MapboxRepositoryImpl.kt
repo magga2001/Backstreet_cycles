@@ -40,29 +40,6 @@ class MapboxRepositoryImpl @Inject constructor(
      * @param routeOptions - An object of Route Options that holds different options
      * @param info - a boolean
      */
-//    override fun requestRoute(
-//        mapboxNavigation: MapboxNavigation,
-//        routeOptions: RouteOptions,
-//        info: Boolean
-//    ): Flow<DirectionsRoute> = callbackFlow {
-//
-//        val callBack = object : CallbackResource<DirectionsRoute> {
-//            override fun getResult(objects: DirectionsRoute) {
-//                trySend(objects)
-//            }
-//        }
-//
-//        mapboxApi.requestRoute(
-//            mapboxNavigation,
-//            routeOptions,
-//            info,
-//            callBack,
-//            mapboxRepository = this@MapboxRepositoryImpl
-//        )
-//
-//        awaitClose { channel.close() }
-//    }
-
     override fun requestRoute(
         mapboxNavigation: MapboxNavigation,
         routeOptions: RouteOptions,
@@ -80,8 +57,6 @@ class MapboxRepositoryImpl @Inject constructor(
                     routerOrigin: RouterOrigin
                 ) {
 
-                    Log.i("retrieving route", "success")
-
                     val fastestRoute = MapInfoHelper.getFastestRoute(routes)
 
                     if (info) {
@@ -95,16 +70,12 @@ class MapboxRepositoryImpl @Inject constructor(
                     }
 
                     trySend(Resource.Success(fastestRoute))
-                    Log.i("THE CURRENT ROUTE", fastestRoute.toString())
                 }
 
                 /**
                  * The callback is triggered if the request to fetch a route was canceled.
                  */
                 override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
-                    // This particular callback is executed if you invoke
-                    //mapboxNavigation.cancelRouteRequest()
-                    Log.i("retrieving route", "cancel")
                     trySend(Resource.Error("Request to fetch a route was canceled"))
                 }
 
@@ -112,8 +83,6 @@ class MapboxRepositoryImpl @Inject constructor(
                  * The callback is triggered if the request to fetch a route failed for any reason.
                  */
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
-                    //Route request fail
-                    Log.i("retrieving route", "fail")
                     trySend(Resource.Error("Fail to fetch the route"))
                 }
             }

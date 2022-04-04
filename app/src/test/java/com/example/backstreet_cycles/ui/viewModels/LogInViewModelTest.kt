@@ -7,7 +7,6 @@ import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
-import com.example.backstreet_cycles.common.TestAppModule
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
@@ -39,9 +38,9 @@ class LogInViewModelTest {
         val application = mockk<BackstreetApplication>(relaxed = true)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl(TestAppModule.provideFirstName(), TestAppModule.provideLastName(), TestAppModule.provideEmail(), TestAppModule.providePassword())
+        fakeUserRepoImpl = FakeUserRepoImpl()
 
         logInViewModel = LogInViewModel(
             fakeTflRepoImpl,
@@ -67,20 +66,20 @@ class LogInViewModelTest {
         register()
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
     }
 
     @Test
     fun test_log_in_with_unverified_email() = runBlocking {
         register()
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("Please verify your email", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+        assertEquals("Please verify your email", logInViewModel.getErrorMessageData().getOrAwaitValue())
     }
 
     @Test
     fun test_log_in_with_unregistered_email() = runBlocking {
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals("No User", logInViewModel.getErrorMessageMutableLiveData().getOrAwaitValue())
+        assertEquals("No User", logInViewModel.getErrorMessageData().getOrAwaitValue())
     }
 
     @Test
@@ -88,7 +87,7 @@ class LogInViewModelTest {
         register()
         fakeUserRepoImpl.verifyEmail("johndoe@example.com")
         logInViewModel.login("johndoe@example.com", "123456")
-        assertEquals(true, logInViewModel.getFirebaseUserMutableLiveData().getOrAwaitValue())
+        assertEquals(true, logInViewModel.getFirebaseUserData().getOrAwaitValue())
         assert(fakeUserRepoImpl.getCurrentUser() != null)
     }
 

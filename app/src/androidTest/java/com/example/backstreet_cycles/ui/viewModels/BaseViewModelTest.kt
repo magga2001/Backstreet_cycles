@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
-import com.example.backstreet_cycles.common.TestAppModule
 //import com.google.common.truth.Truth.assertThat
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
@@ -51,14 +50,9 @@ class BaseViewModelTest {
         val application = getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl(
-            TestAppModule.provideFirstName(),
-            TestAppModule.provideLastName(),
-            TestAppModule.provideEmail(),
-            TestAppModule.providePassword()
-        )
+        fakeUserRepoImpl = FakeUserRepoImpl()
 
         baseViewModel = BaseViewModel(
             fakeTflRepoImpl,
@@ -209,13 +203,13 @@ class BaseViewModelTest {
         assertEquals(email, baseViewModel.getUserInfo().getOrAwaitValue().email)
     }
 
-    fun add_3_cyclists(){
+    private fun add_3_cyclists(){
         baseViewModel.incrementNumCyclists()
         baseViewModel.incrementNumCyclists()
         baseViewModel.incrementNumCyclists()
     }
 
-    fun register_user(){
+    private fun register_user(){
         fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
         baseViewModel.getUserDetails()
     }

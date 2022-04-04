@@ -5,15 +5,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
-import com.example.backstreet_cycles.common.TestAppModule
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
-import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoadingViewModel
-import com.mapbox.api.directions.v5.models.DirectionsRoute
 import dagger.hilt.android.internal.Contexts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -60,14 +56,9 @@ class LoadingViewModelTest {
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
-        fakeMapboxRepoImpl = FakeMapboxRepoImpl(TestAppModule.provideRoute())
+        fakeMapboxRepoImpl = FakeMapboxRepoImpl()
         fakeCyclistRepoImpl = FakeCyclistRepoImpl()
-        fakeUserRepoImpl = FakeUserRepoImpl(
-            TestAppModule.provideFirstName(),
-            TestAppModule.provideLastName(),
-            TestAppModule.provideEmail(),
-            TestAppModule.providePassword()
-        )
+        fakeUserRepoImpl = FakeUserRepoImpl()
         fakeLocationRepoImpl = FakeLocationRepoImpl()
 
         journeyHistoryViewModel = JourneyHistoryViewModel(

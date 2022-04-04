@@ -2,11 +2,22 @@ package com.example.backstreet_cycles.data.repository
 
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthResult
 import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.api.directions.v5.models.RouteOptions
+import com.mapbox.navigation.core.MapboxNavigation
+import com.mapbox.navigator.RouterCallback
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class MapboxRepositoryImplTest{
 
     private lateinit var mapboxRepositoryImpl: MapboxRepositoryImpl
@@ -21,6 +32,17 @@ class MapboxRepositoryImplTest{
     private var locations = mutableListOf<Locations>()
     // The way-points that get the user to the location in the journey
     private val wayPoints = mutableListOf<Locations>()
+
+    //Mock
+
+    @Mock
+    private lateinit var mapboxNavigation: MapboxNavigation
+
+    @Mock
+    private lateinit var routeOptions: RouteOptions
+
+    @Mock
+    private lateinit var routerCallback: RouterCallback
 
 
     @Before
@@ -132,7 +154,18 @@ class MapboxRepositoryImplTest{
         assert(mapboxRepositoryImpl.getJourneyWayPointsLocations().isEmpty())
     }
 
-
+//    @Test
+//    fun `test fetch route success`(){
+//
+//        Mockito.doAnswer {
+//            val listener = it.arguments[0]
+//            listener.onComplete()
+//            successAuthTask
+//        }
+//            .`when`(successAuthTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
+//
+//        Mockito.verify(mapboxNavigation.requestRoutes(routeOptions,)
+//    }
 
     @After
     fun tearDown(){
