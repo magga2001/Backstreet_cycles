@@ -12,6 +12,9 @@ import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 
+/**
+ * Class responsible for managing stops cards inside recycler view inside the Homepage activity
+ */
 class StopsAdapter(private val stops: MutableList<Locations>) :
     RecyclerView.Adapter<StopsAdapter.StopViewHolder>() {
 
