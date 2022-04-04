@@ -209,13 +209,11 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    isReady.postValue(status)
                     updateMap.value = isUpdateMap
                 }
 
                 is Resource.Error -> {
                     //Fail
-//                    message.postValue(result.message!!)
                     message.value = result.message!!
                 }
 
@@ -234,7 +232,6 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    isReady.postValue(status)
                     updateMap.value = isUpdateMap
                     calcJourneyInfo()
                 }

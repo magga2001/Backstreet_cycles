@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.data.remote
 
-import android.util.Log
 import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
@@ -20,9 +19,6 @@ object MapboxApi {
         listener: CallbackResource<DirectionsRoute>,
         mapboxRepository: MapboxRepository
     ) {
-
-        Log.i("retrieving the route", "success")
-
         mapboxNavigation.requestRoutes(
             routeOptions,
             object : RouterCallback {
@@ -33,11 +29,7 @@ object MapboxApi {
                     routes: List<DirectionsRoute>,
                     routerOrigin: RouterOrigin
                 ) {
-
-                    Log.i("retrieving route", "success")
-
                     val fastestRoute = MapInfoHelper.getFastestRoute(routes)
-
                     if (info) {
                         val distance = MapInfoHelper.retrieveJourneyDistances(fastestRoute)
                         val duration = MapInfoHelper.retrieveJourneyDurations(fastestRoute)
@@ -47,7 +39,6 @@ object MapboxApi {
                     } else {
                         mapboxRepository.setJourneyCurrentRoute(fastestRoute)
                     }
-
                     listener.getResult(fastestRoute)
                 }
 
@@ -56,8 +47,6 @@ object MapboxApi {
                  */
                 override fun onCanceled(routeOptions: RouteOptions, routerOrigin: RouterOrigin) {
                     // This particular callback is executed if you invoke
-                    //mapboxNavigation.cancelRouteRequest()
-                    Log.i("retrieving route", "cancel")
                 }
 
                 /**
@@ -65,8 +54,6 @@ object MapboxApi {
                  */
                 override fun onFailure(reasons: List<RouterFailure>, routeOptions: RouteOptions) {
                     //Route request fail
-                    Log.i("retrieving route", "fail")
-//                    listener.getResult(DirectionsRoute.fromJson(""))
                 }
             }
         )

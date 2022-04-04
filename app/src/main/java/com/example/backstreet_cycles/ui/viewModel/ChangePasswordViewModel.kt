@@ -2,18 +2,13 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.service.WorkHelper
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
@@ -37,14 +32,14 @@ class ChangePasswordViewModel @Inject constructor(
     applicationContext
 ) {
 
-    private val updatePassword : MutableLiveData<String> = MutableLiveData()
+    private val updatePassword: MutableLiveData<String> = MutableLiveData()
 
     /**
      * Updating the user's password in the database
      * @param password records current password
      * @param newPassword records the updated password
      */
-     fun updatePassword(password: String, newPassword: String) {
+    fun updatePassword(password: String, newPassword: String) {
         userRepository.updatePassword(password, newPassword).onEach { result ->
             when (result) {
                 is Resource.Success -> {

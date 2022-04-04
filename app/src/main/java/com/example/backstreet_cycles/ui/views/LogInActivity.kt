@@ -11,7 +11,6 @@ import com.example.backstreet_cycles.domain.utils.PermissionHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.coroutines.launch
 

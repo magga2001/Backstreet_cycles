@@ -273,7 +273,6 @@ class JourneyActivity : AppCompatActivity() {
      * Initialise the navigation
      */
     private fun initNavigation() {
-//        mapboxNavigation.setRoutes(currentRoute)
         journeyViewModel.setRoute()
         journeyViewModel.registerObservers(
             routesObserver,
@@ -419,8 +418,6 @@ class JourneyActivity : AppCompatActivity() {
 
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
-//        finish_journey.isEnabled = false
-//        val check = planJourneyAdapter.getViewHolders()
     }
 
     /**

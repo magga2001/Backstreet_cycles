@@ -29,7 +29,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
-class EditUserProfileActivityTest{
+class EditUserProfileActivityTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -46,7 +46,8 @@ class EditUserProfileActivityTest{
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
-            android.Manifest.permission.INTERNET)
+            android.Manifest.permission.INTERNET
+        )
 
     @get:Rule
     val activityRule = ActivityScenarioRule(HomePageActivity::class.java)
@@ -86,14 +87,15 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_check_if_first_name_is_inputted(){
+    fun test_check_if_first_name_is_inputted() {
         onView(withId(R.id.edit_user_details_firstName)).check(matches(isDisplayed()))
         val testInput = "Test"
         onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(testInput))
         onView(withId(R.id.edit_user_details_firstName)).check(matches(withText(testInput)))
     }
+
     @Test
-    fun test_check_if_last_name_is_inputted(){
+    fun test_check_if_last_name_is_inputted() {
         onView(withId(R.id.edit_user_details_lastName)).check(matches(isDisplayed()))
         val testInput = "User"
         onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(testInput))
@@ -101,7 +103,7 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity(){
+    fun test_on_pressBack_go_to_HomePageActivity() {
         pressBack()
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
@@ -109,8 +111,9 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_on_clickUpdateProfile_Empty_firstName(){
-        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText(""),
+    fun test_on_clickUpdateProfile_Empty_firstName() {
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.replaceText(""),
             ViewActions.closeSoftKeyboard()
         )
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
@@ -118,17 +121,21 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_on_clickUpdateProfile_Empty_lastName(){
-        onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Test"),
+    fun test_on_clickUpdateProfile_Empty_lastName() {
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.replaceText("Test"),
             ViewActions.closeSoftKeyboard()
         )
-        onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText(""), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.edit_user_details_lastName)).perform(
+            ViewActions.replaceText(""),
+            ViewActions.closeSoftKeyboard()
+        )
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
         onView(withId(R.id.edit_user_details_lastName)).check(matches(hasErrorText("Please enter your last name")))
     }
 
     @Test
-    fun test_on_clickUpdateProfile_save(){
+    fun test_on_clickUpdateProfile_save() {
         onView(withId(R.id.edit_user_details_firstName)).perform(ViewActions.replaceText("Name"))
         onView(withId(R.id.edit_user_details_lastName)).perform(ViewActions.replaceText("Surname"))
         onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
@@ -138,7 +145,17 @@ class EditUserProfileActivityTest{
     }
 
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+    fun test_trim_first_name_and_last_name() {
+        onView(withId(R.id.edit_user_details_firstName)).perform(
+            ViewActions.typeText("name    "), ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.edit_user_details_lastName)).perform(
+            ViewActions.typeText("lastname   "), ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.edit_user_details_SaveButton)).perform(ViewActions.click())
+    }
+
+    @Test
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
         onView(
             Matchers.allOf(
                 withContentDescription("Navigate up"),

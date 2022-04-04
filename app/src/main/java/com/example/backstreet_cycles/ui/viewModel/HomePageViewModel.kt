@@ -56,19 +56,6 @@ class HomePageViewModel @Inject constructor(
     application,
     applicationContext
 ) {
-
-//    private val mapboxNavigation by lazy {
-//        if (MapboxNavigationProvider.isCreated()) {
-//            MapboxNavigationProvider.retrieve()
-//        } else {
-//            MapboxNavigationProvider.create(
-//                NavigationOptions.Builder(mApplication)
-//                    .accessToken(mApplication.getString(R.string.mapbox_access_token))
-//                    .build()
-//            )
-//        }
-//    }
-
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
@@ -221,45 +208,6 @@ class HomePageViewModel @Inject constructor(
         checkCurrentJourney()
     }
 
-//    /**
-//     * Getter function for the representation of the route of the journey
-//     */
-//    private fun getMapBoxRoute(routeOptions: RouteOptions) {
-//        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
-//            when (result) {
-//                is Resource.Success -> {
-//                    isReady.value = true
-//                }
-//
-//                is Resource.Error -> {
-//                    //Fail
-//                    message.postValue(result.message!!)
-//                }
-//
-//                is Resource.Loading -> {
-//                }
-//            }
-//        }.launchIn(viewModelScope)
-//    }
-
-//    /**
-//     * Receive the route of the journey
-//     * @param context
-//     * @param locations
-//     */
-//    private fun fetchRoute(
-//        context: Context,
-//        locations: MutableList<Locations>
-//    ) {
-//        clearDuplication(locations)
-//        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
-//
-//        clearInfo()
-//        setCurrentWayPoint(locations)
-//        val routeOptions = setCustomiseRoute(context, points)
-//        getMapBoxRoute(routeOptions)
-//    }
-
     /**
      * Display tourist attractions on the map for the user
      * @param symbolManager
@@ -399,11 +347,9 @@ class HomePageViewModel @Inject constructor(
 
     private fun postUpdateInfo() {
         if (getUpdateInfo()) {
-//            updateMutableLiveData.postValue(updateInfo)
             updateMutableLiveData.value = updateInfo
             setUpdateInfo(false)
         } else {
-//            updateMutableLiveData.postValue(updateInfo)
             updateMutableLiveData.value = updateInfo
         }
     }
@@ -432,7 +378,6 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
-//            showAlert.postValue(true)
             showAlert.value = true
         }
         else {
@@ -449,7 +394,6 @@ class HomePageViewModel @Inject constructor(
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
             isReady.value = true
-//            fetchRoute(mContext, listOfLocations)
         } else {
             hasCurrentJourney.value = false
         }
@@ -460,10 +404,6 @@ class HomePageViewModel @Inject constructor(
      */
     override fun continueWithCurrentJourney() {
         super.continueWithCurrentJourney()
-//        fetchRoute(
-//            mContext,
-//            getJourneyLocations(),
-//        )
         isReady.value = true
     }
 
@@ -473,25 +413,8 @@ class HomePageViewModel @Inject constructor(
      */
     override fun continueWithNewJourney(newStops: MutableList<Locations>) {
         super.continueWithNewJourney(newStops)
-//        fetchRoute(
-//            mContext,
-//            newStops,
-//        )
         isReady.value = true
     }
-
-//    /**
-//     * Obtain necessary data to save the journey
-//     */
-//    fun saveJourney() {
-//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
-//        SharedPrefHelper.overrideSharedPref(
-//            mutableListOf(getNumCyclists().toString()),
-//            String::class.java
-//        )
-//        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
-//        SharedPrefHelper.overrideSharedPref(getJourneyLocations(), Locations::class.java)
-//    }
 
     fun cancelWork() {
         WorkHelper.cancelWork(mContext)
@@ -516,22 +439,6 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
-
-//    /**
-//     * Getter function to return the Mapbox navigation
-//     * @return MapboxNavigation
-//     */
-//    fun getMapBoxNavigation(): MapboxNavigation {
-//        return mapboxNavigation
-//    }
-//
-//    /**
-//     * Terminate the Mapbox navigation
-//     */
-//    fun destroyMapboxNavigation() {
-//        MapboxNavigationProvider.destroy()
-//        mapboxNavigation.onDestroy()
-//    }
 
     /**
      * Setting state of showing an alert

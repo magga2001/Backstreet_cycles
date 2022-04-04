@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
@@ -44,14 +43,12 @@ class ForgotPasswordViewModel @Inject constructor(
         userRepository.resetPassword(email).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    resetPassword.postValue(result.data!!)
                     resetPassword.value = result.data!!
                 }
 
                 is Resource.Error -> {
                     resetPassword.value = result.message!!
                 }
-
                 is Resource.Loading -> {
                 }
             }

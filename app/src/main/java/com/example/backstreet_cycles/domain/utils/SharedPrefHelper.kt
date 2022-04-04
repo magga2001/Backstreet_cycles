@@ -3,7 +3,6 @@ package com.example.backstreet_cycles.domain.utils
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object SharedPrefHelper {
 
@@ -65,7 +64,6 @@ object SharedPrefHelper {
     fun <T> getSharedPref(type: Class<T>): MutableList<T> {
         val serializedObject: String? =
             sharedPref.getString(key, null)
-        Log.i("serializedObject", serializedObject.toString())
         return if (serializedObject != null) {
             JsonHelper.stringToObject(serializedObject, type)!!.toMutableList()
         } else {

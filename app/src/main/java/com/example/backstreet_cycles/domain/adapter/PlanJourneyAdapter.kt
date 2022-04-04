@@ -32,7 +32,6 @@ class PlanJourneyAdapter(
     private val tvFrom: List<String>
 ) : RecyclerView.Adapter<PlanJourneyAdapter.ViewHolder>() {
 
-//    private val checkedBoxesLiveData: MutableLiveData<List<TextView>> = MutableLiveData()
     private var viewHolders: MutableList<ViewHolder> = emptyList<ViewHolder>().toMutableList()
     private val allBoxesCheckedMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val collapseBottomSheet: MutableLiveData<Boolean> = MutableLiveData()
@@ -110,8 +109,6 @@ class PlanJourneyAdapter(
 
         if (checkCheckedBoxInSharePref(holder.tvFrom.text.toString())){
             holder.checkBoxButton.isChecked = true
-//            holder.expandButton.isEnabled = !holder.checkBoxButton.isChecked
-//            checkCurrentCheckBox(holder)
         }
         enableExpandButton(holder)
 

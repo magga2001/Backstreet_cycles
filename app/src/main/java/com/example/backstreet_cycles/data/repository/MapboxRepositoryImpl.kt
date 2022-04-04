@@ -1,7 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.util.Log
-import com.example.backstreet_cycles.common.CallbackResource
+
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.domain.model.dto.Locations
