@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
+import androidx.arch.core.executor.testing.CountingTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -9,6 +11,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
@@ -32,10 +35,14 @@ class SignUpActivityTest {
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val countingTaskExecutorRule = CountingTaskExecutorRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -45,13 +52,12 @@ class SignUpActivityTest {
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
+    @get:Rule
+    val activityRule = ActivityScenarioRule(SignUpActivity::class.java)
+
     @Before
     fun setUp() {
-        userRepoImpl.logOut()
         hiltRule.inject()
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        ActivityScenario.launch(LogInActivity::class.java)
-        onView(withId(R.id.log_in_buttonCreateAccount)).perform(click())
     }
 
     @Test
@@ -186,8 +192,4 @@ class SignUpActivityTest {
         onView(withId(R.id.buttonSignUp)).perform(click())
     }
 
-    @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-    }
 }

@@ -11,6 +11,7 @@ import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.domain.model.dto.Dock
+import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.BaseViewModel
 import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
@@ -43,6 +44,12 @@ class BaseViewModelTest {
     val lastname = "User"
     val email = "testuser@gmail.com"
     val password = "123456"
+
+    private val locations = mutableListOf<Locations>(
+        Locations("Current Location",51.5081,-0.0759),
+        Locations("Tate Modern",51.5076,-0.0994 ),
+        Locations("St Paul's Cathedral",51.5138,-0.0984 )
+    )
 
     @Before
     fun setUp() {
@@ -212,7 +219,7 @@ class BaseViewModelTest {
     }
 
     private fun register_user(){
-        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password)
+        fakeUserRepoImpl.addMockUser(firstname,lastname,email,password, locations)
         baseViewModel.getUserDetails()
     }
 

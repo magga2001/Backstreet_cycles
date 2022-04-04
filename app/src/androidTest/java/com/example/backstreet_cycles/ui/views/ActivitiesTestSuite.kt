@@ -10,16 +10,17 @@ import org.junit.runners.Suite
     SplashScreenActivityTest::class,
     SignUpActivityTest::class,
     LogInActivityTest::class,
-    HomePageActivityTest::class,
+//    HomePageActivityTest::class,
     EditUserProfileActivityTest::class,
-    JourneyActivityTest::class,
+//    JourneyActivityTest::class,
     AboutActivityTest::class,
-    JourneyHistoryActivityTest::class,
+//    JourneyHistoryActivityTest::class,
+//    LoadingActivityTest::class.java,
     NavMenuTest::class,
     ChangePasswordActivityTest::class,
     FAQActivityTest::class,
     ForgotPasswordActivityTest::class,
-    // NavigationActivityTest::class,
+    NavigationActivityTest::class,
 )
 
 class ActivitiesTestSuite
