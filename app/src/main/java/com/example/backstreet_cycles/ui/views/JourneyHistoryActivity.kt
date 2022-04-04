@@ -85,6 +85,9 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
     private fun initCardView() {
 
+        if(journeys.size == 0){
+            SnackBarHelper.displaySnackBar(recentJourney_layout, "No history recorded")
+        }
         nAdapter = JourneyHistoryAdapter(journeys)
         nAdapter.setOnItemClickListener(object : JourneyHistoryAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {

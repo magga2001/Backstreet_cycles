@@ -81,6 +81,7 @@
     <string name="list_of_stops">Journey Summary:</string>
     <string name="from_to_">From To</string>
     <string name="recent_journeys">Recent Journeys</string>
+    <string name="sorted_by_most_recent_journey">Sorted by most recent journey</string>
 
     <!-- About -->
     <string name="about_us">About us</string>
@@ -150,6 +151,5 @@
     <string name="from">"From: %1$s "</string>
     <string name="to">"To: %1$s "</string>
     <string name="no_connection">No connection. Please connect to internet</string>
-
 
 </resources>
