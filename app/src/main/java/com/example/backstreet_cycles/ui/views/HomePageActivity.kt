@@ -630,7 +630,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     /**
-     *
+     * Called when the overall system is running low on memory,
+     * and actively running processes should trim their memory usage
      */
     override fun onLowMemory() {
         super.onLowMemory()
