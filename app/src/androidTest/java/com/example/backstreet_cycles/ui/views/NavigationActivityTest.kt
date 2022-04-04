@@ -17,10 +17,12 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -62,7 +64,15 @@ class NavigationActivityTest {
 
 //    @Test
 //    fun navigation_mapView_is_displayed(){
-//        onView(withId(R.id.navigation_mapView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+////        sleep(1500)
+////        onView(withId(R.id.navigation_mapView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        //onView(withId(R.id.navigation_mapView)).check(matches(isDisplayed()))
+//
+//        onView(
+//            Matchers.allOf(
+//                withId(R.id.navigation_mapView),
+//                withParent(withId(R.id.nav_header_layout))
+//            )).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 //    }
 
     @Test
