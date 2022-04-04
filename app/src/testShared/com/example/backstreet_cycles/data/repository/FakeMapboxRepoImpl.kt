@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute): MapboxRepository{
+class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute?): MapboxRepository{
+
+    constructor() : this(null)
 
     private var testCurrentRoute = mutableListOf<DirectionsRoute>()
     private val testDistances = mutableListOf<Double>()
@@ -29,7 +31,9 @@ class FakeMapboxRepoImpl @Inject constructor(route: DirectionsRoute): MapboxRepo
     }
 
     init {
-        setJourneyCurrentRoute(route)
+        if(route != null){
+            setJourneyCurrentRoute(route)
+        }
     }
 
     override fun requestRoute(

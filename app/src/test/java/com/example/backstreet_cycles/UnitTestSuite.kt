@@ -6,8 +6,6 @@ import com.example.backstreet_cycles.data.repository.CyclistRepositoryImplTest
 import com.example.backstreet_cycles.data.repository.LocationRepositoryImplTest
 import com.example.backstreet_cycles.data.repository.MapboxRepositoryImplTest
 import com.example.backstreet_cycles.data.repository.TflRepositoryImplTest
-import com.example.backstreet_cycles.domain.utils.ConvertHelperTest
-import com.example.backstreet_cycles.domain.utils.MapInfoHelperTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -20,8 +18,8 @@ import org.junit.runners.Suite
     MapboxRepositoryImplTest::class,
     TflRepositoryImplTest::class,
     ConstantsTest::class,
-    ConvertHelperTest::class,
-    MapInfoHelperTest::class
+//    ConvertHelperTest::class,
+//    MapInfoHelperTest::class
 //    UserRepositoryImplTest::class
 )
 

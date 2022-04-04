@@ -19,25 +19,22 @@ class FakeUserRepoImpl @Inject constructor(
     @Named("lastName") lastName: String,
     @Named("email") email: String,
     @Named("password") password: String
-)
-    : UserRepository{
+) : UserRepository{
+
+    constructor() : this("", "", "", "")
 
     private val PASSWORD_MINIMUM_LENGTH = 6
-
     private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
     private var verifiedUser: HashMap<String, Boolean> = hashMapOf()
     private var currentUser: Users? = null
     private val validEmail: String = "@example.com"
 
     init {
-        Log.i("user", firstName)
-        EspressoIdlingResource.increment()
-        addMockUser(firstName, lastName, email, password)
-//        register(firstName, lastName, email, password)
-//        verifyEmail(email)
-//        login(email, password)
-        Log.i("users", currentUser.toString())
-        EspressoIdlingResource.decrement()
+        if(firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
+            EspressoIdlingResource.increment()
+            addMockUser(firstName, lastName, email, password)
+            EspressoIdlingResource.decrement()
+        }
     }
 
     override fun register(
