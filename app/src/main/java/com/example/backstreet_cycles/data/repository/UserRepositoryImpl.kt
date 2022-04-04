@@ -44,8 +44,9 @@ class UserRepositoryImpl(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     trySend(Resource.Success("EMAIL VERIFICATION BEING SENT TO:  $email"))
+
                 } else {
-                    trySend(Resource.Error<String>(task.exception!!.localizedMessage))
+                    trySend(Resource.Error<String>(" The email is badly formatted"))
                 }
             }
 
@@ -121,14 +122,13 @@ class UserRepositoryImpl(
 
     override fun updatePassword(password: String, newPassword: String): Flow<Resource<String>> = callbackFlow {
 
-        val credential =
-            EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
+        val credential = EmailAuthProvider.getCredential(firebaseAuth.currentUser!!.email!!, password)
 
         firebaseAuth.currentUser!!.reauthenticate(credential).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
                 Timber.tag("value").w("User re-authenticated.")
-                val user = FirebaseAuth.getInstance().currentUser
+                val user = firebaseAuth.currentUser
                 if (newPassword.isNotEmpty()) {
                     user!!.updatePassword(newPassword).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -158,18 +158,16 @@ class UserRepositoryImpl(
                         for (document in task.result) {
                             val userDetails = document.toObject(Users::class.java)
                             trySend(Resource.Success(userDetails))
-                            EspressoIdlingResource.decrement()
                         }
                     }
                 }
         } catch(e: Exception) {
             trySend(Resource.Error<Users>("No user"))
-                        EspressoIdlingResource.decrement()
 
         }
-//        finally {
-//            EspressoIdlingResource.decrement()
-//        }
+        finally {
+            EspressoIdlingResource.decrement()
+        }
 
         awaitClose { channel.close() }
 
@@ -194,7 +192,9 @@ class UserRepositoryImpl(
                     }
                 } else {
 
-                    trySend(Resource.Error<Boolean>(task.exception!!.localizedMessage))
+                    trySend(Resource.Error<Boolean>(
+                            " The password is invalid or the user does not have a password")
+                    )
                     EspressoIdlingResource.decrement()
                 }
             }
@@ -203,11 +203,13 @@ class UserRepositoryImpl(
     }
 
     override fun resetPassword(email: String): Flow<Resource<String>> = callbackFlow  {
-        FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
+        firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 trySend(Resource.Success("Password reset link sent to email."))
             } else {
-                trySend(Resource.Error<String>(task.exception!!.message.toString()))
+                trySend(Resource.Error<String>(
+                    "There is no user record corresponding to this identifier. The user may have been deleted")
+                )
             }
         }
 
