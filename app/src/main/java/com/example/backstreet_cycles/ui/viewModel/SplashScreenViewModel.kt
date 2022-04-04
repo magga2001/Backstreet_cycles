@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Splash Screen Activity responsible for fethcing application data from API
+ */
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
     tflRepository: TflRepository,

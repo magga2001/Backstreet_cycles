@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Log In Activity responsible for log in the user
+ */
 @HiltViewModel
 class LogInViewModel @Inject constructor(
     tflRepository: TflRepository,

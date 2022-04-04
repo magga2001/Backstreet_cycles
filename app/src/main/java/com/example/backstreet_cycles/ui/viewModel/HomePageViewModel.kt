@@ -39,6 +39,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Home Page Activity responsible for implementing map with locations and adding stops for a journey
+ */
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
     tflRepository: TflRepository,

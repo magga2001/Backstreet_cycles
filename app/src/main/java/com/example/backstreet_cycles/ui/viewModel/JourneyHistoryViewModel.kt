@@ -21,6 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Journey History Activity responsible for storing previous journeys and the current journey if one exists
+ */
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
     tflRepository: TflRepository,

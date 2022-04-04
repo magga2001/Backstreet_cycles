@@ -30,7 +30,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-
+/**
+ * View model for Journey Activity responsible for getting journey route, price and statistics
+ */
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
     tflRepository: TflRepository,

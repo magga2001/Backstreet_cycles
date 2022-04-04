@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Sign Up Activity responsible for creating sign up page
+ */
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     tflRepository: TflRepository,

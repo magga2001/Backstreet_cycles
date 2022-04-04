@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Edit User Profile Activity responsible for profile update
+ */
 @HiltViewModel
 class EditUserProfileViewModel @Inject constructor(
     tflRepository: TflRepository,

@@ -22,6 +22,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Navigation Activity that launches navigation
+ */
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
     tflRepository: TflRepository,
