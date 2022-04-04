@@ -30,6 +30,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 
+/**
+ * Class for sending notification to the user about the dock updates
+ */
 @HiltWorker
 class WorkerService @AssistedInject constructor(
     @Assisted context: Context,
