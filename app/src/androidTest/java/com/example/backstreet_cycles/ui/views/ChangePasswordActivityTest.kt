@@ -63,12 +63,12 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_activity_launched_title_displayed() {
+    fun test_title_is_displayed() {
         onView(withId(R.id.change_password_title)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_activity_launched_user_email_displayed() {
+    fun test_user_email_is_displayed() {
         onView(withId(R.id.change_password_email)).check(matches(isDisplayed()))
     }
 
@@ -88,7 +88,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_activity_launched_text_field_current_password() {
+    fun test_current_password_is_checked() {
         onView(withId(R.id.change_password_currentPassword)).check(matches(isDisplayed()))
         val testInput = "password"
         onView(withId(R.id.change_password_currentPassword)).perform(typeText(testInput))
@@ -102,7 +102,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_activity_launched_text_field_new_password() {
+    fun test_new_password_is_checked() {
         onView(withId(R.id.change_password_NewPassword)).check(matches(isDisplayed()))
         val testInput = "password"
         onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput))
@@ -116,7 +116,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_trims_fullname(){
+    fun test_trim_fullName(){
         onView(withId(R.id.change_password_currentPassword)).perform(ViewActions.replaceText("123456   "))
         onView(withId(R.id.change_password_NewPassword)).perform(ViewActions.replaceText("   696969"))
         onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
@@ -214,7 +214,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
+    fun test_on_press_back_go_to_HomePageActivity() {
         pressBack()
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
@@ -222,7 +222,7 @@ class ChangePasswordActivityTest {
     }
 
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
+    fun test_on_press_top_back_button_go_to_HomePageActivity() {
 
         onView(
             Matchers.allOf(

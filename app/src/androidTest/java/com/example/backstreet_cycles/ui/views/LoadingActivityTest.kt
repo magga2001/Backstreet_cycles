@@ -145,7 +145,6 @@ class LoadingActivityTest {
         onView(withId(R.id.nextPageButton)).perform(click())
         onView(withText("Create New Journey")).perform(click())
         onView(withId(R.id.loadingActivity_GifImage)).check(matches(isDisplayed()))
-
     }
     @Test
     fun test_loading_activity_test_is_displayed() {
