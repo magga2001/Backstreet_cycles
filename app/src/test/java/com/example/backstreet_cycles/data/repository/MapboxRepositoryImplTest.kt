@@ -42,7 +42,7 @@ class MapboxRepositoryImplTest{
 
     @Before
     fun setUp(){
-        mapboxRepositoryImpl = MapboxRepositoryImpl()
+        mapboxRepositoryImpl = MapboxRepositoryImpl(MapboxApi)
     }
 
     @Test
