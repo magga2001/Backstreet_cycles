@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_loading.*
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class LoadingActivity() : AppCompatActivity() {
 
@@ -61,6 +60,9 @@ class LoadingActivity() : AppCompatActivity() {
         }
     }
 
+    /**
+     * Terminate the Loading display when back button is clicked and go to HomePage
+     */
     private fun onBackHomePage(){
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -69,6 +71,10 @@ class LoadingActivity() : AppCompatActivity() {
         }, Constants.INFORM_SPLASH_TIME)
     }
 
+    /**
+     * Resets the Mapbox Navigation inside the journeyHistoryViewModel
+     * each time the Loading activity starts
+     */
     override fun onStart() {
         super.onStart()
         loadingViewModel.destroyMapboxNavigation()
