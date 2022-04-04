@@ -148,10 +148,8 @@
     <string name="destination">destination</string>
     <string name="from">"From: %1$s "</string>
     <string name="to">"To: %1$s "</string>
-
-
-
-
     <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
+    <string name="no_connection">No connection. Please connect to internet</string>
+
 
 </resources>

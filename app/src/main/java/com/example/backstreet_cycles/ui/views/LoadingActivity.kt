@@ -38,7 +38,7 @@ class LoadingActivity() : AppCompatActivity() {
 
         if(!hasConnection()){
 
-            SnackBarHelper.displaySnackBar(loadingActivity, "No connection. Please connect to the internet")
+            SnackBarHelper.displaySnackBar(loadingActivity, getString(R.string.no_connection))
             onNoConnection()
 
         }else{

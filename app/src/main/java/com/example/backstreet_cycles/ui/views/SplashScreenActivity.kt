@@ -43,7 +43,7 @@ class SplashScreenActivity() : AppCompatActivity() {
         if(!hasConnection()) {
             SnackBarHelper.displaySnackBar(
                 splashScreenActivity,
-                "No connection. Please connect to internet"
+                getString(R.string.no_connection)
             )
         }
 
