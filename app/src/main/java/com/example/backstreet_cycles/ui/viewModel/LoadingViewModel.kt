@@ -99,9 +99,6 @@ class LoadingViewModel @Inject constructor(
                     message.value = result.message!!
                     isReady.value = false
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }

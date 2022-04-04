@@ -97,9 +97,6 @@ class JourneyViewModel @Inject constructor(
                     tflRepository.setCurrentDocks(docks!!.toMutableList())
 
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }
@@ -216,9 +213,6 @@ class JourneyViewModel @Inject constructor(
                 is Resource.Error -> {
                     message.value = result.message!!
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }
@@ -238,9 +232,6 @@ class JourneyViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     message.value = result.message!!
-                }
-
-                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
@@ -338,9 +329,6 @@ class JourneyViewModel @Inject constructor(
                 is Resource.Error -> {
                     message.value = result.message!!
                     isReady.value = false
-                }
-
-                is Resource.Loading -> {
                 }
             }
 

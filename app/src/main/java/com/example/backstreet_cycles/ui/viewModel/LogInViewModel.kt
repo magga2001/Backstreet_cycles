@@ -56,9 +56,6 @@ class LogInViewModel @Inject constructor(
                 is Resource.Error -> {
                     errorMessageData.value = mApplication.getString(R.string.LOG_IN_FAILED) + result.message!!
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }

@@ -100,9 +100,6 @@ open class BaseViewModel @Inject constructor(
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
-
-                }
-                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
@@ -279,8 +276,6 @@ open class BaseViewModel @Inject constructor(
                     tflRepository.setCurrentDocks(docks!!.toMutableList())
 
                 }
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }
@@ -342,14 +337,14 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Get number of cyclist incremented by 1
+     * Get number of cyclist incremented by 1 mutable live data
      */
     fun getIncreaseCyclist(): MutableLiveData<Boolean> {
         return increaseCyclist
     }
 
     /**
-     * Get number of cyclist decremented by 1
+     * Get number of cyclist decremented by 1 mutable live data
      */
     fun getDecreaseCyclist(): MutableLiveData<Boolean> {
         return decreaseCyclist
