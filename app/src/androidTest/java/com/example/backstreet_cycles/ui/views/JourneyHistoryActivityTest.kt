@@ -115,35 +115,6 @@ class JourneyHistoryActivityTest {
             )).check(matches(isDisplayed()))
     }
 
-
-    //NOT WORKING -_-
-//    @Test
-//    fun test_on_pressBack_go_to_HomePageActivity() {
-////        ActivityScenario.launch(HomePageActivity::class.java)
-////        onView(
-////            Matchers.allOf(
-////                withId(R.id.journeyHistory),
-////                childAtPosition(
-////                    Matchers.allOf(
-////                        withId(R.id.design_navigation_view),
-////                        childAtPosition(
-////                            withId(R.id.homepage_nav_view),
-////                            0
-////                        )
-////                    ),
-////                    3
-////                ),
-////                isDisplayed()
-////            )
-////        ).perform(ViewActions.click())
-////        sleep(1000)
-//        pressBack()
-//        //sleep(1000)
-//        Intents.init()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//        Intents.release()
-//    }
-
     @Test
     fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
 

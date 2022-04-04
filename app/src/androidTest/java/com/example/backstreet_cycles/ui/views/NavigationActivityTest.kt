@@ -62,19 +62,6 @@ class NavigationActivityTest {
         Intents.release()
     }
 
-//    @Test
-//    fun navigation_mapView_is_displayed(){
-////        sleep(1500)
-////        onView(withId(R.id.navigation_mapView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        //onView(withId(R.id.navigation_mapView)).check(matches(isDisplayed()))
-//
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.navigation_mapView),
-//                withParent(withId(R.id.nav_header_layout))
-//            )).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//    }
-
     @Test
     fun navigation_tripProgressCard_is_displayed(){
         onView(withId(R.id.tripProgressCard)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
@@ -88,12 +75,6 @@ class NavigationActivityTest {
     fun navigation_imageViewStop_is_displayed(){
         onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
-
-//    @Test
-//    fun navigation_maneuverView_is_displayed(){
-////        onView(isRoot()).perform(waitFor(2000))
-//        onView(withId(R.id.maneuverView)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
-//    }
 
     @Test
     fun navigation_soundButton_is_displayed(){
@@ -126,13 +107,4 @@ class NavigationActivityTest {
         Intents.release()
     }
 
-//    private fun waitFor(delay: Long): ViewAction {
-//        return object : ViewAction {
-//            override fun getConstraints(): Matcher<View> = isRoot()
-//            override fun getDescription(): String = "wait for $delay milliseconds"
-//            override fun perform(uiController: UiController, v: View?) {
-//                uiController.loopMainThreadForAtLeast(delay)
-//            }
-//        }
-//    }
 }

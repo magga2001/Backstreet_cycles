@@ -2,7 +2,9 @@ package com.example.backstreet_cycles.domain.utils
 
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.google.common.collect.ImmutableList
 import com.mapbox.geojson.Point
+import junit.framework.Assert.assertTrue
 import org.junit.Test
 
 class ConvertHelperTest {
@@ -42,6 +44,34 @@ class ConvertHelperTest {
     fun `test if you convert milliseconds to seconds`(){
         val durations = listOf(60.0, 60.0)
         assert(ConvertHelper.convertMsToS(durations) == 2)
+    }
+
+
+    @Test
+    fun test_get_location_names(){
+
+
+        val locationList = listOf(
+            Locations("St Paul’s Cathedral", 51.5138, -0.0984),
+            Locations("Tower of London",51.5081, -0.0759),
+            Locations("Tate Modern",51.5076, -0.0994 )
+        )
+
+        val result = ConvertHelper.getLocationNames(locationList)
+
+        val expectedResult = listOf(
+            "St Paul’s Cathedral",
+            "Tower of London",
+            "Tate Modern"
+        )
+
+//        assertTrue(
+//                result.size == expectedResult.size
+//                && result.containsAll(expectedResult)
+//                && expectedResult.containsAll(result)
+//        )
+
+        assert(result.containsAll(expectedResult))
     }
 
 }
