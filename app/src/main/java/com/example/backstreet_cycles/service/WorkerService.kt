@@ -37,6 +37,9 @@ class WorkerService @AssistedInject constructor(
     private val tflRepository: TflRepository,
 ) : Worker(context, userParameters) {
 
+    /**
+     *  Start worker service
+     */
     override fun doWork(): Result {
 
         runBlocking { attemptNotification() }
@@ -44,6 +47,9 @@ class WorkerService @AssistedInject constructor(
         return Result.success()
     }
 
+    /**
+     *  Run update and notify user about the new dock
+     */
     private suspend fun attemptNotification() {
 
 
@@ -70,6 +76,9 @@ class WorkerService @AssistedInject constructor(
         }
     }
 
+    /**
+     *  Check for a new dock based on the current docks locations and number of users
+     */
     private fun checkUpdate(docks: MutableList<Dock>?): Boolean {
         SharedPrefHelper.initialiseSharedPref(
             getApplication(applicationContext),
@@ -86,6 +95,9 @@ class WorkerService @AssistedInject constructor(
         return checkForNewDock(currentDocks, docks, numUser)
     }
 
+    /**
+     *  Check if there is a new dock with free spaces
+     */
     private fun checkForNewDock(
         currentDocks: MutableList<Point>,
         docks: MutableList<Dock>?,
@@ -116,6 +128,9 @@ class WorkerService @AssistedInject constructor(
         return true
     }
 
+    /**
+     *  Create a notification channel
+     */
     private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -133,6 +148,9 @@ class WorkerService @AssistedInject constructor(
         }
     }
 
+    /**
+     *  Create notification for a new Journey update
+     */
     private fun notificationTapAction(context: Context) {
         // Create an explicit intent for an Activity in your app
 
@@ -163,6 +181,9 @@ class WorkerService @AssistedInject constructor(
         showNotification(context, notificationBuilder)
     }
 
+    /**
+     *  Display notification
+     */
     private fun showNotification(
         context: Context,
         notificationBuilder: NotificationCompat.Builder
