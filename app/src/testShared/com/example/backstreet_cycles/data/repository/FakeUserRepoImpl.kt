@@ -156,9 +156,9 @@ class FakeUserRepoImpl @Inject constructor(
     override fun resetPassword(email: String): Flow<Resource<String>> = flow{
         if(users.containsKey(email))
         {
-            emit(Resource.Success("Reset password sent"))
+            emit(Resource.Success("Password reset link sent to email."))
         }else{
-            emit(Resource.Error("No User"))
+            emit(Resource.Error("There is no user record corresponding to this identifier. The user may have been deleted."))
         }
     }
 

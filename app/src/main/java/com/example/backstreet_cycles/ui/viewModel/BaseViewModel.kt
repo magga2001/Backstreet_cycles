@@ -332,6 +332,18 @@ open class BaseViewModel @Inject constructor(
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    open fun clearAllSharedPreferences(){
+
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
+        SharedPrefHelper.clearSharedPreferences()
+    }
+
     /**
      * Get number of cyclist incremented by 1
      */

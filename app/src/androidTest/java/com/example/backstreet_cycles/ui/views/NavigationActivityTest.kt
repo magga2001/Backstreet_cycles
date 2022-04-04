@@ -125,21 +125,37 @@ class NavigationActivityTest {
 
     }
 
-    @Test
-    fun test_click_navigation_cancelButton(){
-        onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        //waitFor(5500)
-        onView(withId(R.id.stop)).perform(click())
-        Intents.init()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-        Intents.release()
-
-    }
+//    @Test
+//    fun test_click_navigation_cancelButton(){
+//        onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        //waitFor(5500)
+//        onView(withId(R.id.stop)).perform(click())
+//        Intents.init()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        Intents.release()
+//
+//    }
 
     @After
     fun tearDown(){
         fakeUserRepoImpl.logOut()
     }
+//    @Test
+//    fun test_click_on_cancel_journey(){
+////        addStop("Covent Garden")
+////        onView(withId(R.id.nextPageButton)).perform(click())
+////        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+////        waitFor(3500)
+////        onView(withId(R.id.planJourney_button_expand)).perform(click())
+////        waitFor(3500)
+////        onView(withId(R.id.setNav1)).perform(click())
+////        waitFor(1500)
+//        onView(withId(R.id.stop)).perform(click())
+//        Intents.init()
+//        intending(hasComponent(LoadingActivity::class.qualifiedName))
+//        Intents.release()
+//
+//    }
 
     private fun waitFor(delay: Long): ViewAction {
         return object : ViewAction {

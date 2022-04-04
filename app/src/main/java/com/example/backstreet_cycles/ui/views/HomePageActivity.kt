@@ -25,6 +25,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -125,7 +126,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Greets the user in the nav menu
         homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                Log.i("userssss", firebaseUser.firstName.toString())
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
             }
@@ -538,13 +538,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }
@@ -625,12 +623,11 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onStart()
         homepage_mapView?.onStart()
         homePageViewModel.getUserDetails()
-//        homePageViewModel.destroyMapboxNavigation()
-//        homePageViewModel.getMapBoxNavigation()
     }
 
     /**
-     *
+     * Called when the overall system is running low on memory,
+     * and actively running processes should trim their memory usage
      */
     override fun onLowMemory() {
         super.onLowMemory()
