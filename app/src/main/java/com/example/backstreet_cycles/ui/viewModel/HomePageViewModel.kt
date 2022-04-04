@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Constants
@@ -380,6 +379,7 @@ class HomePageViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
+            showAlert.value = true
             setShowAlert(true)
         }
         else {
@@ -397,6 +397,7 @@ class HomePageViewModel @Inject constructor(
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
             isReady.value = true
+            hasCurrentJourney.value = false
         } else {
             hasCurrentJourney.value = false
         }

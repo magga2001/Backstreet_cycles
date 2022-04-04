@@ -7,8 +7,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.*
-import java.nio.charset.Charset
-import java.util.concurrent.CopyOnWriteArrayList
 
 object JsonHelper {
 
@@ -22,15 +20,6 @@ object JsonHelper {
             }
         }
     }
-
-    /**
-     *
-     */
-//    fun writeJsonToResources(application: Application, json: String, resourceId: Int) {
-//        val writeFile: String = application.resources.getResourceName(resourceId)
-//        File(writeFile).writeText(json)
-//    }
-
 
     /**
      * Write to Json file

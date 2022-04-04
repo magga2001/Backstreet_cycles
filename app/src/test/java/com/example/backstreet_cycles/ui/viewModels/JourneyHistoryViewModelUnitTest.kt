@@ -73,4 +73,5 @@ class JourneyHistoryViewModelUnitTest {
         journeyHistoryViewModel.clearAllStops()
         assertEquals(0, journeyHistoryViewModel.getStops().size)
     }
+
 }

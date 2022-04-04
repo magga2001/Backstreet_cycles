@@ -7,12 +7,11 @@ import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-open class TflRepositoryImpl @Inject constructor(
+class TflRepositoryImpl @Inject constructor(
     private val tflApi: TflApi
 ) : TflRepository {
 

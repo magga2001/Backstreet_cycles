@@ -1,11 +1,7 @@
 package com.example.backstreet_cycles.dependencyInjection
 
-import android.app.Application
-import android.content.Context
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
-import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.repositoryInt.*
@@ -16,8 +12,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.internal.Contexts.getApplication
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -53,14 +47,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMapboxApi(): MapboxApi {
-        return MapboxApi
-    }
-
-    @Provides
-    @Singleton
-    fun provideMapboxRepository(api: MapboxApi): MapboxRepository {
-        return MapboxRepositoryImpl(api)
+    fun provideMapboxRepository(): MapboxRepository {
+        return MapboxRepositoryImpl()
     }
 
     @Provides
@@ -93,9 +81,4 @@ object AppModule {
     fun provideUserRepository(firebaseAuth: FirebaseAuth, fireStore: FirebaseFirestore): UserRepository {
         return UserRepositoryImpl(firebaseAuth, fireStore)
     }
-
-//    @Provides
-//    fun provideApplication(): BackstreetApplication{
-//        return BackstreetApplication()
-//    }
 }

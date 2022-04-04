@@ -1,9 +1,7 @@
 package com.example.backstreet_cycles.data.repository
 
-import android.util.Log
-import com.example.backstreet_cycles.common.CallbackResource
+
 import com.example.backstreet_cycles.common.Resource
-import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
@@ -16,11 +14,8 @@ import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import javax.inject.Inject
 
-class MapboxRepositoryImpl @Inject constructor(
-    private val mapboxApi: MapboxApi
-) : MapboxRepository {
+class MapboxRepositoryImpl: MapboxRepository {
 
     // The current route of the journey
     private var currentRoute = mutableListOf<DirectionsRoute>()

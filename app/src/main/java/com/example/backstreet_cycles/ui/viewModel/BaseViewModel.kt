@@ -52,10 +52,10 @@ open class BaseViewModel @Inject constructor(
      * Increment the number of cyclists
      */
     open fun incrementNumCyclists() {
-        if(getNumCyclists() < 4){
+        if (getNumCyclists() < 4) {
             cyclistRepository.incrementNumCyclists()
             increaseCyclist.value = true
-        }else{
+        } else {
             increaseCyclist.value = false
         }
     }
@@ -64,10 +64,10 @@ open class BaseViewModel @Inject constructor(
      * Decrement the number of cyclists
      */
     open fun decrementNumCyclists() {
-        if(getNumCyclists() >= 2){
+        if (getNumCyclists() >= 2) {
             cyclistRepository.decrementNumCyclists()
             decreaseCyclist.value = true
-        }else{
+        } else {
             decreaseCyclist.value = false
         }
     }
@@ -95,7 +95,6 @@ open class BaseViewModel @Inject constructor(
         userRepository.getUserDetails().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    userDetail.postValue(result.data!!)
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
@@ -110,8 +109,7 @@ open class BaseViewModel @Inject constructor(
     /**
      * Get user's details in MutableLiveData format
      */
-    fun getUserInfo(): MutableLiveData<Users>
-    {
+    fun getUserInfo(): MutableLiveData<Users> {
         return userDetail
     }
 
@@ -193,7 +191,7 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Clear journey's distance and duration
+     * Clear journey's distance and duration information
      */
     open fun clearInfo() {
         mapboxRepository.clearJourneyDistances()
@@ -263,6 +261,9 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
+    /**
+     *
+     */
     open fun getRoute() {
         clearView()
     }
@@ -274,13 +275,8 @@ open class BaseViewModel @Inject constructor(
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Log.i("New dock", result.data?.size.toString())
-
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
-//                        JsonHelper.deleteFile(mContext,"localDocks.json")
-//                        val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-//                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
                     }
                     getRoute()
                 }
@@ -292,7 +288,6 @@ open class BaseViewModel @Inject constructor(
 
                 }
                 is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
                 }
             }
         }.launchIn(viewModelScope)
@@ -306,7 +301,7 @@ open class BaseViewModel @Inject constructor(
     open fun continueWithCurrentJourney() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
-        if(!noCurrentJourney){
+        if (!noCurrentJourney) {
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             clearJourneyLocations()
             mapboxRepository.setJourneyLocations(listOfLocations)
@@ -320,18 +315,21 @@ open class BaseViewModel @Inject constructor(
     open fun continueWithNewJourney(newStops: MutableList<Locations>) {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.overrideSharedPref(newStops, Locations::class.java)
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 
     /**
-     * Clear shared preferences
+     * Clear shared preferences for locations
      */
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    /**
+     * Clear all shared preferences related to journey
+     */
     open fun clearAllSharedPreferences(){
 
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
@@ -347,14 +345,14 @@ open class BaseViewModel @Inject constructor(
     /**
      * Get number of cyclist incremented by 1
      */
-    fun getIncreaseCyclist(): MutableLiveData<Boolean>{
+    fun getIncreaseCyclist(): MutableLiveData<Boolean> {
         return increaseCyclist
     }
 
     /**
      * Get number of cyclist decremented by 1
      */
-    fun getDecreaseCyclist(): MutableLiveData<Boolean>{
+    fun getDecreaseCyclist(): MutableLiveData<Boolean> {
         return decreaseCyclist
     }
 }

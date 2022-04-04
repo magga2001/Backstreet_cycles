@@ -153,14 +153,7 @@ class NavigationActivity : AppCompatActivity() {
 
             // update top banner with maneuver instructions
             val maneuvers = maneuverApi.getManeuvers(routeProgress)
-            maneuvers.fold(
-                { error ->
-//                    Toast.makeText(
-//                        applicationContext,
-//                        error.errorMessage,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                },
+            maneuvers.fold({},
                 {
                     maneuverView.visibility = View.VISIBLE
                     maneuverView.renderManeuvers(maneuvers)
@@ -578,9 +571,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onDestroy()
 
         locationComponent.removeOnIndicatorPositionChangedListener(onPositionChangedListener)
-//        MapboxNavigationProvider.destroy()
         navigationViewModel.finishMapboxReplayer()
-//        mapboxReplayer.finish()
         maneuverApi.cancel()
         routeLineApi.cancel()
         routeLineView.cancel()
