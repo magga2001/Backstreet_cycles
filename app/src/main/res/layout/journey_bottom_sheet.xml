@@ -192,7 +192,7 @@
                     android:gravity="bottom"
                     android:text="@string/journeys"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView

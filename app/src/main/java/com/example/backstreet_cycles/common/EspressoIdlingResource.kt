@@ -4,6 +4,9 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
 
+/**
+ * Class for fetching remote data for espresso tests
+ */
 object EspressoIdlingResource {
 
     private const val RESOURCE = "GLOBAL"

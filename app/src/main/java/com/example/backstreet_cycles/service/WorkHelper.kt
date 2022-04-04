@@ -7,6 +7,9 @@ import androidx.work.WorkManager
 import com.example.backstreet_cycles.common.Constants
 import java.util.concurrent.TimeUnit
 
+/**
+ * Helper class for sending notification to the user about the dock updates
+ */
 object WorkHelper {
 
     /**

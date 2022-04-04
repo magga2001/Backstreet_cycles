@@ -12,9 +12,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
@@ -58,7 +56,7 @@ class ChangePasswordActivityTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-        onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withContentDescription(R.string.open)).perform(ViewActions.click())
         onView(withId(R.id.changePassword)).perform(ViewActions.click())
     }
 
@@ -94,7 +92,7 @@ class ChangePasswordActivityTest {
         onView(withId(R.id.change_password_currentPassword)).perform(typeText(testInput))
         onView(withId(R.id.change_password_currentPassword)).check(
             matches(
-                ViewMatchers.withText(
+                withText(
                     testInput
                 )
             )
@@ -108,7 +106,7 @@ class ChangePasswordActivityTest {
         onView(withId(R.id.change_password_NewPassword)).perform(typeText(testInput))
         onView(withId(R.id.change_password_NewPassword)).check(
             matches(
-                ViewMatchers.withText(
+                withText(
                     testInput
                 )
             )
@@ -122,72 +120,22 @@ class ChangePasswordActivityTest {
         onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
     }
 
-//    //    Test will work later
-//    @Test
-//    fun test_snack_bar_appears_on_change_password() {
-//        val testInput = "123456"
-//        onView(withId(R.id.change_password_currentPassword)).perform(
-//            typeText(testInput),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.change_password_currentPassword)).check(
-//            matches(
-//                ViewMatchers.withText(
-//                    testInput
-//                )
-//            )
-//        )
-//        val newPassInput = "newPassword"
-//        onView(withId(R.id.change_password_NewPassword)).perform(
-//            typeText(newPassInput),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.change_password_NewPassword)).check(
-//            matches(
-//                ViewMatchers.withText(
-//                    newPassInput
-//                )
-//            )
-//        )
-//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
-//        onView(withId(com.google.android.material.R.id.snackbar_text))
-//            .check(matches(ViewMatchers.withText("Password successfully updated")))
-//    }
-//
-//    //Test will work later
-//    @Test
-//    fun test_saves_new_password() {
-//        val testInput = "123456"
-//        onView(withId(R.id.change_password_currentPassword)).perform(
-//            typeText(testInput),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.change_password_currentPassword)).check(
-//            matches(
-//                ViewMatchers.withText(
-//                    testInput
-//                )
-//            )
-//        )
-//        val newPassInput = "newPassword"
-//        onView(withId(R.id.change_password_NewPassword)).perform(
-//            typeText(newPassInput),
-//            ViewActions.closeSoftKeyboard()
-//        )
-//        onView(withId(R.id.change_password_NewPassword)).check(
-//            matches(
-//                ViewMatchers.withText(
-//                    newPassInput
-//                )
-//            )
-//        )
-//        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
-//        onView(withId(com.google.android.material.R.id.snackbar_text))
-//            .check(matches(ViewMatchers.withText("Password successfully updated")))
-//        Intents.init()
-//        intending(hasComponent(HomePageActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun test_snack_bar_appears_when_change_password_failed() {
+        val testInput = "123456"
+        onView(withId(R.id.change_password_currentPassword)).perform(
+            typeText(testInput),
+            ViewActions.closeSoftKeyboard()
+        )
+        val newPassInput = "123456"
+        onView(withId(R.id.change_password_NewPassword)).perform(
+            typeText(newPassInput),
+            ViewActions.closeSoftKeyboard()
+        )
+        onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText("Password update fail")))
+    }
 
     @Test
     fun test_old_password_not_entered() {
@@ -198,7 +146,7 @@ class ChangePasswordActivityTest {
         )
         onView(withId(R.id.change_password_NewPassword)).check(
             matches(
-                ViewMatchers.withText(
+                withText(
                     newPassInput
                 )
             )
@@ -206,7 +154,7 @@ class ChangePasswordActivityTest {
         onView(withId(R.id.change_password_SaveButton)).perform(ViewActions.click())
         onView(withId(R.id.change_password_currentPassword)).check(
             matches(
-                ViewMatchers.hasErrorText(
+                hasErrorText(
                     "In order for use to change your email or password you need to enter your old password"
                 )
             )
@@ -226,7 +174,7 @@ class ChangePasswordActivityTest {
 
         onView(
             Matchers.allOf(
-                ViewMatchers.withContentDescription("Navigate up"),
+                withContentDescription("Navigate up"),
                 childAtPosition(
                     Matchers.allOf(
                         withId(R.id.action_bar),

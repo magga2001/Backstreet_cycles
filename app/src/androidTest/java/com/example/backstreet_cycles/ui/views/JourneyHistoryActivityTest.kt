@@ -4,10 +4,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -17,6 +20,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
+import com.mapbox.maps.extension.style.expressions.dsl.generated.match
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
@@ -27,6 +31,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
@@ -65,15 +70,11 @@ class JourneyHistoryActivityTest {
         Intents.release()
     }
 
-//    @Test
-//    fun test_title_is_visible() {
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.journey_history_title),
-//                withParent(withId(R.id.recentJourney_layout))
-//            )
-//        ).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_title_is_visible() {
+
+        onView(withId(R.id.journey_history_title)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_recycler_view_is_visible() {
@@ -85,15 +86,20 @@ class JourneyHistoryActivityTest {
         ).check(matches(isDisplayed()))
     }
 
-    // Look into why this is not working
-//    @Test
-//    fun test_journey_summary_is_visible() {
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.recentJourneyCard_locationDataCardView),
-//                withParent(withId(R.id.JourneySummaryLayout1))
-//            )).check(matches(isDisplayed()))
-//    }
+
+    @Test
+    fun test_journey_summary_card_is_visible(){
+        onView(
+            Matchers.allOf(
+                withId(R.id.journey_history_recycler_view),
+                childAtPosition(
+                    withId(R.id.recentJourney_layout),
+                    0
+                )
+            )
+        ).check(matches(isDisplayed()))
+
+    }
 
     @Test
     fun test_card_is_visible() {
@@ -109,9 +115,30 @@ class JourneyHistoryActivityTest {
             )).check(matches(isDisplayed()))
     }
 
+
+    //NOT WORKING -_-
 //    @Test
 //    fun test_on_pressBack_go_to_HomePageActivity() {
+////        ActivityScenario.launch(HomePageActivity::class.java)
+////        onView(
+////            Matchers.allOf(
+////                withId(R.id.journeyHistory),
+////                childAtPosition(
+////                    Matchers.allOf(
+////                        withId(R.id.design_navigation_view),
+////                        childAtPosition(
+////                            withId(R.id.homepage_nav_view),
+////                            0
+////                        )
+////                    ),
+////                    3
+////                ),
+////                isDisplayed()
+////            )
+////        ).perform(ViewActions.click())
+////        sleep(1000)
 //        pressBack()
+//        //sleep(1000)
 //        Intents.init()
 //        intending(hasComponent(HomePageActivity::class.qualifiedName))
 //        Intents.release()
@@ -136,7 +163,6 @@ class JourneyHistoryActivityTest {
                 isDisplayed()
             )
         ).perform(ViewActions.click())
-
 
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))

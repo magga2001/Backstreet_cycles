@@ -6,7 +6,7 @@ import com.mapbox.geojson.Point
 import kotlin.math.roundToInt
 
 /**
- * A class created to help us with the conversion of different data
+ * Helper class for conversion of different data
  */
 object ConvertHelper {
 

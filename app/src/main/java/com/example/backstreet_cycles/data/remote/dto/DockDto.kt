@@ -3,6 +3,9 @@ package com.example.backstreet_cycles.data.remote.dto
 
 import com.example.backstreet_cycles.domain.model.dto.Dock
 
+/**
+ * Class responsible for conversion from Json file into the Dock data
+ */
 data class DockDto(
     val `$type`: String,
     val additionalProperties: List<BikeStatusInfo>,

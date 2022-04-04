@@ -3,6 +3,10 @@ package com.example.backstreet_cycles.common
 import android.content.res.Resources
 import com.mapbox.maps.EdgeInsets
 
+
+/**
+ * Class holding all the constant data used for MapBox
+ */
 object MapboxConstants {
 
     /**
