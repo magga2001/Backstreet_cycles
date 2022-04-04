@@ -90,7 +90,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_cyclist_number_donot_increase_if_already_4(){
+    fun test_cyclist_number_do_not_increase_if_there_is_at_least_4(){
         baseViewModel.resetNumCyclists()
         add_3_cyclists()
         baseViewModel.incrementNumCyclists()
@@ -98,8 +98,6 @@ class BaseViewModelTest {
         baseViewModel.incrementNumCyclists()
         assert(baseViewModel.getNumCyclists() == 4)
     }
-
-
 
     @Test
     fun test_decrement_cyclists() {
@@ -110,7 +108,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_cannot_have_less_than_cyclists_1() {
+    fun test_cannot_have_less_than_1_number_of_cyclists() {
         baseViewModel.resetNumCyclists()
         baseViewModel.incrementNumCyclists()
         baseViewModel.decrementNumCyclists()
@@ -128,13 +126,19 @@ class BaseViewModelTest {
     }
 
     @Test
+    fun test_check_base_number_of_cyclists_is_1(){
+        baseViewModel.resetNumCyclists()
+        assert(baseViewModel.getNumCyclists() == 1)
+    }
+
+    @Test
     fun check_increase_cyclist_boolean_value(){
         baseViewModel.incrementNumCyclists()
         assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
     }
 
     @Test
-    fun check_increase_cyclist_boolean_value_with_max_cyclists(){
+    fun test_increase_cyclist_boolean_value_is_false_when_incremented_with_max_cyclists(){
         add_3_cyclists()
         assertEquals(true, baseViewModel.getIncreaseCyclist().getOrAwaitValue())
         baseViewModel.incrementNumCyclists()
@@ -142,7 +146,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun check_decrease_cyclist_boolean_value(){
+    fun test_decrease_cyclist_boolean_value_is_false_when_decremented_with_min_cyclists(){
         baseViewModel.resetNumCyclists()
         baseViewModel.incrementNumCyclists()
         baseViewModel.decrementNumCyclists()
@@ -157,19 +161,19 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_get_current_docks_after_loading_it() = runBlocking{
+    fun test_get_current_docks_is_full_after_loading_it() = runBlocking{
         fakeTflRepoImpl.loadDocks()
         assertEquals(fakeTflRepoImpl.getCurrentDocks(), baseViewModel.getCurrentDocks())
     }
 
     @Test
-    fun test_get_current_docks_before_loading_it()= runBlocking{
+    fun test_current_docks_is_empty_before_loading_it()= runBlocking{
         val emptyList:MutableList<Dock> = mutableListOf()
         assertEquals(emptyList,fakeTflRepoImpl.getCurrentDocks())
     }
 
     @Test
-    fun test_try_loading_docks_without_connection() = runBlocking{
+    fun test_loading_docks_is_empty_without_connection() = runBlocking{
         val emptyList:MutableList<Dock> = mutableListOf()
         fakeTflRepoImpl.setConnection(false)
         fakeTflRepoImpl.getDocks()
@@ -177,28 +181,26 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun test_try_loading_docks_with_connection() = runBlocking{
+    fun test_loading_docks_works_with_connection() = runBlocking{
         val docks:MutableList<Dock> = fakeTflRepoImpl.getCurrentDocks()
         fakeTflRepoImpl.setConnection(true)
         fakeTflRepoImpl.getDocks()
         assertEquals(docks,fakeTflRepoImpl.getCurrentDocks())
     }
 
-
-
     @Test
-    fun test_getting_user_info_first_name(){
+    fun test_get_user_info_first_name(){
         register_user()
         assertEquals(firstname, baseViewModel.getUserInfo().getOrAwaitValue().firstName)
     }
     @Test
-    fun test_getting_user_info_last_name(){
+    fun test_get_user_info_last_name(){
         register_user()
         assertEquals(lastname, baseViewModel.getUserInfo().getOrAwaitValue().lastName)
     }
 
     @Test
-    fun test_getting_user_info_email(){
+    fun test_get_user_info_email(){
         register_user()
         assertEquals(email, baseViewModel.getUserInfo().getOrAwaitValue().email)
     }

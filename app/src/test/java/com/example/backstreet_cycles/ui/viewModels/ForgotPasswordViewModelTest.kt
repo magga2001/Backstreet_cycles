@@ -82,17 +82,16 @@ class ForgotPasswordViewModelTest {
     fun test_email_verification_sent_with_correct_email(){
         forgotPasswordViewModel.resetPassword("johndoe@example.com")
         Assert.assertEquals(
-            "Reset password sent",
+            "Password reset link sent to email.",
             forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
         )
     }
 
     @Test
     fun test_email_verification_not_sent_with_incorrect_email(){
-
         forgotPasswordViewModel.resetPassword("testuser@random.com")
         Assert.assertEquals(
-            "No User",
+            "There is no user record corresponding to this identifier. The user may have been deleted.",
             forgotPasswordViewModel.getResetPassword().getOrAwaitValue()
         )
     }
