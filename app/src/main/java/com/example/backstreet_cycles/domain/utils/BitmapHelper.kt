@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 
+/**
+ * Helper class for creating Bitmap
+ */
 object BitmapHelper {
 
     /**
