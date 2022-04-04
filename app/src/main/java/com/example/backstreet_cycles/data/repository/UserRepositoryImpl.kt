@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
-
 class UserRepositoryImpl(
     fireAuth: FirebaseAuth,
     fireStore: FirebaseFirestore,
@@ -32,6 +31,14 @@ class UserRepositoryImpl(
         this.dataBase = dataBase
     }
 
+    /**
+     * Register user in the Firebase
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param password
+     */
     override fun register(
         firstName: String,
         lastName: String,
@@ -51,6 +58,13 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
+    /**
+     * Verify user with email
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     */
     override fun emailVerification(
         firstName: String,
         lastName: String,
@@ -68,6 +82,13 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
+    /**
+     * Create user account in the database
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     */
     private fun createUserAccount(
         firstName: String,
         lastName: String,
@@ -87,6 +108,12 @@ class UserRepositoryImpl(
             }
     }
 
+    /**
+     * Update user's first name and last name
+     *
+     * @param firstName
+     * @param lastName
+     */
     override fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = callbackFlow {
         try {
             EspressoIdlingResource.increment()
@@ -118,6 +145,12 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
+    /**
+     * Update user's password
+     *
+     * @param password
+     * @param newPassword
+     */
     override fun updatePassword(password: String, newPassword: String): Flow<Resource<String>> = callbackFlow {
 
         val credential =
@@ -145,6 +178,9 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
+    /**
+     * Retrieve user's details from the database
+     */
     override fun getUserDetails(): Flow<Resource<Users>> = callbackFlow {
         EspressoIdlingResource.increment()
         try {
@@ -174,6 +210,12 @@ class UserRepositoryImpl(
 
     }
 
+    /**
+     * Log in user into the application
+     *
+     * @param email
+     * @param password
+     */
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = callbackFlow {
         EspressoIdlingResource.increment()
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -201,6 +243,11 @@ class UserRepositoryImpl(
         awaitClose { channel.close() }
     }
 
+    /**
+     * Reset user's password via email with a link
+     *
+     * @param email
+     */
     override fun resetPassword(email: String): Flow<Resource<String>> = callbackFlow  {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -214,6 +261,12 @@ class UserRepositoryImpl(
 
     }
 
+    /**
+     * Add Json journey object to the particular user's history
+     *
+     * @param locations - list of journey's locations
+     * @param user
+     */
     override fun addJourneyToJourneyHistory(locations: MutableList<Locations>, user: Users): Flow<Resource<String>> = callbackFlow  {
 
         dataBase
@@ -244,6 +297,9 @@ class UserRepositoryImpl(
 
     }
 
+    /**
+     * Log out user from the application
+     */
     override fun logOut() {
         EspressoIdlingResource.increment()
         firebaseAuth.signOut()
