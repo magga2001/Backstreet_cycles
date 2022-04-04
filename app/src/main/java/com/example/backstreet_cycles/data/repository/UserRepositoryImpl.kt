@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
+/**
+ * Class responsible for implementation of the user repository
+ */
 class UserRepositoryImpl(
     fireAuth: FirebaseAuth,
     fireStore: FirebaseFirestore,
