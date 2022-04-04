@@ -32,4 +32,12 @@ object ConvertHelper {
     fun convertMsToS(durations: List<Double>): Int {
         return (durations.sum() / 60).roundToInt()
     }
+
+    /**
+     * @param locations - a list of locations
+     * @return a list of strings - of the location names
+     */
+    fun getLocationNames(locations: List<Locations>): List<String> {
+        return locations.map { it.name }
+    }
 }
