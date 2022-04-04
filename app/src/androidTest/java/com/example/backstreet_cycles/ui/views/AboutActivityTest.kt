@@ -48,24 +48,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class AboutActivityTest {
 
-    private val firstName = "Test"
-    private val lastName = "User"
-    private val email = "backstreet.cycles.test.user@gmail.com"
-    private val password = "123456"
-
-//    @Inject
-//    lateinit var fakeTflRepoImpl: FakeTflRepoImpl
-//    @Inject
-//    lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
-//    @Inject
-//    lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
-    @Inject
-    lateinit var fakeUserRepoImpl: FakeUserRepoImpl
-//    @Inject
-//    lateinit var fakeLocationRepoImpl: FakeLocationRepoImpl
-
-    @get:Rule
-    val activityRule = ActivityScenarioRule(HomePageActivity::class.java)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -84,17 +66,12 @@ class AboutActivityTest {
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
+    @get:Rule
+    val activityRule = ActivityScenarioRule(HomePageActivity::class.java)
+
     @Before
     fun setUp() {
         hiltRule.inject()
-//        fakeUserRepoImpl.logOut()
-//        fakeUserRepoImpl.register(firstName, lastName, email, password)
-//        fakeUserRepoImpl.verifyEmail(email)
-//        fakeUserRepoImpl.login(email, password)
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        Espresso.onIdle()
-//        ActivityScenario.launch(HomePageActivity::class.java)
-        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         onView(withContentDescription(R.string.open)).perform(click())
         onView(withId(R.id.about)).perform(click())
     }
@@ -147,7 +124,6 @@ class AboutActivityTest {
             )
         ).perform(click())
 
-
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
@@ -171,17 +147,4 @@ class AboutActivityTest {
         }
     }
 
-//    @Test
-//    fun test_open_browser(){
-//        onView(withId(R.id.about_image)).perform(click())
-//        intended(allOf(hasData(hasHost(equalTo("www.google.com"))),
-//            hasAction(Intent.ACTION_VIEW),
-//            toPackage("com.android.chrome")))
-//    }
-
-    @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-//        fakeUserRepoImpl.logOut()
-    }
 }
