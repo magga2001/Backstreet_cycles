@@ -6,15 +6,13 @@ import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
-import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
-import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
-import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
+import com.example.backstreet_cycles.ui.viewModel.*
 import com.mapbox.mapboxsdk.location.LocationComponent
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,12 +26,14 @@ class HomePageViewModelTest{
     private lateinit var homepageViewModel: HomePageViewModel
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var logInViewModel: LogInViewModel
+    private lateinit var loadingViewModel: LoadingViewModel
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
     private lateinit var fakeMapboxRepoImpl: FakeMapboxRepoImpl
     private lateinit var fakeCyclistRepoImpl: FakeCyclistRepoImpl
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
     private lateinit var fakeLocationRepoImpl: FakeLocationRepoImpl
+
 
     val randomLocation1 = Locations("Random Location1", 51.15,0.03)
     val randomLocation2 = Locations("Random Location2", 51.15,0.03)
@@ -72,6 +72,15 @@ class HomePageViewModelTest{
             fakeCyclistRepoImpl,
             fakeUserRepoImpl,
             fakeLocationRepoImpl,
+            application,
+            context
+        )
+
+        loadingViewModel = LoadingViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
             application,
             context
         )
@@ -176,14 +185,6 @@ class HomePageViewModelTest{
         )
     }
 
-//    @Test
-//    fun test_user_is_not_logged_out_before_logout(){
-//        assertEquals(
-//            !true,
-//            homepageViewModel.getLogout().value
-//        )
-//    }
-
     @Test
     fun test_check_if_current_location_exists_without_adding_it(){
         val currentLocation = Locations("Current Location", 0.0,0.0)
@@ -257,13 +258,13 @@ class HomePageViewModelTest{
     }
 
 
-//    @Test
-//    fun test_logOut_value_before_logging_out(){
-//        assertEquals(
-//            false,
-//            homepageViewModel.getLogout().getOrAwaitValue()
-//        )
-//    }
+    @Test
+    fun test_logOut_value_before_logging_out(){
+        assertEquals(
+            false,
+            homepageViewModel.getLogout().getOrAwaitValue()
+        )
+    }
 
     @Test
     fun test_logOut_value_after_logging_out(){
@@ -279,20 +280,4 @@ class HomePageViewModelTest{
         homepageViewModel.addStop(randomLocation2)
         homepageViewModel.addStop(randomLocation3)
     }
-
-//    @Test
-//    fun test_get_message_after_get_mapbox_route(){
-//
-//    }
-
-//    @Test
-//    fun test_get_route(){
-//        homepageViewModel.getCurrentJourney()
-//        assertEquals(
-//            false,
-//            homepageViewModel.getHasCurrentJourneyMutableLiveData().getOrAwaitValue()
-//        )
-//    }
-
-
 }

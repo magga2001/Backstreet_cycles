@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Log In Activity responsible for log in the user
+ */
 @HiltViewModel
 class LogInViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -46,15 +49,11 @@ class LogInViewModel @Inject constructor(
         userRepository.login(email, password).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    firebaseUserData.postValue(result.data!!)
                     firebaseUserData.value = result.data!!
                     WorkHelper.setPeriodicallySendingLogs(mApplication)
                 }
 
                 is Resource.Error -> {
-//                    errorMessageData.postValue(
-//                        mApplication.getString(R.string.LOG_IN_FAILED) + ". " + result.message!!
-//                    )
                     errorMessageData.value = mApplication.getString(R.string.LOG_IN_FAILED) + result.message!!
                 }
 

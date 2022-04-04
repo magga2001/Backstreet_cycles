@@ -65,7 +65,7 @@ class JourneyHistoryAdapter(
      */
     override fun onBindViewHolder(holder: JourneyViewHolder, position: Int) {
         val newList = locations[position]
-        val addressName = getLocationNames(newList)
+        val addressName = ConvertHelper.getLocationNames(newList)
         holder.name.text = constructString(addressName)
     }
 
@@ -88,14 +88,6 @@ class JourneyHistoryAdapter(
      */
     override fun getItemCount(): Int {
         return locations.size
-    }
-
-    /**
-     * @param locations - a list of locations
-     * @return a list of strings - of the location names
-     */
-    private fun getLocationNames(locations: List<Locations>): List<String> {
-        return locations.map { it.name }
     }
 
 }

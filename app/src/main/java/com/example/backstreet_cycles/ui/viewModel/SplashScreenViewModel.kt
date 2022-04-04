@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.common.Resource
@@ -15,6 +14,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Splash Screen Activity responsible for fethcing application data from API
+ */
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -42,8 +44,6 @@ class SplashScreenViewModel @Inject constructor(
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Log.i("Splash screen dock", result.data?.size.toString())
-
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
                         val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)

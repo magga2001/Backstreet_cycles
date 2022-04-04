@@ -60,7 +60,7 @@ class AboutActivityTest {
     }
 
     @Test
-    fun test_about_button_to_AboutActivity() {
+    fun test_about_button_is_displayed() {
         onView(withId(R.id.aboutActivity)).check(matches(isDisplayed()))
     }
 
@@ -70,7 +70,7 @@ class AboutActivityTest {
     }
 
     @Test
-    fun test_description_is_displayed() {
+    fun test_about_description_is_displayed() {
         onView(withId(R.id.aboutDescription)).check(matches(isDisplayed()))
     }
 
@@ -80,7 +80,7 @@ class AboutActivityTest {
     }
 
     @Test
-    fun test_on_pressBack_go_to_HomePageActivity() {
+    fun test_on_press_back_go_to_HomePageActivity() {
         pressBack()
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
@@ -88,7 +88,7 @@ class AboutActivityTest {
     }
 
     @Test
-    fun test_on_go_to_HomePageActivity_on_top_back_button(){
+    fun test_on_press_top_back_button_go_to_HomePageActivity(){
 
         onView(
             Matchers.allOf(

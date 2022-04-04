@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Journey History page which contains the history of all user's journeys
+ */
 @AndroidEntryPoint
 class JourneyHistoryActivity : AppCompatActivity() {
 

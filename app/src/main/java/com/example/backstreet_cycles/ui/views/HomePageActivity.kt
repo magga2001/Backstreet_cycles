@@ -1,22 +1,18 @@
 package com.example.backstreet_cycles.ui.views
 
-//---------------------------------
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +21,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.StopsAdapter
 import com.example.backstreet_cycles.domain.model.dto.Locations
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.domain.utils.TouchScreenCallBack
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
@@ -49,10 +46,11 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_homepage.*
 import kotlinx.android.synthetic.main.homepage_bottom_sheet.*
-import kotlinx.android.synthetic.main.nav_header.*
-import kotlinx.coroutines.launch
 import java.util.*
 
+/**
+ * This activity launches Home page which is the heart of our application that plans the whole journey
+ */
 @AndroidEntryPoint
 class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener {
     private lateinit var toggle: ActionBarDrawerToggle
@@ -102,7 +100,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     }
 
     /**
-     *
+     * Initialise observers for Homepage
      */
     @SuppressLint("SetTextI18n")
     private fun initObservers() {
@@ -125,7 +123,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Greets the user in the nav menu
         homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                Log.i("userssss", firebaseUser.firstName.toString())
                 user_name.text = "Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
             }
@@ -534,17 +531,15 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         builder.setTitle("Planner Alert")
         builder.setMessage(
             "There is already a planned journey that you are currently using." +
-                    "Do you want to continue with the current journey or with the newly created one?"
+                    " Do you want to continue with the current journey or with the newly created one?"
         )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->
-            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithCurrentJourney()
             homePageViewModel.setShowAlert(false)
         }
 
         builder.setNegativeButton(R.string.continue_with_newly_set_journey) { dialog, which ->
-            SnackBarHelper.displaySnackBar(homePageActivity, "Loading...")
             homePageViewModel.continueWithNewJourney(newStops)
             homePageViewModel.setShowAlert(false)
         }
@@ -625,8 +620,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         super.onStart()
         homepage_mapView?.onStart()
         homePageViewModel.getUserDetails()
-//        homePageViewModel.destroyMapboxNavigation()
-//        homePageViewModel.getMapBoxNavigation()
     }
 
     /**

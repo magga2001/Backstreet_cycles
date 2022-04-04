@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.ui.views
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.activity.viewModels
@@ -11,10 +10,11 @@ import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
+/**
+ * This activity launches Sign up page which allows user to create an account
+ */
 @AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
@@ -32,16 +32,7 @@ class SignUpActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         signUpViewModel.getMessage().observe(this){
-//            runBlocking {
-////                delay(1000)
-//                SnackBarHelper.displaySnackBar(signUpActivity, it)
-////                val intent = Intent(this, LogInActivity::class.java)
-////                startActivity(intent)
-////                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-//            }
-
             SnackBarHelper.displaySnackBar(signUpActivity, it)
-
         }
 
         initListener()

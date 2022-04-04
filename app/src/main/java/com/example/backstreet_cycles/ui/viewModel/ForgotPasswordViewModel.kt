@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
@@ -16,6 +15,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Forgot Password Activity responsible for password reset
+ */
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -44,14 +46,12 @@ class ForgotPasswordViewModel @Inject constructor(
         userRepository.resetPassword(email).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    resetPassword.postValue(result.data!!)
                     resetPassword.value = result.data!!
                 }
 
                 is Resource.Error -> {
                     resetPassword.value = result.message!!
                 }
-
                 is Resource.Loading -> {
                 }
             }

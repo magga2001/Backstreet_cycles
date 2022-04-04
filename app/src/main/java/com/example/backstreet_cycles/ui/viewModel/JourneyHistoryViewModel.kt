@@ -21,6 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Journey History Activity responsible for storing previous journeys and the current journey if one exists
+ */
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -64,40 +67,6 @@ class JourneyHistoryViewModel @Inject constructor(
         checkCurrentJourney()
     }
 
-//    private fun getMapBoxRoute(routeOptions: RouteOptions) {
-//        mapboxRepository.requestRoute(mapboxNavigation, routeOptions).onEach { result ->
-//            when (result) {
-//                is Resource.Success -> {
-////                    isReady.postValue(true)
-//                    isReady.value = true
-//                }
-//
-//                is Resource.Error -> {
-//                    //Fail
-////                    message.postValue(result.message!!)
-//                    message.value = result.message!!
-//                }
-//                is Resource.Loading -> {
-//                }
-//            }
-//        }.launchIn(viewModelScope)
-//    }
-
-//    private fun fetchRoute(
-//        context: Context,
-//        locations: MutableList<Locations>
-//    ) {
-//
-//        resetNumCyclists()
-//        clearDuplication(locations)
-//        val points = locations.map { ConvertHelper.convertLocationToPoint(it) }
-//
-//        clearInfo()
-//        setCurrentWayPoint(locations)
-//        val routeOptions = setCustomiseRoute(context, points)
-//        getMapBoxRoute(routeOptions)
-//    }
-
     /**
      * Checks for a current journey, if not found alert message given
      */
@@ -105,7 +74,6 @@ class JourneyHistoryViewModel @Inject constructor(
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
-//            showAlert.postValue(true)
             setShowAlert(true)
         } else {
             isReady.value = true
@@ -204,7 +172,6 @@ class JourneyHistoryViewModel @Inject constructor(
      * @param bool to indicate state
      */
     fun setShowAlert(bool: Boolean) {
-//        showAlert.postValue(bool)
         showAlert.value = bool
     }
 

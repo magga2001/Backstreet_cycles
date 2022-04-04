@@ -1,11 +1,9 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.app.Application
-import com.example.backstreet_cycles.common.CallbackResource
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.repositoryInt.LocationRepository
-import com.mapbox.api.directions.v5.models.DirectionsRoute
 import javax.inject.Inject
 
 open class LocationRepositoryImpl @Inject constructor(
