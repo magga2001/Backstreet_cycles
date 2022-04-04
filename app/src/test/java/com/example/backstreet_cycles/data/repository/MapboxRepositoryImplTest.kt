@@ -1,9 +1,6 @@
 package com.example.backstreet_cycles.data.repository
 
-import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.core.MapboxNavigation
@@ -12,9 +9,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)

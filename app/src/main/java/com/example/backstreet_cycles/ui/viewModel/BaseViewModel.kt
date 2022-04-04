@@ -95,7 +95,6 @@ open class BaseViewModel @Inject constructor(
         userRepository.getUserDetails().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    userDetail.postValue(result.data!!)
                     userDetail.value = result.data!!
                 }
                 is Resource.Error -> {
@@ -193,7 +192,7 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Clear journey's distance and duration
+     * Clear journey's distance and duration information
      */
     open fun clearInfo() {
         mapboxRepository.clearJourneyDistances()
@@ -263,6 +262,9 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
+    /**
+     *
+     */
     open fun getRoute() {
         clearView()
     }
@@ -274,8 +276,6 @@ open class BaseViewModel @Inject constructor(
         tflRepository.getDocks().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Log.i("New dock", result.data?.size.toString())
-
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
 //                        JsonHelper.deleteFile(mContext,"localDocks.json")
@@ -292,7 +292,6 @@ open class BaseViewModel @Inject constructor(
 
                 }
                 is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
                 }
             }
         }.launchIn(viewModelScope)
@@ -325,10 +324,25 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Clear shared preferences
+     * Clear shared preferences for locations
      */
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+    }
+
+    /**
+     * Clear all shared preferences related to journey
+     */
+    open fun clearAllSharedPreferences(){
+
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
+        SharedPrefHelper.clearSharedPreferences()
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
         SharedPrefHelper.clearSharedPreferences()
     }
 
