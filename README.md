@@ -22,7 +22,7 @@ Download the APK file from this website
 
 ## Credentials
 
-To access Firebase and MapBox accounts for our application use the following credentials
+To access Firebase account for our application use the following credentials
 
 Email: backstreet.cycles.test.user@gmail.com
 
