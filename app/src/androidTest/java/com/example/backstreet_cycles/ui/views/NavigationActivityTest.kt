@@ -6,6 +6,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
@@ -117,18 +118,30 @@ class NavigationActivityTest {
         onView(withId(R.id.recenter)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-    @After
-    fun tearDown(){
-        fakeUserRepoImpl.logOut()
-    }
+//    @Test
+//    fun test_click_on_cancel_journey(){
+////        addStop("Covent Garden")
+////        onView(withId(R.id.nextPageButton)).perform(click())
+////        onView(withId(R.id.checkBoxFinishJourney)).check(matches(isNotChecked()))
+////        waitFor(3500)
+////        onView(withId(R.id.planJourney_button_expand)).perform(click())
+////        waitFor(3500)
+////        onView(withId(R.id.setNav1)).perform(click())
+////        waitFor(1500)
+//        onView(withId(R.id.stop)).perform(click())
+//        Intents.init()
+//        intending(hasComponent(LoadingActivity::class.qualifiedName))
+//        Intents.release()
+//
+//    }
 
-    private fun waitFor(delay: Long): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): Matcher<View> = isRoot()
-            override fun getDescription(): String = "wait for $delay milliseconds"
-            override fun perform(uiController: UiController, v: View?) {
-                uiController.loopMainThreadForAtLeast(delay)
-            }
-        }
-    }
+//    private fun waitFor(delay: Long): ViewAction {
+//        return object : ViewAction {
+//            override fun getConstraints(): Matcher<View> = isRoot()
+//            override fun getDescription(): String = "wait for $delay milliseconds"
+//            override fun perform(uiController: UiController, v: View?) {
+//                uiController.loopMainThreadForAtLeast(delay)
+//            }
+//        }
+//    }
 }

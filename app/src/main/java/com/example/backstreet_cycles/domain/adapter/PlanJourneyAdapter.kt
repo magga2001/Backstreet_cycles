@@ -51,10 +51,6 @@ class PlanJourneyAdapter(
             initListener()
         }
 
-        override fun onClick(p0: View?) {
-            TODO("Not yet implemented")
-        }
-
         private fun initListener() {
             expandButton.setOnClickListener {
                 if (expandableLayout.visibility == View.GONE) {
@@ -68,6 +64,10 @@ class PlanJourneyAdapter(
                     expandButton.text = ">"
                 }
             }
+        }
+
+        override fun onClick(p0: View?) {
+            //Does nothing
         }
     }
 
@@ -185,12 +185,17 @@ class PlanJourneyAdapter(
         holder.setNav1.isEnabled = true
         holder.setNav2.isEnabled = true
         holder.setNav3.isEnabled = true
-        if (buttonToDisable.id == holder.setNav1.id) {
-            holder.setNav1.isEnabled = false
-        } else if (buttonToDisable.id == holder.setNav2.id) {
-            holder.setNav2.isEnabled = false
-        } else {
-            holder.setNav3.isEnabled = false
+
+        when (buttonToDisable.id) {
+            holder.setNav1.id -> {
+                holder.setNav1.isEnabled = false
+            }
+            holder.setNav2.id -> {
+                holder.setNav2.isEnabled = false
+            }
+            else -> {
+                holder.setNav3.isEnabled = false
+            }
         }
         (context as JourneyActivity).findViewById<Button>(R.id.start_navigation).isEnabled = true
 
@@ -217,10 +222,6 @@ class PlanJourneyAdapter(
      */
     fun getAllBoxesCheckedMutableLiveData(): LiveData<Boolean> {
         return allBoxesCheckedMutableLiveData
-    }
-
-    fun getViewHolders(): List<ViewHolder>{
-        return viewHolders
     }
 
     /**
@@ -258,7 +259,7 @@ class PlanJourneyAdapter(
      *
      * @param holder - An object of ViewHolder
      */
-    fun checkAllBoxes() {
+    private fun checkAllBoxes() {
         if (viewHolders.all { it.checkBoxButton.isChecked }) {
             allBoxesCheckedMutableLiveData.postValue(true)
 
@@ -272,7 +273,7 @@ class PlanJourneyAdapter(
         return checkedBoxes.map { it.tvFrom.text.toString() }
     }
 
-    fun checkCheckedBoxInSharePref(from: String): Boolean {
+    private fun checkCheckedBoxInSharePref(from: String): Boolean {
         return from in tvFrom
     }
 

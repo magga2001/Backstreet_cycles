@@ -18,6 +18,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.utils.PermissionHelper
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -166,7 +167,6 @@ class JourneyActivity : AppCompatActivity() {
         mapboxMap = journey_mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
         init()
-
     }
 
     /**
@@ -513,8 +513,9 @@ class JourneyActivity : AppCompatActivity() {
         routeLineView.cancel()
         routeLineApi.cancel()
     }
-
-    // Terminate JourneyPage when back button is clicked
+    /**
+     * Terminate JourneyPage when back button is clicked
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         updateCheckBoxSharedPref()

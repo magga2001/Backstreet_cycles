@@ -322,6 +322,10 @@ class NavigationActivity : AppCompatActivity() {
 
     private val navigationViewModel: NavigationViewModel by viewModels()
 
+    /**
+     * Initialise the contents within the display of the Navigation activity
+     * @param savedInstanceState used to restore a saved state so activity can be recreated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
@@ -343,6 +347,9 @@ class NavigationActivity : AppCompatActivity() {
         mapboxNavigation.startTripSession()
     }
 
+    /**
+     * Initialise navigation
+     */
     private fun init() {
         initNavigationUI()
         initLocationPuck()
@@ -352,17 +359,26 @@ class NavigationActivity : AppCompatActivity() {
         initStyle()
     }
 
+    /**
+     * Initialise navigation user interface
+     */
     private fun initNavigationUI() {
         initialiseProgressUI()
         initialiseVoiceUI()
         initialiseRouteLineUI()
     }
 
+    /**
+     * Initialise location symbol
+     */
     private fun initLocationPuck() {
         // initialize the location puck
         locationComponent.addOnIndicatorPositionChangedListener(onPositionChangedListener)
     }
 
+    /**
+     * Initialise navigation camera
+     */
     private fun initCamera() {
         // initialize Navigation Camera
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
@@ -494,6 +510,9 @@ class NavigationActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Start activity
+     */
     override fun onStart() {
         super.onStart()
 
@@ -530,6 +549,9 @@ class NavigationActivity : AppCompatActivity() {
         tripProgressCard.visibility = View.INVISIBLE
     }
 
+    /**
+     * Called before termination of activity
+     */
     override fun onStop() {
         super.onStop()
 
@@ -542,6 +564,9 @@ class NavigationActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Terminate the Navigation
+     */
     override fun onDestroy() {
         super.onDestroy()
 
@@ -555,6 +580,9 @@ class NavigationActivity : AppCompatActivity() {
         navigationViewModel.destroyMapboxNavigation()
     }
 
+    /**
+     * Terminate Navigation activity when back button is clicked and go to Loading activity
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
@@ -564,6 +592,9 @@ class NavigationActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * Terminate the Navigation
+     */
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)

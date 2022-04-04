@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
 
     /**
-     *
+     * Enable the movement of the cards inside the recycler view
      */
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -21,7 +21,8 @@ abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
     }
 
     /**
-     *
+     * Delete card in the recycler view by swiping to the left, disable deletion
+     * of the first card
      */
     private fun disableFlags(position: Int): Int {
         return if (position == 0) 0
@@ -29,7 +30,7 @@ abstract class TouchScreenCallBack : ItemTouchHelper.Callback() {
     }
 
     /**
-     *
+     * Enable the card swipe to the left in the recycler view
      */
     override fun onMove(
         recyclerView: RecyclerView,

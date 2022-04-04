@@ -56,6 +56,7 @@ class HomePageViewModel @Inject constructor(
     application,
     applicationContext
 ) {
+
     private var showAlert: MutableLiveData<Boolean> = MutableLiveData(false)
     private var stops: MutableList<Locations> = mutableListOf()
     private var updateInfo: Boolean = false
@@ -379,8 +380,10 @@ class HomePageViewModel @Inject constructor(
         val noCurrentJourney = SharedPrefHelper.checkIfSharedPrefEmpty(Constants.LOCATIONS)
         if (!noCurrentJourney) {
             showAlert.value = true
+            setShowAlert(true)
         }
         else {
+            clearAllSharedPreferences()
             isReady.value = true
         }
     }
@@ -425,19 +428,8 @@ class HomePageViewModel @Inject constructor(
      */
     fun logOut() {
         userRepository.logOut()
-        clearSharedPref()
+        clearAllSharedPreferences()
         logout.value = true
-    }
-
-    fun clearSharedPref(){
-        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
-        SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(application,Constants.DOCKS_LOCATIONS)
-        SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(application,Constants.NUM_USERS)
-        SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(application,Constants.CHECKED_BOXES)
-        SharedPrefHelper.clearSharedPreferences()
     }
 
     /**
