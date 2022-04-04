@@ -20,7 +20,7 @@ import org.junit.runners.Suite
     ChangePasswordActivityTest::class,
     FAQActivityTest::class,
     ForgotPasswordActivityTest::class,
-    NavigationActivityTest::class,
+    NavigationActivityTest::class
 )
 
 class ActivitiesTestSuite

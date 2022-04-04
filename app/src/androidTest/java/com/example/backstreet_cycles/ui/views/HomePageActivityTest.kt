@@ -1,5 +1,14 @@
 package com.example.backstreet_cycles.ui.views
 
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import com.example.backstreet_cycles.R
+import org.junit.Test
+
 //import android.view.KeyEvent
 //import android.view.View
 //import android.view.ViewGroup
@@ -657,5 +666,20 @@ package com.example.backstreet_cycles.ui.views
 //    fun tearDown(){
 //        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
 //    }
+//@Test
+//fun test_next_button_from_home_to_journey() {
+//    ActivityScenario.launch(HomePageActivity::class.java)
+//    addStop("Covent Garden")
+//    Espresso.onView(ViewMatchers.withId(R.id.nextPageButton)).perform(ViewActions.click())
+//    Espresso.pressBackUnconditionally()
+//    Intents.init()
+//    Intents.intending(IntentMatchers.hasComponent(HomePageActivity::class.qualifiedName))
+//    Intents.release()
+//    ActivityScenario.launch(HomePageActivity::class.java)
+//    Espresso.onView(ViewMatchers.withId(R.id.nextPageButton)).perform(ViewActions.click())
+//    Intents.init()
+//    Intents.intending(IntentMatchers.hasComponent(JourneyActivity::class.qualifiedName))
+//    Intents.release()
+//}
 //
 //}
