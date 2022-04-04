@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.dependencyInjection
 
 import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.data.local.TouristAttractionFile
-import com.example.backstreet_cycles.data.remote.MapboxApi
 import com.example.backstreet_cycles.data.remote.TflApi
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.repositoryInt.*
@@ -48,14 +47,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMapboxApi(): MapboxApi {
-        return MapboxApi
-    }
-
-    @Provides
-    @Singleton
-    fun provideMapboxRepository(api: MapboxApi): MapboxRepository {
-        return MapboxRepositoryImpl(api)
+    fun provideMapboxRepository(): MapboxRepository {
+        return MapboxRepositoryImpl()
     }
 
     @Provides

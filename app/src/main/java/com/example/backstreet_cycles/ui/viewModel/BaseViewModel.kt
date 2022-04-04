@@ -191,7 +191,7 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Clear journey's distance and duration
+     * Clear journey's distance and duration information
      */
     open fun clearInfo() {
         mapboxRepository.clearJourneyDistances()
@@ -261,6 +261,9 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
+    /**
+     *
+     */
     open fun getRoute() {
         clearView()
     }
@@ -285,7 +288,6 @@ open class BaseViewModel @Inject constructor(
 
                 }
                 is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
                 }
             }
         }.launchIn(viewModelScope)
@@ -318,13 +320,16 @@ open class BaseViewModel @Inject constructor(
     }
 
     /**
-     * Clear shared preferences
+     * Clear shared preferences for locations
      */
     open fun clearSaveLocations() {
         SharedPrefHelper.initialiseSharedPref(mApplication, Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
     }
 
+    /**
+     * Clear all shared preferences related to journey
+     */
     open fun clearAllSharedPreferences(){
 
         SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)

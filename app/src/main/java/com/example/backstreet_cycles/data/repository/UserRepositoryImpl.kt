@@ -23,14 +23,6 @@ class UserRepositoryImpl(
     private var firebaseAuth: FirebaseAuth = fireAuth
     private var dataBase: FirebaseFirestore = fireStore
 
-    fun setFirebaseAuth(firebaseAuth: FirebaseAuth){
-        this.firebaseAuth = firebaseAuth
-    }
-
-    fun setFirebaseFirestore(dataBase: FirebaseFirestore){
-        this.dataBase = dataBase
-    }
-
     /**
      * Register user in the Firebase
      *
@@ -116,7 +108,6 @@ class UserRepositoryImpl(
      */
     override fun updateUserDetails(firstName: String, lastName: String): Flow<Resource<String>> = callbackFlow {
         try {
-            EspressoIdlingResource.increment()
         dataBase
             .collection("users")
             .whereEqualTo("email", firebaseAuth.currentUser!!.email)
@@ -138,10 +129,7 @@ class UserRepositoryImpl(
             }
         }catch(e: Exception) {
             trySend(Resource.Error<String>("No user"))
-        }finally {
-            EspressoIdlingResource.decrement()
         }
-
         awaitClose { channel.close() }
     }
 
@@ -180,7 +168,6 @@ class UserRepositoryImpl(
      * Retrieve user's details from the database
      */
     override fun getUserDetails(): Flow<Resource<Users>> = callbackFlow {
-        EspressoIdlingResource.increment()
         try {
             dataBase
                 .collection("users")
@@ -196,10 +183,6 @@ class UserRepositoryImpl(
                 }
         } catch(e: Exception) {
             trySend(Resource.Error<Users>("No user"))
-
-        }
-        finally {
-            EspressoIdlingResource.decrement()
         }
 
         awaitClose { channel.close() }
@@ -213,7 +196,6 @@ class UserRepositoryImpl(
      * @param password
      */
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = callbackFlow {
-        EspressoIdlingResource.increment()
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -224,17 +206,14 @@ class UserRepositoryImpl(
                         }else{
                             trySend(Resource.Error<Boolean>("Couldn't reach server"))
                         }
-                        EspressoIdlingResource.decrement()
                     } else {
                         trySend(Resource.Error<Boolean>("Please verify your email address"))
-                        EspressoIdlingResource.decrement()
                     }
                 } else {
 
                     trySend(Resource.Error<Boolean>(
                             " The password is invalid or the user does not have a password")
                     )
-                    EspressoIdlingResource.decrement()
                 }
             }
 
@@ -301,9 +280,7 @@ class UserRepositoryImpl(
      * Log out user from the application
      */
     override fun logOut() {
-        EspressoIdlingResource.increment()
         firebaseAuth.signOut()
-        EspressoIdlingResource.decrement()
     }
 
 }
