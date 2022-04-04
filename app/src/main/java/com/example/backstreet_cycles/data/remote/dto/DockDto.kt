@@ -1,6 +1,6 @@
 package com.example.backstreet_cycles.data.remote.dto
 
-import android.util.Log
+
 import com.example.backstreet_cycles.domain.model.dto.Dock
 
 data class DockDto(

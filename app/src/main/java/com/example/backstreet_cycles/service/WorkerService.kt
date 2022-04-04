@@ -52,7 +52,6 @@ class WorkerService @AssistedInject constructor(
      */
     private suspend fun attemptNotification() {
 
-
         runBlocking {
             tflRepository.getDocks().onEach { result ->
                 when (result) {
@@ -65,11 +64,9 @@ class WorkerService @AssistedInject constructor(
                     }
 
                     is Resource.Error -> {
-                        Log.i("New dock", "Error")
 
                     }
                     is Resource.Loading -> {
-                        Log.i("New dock", "Loading...")
                     }
                 }
             }.collect()

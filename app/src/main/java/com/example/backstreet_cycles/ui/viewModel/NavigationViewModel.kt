@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.repositoryInt.CyclistRepository
 import com.example.backstreet_cycles.domain.repositoryInt.MapboxRepository
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository

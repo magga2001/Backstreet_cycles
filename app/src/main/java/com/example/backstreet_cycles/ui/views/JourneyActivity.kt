@@ -18,6 +18,7 @@ import com.example.backstreet_cycles.common.Constants
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.domain.adapter.PlanJourneyAdapter
 import com.example.backstreet_cycles.domain.utils.PermissionHelper
+import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.domain.utils.SnackBarHelper
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -166,7 +167,6 @@ class JourneyActivity : AppCompatActivity() {
         mapboxMap = journey_mapView.getMapboxMap()
         MapboxNavigationProvider.destroy()
         init()
-
     }
 
     /**
@@ -273,7 +273,6 @@ class JourneyActivity : AppCompatActivity() {
      * Initialise the navigation
      */
     private fun initNavigation() {
-//        mapboxNavigation.setRoutes(currentRoute)
         journeyViewModel.setRoute()
         journeyViewModel.registerObservers(
             routesObserver,
@@ -419,8 +418,6 @@ class JourneyActivity : AppCompatActivity() {
 
         plan_journey_recycling_view.layoutManager = LinearLayoutManager(this)
         plan_journey_recycling_view.adapter = planJourneyAdapter
-//        finish_journey.isEnabled = false
-//        val check = planJourneyAdapter.getViewHolders()
     }
 
     /**

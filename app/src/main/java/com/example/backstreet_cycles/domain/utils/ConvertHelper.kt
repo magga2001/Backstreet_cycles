@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.domain.utils
 
-import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.mapbox.geojson.Point
@@ -31,5 +30,13 @@ object ConvertHelper {
 
     fun convertMsToS(durations: List<Double>): Int {
         return (durations.sum() / 60).roundToInt()
+    }
+
+    /**
+     * @param locations - a list of locations
+     * @return a list of strings - of the location names
+     */
+    fun getLocationNames(locations: List<Locations>): List<String> {
+        return locations.map { it.name }
     }
 }

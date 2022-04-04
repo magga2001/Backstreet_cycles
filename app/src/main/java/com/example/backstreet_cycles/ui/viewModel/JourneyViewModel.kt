@@ -2,7 +2,6 @@ package com.example.backstreet_cycles.ui.viewModel
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.backstreet_cycles.R
@@ -30,6 +29,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+
 
 @HiltViewModel
 class JourneyViewModel @Inject constructor(
@@ -97,7 +97,6 @@ class JourneyViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {
-                    Log.i("New dock", "Loading...")
                 }
             }
         }.launchIn(viewModelScope)
@@ -209,13 +208,11 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    isReady.postValue(status)
                     updateMap.value = isUpdateMap
                 }
 
                 is Resource.Error -> {
                     //Fail
-//                    message.postValue(result.message!!)
                     message.value = result.message!!
                 }
 
@@ -234,13 +231,11 @@ class JourneyViewModel @Inject constructor(
         mapboxRepository.requestRoute(mapboxNavigation, routeOptions, info).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-//                    isReady.postValue(status)
                     updateMap.value = isUpdateMap
                     calcJourneyInfo()
                 }
 
                 is Resource.Error -> {
-                    //Fail
                 }
 
                 is Resource.Loading -> {
@@ -316,18 +311,12 @@ class JourneyViewModel @Inject constructor(
      * @param userDetails
      */
     fun finishJourney(userDetails: Users) {
-        SharedPrefHelper.initialiseSharedPref(application,Constants.LOCATIONS)
+        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.LOCATIONS)
         addJourneyToJourneyHistory(
             SharedPrefHelper.getSharedPref(Locations::class.java),
             userDetails
         )
-
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.DOCKS_LOCATIONS)
-        SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(mApplication, Constants.NUM_USERS)
-        SharedPrefHelper.clearSharedPreferences()
-        SharedPrefHelper.initialiseSharedPref(mApplication,Constants.CHECKED_BOXES)
-        SharedPrefHelper.clearSharedPreferences()
+        clearAllSharedPreferences()
     }
 
     /**
