@@ -5,13 +5,11 @@ import android.view.ViewGroup
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -47,7 +45,8 @@ class JourneyHistoryActivityTest {
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
-            android.Manifest.permission.INTERNET)
+            android.Manifest.permission.INTERNET
+        )
 
     @get:Rule
     val activityRule = ActivityScenarioRule(JourneyHistoryActivity::class.java)
@@ -65,15 +64,10 @@ class JourneyHistoryActivityTest {
         Intents.release()
     }
 
-//    @Test
-//    fun test_title_is_visible() {
-//        onView(
-//            Matchers.allOf(
-//                withId(R.id.journey_history_title),
-//                withParent(withId(R.id.recentJourney_layout))
-//            )
-//        ).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun test_title_is_visible() {
+        onView(withId(R.id.journey_history_title)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_recycler_view_is_visible() {
@@ -106,7 +100,8 @@ class JourneyHistoryActivityTest {
             Matchers.allOf(
                 withId(R.id.recentJourneyCardTextView),
                 withParent(withId(R.id.JourneySummaryLayout1))
-            )).check(matches(isDisplayed()))
+            )
+        ).check(matches(isDisplayed()))
     }
 
 //    @Test
@@ -118,7 +113,7 @@ class JourneyHistoryActivityTest {
 //    }
 
     @Test
-    fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
+    fun test_go_to_HomePageActivity_on_clicking_top_back_button() {
 
         onView(
             Matchers.allOf(

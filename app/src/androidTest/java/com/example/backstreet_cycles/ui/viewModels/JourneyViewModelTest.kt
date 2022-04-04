@@ -45,7 +45,7 @@ class JourneyViewModelTest {
 
     @Before
     fun setUp() {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
@@ -211,7 +211,7 @@ class JourneyViewModelTest {
 
     @Test
     fun test_finish_journey() = runBlocking {
-        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456")
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
         journeyViewModel.getUserDetails()
         assert(
             journeyViewModel.getUserInfo().getOrAwaitValue()

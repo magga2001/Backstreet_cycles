@@ -1,13 +1,11 @@
 package com.example.backstreet_cycles.data.repository
 
 import android.util.Log
-import androidx.navigation.Navigator
 import com.example.backstreet_cycles.common.EspressoIdlingResource
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -100,9 +98,9 @@ class FakeUserRepoImpl @Inject constructor(
 
                 if(user?.get(currentUser!!) == password && newPassword.length > PASSWORD_MINIMUM_LENGTH){
                     user[currentUser!!] = newPassword
-                    emit(Resource.Success("Password updated Successfully"))
+                    emit(Resource.Success("Password successfully updated."))
                 }else{
-                    emit(Resource.Error("Fail to update password"))
+                    emit(Resource.Error("Password update fail"))
                 }
             }
         }
