@@ -49,7 +49,9 @@ class EditUserProfileActivity : AppCompatActivity() {
         initListener()
     }
 
-    // Display helpful text in the text fields if they aren't already containing information
+    /**
+     * Display helpful text in the text fields if they aren't already containing information
+     */
     private fun initListener() {
         edit_user_details_SaveButton.setOnClickListener {
             when {

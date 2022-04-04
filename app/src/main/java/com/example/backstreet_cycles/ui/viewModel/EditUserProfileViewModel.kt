@@ -52,9 +52,6 @@ class EditUserProfileViewModel @Inject constructor(
                 is Resource.Error -> {
                     updatedProfile.value = result.message!!
                 }
-
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException
 
 object LiveDataObserver {
     fun <T> LiveData<T>.getOrAwaitValue(
-        time: Long = 2,
+        time: Long = 5,
         timeUnit: TimeUnit = TimeUnit.SECONDS
     ): T {
         var data: T? = null

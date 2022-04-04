@@ -66,6 +66,7 @@
     <string name="set_nav_to_start_journey">Make sure to set your journey to start your navigation!</string>
     <string name="road_label">road-label</string>
     <string name="hire_bike">Hire a bike</string>
+    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
     <string name="hire_bikes">"Hire %1$s bikes"</string>
 
     <!-- Strings for the menu items -->
@@ -148,7 +149,6 @@
     <string name="destination">destination</string>
     <string name="from">"From: %1$s "</string>
     <string name="to">"To: %1$s "</string>
-    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
     <string name="no_connection">No connection. Please connect to internet</string>
 
 

@@ -61,8 +61,6 @@ class SignUpViewModel @Inject constructor(
                 is Resource.Error -> {
                     message.value = mApplication.getString(R.string.REGISTRATION_FAILED) + result.message!!
                 }
-                is Resource.Loading -> {
-                }
             }
         }.launchIn(viewModelScope)
     }
@@ -86,9 +84,6 @@ class SignUpViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     message.value = result.message!!
-                }
-
-                is Resource.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)

@@ -25,7 +25,6 @@ class TflRepositoryImpl @Inject constructor(
      */
     override suspend fun getDocks(): Flow<Resource<MutableList<Dock>>> = channelFlow {
         try {
-            send(Resource.Loading())
             val docks = tflApi.getDocks()
                 .map { it.toDock() }
                 .filter { (it.nbDocks - (it.nbBikes + it.nbSpaces) == 0) }
