@@ -1,5 +1,4 @@
 package com.example.backstreet_cycles.ui.viewModels
-
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
@@ -22,7 +21,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class JourneyViewModelTest {
-
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -116,7 +114,7 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_update_map() {
+    fun test_map_is_updated() {
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
     }
@@ -173,7 +171,7 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_get_journey_start_walk() {
+    fun test_get_journey_current_location_to_dock() {
         journeyViewModel.onSelectedJourney(
             locations[0],
             MapboxConstants.WALKING,
@@ -186,7 +184,7 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_get_journey_cycling() {
+    fun test_get_journey_dock_to_dock() {
         journeyViewModel.onSelectedJourney(
             locations[0],
             MapboxConstants.WALKING,
@@ -199,7 +197,7 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_get_journey_end_walk() {
+    fun test_get_journey_dock_to_destination() {
         journeyViewModel.onSelectedJourney(
             locations[0],
             MapboxConstants.WALKING,

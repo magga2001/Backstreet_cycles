@@ -397,6 +397,7 @@ class HomePageViewModel @Inject constructor(
             val listOfLocations = SharedPrefHelper.getSharedPref(Locations::class.java)
             mapboxRepository.setJourneyLocations(listOfLocations)
             isReady.value = true
+            hasCurrentJourney.value = false
         } else {
             hasCurrentJourney.value = false
         }

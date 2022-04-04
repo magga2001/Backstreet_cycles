@@ -92,9 +92,7 @@ class LoadingViewModelTest {
 
     @Test
     fun test_get_journey_route(){
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
+        add_stops()
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
         assert(loadingViewModel.getIsReady().getOrAwaitValue())
@@ -103,13 +101,17 @@ class LoadingViewModelTest {
     @Test
     fun test_get_journey_route_with_no_connection(){
         fakeMapboxRepoImpl.setConnection(false)
-        for(location in locations){
-            homePageViewModel.addStop(location)
-        }
+        add_stops()
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
         assert(!loadingViewModel.getIsReady().getOrAwaitValue())
         assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
+    }
+
+    fun add_stops(){
+        for(location in locations){
+            homePageViewModel.addStop(location)
+        }
     }
 
     @After

@@ -78,7 +78,33 @@ class LogInViewModelTest {
 
     @Test
     fun test_log_in_with_unregistered_email() = runBlocking {
-        logInViewModel.login("johndoe@example.com", "123456")
+        register()
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
+        logInViewModel.login("johndoe1234@example.com", "123456")
+        assertEquals("No User", logInViewModel.getErrorMessageData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_log_in_with_wrong_password() = runBlocking {
+        register()
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
+        logInViewModel.login("johndoe@example.com", "1248974")
+        assertEquals("Please verify your email", logInViewModel.getErrorMessageData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_log_in_with_empty_password() = runBlocking {
+        register()
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
+        logInViewModel.login("johndoe@example.com", "")
+        assertEquals("Please verify your email", logInViewModel.getErrorMessageData().getOrAwaitValue())
+    }
+
+    @Test
+    fun test_log_in_with_empty_email() = runBlocking {
+        register()
+        fakeUserRepoImpl.verifyEmail("johndoe@example.com")
+        logInViewModel.login("", "123456")
         assertEquals("No User", logInViewModel.getErrorMessageData().getOrAwaitValue())
     }
 

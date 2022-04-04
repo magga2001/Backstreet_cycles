@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import dagger.hilt.android.HiltAndroidApp
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -43,7 +44,7 @@ class BackstreetApplication : Application(), Configuration.Provider {
                 WorkHelper.cancelWork(context = applicationContext)
             }
 //            WorkHelper.cancelWork(context = applicationContext)
-        }, 5000)
+        }, 900000)
     }
 
     /**

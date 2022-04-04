@@ -10,13 +10,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/journey_history_recycler_view"
-        android:layout_width="397dp"
-        android:layout_height="609dp"
+        android:layout_width="392dp"
+        android:layout_height="634dp"
         android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/journey_history_card"
+        app:layout_constraintTop_toBottomOf="@+id/journey_history_card"
         app:layout_constraintVertical_bias="0.991" />
 
     <androidx.cardview.widget.CardView

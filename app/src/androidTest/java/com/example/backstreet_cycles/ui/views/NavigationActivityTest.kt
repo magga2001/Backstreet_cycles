@@ -24,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -118,6 +119,27 @@ class NavigationActivityTest {
         onView(withId(R.id.recenter)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
+    @Test
+    fun navigation_cancelButton_is_displayed(){
+        onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+
+    }
+
+//    @Test
+//    fun test_click_navigation_cancelButton(){
+//        onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        //waitFor(5500)
+//        onView(withId(R.id.stop)).perform(click())
+//        Intents.init()
+//        intending(hasComponent(HomePageActivity::class.qualifiedName))
+//        Intents.release()
+//
+//    }
+
+    @After
+    fun tearDown(){
+        fakeUserRepoImpl.logOut()
+    }
 //    @Test
 //    fun test_click_on_cancel_journey(){
 ////        addStop("Covent Garden")
@@ -135,13 +157,13 @@ class NavigationActivityTest {
 //
 //    }
 
-//    private fun waitFor(delay: Long): ViewAction {
-//        return object : ViewAction {
-//            override fun getConstraints(): Matcher<View> = isRoot()
-//            override fun getDescription(): String = "wait for $delay milliseconds"
-//            override fun perform(uiController: UiController, v: View?) {
-//                uiController.loopMainThreadForAtLeast(delay)
-//            }
-//        }
-//    }
+    private fun waitFor(delay: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = isRoot()
+            override fun getDescription(): String = "wait for $delay milliseconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(delay)
+            }
+        }
+    }
 }
