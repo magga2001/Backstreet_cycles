@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Forgot Password Activity responsible for password reset
+ */
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
     tflRepository: TflRepository,

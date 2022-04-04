@@ -7,6 +7,9 @@ import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.core.MapboxNavigation
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Interface for the MapBox repository
+ */
 interface MapboxRepository {
 
     fun requestRoute(

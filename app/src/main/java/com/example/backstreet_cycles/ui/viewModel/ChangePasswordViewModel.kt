@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Change Password Activity responsible for password update
+ */
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
     tflRepository: TflRepository,

@@ -14,6 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Login page allowing user to log into the application
+ */
 @AndroidEntryPoint
 class LogInActivity : AppCompatActivity() {
 
@@ -63,11 +66,11 @@ class LogInActivity : AppCompatActivity() {
         log_in_button.setOnClickListener {
             when {
                 TextUtils.isEmpty(log_in_email.text.toString().trim { it <= ' ' }) -> {
-                    log_in_email.error = "Please enter your email"
+                    log_in_email.error = getString(R.string.enter_email)
                 }
 
                 TextUtils.isEmpty(log_in_password.text.toString().trim { it <= ' ' }) -> {
-                    log_in_password.error = "Please enter a password"
+                    log_in_password.error = getString(R.string.error_enter_password)
                 }
 
                 else ->

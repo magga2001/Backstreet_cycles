@@ -7,7 +7,6 @@ import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.common.MapboxConstants
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.utils.ConvertHelper
 import com.example.backstreet_cycles.domain.utils.JourneyState
 import com.example.backstreet_cycles.domain.utils.MapInfoHelper
@@ -45,7 +44,7 @@ class JourneyViewModelTest {
 
     @Before
     fun setUp() {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
@@ -210,14 +209,27 @@ class JourneyViewModelTest {
     }
 
     @Test
-    fun test_finish_journey() = runBlocking {
-        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456")
+    fun test_finish_journey_get_firstName() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
         journeyViewModel.getUserDetails()
-        assert(
-            journeyViewModel.getUserInfo().getOrAwaitValue()
-                .equals(Users("John", "Doe", "johndoe@example.com"))
-        )
         journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assert("John"==journeyViewModel.getUserInfo().getOrAwaitValue().firstName)
+    }
+
+    @Test
+    fun test_finish_journey_get_lastName() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
+        journeyViewModel.getUserDetails()
+        journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assert("Doe" == journeyViewModel.getUserInfo().getOrAwaitValue().lastName)
+    }
+
+    @Test
+    fun test_finish_journey_get_email() = runBlocking {
+        fakeUserRepoImpl.addMockUser("John", "Doe", "johndoe@example.com", "123456", locations)
+        journeyViewModel.getUserDetails()
+        journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
+        assert("johndoe@example.com"==journeyViewModel.getUserInfo().getOrAwaitValue().email)
     }
 
     @Test

@@ -24,6 +24,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * View model for Loading Activity responsible for getting route and navigation information
+ */
 @HiltViewModel
 class LoadingViewModel @Inject constructor(
     tflRepository: TflRepository,

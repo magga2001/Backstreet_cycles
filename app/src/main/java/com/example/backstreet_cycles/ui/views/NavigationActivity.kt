@@ -62,6 +62,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import java.util.*
 
+/**
+ * This activity launches Navigation page that is responsible live GPS navigation
+ */
 @AndroidEntryPoint
 class NavigationActivity : AppCompatActivity() {
 
@@ -468,7 +471,7 @@ class NavigationActivity : AppCompatActivity() {
         val mapboxRouteLineOptions = MapboxRouteLineOptions.Builder(this)
             .withVanishingRouteLineEnabled(true)
             .withRouteLineResources(routeLineResources)
-            .withRouteLineBelowLayerId("road-label")
+            .withRouteLineBelowLayerId(getString(R.string.road_label))
             .build()
         routeLineApi = MapboxRouteLineApi(mapboxRouteLineOptions)
         routeLineView = MapboxRouteLineView(mapboxRouteLineOptions)

@@ -5,6 +5,10 @@ import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.utils.JsonHelper
 
+
+/**
+ * Class responsible for tourist attractions
+ */
 object TouristAttractionFile {
 
     private val touristAttractions = mutableListOf<Locations>()

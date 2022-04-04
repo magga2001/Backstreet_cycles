@@ -1,8 +1,5 @@
 package com.example.backstreet_cycles.common
 
-//import androidx.hilt.work.HiltWorkerFactory
-//import androidx.work.Configuration
-
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -25,6 +22,9 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 
+/**
+ * Custom application for the whole application
+ */
 @HiltAndroidApp
 class BackstreetApplication : Application(), Configuration.Provider{
 
@@ -41,6 +41,7 @@ class BackstreetApplication : Application(), Configuration.Provider{
 
         SharedPrefHelper.initialiseSharedPref(this, Constants.DOCKS_LOCATIONS)
 
+//      check if there is a current user to turn on the notification
         Handler(Looper.myLooper()!!).postDelayed({
             if (FirebaseAuth.getInstance().currentUser != null) {
                 WorkHelper.setPeriodicallySendingLogs(context = applicationContext)

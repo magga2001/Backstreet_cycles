@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
+import androidx.arch.core.executor.testing.CountingTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -12,6 +14,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
@@ -30,10 +33,9 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 @HiltAndroidTest
 class NavMenuTest{
+
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
-
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -46,14 +48,19 @@ class NavMenuTest{
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
+    @get:Rule
+    val countingTaskExecutorRule = CountingTaskExecutorRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val activityRule = ActivityScenarioRule(HomePageActivity::class.java)
+
     @Before
     fun setUp() {
-        userRepoImpl.logOut()
-        userRepoImpl.login(email, password)
         hiltRule.inject()
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        ActivityScenario.launch(HomePageActivity::class.java)
-        onView(ViewMatchers.withContentDescription(R.string.open)).perform(ViewActions.click())
+        onView(withContentDescription(R.string.open)).perform(click())
     }
 
     @Test
@@ -95,16 +102,20 @@ class NavMenuTest{
     fun test_FAQ_in_NavMenu_is_visible() {
         onView(withId(R.id.faq)).check(matches(isDisplayed()))
     }
-//    @Test
-//    fun test_logout_in_NavMenu_is_visible() {
-//        onView(withId(R.id.logout)).check(matches(isDisplayed()))
-//    }
+
+    @Test
+    fun test_logout_in_NavMenu_is_visible() {
+//        ActivityScenario.launch(LogInActivity::class.java)
+//        onView(withId(R.id.log_in_email)).perform(ViewActions.typeText(email)).check(matches(withText(email)))
+//        onView(withId(R.id.log_in_password)).perform(ViewActions.typeText(password)).check(matches(withText(password)))
+        onView(withId(R.id.logout)).check(matches(isDisplayed()))
+    }
 
     @Test
     fun test_viewProfileButton_toEditProfileActivity() {
         onView(withId(R.id.profile)).perform(click())
         Intents.init()
-        Intents.intending(IntentMatchers.hasComponent(EditUserProfileActivity::class.qualifiedName))
+        intending(hasComponent(EditUserProfileActivity::class.qualifiedName))
         Intents.release()
     }
 
@@ -112,65 +123,60 @@ class NavMenuTest{
     fun test_changePassword_toChangePasswordActivity() {
         onView(withId(R.id.changePassword)).perform(click())
         Intents.init()
-        Intents.intending(IntentMatchers.hasComponent(ChangePasswordActivity::class.qualifiedName))
+        intending(hasComponent(ChangePasswordActivity::class.qualifiedName))
         Intents.release()
     }
 
-//    @Test
-//    fun test_JourneyHistory_to_JourneyHistoryActivity(){
-//        onView(withId(R.id.journeyHistory)).perform(click())
-//        Intents.init()
-//        Intents.intending(IntentMatchers.hasComponent(JourneyActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun test_JourneyHistory_to_JourneyHistoryActivity(){
+        onView(withId(R.id.journeyHistory)).perform(click())
+        Intents.init()
+        intending(hasComponent(JourneyActivity::class.qualifiedName))
+        Intents.release()
+    }
+
     @Test
     fun test_aboutButton_to_AboutActivity(){
         onView(withId(R.id.about)).perform(click())
         Intents.init()
-        Intents.intending(IntentMatchers.hasComponent(AboutActivity::class.qualifiedName))
+        intending(hasComponent(AboutActivity::class.qualifiedName))
         Intents.release()
     }
     @Test
     fun test_FAQ_to_FaqActivity(){
         onView(withId(R.id.faq)).perform(click())
         Intents.init()
-        Intents.intending(IntentMatchers.hasComponent(FAQActivity::class.qualifiedName))
+        intending(hasComponent(FAQActivity::class.qualifiedName))
         Intents.release()
     }
 
-//    @Test
-//    fun test_logout_to_loginActivity(){
-//        onView(withId(R.id.logout)).perform(click())
-//        Intents.init()
-//        Intents.intending(IntentMatchers.hasComponent(LogInActivity::class.qualifiedName))
-//        Intents.release()
-//    }
+    @Test
+    fun test_logout_to_loginActivity(){
+        onView(withId(R.id.logout)).check(matches(isDisplayed()))
+        Intents.init()
+        intending(hasComponent(LogInActivity::class.qualifiedName))
+        Intents.release()
+    }
 
     @Test
     fun test_nav_showUserName_textField(){
         onView(withId(R.id.user_name)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun test_nav_showUserEmail_textField(){
-//        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
-//    }
-
-    //get current user's first name
-//    @Test
-//    fun test_username_field_matches_currentuserName(){
-//        val userName = "Hello + " //current user's name
-//        onView(withId(R.id.user_name)).check(matches(withText(userName)))
-//    }
-
-//    @Test
-//    fun test_email_field_matches_currentuserEmail(){
-//        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
-//    }
-
-    @After
-    fun tearDown(){
-        userRepoImpl.logOut()
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+    @Test
+    fun test_nav_showUserEmail_textField(){
+        onView(withId(R.id.nav_header_textView_email)).check(matches(isDisplayed()))
     }
+
+    @Test
+    fun test_username_field_matches_current_user_first_name(){
+        val firstName = "Hello, Test"
+        onView(withId(R.id.user_name)).check(matches(withText(firstName)))
+    }
+
+    @Test
+    fun test_email_field_matches_current_user_email(){
+        onView(withId(R.id.nav_header_textView_email)).check(matches(withText(email)))
+    }
+
 }

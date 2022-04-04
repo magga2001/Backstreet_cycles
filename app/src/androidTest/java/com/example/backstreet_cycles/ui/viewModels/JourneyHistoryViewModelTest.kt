@@ -7,12 +7,12 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.*
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.ui.viewModel.HomePageViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
 import com.example.backstreet_cycles.ui.viewModel.JourneyViewModel
 import com.example.backstreet_cycles.ui.viewModel.LoadingViewModel
 import dagger.hilt.android.internal.Contexts
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -142,15 +142,18 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_get_journey_history(){
-        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456")
+        fakeUserRepoImpl.addMockUser("John","Doe","johndoe@example.com","123456", locations)
         get_and_save_journey()
         journeyViewModel.getUserDetails()
         val user = journeyViewModel.getUserInfo().getOrAwaitValue()
-        assert(user.equals(Users("John","Doe","johndoe@example.com")))
+        assert("John"==journeyViewModel.getUserInfo().getOrAwaitValue().firstName)
+        assert("Doe" == journeyViewModel.getUserInfo().getOrAwaitValue().lastName)
+        assert("johndoe@example.com"==journeyViewModel.getUserInfo().getOrAwaitValue().email)
         journeyViewModel.finishJourney(journeyViewModel.getUserInfo().getOrAwaitValue())
-        assert(journeyViewModel.getMessage().getOrAwaitValue() == "Record added")
-        assert(journeyHistoryViewModel.getJourneyHistory(user).size == 1)
+        assertEquals(journeyViewModel.getMessage().getOrAwaitValue(), "Record added")
+        assertEquals(journeyHistoryViewModel.getJourneyHistory(user).size, 1)
     }
+
 
     private fun get_and_save_journey(){
         for(location in locations){

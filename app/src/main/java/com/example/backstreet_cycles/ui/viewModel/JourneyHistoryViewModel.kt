@@ -21,6 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Journey History Activity responsible for storing previous journeys and the current journey if one exists
+ */
 @HiltViewModel
 class JourneyHistoryViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -84,7 +87,7 @@ class JourneyHistoryViewModel @Inject constructor(
      */
     fun updateCurrentLocation(currentLocation: Location) {
         for (stop in getStops()) {
-            if (stop.name == "Current Location") {
+            if (stop.name == mContext.getString(R.string.location)) {
 
                 val longitude = currentLocation.longitude
                 val latitude = currentLocation.latitude

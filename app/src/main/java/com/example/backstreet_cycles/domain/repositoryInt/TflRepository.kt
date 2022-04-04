@@ -4,6 +4,9 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Interface for the TFL repository
+ */
 interface TflRepository {
 
     suspend fun getDocks(): Flow<Resource<MutableList<Dock>>>

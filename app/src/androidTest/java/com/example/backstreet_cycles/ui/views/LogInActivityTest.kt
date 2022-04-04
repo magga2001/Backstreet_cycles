@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
+import androidx.arch.core.executor.testing.CountingTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -10,6 +12,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
@@ -33,10 +36,14 @@ class LogInActivityTest{
     private val email = "backstreet.cycles.test.user@gmail.com"
     private val password = "123456"
 
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    val countingTaskExecutorRule = CountingTaskExecutorRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -46,12 +53,13 @@ class LogInActivityTest{
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.INTERNET)
 
+    @get:Rule
+    val activityRule = ActivityScenarioRule(LogInActivity::class.java)
+
+
     @Before
     fun setUp() {
-        userRepoImpl.logOut()
         hiltRule.inject()
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        ActivityScenario.launch(LogInActivity::class.java)
     }
 
     @Test
@@ -67,7 +75,7 @@ class LogInActivityTest{
     }
 
     @Test
-    fun test_email_textfield_is_visible() {
+    fun test_email_text_field_is_visible() {
         onView(withId(R.id.log_in_email)).check(matches(isDisplayed()))
     }
     @Test
@@ -81,12 +89,12 @@ class LogInActivityTest{
     }
 
     @Test
-    fun test_buttonLogin_is_visible() {
+    fun test_button_login_is_visible() {
         onView(withId(R.id.log_in_button)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_buttonCreateAccount_is_visible() {
+    fun test_button_createAccount_is_visible() {
         onView(withId(R.id.log_in_buttonCreateAccount)).check(matches(isDisplayed()))
     }
 
@@ -119,21 +127,17 @@ class LogInActivityTest{
 
     @Test
     fun login_email_is_empty() {
-        onView(withId(R.id.log_in_email)).perform(ViewActions.typeText(""), closeSoftKeyboard())
-        onView(withId(R.id.log_in_button)).perform(ViewActions.click())
+        onView(withId(R.id.log_in_email)).perform(typeText(""), closeSoftKeyboard())
+        onView(withId(R.id.log_in_button)).perform(click())
         onView(withId(R.id.log_in_email)).check(matches(hasErrorText("Please enter your email")))
     }
 
     @Test
     fun login_password_is_empty() {
-        onView(withId(R.id.log_in_email)).perform(ViewActions.typeText("test"), closeSoftKeyboard())
-        onView(withId(R.id.log_in_password)).perform(ViewActions.typeText(""), closeSoftKeyboard())
+        onView(withId(R.id.log_in_email)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.log_in_password)).perform(typeText(""), closeSoftKeyboard())
         onView(withId(R.id.log_in_button)).perform(click())
         onView(withId(R.id.log_in_password)).check(matches(hasErrorText("Please enter a password")))
     }
 
-    @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-    }
 }

@@ -11,6 +11,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_forgot_password.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Forgot Password page which enables user to retrieve access to their account
+ * by sending a verification link to their email
+ */
 @AndroidEntryPoint
 class ForgotPasswordActivity : AppCompatActivity() {
 
@@ -38,7 +42,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         forgot_password_SendPasswordReset_button.setOnClickListener {
             val email = forgot_password_email.text.toString().trim { it <= ' ' }
             if (email.isEmpty()) {
-                forgot_password_email.error = "Please enter your email"
+                forgot_password_email.error = getString(R.string.enter_email_forgot_password)
             } else {
                 lifecycleScope.launch {
                     forgotPasswordViewModel.resetPassword(email)

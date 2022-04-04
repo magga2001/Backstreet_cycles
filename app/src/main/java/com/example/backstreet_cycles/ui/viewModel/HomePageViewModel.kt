@@ -39,6 +39,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/**
+ * View model for Home Page Activity responsible for implementing map with locations and adding stops for a journey
+ */
 @HiltViewModel
 class HomePageViewModel @Inject constructor(
     tflRepository: TflRepository,
@@ -222,24 +225,24 @@ class HomePageViewModel @Inject constructor(
         data: List<Locations>
     ) {
         val textSize = 15.0F
-        val textColor = "black"
+        val textColor = mContext.getString(R.string.black)
 
         symbolManager.iconAllowOverlap = true
         val bitmap = BitmapHelper.bitmapFromDrawableRes(
             mApplication,
             R.drawable.tourist_attraction_icon
         ) as Bitmap
-        loadedMapStyle.addImage("myMarker", Bitmap.createScaledBitmap(bitmap, 80, 80, false))
+        loadedMapStyle.addImage(mContext.getString(R.string.my_marker), Bitmap.createScaledBitmap(bitmap, 80, 80, false))
         for (attraction in data) {
             symbolManager.create(
                 SymbolOptions()
                     .withLatLng(LatLng(attraction.lat, attraction.lon))
-                    .withIconImage("myMarker")
-                    .withIconAnchor("right")
+                    .withIconImage(mContext.getString(R.string.my_marker))
+                    .withIconAnchor(mContext.getString(R.string.right))
                     .withTextField(attraction.name)
                     .withTextSize(textSize)
                     .withTextColor(textColor)
-                    .withTextAnchor("left")
+                    .withTextAnchor(mContext.getString(R.string.left))
             )
         }
     }
@@ -248,7 +251,7 @@ class HomePageViewModel @Inject constructor(
      * Check whether one of the added locations is the current location itself
      */
     fun checkCurrentLocation() {
-        val stop = stops.map { it.name }.contains("Current Location")
+        val stop = stops.map { it.name }.contains(mContext.getString(R.string.location))
         hasCurrentLocation.value = stop
     }
 
@@ -259,7 +262,7 @@ class HomePageViewModel @Inject constructor(
     fun updateCurrentLocation(locationComponent: LocationComponent) {
         try {
             for (stop in stops) {
-                if (stop.name == "Current Location") {
+                if (stop.name == mContext.getString(R.string.location)) {
 
                     val longitude = getCurrentLocation(locationComponent)!!.longitude
                     val latitude = getCurrentLocation(locationComponent)!!.latitude
@@ -292,8 +295,8 @@ class HomePageViewModel @Inject constructor(
             .accessToken(mApplication.getString(R.string.mapbox_access_token)).placeOptions(
                 PlaceOptions.builder()
                     .bbox(-0.240, 51.455, -0.0005, 51.600)
-                    .country("GB") // Restricts searches to just Great Britain
-                    .backgroundColor(Color.parseColor("#EEEEEE"))
+                    .country(mContext.getString(R.string.country_GB)) // Restricts searches to just Great Britain
+                    .backgroundColor(Color.parseColor(mContext.getString(R.string.color)))
                     .limit(10)
                     .build(PlaceOptions.MODE_CARDS)
             )

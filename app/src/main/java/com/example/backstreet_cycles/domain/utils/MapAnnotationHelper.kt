@@ -11,6 +11,9 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 
+/**
+ * Helper class for map annotations
+ */
 object MapAnnotationHelper {
 
     private var pointAnnotationManager: PointAnnotationManager? = null

@@ -1,5 +1,9 @@
 package com.example.backstreet_cycles.common
 
+
+/**
+ * Class holding all the constant variables
+ */
 object Constants {
 
     //    Splash screen

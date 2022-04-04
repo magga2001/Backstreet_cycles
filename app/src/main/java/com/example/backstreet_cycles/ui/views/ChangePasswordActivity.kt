@@ -14,7 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_change_password.*
 import kotlinx.coroutines.launch
 
-
+/**
+ * This activity launches Change Password page that is responsible for enabling user the password change
+ */
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
 
@@ -50,8 +52,8 @@ class ChangePasswordActivity : AppCompatActivity() {
                 TextUtils.isEmpty(
                     change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
                     change_password_currentPassword.error =
-                        "In order for use to change your email or password you need to" +
-                                " enter your old password"
+                        getString(R.string.to_change_password) +
+                                getString(R.string.enter_old_password)
                 }
                 else -> {
                     val currentPassword =

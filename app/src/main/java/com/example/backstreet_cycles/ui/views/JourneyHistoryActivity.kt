@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.activity_journey.*
 import kotlinx.android.synthetic.main.activity_journey_history.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Journey History page which contains the history of all user's journeys
+ */
 @AndroidEntryPoint
 class JourneyHistoryActivity : AppCompatActivity() {
 
@@ -87,7 +90,7 @@ class JourneyHistoryActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 journeyHistoryViewModel.clearAllStops()
                 journeyHistoryViewModel.addAllStops(journeys[position].toMutableList())
-                val currentLocation: Location = intent.getParcelableExtra("User Location")!!
+                val currentLocation: Location = intent.getParcelableExtra(getString(R.string.user_location))!!
                 journeyHistoryViewModel.updateCurrentLocation(currentLocation)
                 lifecycleScope.launch { journeyHistoryViewModel.getDock() }
             }
@@ -114,10 +117,10 @@ class JourneyHistoryActivity : AppCompatActivity() {
 
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Planner Alert")
+        builder.setTitle(getString(R.string.user_location))
         builder.setMessage(
-            "You currently have a planned journey. " +
-                    "Would you like to return to the current journey or create a new one?"
+            getString(R.string.alert_message_1) +
+                    getString(R.string.alert_message_2)
         )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->

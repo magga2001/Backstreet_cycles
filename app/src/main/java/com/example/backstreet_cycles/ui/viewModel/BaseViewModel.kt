@@ -29,6 +29,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+/**
+ * Generic view model from which all the other view models inherit from
+ */
 @HiltViewModel
 open class BaseViewModel @Inject constructor(
     protected val tflRepository: TflRepository,
@@ -253,9 +256,6 @@ open class BaseViewModel @Inject constructor(
             .build()
     }
 
-    /**
-     *
-     */
     open fun getRoute() {
         clearView()
     }

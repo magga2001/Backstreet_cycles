@@ -19,7 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.launch
 
-
+/**
+ * This activity launches Splash Screen page which is responsible for fetching data when the app starts
+ */
 @AndroidEntryPoint
 class SplashScreenActivity() : AppCompatActivity() {
 

@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.example.backstreet_cycles.common.Constants
 
-
+/**
+ * Helper class for managing permissions
+ */
 object PermissionHelper {
 
     /**

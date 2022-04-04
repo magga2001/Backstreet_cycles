@@ -5,7 +5,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.backstreet_cycles.R
 
-
+/**
+ * This activity launches About page which contains our app description
+ */
 class AboutActivity : AppCompatActivity() {
 
     /**

@@ -29,6 +29,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 
+/**
+ * Class for sending notification to the user about the dock updates
+ */
 @HiltWorker
 class WorkerService @AssistedInject constructor(
     @Assisted context: Context,
@@ -154,10 +157,10 @@ class WorkerService @AssistedInject constructor(
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Backstreet cycle Notification"
-            val descriptionText = "Journey update"
+            val name = context.getString(R.string.backstreet_notification)
+            val descriptionText = context.getString(R.string.journey_update)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("1337", name, importance).apply {
+            val channel = NotificationChannel(context.getString(R.string.channel_id), name, importance).apply {
                 description = descriptionText
             }
             // Register the channel with the system
@@ -188,10 +191,10 @@ class WorkerService @AssistedInject constructor(
         val pendingIntent: PendingIntent =
             PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notificationBuilder = NotificationCompat.Builder(context, "1337")
+        val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.channel_id))
             .setSmallIcon(R.drawable.dock_station)
-            .setContentTitle("Journey update!")
-            .setContentText("Open the app to see the new changes in your journey.")
+            .setContentTitle(context.getString(R.string.journey_update_2))
+            .setContentText(context.getString(R.string.open_app_to_see_changes))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)

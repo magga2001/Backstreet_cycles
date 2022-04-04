@@ -41,13 +41,12 @@
         android:id="@+id/about_image"
         android:layout_width="174dp"
         android:layout_height="162dp"
-        android:src="@mipmap/manual_icon"
+        android:src="@mipmap/app_icon_round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/aboutDescription"
         app:layout_constraintVertical_bias="0.292"
-        android:tag="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ff106695-f3c3-44e6-a73e-348a9578ed7f/user_manual.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220401%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20220401T172653Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=faa56c0883fc51aaa92f60e07ac5365a97ee115584363cbb1c2c98be00cb1c59&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=filename%20%3D%22user_manual.pdf%22&amp;x-id=GetObject"
-        android:onClick="openBrowser"/>
+       />
 </androidx.constraintlayout.widget.ConstraintLayout>

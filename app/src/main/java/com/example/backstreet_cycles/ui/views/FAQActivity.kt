@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.example.backstreet_cycles.R
 
+/**
+ * This activity launches FAQ page which contains answers to the most common user's questions
+ */
 class FAQActivity : AppCompatActivity() {
 
     /**

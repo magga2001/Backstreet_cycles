@@ -8,6 +8,9 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.*
 
+/**
+ * Helper class for reading and writing Json files
+ */
 object JsonHelper {
 
     /**

@@ -6,7 +6,6 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import com.example.backstreet_cycles.domain.repositoryInt.UserRepository
-import com.example.backstreet_cycles.domain.utils.JsonHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -18,10 +17,11 @@ class FakeUserRepoImpl @Inject constructor(
     @Named("firstName") firstName: String,
     @Named("lastName") lastName: String,
     @Named("email") email: String,
-    @Named("password") password: String
+    @Named("password") password: String,
+    locations: MutableList<Locations>
 ) : UserRepository{
 
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", mutableListOf())
 
     private val PASSWORD_MINIMUM_LENGTH = 6
     private var users: HashMap<String, HashMap<Users, String>> = hashMapOf()
@@ -30,9 +30,9 @@ class FakeUserRepoImpl @Inject constructor(
     private val validEmail: String = "@example.com"
 
     init {
-        if(firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
+        if(firstName.isNotEmpty() && lastName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && locations.isNotEmpty()){
             EspressoIdlingResource.increment()
-            addMockUser(firstName, lastName, email, password)
+            addMockUser(firstName, lastName, email, password, locations)
             EspressoIdlingResource.decrement()
         }
     }
@@ -98,9 +98,9 @@ class FakeUserRepoImpl @Inject constructor(
 
                 if(user?.get(currentUser!!) == password && newPassword.length > PASSWORD_MINIMUM_LENGTH){
                     user[currentUser!!] = newPassword
-                    emit(Resource.Success("Password updated Successfully"))
+                    emit(Resource.Success("Password successfully updated."))
                 }else{
-                    emit(Resource.Error("Fail to update password"))
+                    emit(Resource.Error("Password update fail"))
                 }
             }
         }
@@ -207,7 +207,8 @@ class FakeUserRepoImpl @Inject constructor(
         firstName: String,
         lastName: String,
         email: String,
-        password: String
+        password: String,
+        locations: MutableList<Locations>
     ){
         EspressoIdlingResource.increment()
         val user = Users(firstName,lastName, email)
@@ -218,7 +219,21 @@ class FakeUserRepoImpl @Inject constructor(
         verifiedUser[email] = true
         currentUser = user
 
-        Log.i("userss",users[email].toString())
+        if(currentUser != null){
+
+            val email = user.email
+
+            if(users.containsKey(email)){
+                val user = users[email]
+                val existedUser = user?.keys?.first()
+
+                val gson = Gson()
+                val jsonObject = gson.toJson(locations)
+
+                existedUser!!.journeyHistory = mutableListOf(jsonObject)
+            }
+        }
+
         EspressoIdlingResource.decrement()
 
     }

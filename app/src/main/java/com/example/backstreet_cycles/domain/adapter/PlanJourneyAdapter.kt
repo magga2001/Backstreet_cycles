@@ -23,7 +23,9 @@ import com.example.backstreet_cycles.domain.utils.PlannerHelper
 import com.example.backstreet_cycles.interfaces.Planner
 import com.example.backstreet_cycles.ui.views.JourneyActivity
 
-
+/**
+ * Class responsible for managing cards inside recycler view for the Journey activity
+ */
 class PlanJourneyAdapter(
     private val context: Context,
     private val docks: MutableList<Dock>,
@@ -56,12 +58,12 @@ class PlanJourneyAdapter(
                 if (expandableLayout.visibility == View.GONE) {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.VISIBLE
-                    expandButton.text = "v"
+                    expandButton.text = context.getString(R.string.openArrow)
 
                 } else {
                     TransitionManager.beginDelayedTransition(cardView, AutoTransition())
                     expandableLayout.visibility = View.GONE
-                    expandButton.text = ">"
+                    expandButton.text = context.getString(R.string.closeArrow)
                 }
             }
         }
@@ -103,9 +105,9 @@ class PlanJourneyAdapter(
         buttonList.add(holder.setNav2)
         buttonList.add(holder.setNav3)
 
-        holder.tvFrom.text = "From: ${ConvertHelper.shortenName(location.name).first()} "
+        holder.tvFrom.text = context.getString(R.string.from, ConvertHelper.shortenName(location.name).first())
 
-        holder.tvTo.text = "To: ${ConvertHelper.shortenName(locations[position + 1].name).first()}"
+        holder.tvTo.text = context.getString(R.string.to, ConvertHelper.shortenName(locations[position + 1].name).first())
 
         if (checkCheckedBoxInSharePref(holder.tvFrom.text.toString())){
             holder.checkBoxButton.isChecked = true
@@ -127,8 +129,8 @@ class PlanJourneyAdapter(
 
             planner.onSelectedJourney(
                 location, MapboxConstants.WALKING, mutableListOf(
-                    journeyPoints["startingPoint"]!!,
-                    journeyPoints["pickUpPoint"]!!
+                    journeyPoints[context.getString(R.string.starting_point)]!!,
+                    journeyPoints[context.getString(R.string.pick_up_point)]!!
                 ), JourneyState.START_WALKING
             )
             collapseBottomSheet.value = true
@@ -146,8 +148,8 @@ class PlanJourneyAdapter(
 
             planner.onSelectedJourney(
                 location, MapboxConstants.CYCLING, mutableListOf(
-                    journeyPoints["pickUpPoint"]!!,
-                    journeyPoints["dropOffPoint"]!!
+                    journeyPoints[context.getString(R.string.pick_up_point)]!!,
+                    journeyPoints[context.getString(R.string.drop_off_point)]!!
                 ), JourneyState.BIKING
             )
             collapseBottomSheet.value = true
@@ -165,8 +167,8 @@ class PlanJourneyAdapter(
 
             planner.onSelectedJourney(
                 location, MapboxConstants.WALKING, mutableListOf(
-                    journeyPoints["dropOffPoint"]!!,
-                    journeyPoints["destination"]!!
+                    journeyPoints[context.getString(R.string.drop_off_point)]!!,
+                    journeyPoints[context.getString(R.string.destination)]!!
                 ), JourneyState.END_WALKING
             )
             collapseBottomSheet.value = true
@@ -250,7 +252,7 @@ class PlanJourneyAdapter(
     private fun checkCurrentCheckBox(holder: ViewHolder) {
         if (holder.checkBoxButton.isEnabled) {
             holder.expandableLayout.visibility = View.GONE
-            holder.expandButton.text = ">"
+            holder.expandButton.text = context.getString(R.string.closeArrow)
         }
     }
 

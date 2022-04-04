@@ -1,5 +1,7 @@
 package com.example.backstreet_cycles.ui.views
 
+import androidx.arch.core.executor.testing.CountingTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -13,12 +15,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.EspressoIdlingResource
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,16 +26,17 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class SplashScreenActivityTest{
 
-    private val email = "backstreet.cycles.test.user@gmail.com"
-    private val password = "123456"
-    private val userRepoImpl = UserRepositoryImpl(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule
-    var activityRule: ActivityScenarioRule<SplashScreenActivity> =
-        ActivityScenarioRule(SplashScreenActivity::class.java)
+    val countingTaskExecutorRule = CountingTaskExecutorRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val activityRule = ActivityScenarioRule(SplashScreenActivity::class.java)
 
     @get:Rule
     val locationRule: GrantPermissionRule =
@@ -73,24 +72,17 @@ class SplashScreenActivityTest{
     @Test
      fun test_if_user_is_loggedin_goes_to_homepage(){
         test_splash_screen_activity_is_in_view()
-        userRepoImpl.login(email, password)
         Intents.init()
         intending(hasComponent(HomePageActivity::class.qualifiedName))
         Intents.release()
-        userRepoImpl.logOut()
     }
 
     @Test
     fun test_if_user_is_not_logged_in_goes_to_login(){
         test_splash_screen_activity_is_in_view()
-        userRepoImpl.logOut()
         Intents.init()
         intending(hasComponent(LogInActivity::class.qualifiedName))
         Intents.release()
     }
 
-    @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-    }
 }

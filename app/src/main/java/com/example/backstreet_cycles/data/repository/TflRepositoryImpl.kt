@@ -11,6 +11,9 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Class responsible for implementation of the TFL repository
+ */
 class TflRepositoryImpl @Inject constructor(
     private val tflApi: TflApi
 ) : TflRepository {

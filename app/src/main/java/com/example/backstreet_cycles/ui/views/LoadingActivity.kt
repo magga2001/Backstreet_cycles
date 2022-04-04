@@ -19,13 +19,16 @@ import kotlinx.android.synthetic.main.activity_loading.*
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.launch
 
+/**
+ * This activity launches Loading page that allows application to load data between different pages
+ */
 @AndroidEntryPoint
 class LoadingActivity() : AppCompatActivity() {
 
     private val loadingViewModel: LoadingViewModel by viewModels()
 
     /**
-     * Initialise the contents within the display of the SplashScreenActivity
+     * Initialise the contents within the display of the LoadingActivity
      * @param savedInstanceState used to restore a saved state so activity can be recreated
      */
     override fun onCreate(savedInstanceState: Bundle?) {

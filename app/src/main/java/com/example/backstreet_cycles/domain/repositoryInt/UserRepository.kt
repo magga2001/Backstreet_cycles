@@ -5,6 +5,9 @@ import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.domain.model.dto.Users
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Interface for the user repository
+ */
 interface UserRepository {
 
     fun register(firstName: String, lastName: String, email: String, password: String): Flow<Resource<String>>
