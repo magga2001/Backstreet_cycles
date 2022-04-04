@@ -28,6 +28,7 @@ class JourneyViewModelTest {
     private lateinit var logInViewModel: LogInViewModel
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var loadingViewModel: LoadingViewModel
+    private lateinit var splashScreenViewModel: SplashScreenViewModel
     lateinit var instrumentationContext: Context
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
@@ -98,12 +99,26 @@ class JourneyViewModelTest {
             application,
             instrumentationContext
         )
+
+        splashScreenViewModel = SplashScreenViewModel(
+            fakeTflRepoImpl,
+            fakeMapboxRepoImpl,
+            fakeCyclistRepoImpl,
+            fakeUserRepoImpl,
+            fakeLocationRepoImpl,
+            application,
+            instrumentationContext
+        )
+
+        runBlocking { splashScreenViewModel.loadData() }
+        splashScreenViewModel.getIsReady().getOrAwaitValue()
         for (location in locations) {
             homePageViewModel.addStop(location)
         }
         homePageViewModel.getRoute()
         runBlocking { loadingViewModel.getDock() }
         loadingViewModel.saveJourney()
+        loadingViewModel.destroyMapboxNavigation()
     }
 
     @Test
@@ -137,8 +152,7 @@ class JourneyViewModelTest {
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-        val distances =
-            ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
+        ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
         val durations =
             ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
         assert(
@@ -153,10 +167,8 @@ class JourneyViewModelTest {
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-        val distances =
-            ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
-        val durations =
-            ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
+        ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
+        ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
         val price = MapInfoHelper.getRental(journeyViewModel.getJourneyDurations())
         assert(journeyViewModel.getPriceData().getOrAwaitValue().equals(price.toString()))
     }
@@ -187,7 +199,7 @@ class JourneyViewModelTest {
     fun test_get_journey_dock_to_dock() {
         journeyViewModel.onSelectedJourney(
             locations[0],
-            MapboxConstants.WALKING,
+            MapboxConstants.CYCLING,
             locations,
             JourneyState.BIKING
         )

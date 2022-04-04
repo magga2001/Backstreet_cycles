@@ -104,8 +104,7 @@
     <string name="enter_confirmed_password">Please confirm your password</string>
     <string name="change_password_title">Change Password</string>
     <string name="UPDATE_FAILED">Password reset failed</string>
-    <string name="to_change_password">In order to change your email or password you need to</string>
-    <string name="enter_old_password">\" enter your old password\"</string>
+    <string name="to_change_password">In order to change your email or password you need to enter your old password</string>
 
     <!-- View profile -->
     <string name="profile_details">Profile Details</string>

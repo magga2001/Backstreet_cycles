@@ -52,8 +52,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 TextUtils.isEmpty(
                     change_password_currentPassword.text.toString().trim { it <= ' ' }) -> {
                     change_password_currentPassword.error =
-                        getString(R.string.to_change_password) +
-                                getString(R.string.enter_old_password)
+                        getString(R.string.to_change_password)
                 }
                 else -> {
                     val currentPassword =
