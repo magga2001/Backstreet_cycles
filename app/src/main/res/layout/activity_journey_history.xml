@@ -10,8 +10,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/journey_history_recycler_view"
-        android:layout_width="402dp"
-        android:layout_height="613dp"
+        android:layout_width="397dp"
+        android:layout_height="575dp"
         android:layout_marginTop="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.backstreet_cycles.R
 import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.*
@@ -47,13 +48,13 @@ class SplashScreenViewModel @Inject constructor(
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
                         val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
+                        JsonHelper.writeJsonFile(mContext, mContext.getString(R.string.json_local_docks), dockJSON)
                     }
                     loadTouristAttractions()
                 }
 
                 is Resource.Error -> {
-                    val docksJson = JsonHelper.readJsonFile(mContext, "localDocks.json").toString()
+                    val docksJson = JsonHelper.readJsonFile(mContext, mContext.getString(R.string.json_local_docks)).toString()
                     val docks = JsonHelper.stringToObject(docksJson, Dock::class.java)
                     tflRepository.setCurrentDocks(docks!!.toMutableList())
                     isReady.value = true

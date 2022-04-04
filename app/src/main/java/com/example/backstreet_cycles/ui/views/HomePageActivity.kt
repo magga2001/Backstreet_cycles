@@ -123,7 +123,8 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Greets the user in the nav menu
         homePageViewModel.getUserInfo().observe(this) { firebaseUser ->
             if (firebaseUser != null) {
-                user_name.text = "Hello, ${firebaseUser.firstName}"
+                user_name.text = getString(R.string.hello_user, firebaseUser.firstName)
+                    //"Hello, ${firebaseUser.firstName}"
                 nav_header_textView_email.text = firebaseUser.email
             }
         }
@@ -145,7 +146,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Checks whether a current journey exists
         homePageViewModel.gethasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
-                SnackBarHelper.displaySnackBar(homePageActivity, "There is no current journey")
+                SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.no_current_journey))
             }else{
                 val intent = Intent(this, LoadingActivity::class.java)
                 startActivity(intent)
@@ -156,7 +157,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         // Ensures that the user doesn't add duplicate locations
         homePageViewModel.getHasDuplicationLocation().observe(this) { duplicate ->
             if (duplicate) {
-                SnackBarHelper.displaySnackBar(homePageActivity, "Location already in list")
+                SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.location_already_exists))
             }
         }
 
@@ -185,7 +186,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             if(increase){
                 UserNumber.text = "${homePageViewModel.getNumCyclists()}"
             }else{
-                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have more than 4 users")
+                SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.no_more_than_4_users))
             }
         }
 
@@ -193,7 +194,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
             if(increase){
                 UserNumber.text = "${homePageViewModel.getNumCyclists()}"
             }else{
-                SnackBarHelper.displaySnackBar(homePageActivity, "Cannot have less than one user")
+                SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.no_less_than_1_user))
             }
         }
 
@@ -225,7 +226,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        SnackBarHelper.displaySnackBar(homePageActivity, "Adding Stop")
+        SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.adding_stop))
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -241,7 +242,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         LayoutInflater.from(this)
         homePageViewModel.addStop(positionOfStop, Locations(name, lat, long))
         stopsAdapter.notifyItemChanged(positionOfStop)
-        SnackBarHelper.displaySnackBar(homePageActivity, "Changing Location Of Stop")
+        SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.change_stop_location))
         enableNextPageButton()
         enableMyLocationButton()
     }
@@ -307,7 +308,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                 R.id.journeyHistory -> {
                     val intent = Intent(this@HomePageActivity, JourneyHistoryActivity::class.java)
                     intent.putExtra(
-                        "User Location",
+                        getString(R.string.user_location),
                         homePageViewModel.getCurrentLocation(locationComponent)
                     )
                     startActivity(intent)
@@ -415,7 +416,7 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
                     enableMyLocationButton()
                     enableNextPageButton()
                 } else {
-                    SnackBarHelper.displaySnackBar(homePageActivity, "Cannot remove location")
+                    SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.cant_remove_location))
                 }
             }
 
@@ -528,10 +529,10 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
      */
     private fun alertDialog(newStops: MutableList<Locations>) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Planner Alert")
+        builder.setTitle(getString(R.string.alert_planner))
         builder.setMessage(
-            "There is already a planned journey that you are currently using." +
-                    " Do you want to continue with the current journey or with the newly created one?"
+            getString(R.string.alert_message_1) +
+                    getString(R.string.alert_message_2)
         )
 
         builder.setPositiveButton(R.string.continue_with_current_journey) { dialog, which ->

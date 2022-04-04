@@ -302,7 +302,7 @@ class JourneyActivity : AppCompatActivity() {
             journeyViewModel.clearView()
             journeyViewModel.getJourneyOverview()
             start_navigation.isEnabled = false
-            SnackBarHelper.displaySnackBar(it, "Make sure to set your journey to start your navigation!")
+            SnackBarHelper.displaySnackBar(it, getString(R.string.set_nav_to_start_journey))
         }
 
         santander_link.setOnClickListener {
@@ -344,7 +344,7 @@ class JourneyActivity : AppCompatActivity() {
         val mapboxRouteLineOptions = MapboxRouteLineOptions.Builder(this)
             .withVanishingRouteLineEnabled(true)
             .withRouteLineResources(routeLineResources)
-            .withRouteLineBelowLayerId("road-label")
+            .withRouteLineBelowLayerId(getString(R.string.road_label))
             .build()
 
         routeLineApi = MapboxRouteLineApi(mapboxRouteLineOptions)
@@ -426,16 +426,16 @@ class JourneyActivity : AppCompatActivity() {
     /**
      * Display the singular and plural word for bike depending on the number of cyclists selected
      */
+    @SuppressLint("StringFormatMatches")
     private fun initInfo() {
         val numCyclists = journeyViewModel.getNumCyclists()
 
         if (numCyclists < 2) {
-            santander_link.text = "Hire a bike"
+            santander_link.text = getString(R.string.hire_bike)
         } else {
-            santander_link.text = "Hire ${numCyclists} bikes"
+            santander_link.text = getString(R.string.hire_bikes, numCyclists)
         }
     }
-
     private fun updateCheckBoxSharedPref(){
         val checkedBoxes = planJourneyAdapter.getCheckedBoxesToStoreInSharedPref()
         journeyViewModel.storeCheckedBoxesSharedPref(checkedBoxes)

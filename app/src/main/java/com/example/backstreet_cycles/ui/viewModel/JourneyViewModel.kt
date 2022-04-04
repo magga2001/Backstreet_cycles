@@ -80,7 +80,7 @@ class JourneyViewModel @Inject constructor(
                     if (result.data != null && result.data.isNotEmpty()) {
                         tflRepository.setCurrentDocks(result.data)
                         val dockJSON = JsonHelper.objectToString(result.data, Dock::class.java)
-                        JsonHelper.writeJsonFile(mContext, "localDocks.json", dockJSON)
+                        JsonHelper.writeJsonFile(mContext, mContext.getString(R.string.json_local_docks), dockJSON)
                     }
                     isUpdateMap = false
                     fetchRoute(
@@ -92,7 +92,7 @@ class JourneyViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    val docksJson = JsonHelper.readJsonFile(mContext, "localDocks.json").toString()
+                    val docksJson = JsonHelper.readJsonFile(mContext, mContext.getString(R.string.json_local_docks)).toString()
                     val docks = JsonHelper.stringToObject(docksJson, Dock::class.java)
                     tflRepository.setCurrentDocks(docks!!.toMutableList())
 

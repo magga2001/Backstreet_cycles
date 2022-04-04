@@ -86,7 +86,7 @@ class JourneyHistoryViewModel @Inject constructor(
      */
     fun updateCurrentLocation(currentLocation: Location) {
         for (stop in getStops()) {
-            if (stop.name == "Current Location") {
+            if (stop.name == mContext.getString(R.string.location)) {
 
                 val longitude = currentLocation.longitude
                 val latitude = currentLocation.latitude
