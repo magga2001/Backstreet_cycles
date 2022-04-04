@@ -94,7 +94,7 @@
 
     <!-- Other strings -->
     <string name="app_name">Backstreet Cycles</string>
-    <string name="mapbox_access_token">sk.eyJ1IjoibWFnZ2EyMDAxIiwiYSI6ImNrcjNoa2E2bzB6eWsyeXFtem5zNWI1OGcifQ.hBDVTqDtj-JQVp02NAaLWA</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoidmFuZGFkZHkiLCJhIjoiY2wxM3AyYzRwMDMyNTNka2E5ZDJyZmxjeSJ9.X21KVzaVpkQhADD-YQw-yA</string>
     <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
     <string name="user_location_permission_explanation">Permission needed</string>
     <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
