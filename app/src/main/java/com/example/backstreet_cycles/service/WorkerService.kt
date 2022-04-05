@@ -17,6 +17,7 @@ import com.example.backstreet_cycles.common.Resource
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.repositoryInt.TflRepository
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
+import com.example.backstreet_cycles.ui.views.HomePageActivity
 import com.example.backstreet_cycles.ui.views.LoadingActivity
 import com.example.backstreet_cycles.ui.views.LogInActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -196,7 +197,7 @@ class WorkerService @AssistedInject constructor(
         val intent: Intent
 
         if (FirebaseAuth.getInstance().currentUser != null) {
-            intent = Intent(context, LoadingActivity::class.java).apply {
+            intent = Intent(context, HomePageActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
         } else {
