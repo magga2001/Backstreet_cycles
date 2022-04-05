@@ -132,10 +132,10 @@ class JourneyHistoryViewModel @Inject constructor(
 
     /**
      * Adding locations for the journey
-     * @param checkpoints
+     * @param stops
      */
-    fun addAllStops(checkpoints: MutableList<Locations>) {
-        stops.addAll(checkpoints)
+    fun addAllStops(stops: MutableList<Locations>) {
+        this.stops.addAll(stops)
     }
 
     /**

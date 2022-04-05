@@ -104,9 +104,11 @@ class JourneyHistoryViewModelTest {
 
     @Test
     fun test_get_a_journey_without_any_current_journey(){
+        journeyHistoryViewModel.clearAllSharedPreferences()
         journeyHistoryViewModel.addAllStops(locations)
         journeyHistoryViewModel.getRoute()
-        assert(journeyHistoryViewModel.getIsReady().getOrAwaitValue())
+        journeyHistoryViewModel.getIsReady().getOrAwaitValue()
+        assert(journeyHistoryViewModel.getJourneyLocations() == locations)
     }
 
     @Test
