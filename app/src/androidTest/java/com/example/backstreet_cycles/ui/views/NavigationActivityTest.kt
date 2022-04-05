@@ -61,31 +61,12 @@ class NavigationActivityTest {
     }
 
     @Test
-    fun navigation_tripProgressCard_is_displayed(){
+    fun navigation_activity_elements_are_displayed(){
         onView(withId(R.id.tripProgressCard)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun navigation_tripProgressView_is_displayed(){
         onView(withId(R.id.tripProgressView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-    @Test
-    fun navigation_imageViewStop_is_displayed(){
         onView(withId(R.id.stop)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun navigation_soundButton_is_displayed(){
         onView(withId(R.id.soundButton)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun navigation_routeOverview_is_displayed(){
         onView(withId(R.id.routeOverview)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun navigation_MapboxRecenterButton_is_displayed(){
         onView(withId(R.id.recenter)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 

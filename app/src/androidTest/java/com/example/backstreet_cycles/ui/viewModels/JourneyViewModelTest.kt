@@ -152,7 +152,6 @@ class JourneyViewModelTest {
         journeyViewModel.calcBicycleRental()
         assert(journeyViewModel.getJourneyLocations().size == locations.size)
         assert(journeyViewModel.getUpdateMap().getOrAwaitValue() == true)
-        ConvertHelper.convertMToKm(journeyViewModel.getJourneyDistances()).toString()
         val durations =
             ConvertHelper.convertMsToS(journeyViewModel.getJourneyDurations()).toString()
         assert(
