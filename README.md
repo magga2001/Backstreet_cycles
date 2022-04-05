@@ -11,18 +11,18 @@ Backstreet Cycles is an android application you could download to plan a cycling
 - FAQ page for user's feedback
 - Real-time data from TFL API
 - Efficient bike journey planner for up to 4 riders
-- Map with most popular tourist attractions
+- Map with popular tourist attractions
 - Live GPS navigation from MapBox API
 - Hire a bike from Santander Bike App
 - Calculate price for bicycle rental
 
-## Installation
+## Deployed version of the application
 
-Download the APK file from this website
+The deployed version of the application can be found at 
 
 ## Credentials
 
-To access Firebase account for our application use the following credentials
+To access to the Firebase and Mapbox account of our application use the following credentials:
 
 Email: backstreet.cycles.test.user@gmail.com
 

@@ -146,10 +146,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
         homePageViewModel.getHasCurrentJourney().observe(this) { hasCurrentJourney ->
             if (!hasCurrentJourney) {
                 SnackBarHelper.displaySnackBar(homePageActivity, getString(R.string.no_current_journey))
-            }else{
-                val intent = Intent(this, LoadingActivity::class.java)
-                startActivity(intent)
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
 
