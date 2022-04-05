@@ -45,7 +45,7 @@ class UserRepositoryImpl(
                     trySend(Resource.Success("EMAIL VERIFICATION BEING SENT TO:  $email"))
 
                 } else {
-                    trySend(Resource.Error<String>("User already exist or email is badly formatted"))
+                    trySend(Resource.Error<String>(task.exception!!.localizedMessage))
                 }
             }
 
@@ -154,12 +154,12 @@ class UserRepositoryImpl(
                         if (task.isSuccessful) {
                             trySend(Resource.Success("Password successfully updated."))
                         } else {
-                            trySend(Resource.Error<String>("Password update fail or no internet connection"))
+                            trySend(Resource.Error<String>(task.exception!!.localizedMessage))
                         }
                     }
                 }
             } else {
-                trySend(Resource.Error<String>("Password update fail or no internet connection"))
+                trySend(Resource.Error<String>(task.exception!!.localizedMessage))
 
             }
         }
