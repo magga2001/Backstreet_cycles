@@ -9,10 +9,8 @@ import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.ui.viewModel.ChangePasswordViewModel
 import com.example.backstreet_cycles.ui.viewModel.ForgotPasswordViewModel
-import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
 import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
-import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test

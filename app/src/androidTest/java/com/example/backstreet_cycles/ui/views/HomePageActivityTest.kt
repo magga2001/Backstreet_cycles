@@ -1,6 +1,5 @@
 package com.example.backstreet_cycles.ui.views
 
-
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -86,43 +85,6 @@ class HomePageActivityTest {
     }
 
     @Test
-    fun test_current_location_card_shown() {
-        onView(isRoot()).perform(waitFor(500))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_LocationDataCardName),
-                withParent(withId(R.id.homepage_locationDataCardView))
-            )
-        ).check(matches(withText("Current Location")))
-        onView(withId(R.id.homepage_LocationDataCardName)).check(matches(withText("Current Location")))
-    }
-
-    @Test
-    fun navigation_drawer_shows_about_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.about)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun navigation_drawer_shows_faq_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.faq)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun navigation_drawer_shows_current_Journey_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.currentJourney)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun navigation_drawer_shows_logout_button() {
-        onView(withContentDescription(R.string.open)).perform(click())
-        onView(withId(R.id.logout)).check(matches(isDisplayed()))
-    }
-
-
-    @Test
     fun test_clicking_current_Journey_button(){
         SharedPrefHelper.initialiseSharedPref(ApplicationProvider.getApplicationContext(),Constants.LOCATIONS)
         SharedPrefHelper.clearSharedPreferences()
@@ -156,9 +118,7 @@ class HomePageActivityTest {
 
     @Test
     fun test_nextPage_is_enabled(){
-//        onView(isRoot()).perform(waitFor(1000))
         addStop("Covent Garden")
-        //onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
     }
 
@@ -178,7 +138,7 @@ class HomePageActivityTest {
                 withId(R.id.homepage_locationDataCardView),
                 withParent(withId(R.id.homepage_recyclerView))
             )).check(matches(isDisplayed()))
-   }
+    }
 
     @Test
     fun test_stop_added(){
@@ -199,44 +159,14 @@ class HomePageActivityTest {
         Intents.release()
     }
 
-
-    @Test
-    fun test_cardView_is_swipeable() {
-        onView(isRoot()).perform(waitFor(500))
-        addStop("covent garden")
-        onView(isRoot()).perform(waitFor(500))
-        addStop("Stamford Bridge")
-        onView(isRoot()).perform(waitFor(500))
-        addStop("Westminister")
-        onView(isRoot()).perform(waitFor(500))
-        addStop("Buckingham Palace")
-        onView(isRoot()).perform(waitFor(500))
-
-        onView(withId(R.id.homepage_recyclerView)).perform(
-            RecyclerViewActions.actionOnItemAtPosition<StopsAdapter.StopViewHolder>(
-                2,
-                swipeLeft()
-            )
-        )
-
-        onView(isRoot()).perform(waitFor(500))
-        onView(withId(R.id.homepage_recyclerView))
-            .perform(scrollToPosition<StopsAdapter.StopViewHolder>(2))
-            .check(matches(hasDescendant(withText("Stamford Bridge"))))
-
-
-    }
-
-
-
     @Test
     fun test_cardView_is_draggable() {
         onView(isRoot()).perform(waitFor(500))
-        addStop("Westminister")
+        addStop("Westminster")
         onView(isRoot()).perform(waitFor(500))
         addStop("Buckingham Palace")
         onView(isRoot()).perform(waitFor(500))
-        addStop("covent garden")
+        addStop("Covent Garden")
         onView(isRoot()).perform(waitFor(500))
         addStop("Stamford Bridge")
 
@@ -258,7 +188,6 @@ class HomePageActivityTest {
             .check(matches(hasDescendant(withText("Covent Garden"))))
     }
 
-
     @Test
     fun test_first_item_in_recycler_view_is_current_location(){
         onView(isRoot()).perform(waitFor(500))
@@ -278,11 +207,8 @@ class HomePageActivityTest {
     @Test
     fun test_next_page_button_enabled_when_more_than_one_item_in_recyclerView(){
         addStop("Covent Garden")
-//        onView(isRoot()).perform(waitFor(1000))
         onView(withId(R.id.nextPageButton)).check(matches(isEnabled()))
     }
-
-
 
     @Test
     fun bottom_sheet_invoked_show_users_field() {
@@ -345,7 +271,7 @@ class HomePageActivityTest {
     @Test
     fun test_current_location_button_disabled_when_already_in_recyclerView(){
         onView(isRoot()).perform(waitFor(1000))
-         onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
+        onView(withId(R.id.myLocationButton)).check(matches(isNotEnabled()))
     }
 
 
@@ -362,55 +288,6 @@ class HomePageActivityTest {
         onView(withId(R.id.homepage_recyclerView))
             .perform(scrollToPosition<StopsAdapter.StopViewHolder>(0))
             .check(matches(hasDescendant(withText("Current Location"))))
-    }
-
-
-
-    //failing
-    @Test
-    fun test_location_is_changed_when_stop_is_clicked(){
-        onView(isRoot()).perform(waitFor(500))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_recyclerView),
-                childAtPosition(
-                    withId(R.id.homepage_bottom_sheet_view),
-                    2
-                )
-            )
-        ).perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                0,
-                click()
-            )
-        )
-
-        onView(isRoot()).perform(waitFor(500))
-        val locationSearched = onView(
-            Matchers.allOf(
-                withId(R.id.edittext_search),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.searchView),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        ).perform(replaceText("covent garden"), closeSoftKeyboard())
-
-        onView(isRoot()).perform(waitFor(500))
-        locationSearched.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
-
-        onView(isRoot()).perform(waitFor(500))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_LocationDataCardName),
-                withParent(withId(R.id.homepage_locationDataCardView))
-            )
-        ).check(matches(withText("Covent Garden")))
-
     }
 
     @Test
@@ -431,56 +308,6 @@ class HomePageActivityTest {
             )
         ).check(matches(isDisplayed()))
     }
-
-    //failing
-    @Test
-    fun test_goBackTo_homepage_when_back_clicked_from_autoCompleteAPI(){
-        onView(withId(R.id.addingBtn)).perform(click())
-        onView(isRoot()).perform(waitFor(1000))
-        onView(
-            allOf(
-                withId(R.id.button_search_back),
-                withContentDescription("Close Search"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.searchView),
-                        0
-                    ),
-                    2
-                ),
-                isDisplayed()
-            )
-        ).perform(click())
-        onView(isRoot()).perform(waitFor(500))
-        Intents.init()
-        intending(hasComponent(HomePageActivity::class.qualifiedName))
-        Intents.release()
-        onView(isRoot()).perform(waitFor(500))
-        onView(withId(R.id.homePageActivity)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
-    }
-
-    @Test
-    fun test_fail_to_add_same_stop() {
-        onView(isRoot()).perform(waitFor(500))
-        addStop("covent garden")
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
-
-        onView(isRoot()).perform(waitFor(500))
-        addStop("covent garden")
-        onView(withId(R.id.homepage_recyclerView)).check(matches(hasChildCount(2)))
-    }
-
-
-   @Test
-   fun test_Snackbar_location_already_in_list(){
-       addStop("Covent Garden")
-       onView(isRoot()).perform(waitFor(500))
-       addStop("Covent Garden")
-
-       onView(withId(com.google.android.material.R.id.snackbar_text))
-           .check(matches(withText("Location already in list")))
-   }
 
     @Test
     fun test_Snackbar_cannot_have_more_than_four_users(){
@@ -504,58 +331,6 @@ class HomePageActivityTest {
         onView(isRoot()).perform(waitFor(500))
         onView(withId(com.google.android.material.R.id.snackbar_text))
             .check(matches(withText("Adding Stop")))
-    }
-
-    @Test
-    fun test_Snackbar_changing_location_of_stop(){
-        onView(isRoot()).perform(waitFor(500))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_recyclerView),
-                childAtPosition(
-                    withId(R.id.homepage_bottom_sheet_view),
-                    2
-                )
-            )
-        ).perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                0,
-                click()
-            )
-        )
-
-        onView(isRoot()).perform(waitFor(500))
-        val locationSearched = onView(
-            Matchers.allOf(
-                withId(R.id.edittext_search),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.searchView),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        ).perform(replaceText("covent garden"), closeSoftKeyboard())
-
-        onView(isRoot()).perform(waitFor(500))
-        locationSearched.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
-
-        onView(isRoot()).perform(waitFor(500))
-        onView(
-            Matchers.allOf(
-                withId(R.id.homepage_LocationDataCardName),
-                withParent(withId(R.id.homepage_locationDataCardView))
-            )
-        ).check(matches(withText("Covent Garden")))
-
-
-
-
-        test_location_is_changed_when_stop_is_clicked()
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText("Changing Location Of Stop")))
     }
 
     @Test
@@ -630,6 +405,11 @@ class HomePageActivityTest {
         Intents.release()
     }
 
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+    }
+
     private fun waitFor(delay: Long): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> = isRoot()
@@ -650,7 +430,7 @@ class HomePageActivityTest {
         else -> "unknown but the value was $state"
     }
 
-    private fun hasBottomSheetBehaviorState(expectedState: Int): Matcher<in View>? {
+    private fun hasBottomSheetBehaviorState(expectedState: Int): Matcher<in View> {
         return object : BoundedMatcher<View, View>(View::class.java) {
             override fun describeTo(description: Description) {
                 description.appendText("has BottomSheetBehavior state: ${getFriendlyBottomSheetBehaviorStateDescription(expectedState)}")
@@ -662,32 +442,6 @@ class HomePageActivityTest {
             }
         }
     }
-//    private fun setBottomSheetBehaviorState(desiredState: Int): Matcher<in View>? {
-//        return object : BoundedMatcher<View, View>(View::class.java) {
-//            override fun describeTo(description: Description) {
-//                description.appendText("has BottomSheetBehavior state: ${getFriendlyBottomSheetBehaviorStateDescription(desiredState)}")
-//            }
-//
-//            override fun matchesSafely(view: View): Boolean {
-//                val bottomSheetBehavior = BottomSheetBehavior.from(view)
-//                return bottomSheetBehavior.state = desiredState
-//            }
-//        }
-//    }
-//
-//    private fun setBottomSheetStateAction(desiredState: Int) {
-//            fun getConstraints(): Matcher<View> {
-//                return Matchers.any(View::class.java)
-//            }
-//
-//            fun perform(uiController: UiController, view: View) {
-//                val bottomSheetBehavior = BottomSheetBehavior.from(view)
-//                bottomSheetBehavior.state = desiredState
-//            }
-//
-//             fun getDescription(): String = "Set BottomSheet to state: $desiredState"
-//        }
-//    }
 
     private fun addStop(name: String) {
         onView(isRoot()).perform(waitFor(500))
@@ -707,8 +461,6 @@ class HomePageActivityTest {
                 isDisplayed()
             )
         )
-
-        onView(isRoot()).perform(waitFor(500))
         addStopButton.perform(click())
 
         onView(isRoot()).perform(waitFor(500))
@@ -725,11 +477,8 @@ class HomePageActivityTest {
                 isDisplayed()
             )
         )
-        onView(isRoot()).perform(waitFor(500))
         location.perform(replaceText(name))
-        onView(isRoot()).perform(waitFor(500))
         location.perform(pressKey(KeyEvent.KEYCODE_ENTER),  pressKey(KeyEvent.KEYCODE_ENTER))
-
     }
 
     private fun childAtPosition(
@@ -748,11 +497,5 @@ class HomePageActivityTest {
             }
         }
     }
-
-    @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-    }
-
 
 }

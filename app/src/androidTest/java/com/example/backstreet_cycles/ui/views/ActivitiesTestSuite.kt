@@ -3,7 +3,6 @@ package com.example.backstreet_cycles.ui.views
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
-
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
 
@@ -15,7 +14,6 @@ import org.junit.runners.Suite
     JourneyActivityTest::class,
     AboutActivityTest::class,
     JourneyHistoryActivityTest::class,
-//    LoadingActivityTest::class.java,
     NavMenuTest::class,
     ChangePasswordActivityTest::class,
     FAQActivityTest::class,

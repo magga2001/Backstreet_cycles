@@ -2,9 +2,7 @@ package com.example.backstreet_cycles.domain.utils
 
 import com.example.backstreet_cycles.domain.model.dto.Dock
 import com.example.backstreet_cycles.domain.model.dto.Locations
-import com.google.common.collect.ImmutableList
 import com.mapbox.geojson.Point
-import junit.framework.Assert.assertTrue
 import org.junit.Test
 
 class ConvertHelperTest {
@@ -21,7 +19,6 @@ class ConvertHelperTest {
         val point = Point.fromLngLat(location.lon, location.lat)
         assert(ConvertHelper.convertLocationToPoint(location).longitude() == point.longitude())
         assert(ConvertHelper.convertLocationToPoint(location).latitude() == point.latitude())
-
     }
 
     @Test
@@ -30,7 +27,6 @@ class ConvertHelperTest {
         val location = Locations("Dock_A", 12.0,13.0)
         assert(ConvertHelper.convertDockToLocations(dock).lat == location.lat)
         assert(ConvertHelper.convertDockToLocations(dock).lon == location.lon)
-
     }
 
     @Test
@@ -49,8 +45,6 @@ class ConvertHelperTest {
 
     @Test
     fun test_get_location_names(){
-
-
         val locationList = listOf(
             Locations("St Paul’s Cathedral", 51.5138, -0.0984),
             Locations("Tower of London",51.5081, -0.0759),
@@ -64,12 +58,6 @@ class ConvertHelperTest {
             "Tower of London",
             "Tate Modern"
         )
-
-//        assertTrue(
-//                result.size == expectedResult.size
-//                && result.containsAll(expectedResult)
-//                && expectedResult.containsAll(result)
-//        )
 
         assert(result.containsAll(expectedResult))
     }

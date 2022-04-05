@@ -14,10 +14,6 @@ class LocationRepositoryImplTest{
         locationRepositoryImpl = LocationRepositoryImpl(TouristAttractionFile)
     }
 
-//    @Test
-//    fun `test if the tourist attraction file is being loaded`(){
-//        locationRepositoryImpl.loadLocations(application)
-//    }
 
     @Test
     fun `test if the touristLocations are being retrieved`() {

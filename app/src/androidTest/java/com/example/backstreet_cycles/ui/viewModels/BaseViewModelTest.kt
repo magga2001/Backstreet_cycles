@@ -30,7 +30,7 @@ class BaseViewModelTest {
     private lateinit var baseViewModel: BaseViewModel
     private lateinit var logInViewModel: LogInViewModel
     private lateinit var signUpViewModel: SignUpViewModel
-    lateinit var instrumentationContext: Context
+    private lateinit var instrumentationContext: Context
 
 
     private lateinit var fakeTflRepoImpl: FakeTflRepoImpl
@@ -43,7 +43,7 @@ class BaseViewModelTest {
     val email = "testuser@gmail.com"
     val password = "123456"
 
-    private val locations = mutableListOf<Locations>(
+    private val locations = mutableListOf(
         Locations("Current Location",51.5081,-0.0759),
         Locations("Tate Modern",51.5076,-0.0994 ),
         Locations("St Paul's Cathedral",51.5138,-0.0984 )

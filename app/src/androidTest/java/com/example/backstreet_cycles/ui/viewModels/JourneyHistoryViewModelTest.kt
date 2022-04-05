@@ -29,7 +29,7 @@ class JourneyHistoryViewModelTest {
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var journeyViewModel: JourneyViewModel
     private lateinit var loadingViewModel: LoadingViewModel
-    lateinit var instrumentationContext: Context
+    private lateinit var instrumentationContext: Context
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -40,13 +40,13 @@ class JourneyHistoryViewModelTest {
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
     private lateinit var fakeLocationRepoImpl: FakeLocationRepoImpl
 
-    private val locations = mutableListOf<Locations>(
+    private val locations = mutableListOf(
         Locations("Current Location",51.5081,-0.0759),
         Locations("Tate Modern",51.5076,-0.0994 ),
         Locations("St Paul's Cathedral",51.5138,-0.0984 )
     )
 
-    private val newLocations= mutableListOf<Locations>(
+    private val newLocations= mutableListOf(
         Locations("Current Location",51.5009,-0.1774 ),
         Locations("Harrods",51.4994,-0.1632 ),
         Locations("Selfridges",51.5144,-0.1528 )

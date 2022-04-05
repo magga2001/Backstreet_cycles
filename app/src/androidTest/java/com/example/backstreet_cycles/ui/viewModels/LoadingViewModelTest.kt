@@ -26,7 +26,7 @@ class LoadingViewModelTest {
     private lateinit var journeyHistoryViewModel: JourneyHistoryViewModel
     private lateinit var homePageViewModel: HomePageViewModel
     private lateinit var loadingViewModel: LoadingViewModel
-    lateinit var instrumentationContext: Context
+    private lateinit var instrumentationContext: Context
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -37,22 +37,16 @@ class LoadingViewModelTest {
     private lateinit var fakeUserRepoImpl: FakeUserRepoImpl
     private lateinit var fakeLocationRepoImpl: FakeLocationRepoImpl
 
-    private val locations = mutableListOf<Locations>(
+    private val locations = mutableListOf(
         Locations("Current Location",51.5081,-0.0759),
         Locations("Tate Modern",51.5076,-0.0994 ),
         Locations("St Paul's Cathedral",51.5138,-0.0984 )
     )
 
-    private val newLocations= mutableListOf<Locations>(
-        Locations("Current Location",51.5009,-0.1774 ),
-        Locations("Harrods",51.4994,-0.1632 ),
-        Locations("Selfridges",51.5144,-0.1528 )
-    )
-
     @Before
     fun setUp()
     {
-        instrumentationContext = ApplicationProvider.getApplicationContext();
+        instrumentationContext = ApplicationProvider.getApplicationContext()
         val application = Contexts.getApplication(instrumentationContext)
 
         fakeTflRepoImpl = FakeTflRepoImpl()
@@ -92,7 +86,7 @@ class LoadingViewModelTest {
 
     @Test
     fun test_get_journey_route(){
-        add_stops()
+        addStops()
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
         assert(loadingViewModel.getIsReady().getOrAwaitValue())
@@ -101,14 +95,14 @@ class LoadingViewModelTest {
     @Test
     fun test_get_journey_route_with_no_connection(){
         fakeMapboxRepoImpl.setConnection(false)
-        add_stops()
+        addStops()
         homePageViewModel.getRoute()
         runBlocking {loadingViewModel.getDock()}
         assert(!loadingViewModel.getIsReady().getOrAwaitValue())
         assert(loadingViewModel.getMessage().getOrAwaitValue() == "Fail to retrieve route")
     }
 
-    fun add_stops(){
+    private fun addStops(){
         for(location in locations){
             homePageViewModel.addStop(location)
         }

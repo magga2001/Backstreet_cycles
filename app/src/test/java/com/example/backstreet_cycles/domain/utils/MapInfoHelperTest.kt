@@ -77,8 +77,6 @@ class MapInfoHelperTest {
         assert(MapInfoHelper.getRental(durations) == 0.0)
     }
 
-
-
     @After
     fun tearDown(){
         routes.clear()
