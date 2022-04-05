@@ -3,4 +3,15 @@
     <item name="tab_layout" type="id" />
     <item name="fragmentLayout" type="id" />
     <item name="pager" type="id" />
+    <item name="journey_history_title" type="id" />
+    <item name="journeySummaryTextView" type="id" />
+    <item name="edittext_search" type="id" />
+    <item name="searchView" type="id" />
+    <item name="rv_search_results" type="id" />
+    <item name="button_1" type="id" />
+    <item name="button_search_back" type="id" />
+    <item name="loadingActivity_text" type="id" />
+    <item name="design_navigation_view" type="id" />
+    <item name="action_bar_container" type="id" />
+    <item name="action_bar" type="id" />
 </resources>

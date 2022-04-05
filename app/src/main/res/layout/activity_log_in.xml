@@ -2,35 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logInActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/logInActivity"
-    tools:context=".views.LogInActivity">
+    tools:context=".ui.views.LogInActivity">
 
-
-    <TextView
-        android:id="@+id/et_log_in_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/playfair_display"
-        android:text="@string/log_in_title"
-        android:textAlignment="center"
-        android:textColor="@color/baby_blue"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
     <Button
-        android:id="@+id/buttonLogin"
+        android:id="@+id/log_in_button"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif-medium"
         android:text="@string/log_in"
         android:textAlignment="center"
         android:textAllCaps="false"
@@ -39,38 +22,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/log_in_LinearLayout"
         app:layout_constraintVertical_bias="0.042" />
 
     <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
+        android:id="@+id/log_in_frame_layout"
+        android:layout_width="224dp"
+        android:layout_height="154dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/vintage_cycle_016_by_onedollarshop_classic_bicycles_11563245064vlzjdbjdby"
-            android:contentDescription="@string/vintage_cycle_image" />
+            android:id="@+id/log_in_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="139dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/vintage_cycle_image"
+            app:srcCompat="@mipmap/app_icon_round" />
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="360dp"
-        android:layout_height="187dp"
-        android:layout_marginTop="24dp"
+        android:id="@+id/log_in_LinearLayout"
+        android:layout_width="356dp"
+        android:layout_height="241dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_log_in_title">
+        app:layout_constraintTop_toBottomOf="@+id/log_in_frame_layout">
 
         <EditText
-            android:id="@+id/et_email"
+            android:id="@+id/log_in_email"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_margin="20dp"
@@ -78,12 +62,12 @@
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:textColor="@color/baby_blue"
+            android:textColor="@color/indigo"
             android:textSize="16sp"
             android:textStyle="italic" />
 
         <EditText
-            android:id="@+id/et_password"
+            android:id="@+id/log_in_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -92,35 +76,38 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"
-            android:textColor="@color/baby_blue"
+            android:textColor="@color/indigo"
+            android:textColorHint="#757575"
             android:textSize="16sp"
             android:textStyle="italic" />
 
+        <TextView
+            android:id="@+id/log_in_clickForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_gravity="end"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="48dp"
+            android:text="@string/forgot_password" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/log_in_buttonCreateAccount"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:padding="5dp"
+        android:text="@string/create_account"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
-        app:layout_constraintVertical_bias="0.071">
+        app:layout_constraintTop_toBottomOf="@+id/log_in_button"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <Button
-            android:id="@+id/buttonCreateAccount"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:padding="5dp"
-            android:text="@string/create_account"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

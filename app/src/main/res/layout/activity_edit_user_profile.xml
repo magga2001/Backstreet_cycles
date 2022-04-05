@@ -2,23 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editUserProfileActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/editUserProfile"
-    tools:context=".views.EditUserProfileActivity">
+    tools:context=".ui.views.EditUserProfileActivity">
 
     <TextView
-        android:id="@+id/et_edit_profile_title"
+        android:id="@+id/edit_user_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:fontFamily="@font/playfair_display"
         android:text="@string/profile_details"
         android:textAlignment="center"
-        android:textColor="@color/baby_blue"
-        android:textSize="20sp"
+        android:textColor="@color/indigo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/edit_user_details_LinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +25,7 @@
         app:layout_constraintVertical_bias="0.143" />
 
     <Button
-        android:id="@+id/buttonUpdateProfile"
+        android:id="@+id/edit_user_details_SaveButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -41,10 +40,9 @@
         app:layout_constraintVertical_bias="0.481"
         tools:ignore="TextContrastCheck" />
 
-<!--    app:layout_constraintTop_toBottomOf="@+id/buttonChangeEmailOrPassword"-->
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/edit_user_details_LinearLayout"
         android:layout_width="335dp"
         android:layout_height="286dp"
         android:layout_margin="20dp"
@@ -57,48 +55,35 @@
         app:layout_constraintVertical_bias="0.175">
 
         <EditText
-            android:id="@+id/et_firstName"
+            android:id="@+id/edit_user_details_firstName"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/firstname"
+            android:hint="@string/f_name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:textColor="@color/baby_blue"
+            android:textColor="@color/indigo"
             android:textSize="16sp"
             android:textStyle="italic"
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/et_lastName"
+            android:id="@+id/edit_user_details_lastName"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/last_name"
+            android:hint="@string/l_name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:textColor="@color/baby_blue"
+            android:textColor="@color/indigo"
             android:textSize="16sp"
             android:textStyle="italic"
             tools:ignore="TextContrastCheck" />
 
     </LinearLayout>
-
-<!--    <Button-->
-<!--        android:id="@+id/buttonChangeEmailOrPassword"-->
-<!--        android:layout_width="326dp"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_marginTop="108dp"-->
-<!--        android:text="@string/change_password"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.511"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
-<!--        app:layout_constraintVertical_bias="0.0" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
