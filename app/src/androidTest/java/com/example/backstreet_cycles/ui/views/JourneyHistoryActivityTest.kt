@@ -108,6 +108,11 @@ class JourneyHistoryActivityTest {
     }
 
     @Test
+    fun test_sorted_title_is_visible(){
+        onView(withId(R.id.journey_history_sort_title)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
     fun test_go_to_HomePageActivity_on_clicking_top_back_button(){
 
         onView(

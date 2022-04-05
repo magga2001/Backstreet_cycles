@@ -1,16 +1,16 @@
 package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.example.backstreet_cycles.common.BackstreetApplication
 import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
-import com.example.backstreet_cycles.ui.viewModel.*
-import dagger.hilt.android.internal.Contexts
+import com.example.backstreet_cycles.ui.viewModel.EditUserProfileViewModel
+import com.example.backstreet_cycles.ui.viewModel.ForgotPasswordViewModel
+import com.example.backstreet_cycles.ui.viewModel.LogInViewModel
+import com.example.backstreet_cycles.ui.viewModel.SignUpViewModel
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -100,6 +100,7 @@ class EditUserProfileViewModelTest {
                 editUserProfileViewModel.getUpdatedProfile().getOrAwaitValue()
         )
     }
+
     @Test
     fun test_update_lastName_unsuccessful_without_loggin_in() {
         fakeUserRepoImpl.logOut()

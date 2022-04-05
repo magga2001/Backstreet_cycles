@@ -28,8 +28,6 @@ class MapboxRepositoryImplTest{
     // The way-points that get the user to the location in the journey
     private val wayPoints = mutableListOf<Locations>()
 
-    //Mock
-
     @Mock
     private lateinit var mapboxNavigation: MapboxNavigation
 
@@ -148,19 +146,6 @@ class MapboxRepositoryImplTest{
         mapboxRepositoryImpl.clearJourneyWayPointsLocations()
         assert(mapboxRepositoryImpl.getJourneyWayPointsLocations().isEmpty())
     }
-
-//    @Test
-//    fun `test fetch route success`(){
-//
-//        Mockito.doAnswer {
-//            val listener = it.arguments[0]
-//            listener.onComplete()
-//            successAuthTask
-//        }
-//            .`when`(successAuthTask).addOnCompleteListener(ArgumentMatchers.any<OnCompleteListener<AuthResult>>())
-//
-//        Mockito.verify(mapboxNavigation.requestRoutes(routeOptions,)
-//    }
 
     @After
     fun tearDown(){

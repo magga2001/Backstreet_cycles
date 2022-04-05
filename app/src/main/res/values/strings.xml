@@ -150,5 +150,6 @@
     <string name="from">"From: %1$s "</string>
     <string name="to">"To: %1$s "</string>
     <string name="no_connection">No connection. Please connect to internet</string>
+    <string name="no_previous_journey">You have not been on a previous journey</string>
 
 </resources>

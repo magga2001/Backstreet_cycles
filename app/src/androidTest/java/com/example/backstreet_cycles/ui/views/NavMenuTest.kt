@@ -2,29 +2,19 @@ package com.example.backstreet_cycles.ui.views
 
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.GrantPermissionRule
 import com.example.backstreet_cycles.R
-import com.example.backstreet_cycles.common.EspressoIdlingResource
-import com.example.backstreet_cycles.data.repository.UserRepositoryImpl
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +25,6 @@ import org.junit.runner.RunWith
 class NavMenuTest{
 
     private val email = "backstreet.cycles.test.user@gmail.com"
-    private val password = "123456"
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -124,14 +113,6 @@ class NavMenuTest{
         onView(withId(R.id.changePassword)).perform(click())
         Intents.init()
         intending(hasComponent(ChangePasswordActivity::class.qualifiedName))
-        Intents.release()
-    }
-
-    @Test
-    fun test_JourneyHistory_to_JourneyHistoryActivity(){
-        onView(withId(R.id.journeyHistory)).perform(click())
-        Intents.init()
-        intending(hasComponent(JourneyActivity::class.qualifiedName))
         Intents.release()
     }
 

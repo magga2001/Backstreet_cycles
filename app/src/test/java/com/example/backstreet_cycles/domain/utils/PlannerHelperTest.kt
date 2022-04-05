@@ -36,20 +36,17 @@ class PlannerHelperTest {
 
     @Test
     fun test_convert_MT_to_KM(){
-        val mtList = listOf<Double>(34.56, 65.435)
+        val mtList = listOf(34.56, 65.435)
         val kmResult = ConvertHelper.convertMToKm(mtList)
         val kmTestList = (mtList.sum()/1000).toInt()
-
         assertEquals(kmResult, kmTestList)
-
     }
 
     @Test
     fun test_Ms_to_S(){
-        val MiliSecondsList = listOf<Double>(6000.00,6000.00)
-        val seconds = ConvertHelper.convertMsToS(MiliSecondsList)
-        val secondsTestList = (MiliSecondsList.sum()/60).toInt()
-
+        val milliSecondsList = listOf(6000.00,6000.00)
+        val seconds = ConvertHelper.convertMsToS(milliSecondsList)
+        val secondsTestList = (milliSecondsList.sum()/60).toInt()
         assertEquals(seconds,secondsTestList)
     }
 

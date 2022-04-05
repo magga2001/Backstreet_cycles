@@ -185,11 +185,6 @@ class HomePageViewModelTest{
     }
 
     @Test
-    fun test_alert_status_before_posting_it(){
-        assert(!homepageViewModel.getShowAlertMutableLiveData().value!!)
-    }
-
-    @Test
     fun test_alert_status_after_posting_it(){
         homepageViewModel.setShowAlert(true)
         assert(homepageViewModel.getShowAlertMutableLiveData().value!!)
@@ -197,11 +192,7 @@ class HomePageViewModelTest{
 
     @Test
     fun test_get_tourist_locations_without_loading(){
-        //homepageViewModel.getTouristAttractions()
         val emptyList: MutableList<Locations> = mutableListOf()
-//        assert(emptyList==
-//
-//        )
         assert(emptyList.containsAll(homepageViewModel.getTouristAttractions()))
     }
 

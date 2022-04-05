@@ -2,14 +2,12 @@ package com.example.backstreet_cycles.ui.viewModels
 
 import android.content.Context
 import com.example.backstreet_cycles.common.BackstreetApplication
-import com.example.backstreet_cycles.common.LiveDataObserver.getOrAwaitValue
 import com.example.backstreet_cycles.data.repository.FakeCyclistRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeMapboxRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeTflRepoImpl
 import com.example.backstreet_cycles.data.repository.FakeUserRepoImpl
 import com.example.backstreet_cycles.domain.model.dto.Locations
 import com.example.backstreet_cycles.ui.viewModel.JourneyHistoryViewModel
-import com.mapbox.navigation.core.MapboxNavigation
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
