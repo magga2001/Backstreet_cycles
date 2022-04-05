@@ -18,7 +18,7 @@ Backstreet Cycles is an android application you could download to plan a cycling
 
 ## Deployed version of the application
 
-The deployed version of the application can be found at 
+The deployed version of the application can be found at https://appetize.io/app/ntefd0g5h3cwn64vf4dh2xgdwr
 
 ## Credentials
 
