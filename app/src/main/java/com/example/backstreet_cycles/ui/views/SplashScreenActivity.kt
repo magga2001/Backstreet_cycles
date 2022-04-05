@@ -72,6 +72,9 @@ class SplashScreenActivity() : AppCompatActivity() {
         }
     }
 
+    /**
+     * Load data for app initialisation
+     */
     private fun loadData(){
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -80,6 +83,10 @@ class SplashScreenActivity() : AppCompatActivity() {
         }, Constants.SPLASH_TIME)
     }
 
+    /**
+     * Check if there is a connection
+     * @return network info connection
+     */
     private fun hasConnection(): Boolean{
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

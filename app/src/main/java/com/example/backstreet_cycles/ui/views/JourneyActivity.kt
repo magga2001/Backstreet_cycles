@@ -56,6 +56,14 @@ import kotlinx.android.synthetic.main.journey_bottom_sheet.*
 @AndroidEntryPoint
 class JourneyActivity : AppCompatActivity() {
 
+    /**
+     * Gets notified whenever the tracked routes change.
+     *
+     * A change can mean:
+     * - routes get changed with [MapboxNavigation.setRoutes]
+     * - routes annotations get refreshed (for example, congestion annotation that indicate the live traffic along the route)
+     * - biker got off route and a reroute was executed
+     */
     private val routesObserver: RoutesObserver by lazy {
         RoutesObserver { routeUpdateResult ->
             // RouteLine: wrap the DirectionRoute objects and pass them
@@ -79,6 +87,9 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Gets notified with progress along the currently active route.
+     */
     private val routeProgressObserver: RouteProgressObserver by lazy {
         RouteProgressObserver { routeProgress ->
 

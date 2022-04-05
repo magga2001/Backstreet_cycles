@@ -50,7 +50,7 @@ class WorkerService @AssistedInject constructor(
     }
 
     /**
-     *  Run update and notify user about the new dock
+     *  Run update and if journey updated, notify user about the new dock
      */
     private suspend fun attemptNotification() {
 
@@ -72,15 +72,19 @@ class WorkerService @AssistedInject constructor(
 
     /**
      *  Check for a new dock based on the current docks locations and number of users
+     *
+     *  @@return Boolean journey update on pick up or drop off point of dock station
      */
     private fun checkUpdate(docks: MutableList<Dock>?): Boolean {
 
+        //Get the saved dock locations from shared preferences
         SharedPrefHelper.initialiseSharedPref(
             getApplication(applicationContext),
             Constants.DOCKS_LOCATIONS
         )
         val currentDocks = SharedPrefHelper.getSharedPref(Point::class.java)
 
+        //Get the saved number of cyclists from shared preferences
         SharedPrefHelper.initialiseSharedPref(
             getApplication(applicationContext),
             Constants.NUM_CYCLISTS
@@ -97,7 +101,10 @@ class WorkerService @AssistedInject constructor(
     }
 
     /**
-     *  Check if there is a new dock with free spaces
+     *  Filter out to check existing assigned dock station to journey
+     *  has been changed
+     *
+     *  @return Boolean journey update on pick up or drop off point of dock station
      */
     private fun checkForNewDock(
         currentDocks: MutableList<Point>,
@@ -114,6 +121,7 @@ class WorkerService @AssistedInject constructor(
             currentPoint.add(Point.fromLngLat(lon, lat))
         }
 
+        //To filter the necessary dock to check
         val filteredDock = docks?.filter {
             val point = Point.fromLngLat(it.lon, it.lat)
             currentPoint.contains(point)
@@ -122,6 +130,14 @@ class WorkerService @AssistedInject constructor(
         return checkForNewDocksAvailability(currentPoint, filteredDock!!, numCyclists)
     }
 
+    /**
+     *  Check if there is a new dock with free spaces and free bikes
+     *  If number of bikes or number of spaces to pick up and drop off respectively
+     *  is less than number of cyclists, then we notify the user via notification
+     *  that their journey is likely to be updated
+     *
+     *  @@return Boolean journey update on pick up or drop off point of dock station
+     */
     private fun checkForNewDocksAvailability(
         currentPoint: MutableList<Point>,
         filteredDock: List<Dock>,
@@ -130,6 +146,7 @@ class WorkerService @AssistedInject constructor(
 
         for (i in filteredDock.indices)
         {
+            //If even which means pick up point, check for number of bikes available
             if(i % 2 != 0){
                 if (filteredDock[i].nbBikes >= numCyclists.first()
                         .toInt() && filteredDock.size == currentPoint.size
@@ -137,6 +154,8 @@ class WorkerService @AssistedInject constructor(
                     return false
                 }
             }else{
+
+                //If even which means drop off point, check for number of spaces available
                 if (filteredDock[i].nbSpaces >= numCyclists.first()
                         .toInt() && filteredDock.size == currentPoint.size
                 ) {

@@ -67,7 +67,6 @@ class HomePageActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsLis
     private lateinit var navigationView: NavigationView
     private lateinit var header: View
 
-
     private lateinit var user_name: TextView
     private lateinit var nav_header_textView_email: TextView
 
