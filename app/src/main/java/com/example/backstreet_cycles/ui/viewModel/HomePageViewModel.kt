@@ -401,7 +401,6 @@ class HomePageViewModel @Inject constructor(
             clearJourneyLocations()
             setJourneyLocations(listOfLocations)
             isReady.value = true
-            hasCurrentJourney.value = false
         } else {
             hasCurrentJourney.value = false
         }
