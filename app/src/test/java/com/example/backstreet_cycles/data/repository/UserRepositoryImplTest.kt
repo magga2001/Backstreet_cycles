@@ -202,24 +202,6 @@ class UserRepositoryImplTest{
     }
 
     @Test
-    fun test_register_when_fail() = runBlocking {
-        `when`(successAuthTask.isSuccessful).thenReturn(false)
-        `when`(mockFirebaseAuth.createUserWithEmailAndPassword(any(), any())).thenReturn(successAuthTask)
-
-        doAnswer{
-            val listener = it.arguments[0] as OnCompleteListener<AuthResult>
-            listener.onComplete(successAuthTask)
-            successAuthTask
-        }.`when`(successAuthTask).addOnCompleteListener(any<OnCompleteListener<AuthResult>>())
-
-        userRepositoryImpl.register("example1", "example2", "example@gmail.com","123456").test {
-            verify(mockFirebaseAuth).createUserWithEmailAndPassword(any(), any())
-            assert(awaitItem() is Resource.Error)
-            cancel()
-        }
-    }
-
-    @Test
     fun test_login_user_success() = runBlocking{
         `when`(successAuthTask.isSuccessful).thenReturn(true)
         `when`(mockFirebaseAuth.signInWithEmailAndPassword(any(), any())).thenReturn(successAuthTask)

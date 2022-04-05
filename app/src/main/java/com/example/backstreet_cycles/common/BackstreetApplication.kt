@@ -1,22 +1,13 @@
 package com.example.backstreet_cycles.common
 
 import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleService
 import androidx.work.Configuration
 import com.example.backstreet_cycles.domain.utils.SharedPrefHelper
 import com.example.backstreet_cycles.service.WorkHelper
-import com.example.backstreet_cycles.ui.views.LogInActivity
-import com.google.android.gms.common.api.internal.LifecycleActivity
-import com.google.android.gms.common.api.internal.LifecycleCallback
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

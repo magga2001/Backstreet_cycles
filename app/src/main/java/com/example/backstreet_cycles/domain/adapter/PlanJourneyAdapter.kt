@@ -270,11 +270,17 @@ class PlanJourneyAdapter(
         }
     }
 
+    /**
+     * get all the check boxes to store in shared preference
+     */
     fun getCheckedBoxesToStoreInSharedPref(): List<String> {
         val checkedBoxes = viewHolders.filter { it.checkBoxButton.isChecked }
         return checkedBoxes.map { it.tvFrom.text.toString() }
     }
 
+    /**
+     * Get the check box in shared preference
+     */
     private fun checkCheckedBoxInSharePref(from: String): Boolean {
         return from in tvFrom
     }

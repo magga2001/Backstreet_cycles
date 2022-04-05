@@ -91,6 +91,9 @@ class LoadingActivity() : AppCompatActivity() {
         loadingViewModel.getMapBoxNavigation()
     }
 
+    /**
+     * If there is no connection, then go back to previous activity
+     */
     private fun onNoConnection() {
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -99,6 +102,10 @@ class LoadingActivity() : AppCompatActivity() {
         }, Constants.SPLASH_TIME)
     }
 
+    /**
+     * Check if there is a connection
+     * @return network info connection
+     */
     private fun hasConnection(): Boolean{
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

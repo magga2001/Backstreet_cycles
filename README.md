@@ -14,7 +14,7 @@ Backstreet Cycles is an android application you could download to plan a cycling
 - Map with most popular tourist attractions
 - Live GPS navigation from MapBox API
 - Hire a bike from Santander Bike App
-
+- Calculate price for bicycle rental
 
 ## Installation
 

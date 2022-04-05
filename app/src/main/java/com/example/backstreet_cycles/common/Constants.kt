@@ -12,6 +12,7 @@ object Constants {
 
     //    WorkManager Tag
     const val TAG_NOTIFICATION = "BackStreet"
+    //15 minutes in milliseconds
     const val WAITING_TIME: Long = 900000
 
     //    Mapbox

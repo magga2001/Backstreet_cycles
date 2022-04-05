@@ -111,6 +111,9 @@ class NavigationViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Register observers for mapbox
+     */
     fun registerObservers(
         routesObserver: RoutesObserver,
         routeProgressObserver: RouteProgressObserver,
@@ -124,6 +127,9 @@ class NavigationViewModel @Inject constructor(
         mapboxNavigation.registerRouteProgressObserver(replayProgressObserver)
     }
 
+    /**
+     * Unregister observers for mapbox
+     */
     fun unregisterObservers(
         routesObserver: RoutesObserver,
         routeProgressObserver: RouteProgressObserver,
@@ -137,6 +143,9 @@ class NavigationViewModel @Inject constructor(
         mapboxNavigation.unregisterRouteProgressObserver(replayProgressObserver)
     }
 
+    /**
+     * Finish the mapbox replayer to stop navigation simulation
+     */
     fun finishMapboxReplayer() {
         mapboxReplayer.finish()
     }
