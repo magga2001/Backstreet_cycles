@@ -1,3 +1,155 @@
-<resources>
-    <string name="app_name">Backstreet_cycles</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Login and sign up -->
+    <string name="log_in_title">Backstreet Cycles</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up_title">Create an account</string>
+    <string name="create_account">Create Account</string>
+    <string name="f_name">First Name</string>
+    <string name="l_name">Last Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="LOG_IN_FAILED">Log in failed. </string>
+    <string name="enter_first_name">Please enter your first name</string>
+    <string name="enter_last_name">Please enter your last name</string>
+    <string name="enter_email">Please enter your email</string>
+    <string name="password_not_match">Passwords do not match</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="error_enter_password">Please enter a password</string>
+
+    <!-- Homepage Strings -->
+    <string name="current_location">Current Location</string>
+    <string name="title">Title</string>
+    <string name="location_button">Location Button</string>
+    <string name="next_page_button">Next Page Button</string>
+    <string name="cyclists_number">Cyclists:</string>
+    <string name="decrement">-</string>
+    <string name="increment">+</string>
+    <string name="continue_with_current_journey">Continue Current Journey</string>
+    <string name="continue_with_newly_set_journey">Create New Journey</string>
+    <string name="add_stop_button" />
+    <string name="no_current_journey">There is no current journey</string>
+    <string name="location_already_exists">Location already in list</string>
+    <string name="no_more_than_4_users">Cannot have more than 4 users</string>
+    <string name="no_less_than_1_user">Cannot have less than one user</string>
+    <string name="adding_stop">Adding Stop</string>
+    <string name="change_stop_location">Changing Location Of Stop</string>
+    <string name="user_location">User Location</string>
+    <string name="cant_remove_location">Cannot remove location</string>
+    <string name="alert_planner">Planner Alert</string>
+    <string name="alert_message_1">There is already a planned journey that you are currently using.</string>
+    <string name="alert_message_2"> Would you like to continue with the current journey or with the newly created one?</string>
+    <string name="hello_user">"Hello, %1$s"</string>
+
+    <!-- Journey Strings  -->
+    <string name="openArrow">v</string>
+    <string name="closeArrow">></string>
+    <string name="start_navigation">start navigation</string>
+    <string name="start_navigation_journey">Start Navigation</string>
+    <string name="hire_a_bike">Hire x Bikes</string>
+    <string name="journey_overview">Journey Overview</string>
+    <string name="distance">Distance:</string>
+    <string name="duration">Duration:</string>
+    <string name="price">Price:</string>
+    <string name="journeys">Journeys:</string>
+    <string name="set_navigation">set navigation</string>
+    <string name="finish_journey">Finish Journey</string>
+    <string name="from_startingpoint">From:</string>
+    <string name="to_destination">To:</string>
+    <string name="done_journey">Done</string>
+    <string name="journey_distances">Distance: %1$s km</string>
+    <string name="journey_durations">Duration: %1$s mins</string>
+    <string name="journey_prices">Price: £%1$s</string>
+    <string name="set_nav_to_start_journey">Make sure to set your journey to start your navigation!</string>
+    <string name="road_label">road-label</string>
+    <string name="hire_bike">Hire a bike</string>
+    <string name="ensure_navigation">Make sure to set your journey to start your navigation!</string>
+    <string name="hire_bikes">"Hire %1$s bikes"</string>
+
+    <!-- Strings for the menu items -->
+    <string name="view_profile">View Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="journey_history">Journey History</string>
+    <string name="current_journey">Current Journey</string>
+    <string name="about">About</string>
+    <string name="log_out">Log Out</string>
+
+    <!-- Journey History -->
+    <string name="list_of_stops">Journey Summary:</string>
+    <string name="from_to_">From To</string>
+    <string name="recent_journeys">Recent Journeys</string>
+    <string name="sorted_by_most_recent_journey">Sorted by most recent journey</string>
+
+    <!-- About -->
+    <string name="about_us">About us</string>
+    <string name="about_paragraph">Backstreet Cycles is the best application you could download to plan a cycling trip with family, friends, or alone to visit tourist attractions and different areas of central London. The app provides you with some of the recommended tourist attractions which you can select to go. Backstreet Cycles will choose the shortest, safest, and fastest journey out in London for you. Because you want it that way!</string>
+
+    <!-- FAQ -->
+    <string name="FAQ">Frequently Asked Questions</string>
+    <string name="Q1">Where can I hire bikes from?</string>
+    <string name="A1">You can hire TFL Santander bikes after choosing your journey by clicking on the \"Hire a bike\" button which redirects you to TFL’s Santander cycle hire.</string>
+    <string name="A2">TFL’s Santander cycles only allows you to hire up to four cycles at a time. Therefore, the app limits you to four cyclists.</string>
+    <string name="Q2">Why can I choose up to only four users to cycle with me?</string>
+    <string name="Q3">How do I set the navigation?</string>
+    <string name="A3">You would have to click on the stop that you would like to travel to and then set the navigation to there in order to start the journey.</string>
+
+    <!-- Change password -->
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="PASSWORD_CHANGED">Password Changed</string>
+    <string name="REGISTRATION_FAILED">Registration failed. </string>
+    <string name="enter_password">Please enter a password</string>
+    <string name="enter_confirmed_password">Please confirm your password</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="UPDATE_FAILED">Password reset failed</string>
+    <string name="to_change_password">In order to change your email or password you need to enter your old password</string>
+
+    <!-- View profile -->
+    <string name="profile_details">Profile Details</string>
+    <string name="update_profile">Save</string>
+    <string name="profile_updated">Profile updated successfully</string>
+
+    <!-- Forgot password -->
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="send_password_reset">Send Password Reset</string>
+    <string name="enter_email_forgot_password">Please enter your email</string>
+
+    <!-- View models -->
+    <string name="location">Current Location</string>
+    <string name="black">black</string>
+    <string name="my_marker">myMarker</string>
+    <string name="right">right</string>
+    <string name="left">left</string>
+    <string name="color">#EEEEEE</string>
+    <string name="country_GB">GB</string>
+    <string name="json_local_docks">localDocks.json</string>
+    <string name="backstreet_notification">Backstreet cycle Notification</string>
+    <string name="journey_update">Journey update</string>
+    <string name="journey_update_2">Journey update!</string>
+    <string name="channel_id">1337</string>
+    <string name="open_app_to_see_changes">Open the app to see the new changes in your journey.</string>
+
+    <!-- Other strings -->
+    <string name="app_name">Backstreet Cycles</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoidmFuZGFkZHkiLCJhIjoiY2wxM3AyYzRwMDMyNTNka2E5ZDJyZmxjeSJ9.X21KVzaVpkQhADD-YQw-yA</string>
+    <string name="tfl_url">https://api.tfl.gov.uk/BikePoint/</string>
+    <string name="user_location_permission_explanation">Permission needed</string>
+    <string name="user_location_permission_not_granted">You didn\'t grant permission location</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="previous">Previous</string>
+    <string name="NO_PERSON_MATCH">No people matched the query.</string>
+    <string name="vintage_cycle_image">backstreet_cycle_logo</string>
+    <string name="starting_point">startingPoint</string>
+    <string name="pick_up_point">pickUpPoint</string>
+    <string name="drop_off_point">dropOffPoint</string>
+    <string name="destination">destination</string>
+    <string name="from">"From: %1$s "</string>
+    <string name="to">"To: %1$s "</string>
+    <string name="no_connection">No connection. Please connect to internet</string>
+    <string name="no_previous_journey">You have not been on a previous journey</string>
+
 </resources>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "118932775845",
+    "project_id": "backstreetcycles-eaf92",
+    "storage_bucket": "backstreetcycles-eaf92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118932775845:android:70722cda8ff7f12c39be4c",
+        "android_client_info": {
+          "package_name": "com.example.backstreet_cycles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118932775845-oda1l5qv0oq1f8c7t7kdqp6126gaqtau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.backstreet_cycles",
+            "certificate_hash": "ac5afb4408266a9dfd9a144fcbfa4b06a28de311"
+          }
+        },
+        {
+          "client_id": "118932775845-8uvrgvegv2f9638n4l0r19jlvpbk8167.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB452riJWo9Y-72PQaMeDa9Z_UXe7ukqfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118932775845-8uvrgvegv2f9638n4l0r19jlvpbk8167.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
